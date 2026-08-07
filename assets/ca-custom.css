@@ -1,0 +1,8 @@
+/*
+ * ca-custom.css
+ * Conspire Agency custom styles for the Horizon theme.
+ *
+ * Put ALL custom CSS here (or @import other ca-*.css files from here) so that
+ * Shopify's own theme files stay untouched and pull cleanly from upstream.
+ * Do NOT edit base.css or other upstream assets directly.
+ */

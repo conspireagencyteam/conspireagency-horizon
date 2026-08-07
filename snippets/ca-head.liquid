@@ -1,0 +1,18 @@
+{%- comment -%}
+  ca-head.liquid — Conspire Agency's single injection point into <head>.
+
+  This is the ONE place custom head code hooks into the theme. It is rendered
+  once from layout/theme.liquid via {%- render 'ca-head' -%}. Add all custom
+  head assets and Liquid partials here so upstream (Shopify) theme files stay
+  untouched and merge cleanly.
+
+  Loaded AFTER Shopify's theme-styles-variables and color-palette, so anything
+  here wins on CSS specificity / cascade order.
+{%- endcomment -%}
+
+{%- comment -%} Custom CSS variables driven by Liquid / theme settings {%- endcomment -%}
+{%- render 'ca-theme-variables' -%}
+
+{%- comment -%} Static custom styles and scripts {%- endcomment -%}
+{{ 'ca-custom.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ca-custom.js' | asset_url }}" defer></script>

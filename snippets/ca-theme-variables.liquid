@@ -1,0 +1,21 @@
+{%- comment -%}
+  ca-theme-variables.liquid — Conspire Agency custom CSS variables.
+
+  Use this for :root variables that need Liquid (e.g. values pulled from theme
+  settings), which plain CSS in ca-custom.css cannot do. For static values or
+  simple overrides of Shopify's variables, prefer ca-custom.css instead.
+
+  Rendered from ca-head.liquid, after Shopify's theme-styles-variables, so these
+  override the theme's values.
+
+  Example:
+    :root {
+      --ca-brand-accent: {{ settings.color_accent | default: '#ff5a1f' }};
+    }
+{%- endcomment -%}
+
+{% style %}
+  :root {
+    /* Add Liquid-driven custom variables here */
+  }
+{% endstyle %}
