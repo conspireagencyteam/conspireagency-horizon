@@ -1,0 +1,394 @@
+{%- comment -%}
+  ca-header.liquid — Conspire Agency minimal header (Conspire v2.0 design).
+
+  Nav (left, from a Shopify navigation menu) + logo (right, theme logo setting).
+  Solid + sticky by default. Goes transparent over the first section when that
+  section opts in via `.ca-allow-transparent-header` (see ca-brands-marquee), and
+  reverts to solid once scrolled (data-stuck, set by assets/ca-header.js).
+
+  Lives in the header section group (see sections/header-group.json).
+{%- endcomment -%}
+
+<script src="{{ 'ca-header.js' | asset_url }}" type="module" fetchpriority="high"></script>
+
+{%- liquid
+  assign menu = section.settings.menu
+  assign logo_height = settings.logo_height | default: 36
+  assign logo_height_mobile = settings.logo_height_mobile | default: 28
+-%}
+
+<ca-header
+  class="ca-header{% if section.settings.sticky %} ca-header--sticky{% endif %}"
+  style="{% render 'spacing-style', settings: section.settings %} --ca-logo-height: {{ logo_height }}px; --ca-logo-height-mobile: {{ logo_height_mobile }}px;"
+>
+  <div class="ca-header__inner">
+    <div class="ca-header__left">
+      <button
+        class="ca-header__toggle"
+        type="button"
+        data-ca-header-toggle
+        aria-expanded="false"
+        aria-controls="ca-header-drawer"
+        aria-label="{{ 'accessibility.menu' | t | default: 'Menu' }}"
+      >
+        <span class="ca-header__toggle-box" aria-hidden="true">
+          <span class="ca-header__toggle-bar"></span>
+          <span class="ca-header__toggle-bar"></span>
+        </span>
+      </button>
+
+      <nav class="ca-header__nav" aria-label="{{ 'accessibility.menu' | t }}">
+        <ul class="ca-header__menu" role="list">
+          {%- for link in menu.links -%}
+            <li>
+              <a
+                href="{{ link.url }}"
+                class="ca-header__link"
+                {% if link.current %}aria-current="page"{% endif %}
+              >{{ link.title }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    </div>
+
+    <a href="{{ routes.root_url }}" class="ca-header__logo" aria-label="{{ shop.name }}">
+      {%- if settings.logo != blank -%}
+        {%- assign logo_alt = 'accessibility.home_logo_alt' | t: store_name: shop.name -%}
+        <img
+          class="ca-header__logo-img ca-header__logo-img--original"
+          src="{{ settings.logo | image_url: height: logo_height }}"
+          width="{{ logo_height | times: settings.logo.aspect_ratio | ceil }}"
+          height="{{ logo_height }}"
+          alt="{{ logo_alt }}"
+          loading="eager"
+        >
+        {%- if settings.logo_inverse != blank -%}
+          <img
+            class="ca-header__logo-img ca-header__logo-img--inverse"
+            src="{{ settings.logo_inverse | image_url: height: logo_height }}"
+            width="{{ logo_height | times: settings.logo_inverse.aspect_ratio | ceil }}"
+            height="{{ logo_height }}"
+            alt="{{ logo_alt }}"
+            loading="eager"
+          >
+        {%- endif -%}
+      {%- else -%}
+        <span class="ca-header__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+  </div>
+
+  <div class="ca-header__drawer" id="ca-header-drawer" data-ca-header-drawer inert>
+    <nav aria-label="{{ 'accessibility.menu' | t }}">
+      <ul class="ca-header__drawer-menu" role="list">
+        {%- for link in menu.links -%}
+          <li>
+            <a href="{{ link.url }}" class="ca-header__drawer-link"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  </div>
+  <div class="ca-header__overlay" data-ca-header-overlay inert></div>
+</ca-header>
+
+{% stylesheet %}
+  .ca-header {
+    display: block;
+    position: relative;
+    z-index: var(--layer-header-menu, 12);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Sticky — mirror Horizon: make the header group `display: contents` so the
+     section wrapper's containing block becomes <body> (spans the page), then
+     stick the SECTION WRAPPER (not the inner element, whose containing block is
+     the short group → would unstick instantly). */
+  #header-group:has(.ca-header--sticky) {
+    display: contents;
+  }
+
+  .ca-header-section:has(> .ca-header--sticky) {
+    position: sticky;
+    top: 0;
+    z-index: var(--layer-header-menu, 12);
+  }
+
+  /* Kill the scroll-anchoring feedback loop: when the sticky header shrinks on
+     scroll, the content above the viewport gets shorter and the browser nudges
+     scrollTop to compensate — which re-fires the scroll handler and flickers.
+     Disabling anchoring on the scroll container stops that nudge. (Safari has no
+     scroll anchoring, so this is a no-op there.) */
+  .page-wrapper:has(.ca-header--sticky) {
+    overflow-anchor: none;
+  }
+
+  .ca-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: var(--page-width, 1440px);
+    margin-inline: auto;
+    padding-inline: var(--page-margin, 24px);
+    padding-block: 20px;
+  }
+
+  .ca-header__left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  /* Nav */
+  .ca-header__menu {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ca-header__link {
+    font-family: var(--font-accent--family);
+    font-weight: var(--font-accent--weight, 500);
+    font-size: 1.25rem; /* 20px */
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-header__link:hover {
+    opacity: 0.6;
+  }
+
+  /* Logo */
+  .ca-header__logo {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-header__logo-img {
+    display: block;
+    height: auto;
+    width: auto;
+    max-height: var(--ca-logo-height, 36px);
+    object-fit: contain;
+    transition: max-height var(--animation-speed, 0.2s) ease;
+  }
+
+  /* Once stuck (scrolled — data-stuck set by ca-header.js), shrink the logo to
+     the mobile logo height. */
+  .ca-header[data-stuck] .ca-header__logo-img {
+    max-height: var(--ca-logo-height-mobile, 28px);
+  }
+
+  .ca-header__logo-img--inverse {
+    display: none;
+  }
+
+  .ca-header__logo-text {
+    font-family: var(--font-heading--family);
+    font-size: var(--font-size--h5, 1.5rem);
+    font-weight: 500;
+  }
+
+  /* Hamburger — mobile only */
+  .ca-header__toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-inline-start: -10px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .ca-header__toggle-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 24px;
+  }
+
+  .ca-header__toggle-bar {
+    height: 2px;
+    width: 100%;
+    background-color: currentcolor;
+    transition: transform var(--animation-speed, 0.12s) ease, opacity var(--animation-speed, 0.12s) ease;
+  }
+
+  .ca-header[data-drawer-open] .ca-header__toggle-bar:nth-child(1) {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  .ca-header[data-drawer-open] .ca-header__toggle-bar:nth-child(2) {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+
+  /* Mobile drawer */
+  .ca-header__drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(80vw, 360px);
+    padding: 96px 32px 32px;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    z-index: var(--layer-menu-drawer, 18);
+    transform: translateX(100%);
+    transition: transform var(--drawer-animation-speed, 0.2s) var(--ease-out-quad, ease);
+    overflow-y: auto;
+    pointer-events: none;
+  }
+
+  .ca-header[data-drawer-open] .ca-header__drawer {
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .ca-header__drawer-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ca-header__drawer-link {
+    font-family: var(--font-accent--family);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-header__overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgb(0 0 0 / 0.4);
+    z-index: var(--layer-overlay, 16);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--drawer-animation-speed, 0.2s) ease;
+  }
+
+  .ca-header[data-drawer-open] .ca-header__overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-header__nav {
+      display: none;
+    }
+
+    .ca-header__toggle {
+      display: inline-flex;
+    }
+
+    .ca-header__inner {
+      padding-block: 10px;
+    }
+
+    .ca-header__logo-img {
+      max-height: var(--ca-logo-height-mobile, 28px);
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .ca-header__drawer,
+    .ca-header__overlay {
+      display: none;
+    }
+  }
+
+  /*
+   * Transparent-over-hero: only when the FIRST section opts in
+   * (renders .ca-allow-transparent-header) and the header hasn't stuck yet.
+   * The transparent text color + logo swap come from that section
+   * (--ca-header-transparent-text, set on .ca-header).
+   */
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]) {
+    background-color: transparent;
+    color: var(--ca-header-transparent-text, var(--color-foreground));
+  }
+
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]) .ca-header__logo-img--original {
+    display: var(--ca-header-logo-original-display, block);
+  }
+
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):has(.ca-header__logo-img--inverse) .ca-header__logo-img--original {
+    display: none;
+  }
+
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]) .ca-header__logo-img--inverse {
+    display: block;
+  }
+
+  /* Solid state gets a hairline + subtle shadow once stuck */
+  .ca-header--sticky[data-stuck] {
+    box-shadow: 0 1px 0 rgb(var(--color-foreground-rgb) / 0.08);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Header (Conspire)",
+  "tag": "header",
+  "class": "ca-header-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
+  ]
+}
+{% endschema %}

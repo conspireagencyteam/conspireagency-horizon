@@ -1,0 +1,400 @@
+{%- comment -%}
+  ca-blog.liquid — Conspire Agency homepage blog block (Conspire v2.0, Figma 97-352).
+
+  Dark section. Eyebrow top-left over a hairline, a row of 3 article cards
+  (image on top, title, date below), and a "View All" chip button bottom-right.
+
+  Source:
+    "recent"   → pulls the latest posts from a chosen blog.
+    "selected" → up to 6 hand-picked articles.
+{%- endcomment -%}
+
+{%- liquid
+  assign source = section.settings.source
+  assign button_label = section.settings.button_label | default: 'View All'
+  assign style_class = section.settings.style_class | default: 'button-secondary'
+
+  assign view_all = section.settings.view_all_link
+  if view_all == blank and source == 'recent'
+    assign view_all = blogs[section.settings.blog].url
+  endif
+-%}
+
+{% render 'contrast-override',
+  background_color: section.settings.background_color,
+  text_color: section.settings.text_color,
+  section_id: section.id
+%}
+
+<div
+  class="ca-blog spacing-style color-custom-{{ section.id }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  <div class="ca-inner ca-blog__inner">
+    {%- if style_class == 'button-custom' -%}
+      {%- render 'button-custom-styles', block_settings: section.settings, block_id: section.id -%}
+    {%- endif -%}
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ca-eyebrow ca-blog__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- comment -%} Determine whether there are any articles to show. {%- endcomment -%}
+    {%- assign has_cards = false -%}
+    {%- if source == 'selected' -%}
+      {%- for i in (1..6) -%}
+        {%- assign key = 'article_' | append: i -%}
+        {%- if section.settings[key] != blank -%}{%- assign has_cards = true -%}{%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- assign blog_articles = blogs[section.settings.blog].articles -%}
+      {%- if blog_articles.size > 0 -%}{%- assign has_cards = true -%}{%- endif -%}
+    {%- endif -%}
+
+    {%- if has_cards -%}
+      <div class="ca-blog__grid">
+        {%- if source == 'selected' -%}
+          {%- for i in (1..6) -%}
+            {%- assign key = 'article_' | append: i -%}
+            {%- assign article = section.settings[key] -%}
+            {%- if article != blank -%}
+              <a class="ca-blog-card" href="{{ article.url }}">
+                <div class="ca-blog-card__media">
+                  {%- if article.image != blank -%}
+                    {%- render 'image', image: article.image, height: 411, class: 'ca-blog-card__img', alt_text_fallback: article.title -%}
+                  {%- endif -%}
+                </div>
+                <div class="ca-blog-card__body">
+                  <h3 class="ca-blog-card__title">{{ article.title }}</h3>
+                  {%- if article.published_at != blank -%}
+                    <p class="ca-blog-card__date">{{ article.published_at | date: '%b %d, %Y' }}</p>
+                  {%- endif -%}
+                </div>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for article in blogs[section.settings.blog].articles limit: section.settings.post_limit -%}
+            <a class="ca-blog-card" href="{{ article.url }}">
+              <div class="ca-blog-card__media">
+                {%- if article.image != blank -%}
+                  {%- render 'image', image: article.image, height: 411, class: 'ca-blog-card__img', alt_text_fallback: article.title -%}
+                {%- endif -%}
+              </div>
+              <div class="ca-blog-card__body">
+                <h3 class="ca-blog-card__title">{{ article.title }}</h3>
+                {%- if article.published_at != blank -%}
+                  <p class="ca-blog-card__date">{{ article.published_at | date: '%b %d, %Y' }}</p>
+                {%- endif -%}
+              </div>
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      {%- if view_all != blank -%}
+        <div class="ca-blog__foot">
+          <a class="{{ style_class }} size-style ca-blog__more{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ view_all }}">{{ button_label }}</a>
+        </div>
+      {%- endif -%}
+    {%- elsif request.design_mode -%}
+      <p class="ca-blog__empty">
+        {%- if source == 'selected' -%}
+          Pick <strong>articles</strong> in this section's settings to populate the blog block.
+        {%- else -%}
+          Choose a <strong>blog</strong> with published articles in this section's settings.
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-blog__eyebrow {
+    margin-block-end: 16px;
+    padding-block-end: 24px;
+    border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.25);
+  }
+
+  .ca-blog__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+  }
+
+  .ca-blog-card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-blog-card__media {
+    aspect-ratio: 448 / 411;
+    overflow: hidden;
+    background-color: rgb(var(--color-foreground-rgb) / 0.08);
+  }
+
+  /* Desktop: staggered image heights per Figma card frames. */
+  .ca-blog-card:nth-child(1) .ca-blog-card__media {
+    aspect-ratio: 448 / 514;
+  }
+
+  .ca-blog-card:nth-child(2) .ca-blog-card__media {
+    aspect-ratio: 448 / 411;
+  }
+
+  .ca-blog-card:nth-child(3) .ca-blog-card__media {
+    aspect-ratio: 448 / 300;
+  }
+
+  .ca-blog-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .ca-blog-card:hover .ca-blog-card__img {
+    transform: scale(1.03);
+  }
+
+  .ca-blog-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ca-blog-card__title {
+    margin: 0;
+    font-size: var(--font-h5--size, 1.25rem);
+    line-height: 1.3;
+  }
+
+  .ca-blog-card:hover .ca-blog-card__title {
+    opacity: 0.8;
+  }
+
+  .ca-blog-card__date {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  .ca-blog__foot {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-start: 40px;
+  }
+
+  .ca-blog__empty {
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-blog__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    /* Mobile: all cards share one uniform image ratio. */
+    .ca-blog-card:nth-child(1) .ca-blog-card__media,
+    .ca-blog-card:nth-child(2) .ca-blog-card__media,
+    .ca-blog-card:nth-child(3) .ca-blog-card__media {
+      aspect-ratio: 448 / 411;
+    }
+
+    .ca-blog__foot {
+      justify-content: stretch;
+    }
+
+    .ca-blog__foot .ca-blog__more {
+      width: 100%;
+      /* full-width: keep the text left and the chip flush-right so the circle
+         stays under the absolutely-positioned arrow (else they separate). */
+      justify-content: space-between;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog",
+  "tag": "section",
+  "class": "ca-blog-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Scale & Shopify Blog"
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Source",
+      "options": [
+        { "value": "recent", "label": "Recent posts" },
+        { "value": "selected", "label": "Selected posts" }
+      ],
+      "default": "recent"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "post_limit",
+      "label": "Posts to show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3,
+      "visible_if": "{{ section.settings.source == 'recent' }}"
+    },
+    {
+      "type": "article",
+      "id": "article_1",
+      "label": "Article 1"
+    },
+    {
+      "type": "article",
+      "id": "article_2",
+      "label": "Article 2"
+    },
+    {
+      "type": "article",
+      "id": "article_3",
+      "label": "Article 3"
+    },
+    {
+      "type": "article",
+      "id": "article_4",
+      "label": "Article 4"
+    },
+    {
+      "type": "article",
+      "id": "article_5",
+      "label": "Article 5"
+    },
+    {
+      "type": "article",
+      "id": "article_6",
+      "label": "Article 6"
+    },
+    {
+      "type": "header",
+      "content": "View All button"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All link"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "View All"
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" },
+        { "value": "button-custom", "label": "t:options.custom" }
+      ],
+      "default": "button-secondary"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_background",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_text",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_border",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0d110d"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#f6f7f6"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog",
+      "category": "Conspire",
+      "settings": {
+        "eyebrow": "Scale & Shopify Blog",
+        "source": "recent",
+        "post_limit": 3,
+        "button_label": "View All",
+        "style_class": "button-secondary",
+        "background_color": "#0d110d",
+        "text_color": "#f6f7f6",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  ]
+}
+{% endschema %}

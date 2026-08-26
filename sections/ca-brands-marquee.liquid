@@ -1,0 +1,500 @@
+{%- comment -%}
+  ca-brands-marquee.liquid — Conspire Agency hero brands carousel (Conspire v2.0).
+
+  Auto-scrolling marquee of client cards, driven by a curated `metaobject_list`
+  of the store's existing `client` metaobject. Reuses marquee.js.
+
+  Field keys used (Shopify's standard underscore keys — verify in Admin by
+  expanding a field; adjust the assigns below if yours differ):
+    name, logo, featured_site_image, work_preview, case_study_image, case_study_reference
+
+  Doubles as a "hero" first-section: when `allow_transparent_header` is on it
+  tags itself `.ca-allow-transparent-header` and hands the header its transparent
+  text color via --ca-header-transparent-text (read by sections/ca-header.liquid).
+{%- endcomment -%}
+
+<script src="{{ 'ca-marquee.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{%- liquid
+  assign clients = section.settings.clients
+  assign image_key = section.settings.image_field
+  assign transparent = section.settings.allow_transparent_header
+  assign has_intro = false
+  if section.settings.badge_image != blank or section.settings.heading != blank or section.settings.body != blank or section.settings.button_label != blank
+    assign has_intro = true
+  endif
+-%}
+
+{%- if transparent and section.settings.transparent_header_text_color != blank -%}
+  {%- style -%}
+    .ca-header { --ca-header-transparent-text: {{ section.settings.transparent_header_text_color }}; }
+  {%- endstyle -%}
+{%- endif -%}
+
+<div
+  class="ca-hero spacing-style{% if transparent %} ca-allow-transparent-header{% endif %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- if has_intro -%}
+    <div class="ca-hero__top">
+      <div class="ca-hero__intro">
+        {%- if section.settings.badge_image != blank -%}
+          <div class="ca-hero__badge">
+            {% render 'image', image: section.settings.badge_image, height: 48, class: 'ca-hero__badge-img' %}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h1 class="ca-hero__heading">{{ section.settings.heading }}</h1>
+        {%- endif -%}
+      </div>
+      <div class="ca-hero__aside">
+        {%- if section.settings.body != blank -%}
+          <div class="ca-hero__body">{{ section.settings.body }}</div>
+        {%- endif -%}
+        {%- if section.settings.button_label != blank -%}
+          {%- render 'button-custom-styles', block_settings: section.settings, block_id: section.id -%}
+          <a
+            class="{{ section.settings.style_class }} size-style ca-hero__button{% if section.settings.style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}"
+            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+          >{{ section.settings.button_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <ca-marquee-component
+    class="ca-brands"
+    style="
+      --marquee-gap: {{ section.settings.gap }}px;
+      --marquee-direction: {{ section.settings.movement_direction }};
+      --ca-brand-radius: {{ section.settings.card_radius }}px;
+    "
+    data-speed-factor="{{ section.settings.speed }}"
+    data-movement-direction="{{ section.settings.movement_direction }}"
+  >
+  {%- if clients.count > 0 -%}
+    <div class="ca-brands__wrapper" ref="wrapper">
+      <div class="ca-brands__content" ref="content">
+        <div class="ca-brands__row" ref="marqueeItems[]">
+          {%- for client in clients -%}
+            {%- liquid
+              assign bg = client[image_key].value
+              if bg.image
+                assign bg = bg.image
+              endif
+              assign logo = client.logo.value
+              if logo.image
+                assign logo = logo.image
+              endif
+              assign brand_title = client.name.value | default: client.system.handle
+              assign brand_url = client.case_study_reference.value
+            -%}
+            {%- capture card_inner -%}
+              <div class="ca-brand-card__media">
+                {%- if bg != blank -%}
+                  {% render 'image', image: bg, height: 500, class: 'ca-brand-card__bg', alt_text_fallback: brand_title %}
+                {%- endif -%}
+                {%- if logo != blank -%}
+                  {% render 'image', image: logo, height: 48, class: 'ca-brand-card__logo', alt_text_fallback: brand_title %}
+                {%- endif -%}
+              </div>
+            {%- endcapture -%}
+            {%- if brand_url != blank -%}
+              <a href="{{ brand_url }}" class="ca-brand-card" aria-label="{{ brand_title | escape }}">{{ card_inner }}</a>
+            {%- else -%}
+              <div class="ca-brand-card" aria-label="{{ brand_title | escape }}">{{ card_inner }}</div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- elsif request.design_mode -%}
+    <p class="ca-brands__empty">Add clients in this section's settings to populate the carousel.</p>
+  {%- endif -%}
+  </ca-marquee-component>
+</div>
+
+{% stylesheet %}
+  .ca-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    background-color: var(--color-background);
+  }
+
+  .ca-hero__top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    width: 100%;
+    max-width: var(--page-width, 1440px);
+    margin-inline: auto;
+    padding-inline: var(--page-margin, 24px);
+  }
+
+  .ca-hero__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+    max-width: 802px;
+  }
+
+  .ca-hero__badge-img {
+    display: block;
+    height: 48px;
+    width: auto;
+  }
+
+  .ca-hero__heading {
+    margin: 0;
+  }
+
+  .ca-hero__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 448px;
+    flex: 0 0 auto;
+  }
+
+  .ca-hero__body {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.8));
+  }
+
+  .ca-hero__body > :first-child { margin-block-start: 0; }
+  .ca-hero__body > :last-child { margin-block-end: 0; }
+
+  /* Hug content instead of stretching to the column width */
+  .ca-hero__button {
+    align-self: flex-start;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-hero {
+      gap: 40px;
+    }
+
+    .ca-hero__top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 32px;
+    }
+
+    .ca-hero__aside {
+      width: 100%;
+    }
+  }
+
+  ca-marquee-component.ca-brands {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--color-background);
+  }
+
+  .ca-brands__wrapper {
+    display: flex;
+    gap: var(--marquee-gap);
+    width: fit-content;
+  }
+
+  .ca-brands__content {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
+  }
+
+  .ca-brands__row {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
+    align-items: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    ca-marquee-component.ca-brands:not([data-disabled]) .ca-brands__wrapper {
+      animation: ca-brands-marquee var(--marquee-speed) linear infinite var(--marquee-direction);
+    }
+  }
+
+  @keyframes ca-brands-marquee {
+    to {
+      transform: translate3d(calc(-50% - (var(--marquee-gap) / 2)), 0, 0);
+    }
+  }
+
+  /* Brand card */
+  .ca-brand-card {
+    display: block;
+    flex: 0 0 auto;
+    border-radius: var(--ca-brand-radius, 0);
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  .ca-brand-card__media {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(var(--color-foreground-rgb) / 0.04);
+  }
+
+  .ca-brand-card__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgb(0 0 0 / 0.2);
+  }
+
+  .ca-brand-card__bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ca-brand-card__logo {
+    position: absolute;
+    inset: auto 0 32px 0;
+    margin-inline: auto;
+    z-index: 1;
+    width: auto;
+    max-width: 60%;
+    max-height: 72px;
+    object-fit: contain;
+  }
+
+  /* Staggered size rhythm — mirrors the Figma cadence (w320/300/360/280 · h430/260/500/350) */
+  .ca-brand-card { width: 320px; height: 430px; }
+  .ca-brand-card:nth-child(6n + 2) { width: 300px; height: 260px; }
+  .ca-brand-card:nth-child(6n + 3) { width: 360px; height: 500px; }
+  .ca-brand-card:nth-child(6n + 4) { width: 280px; height: 350px; }
+  .ca-brand-card:nth-child(6n + 5) { width: 320px; height: 430px; }
+  .ca-brand-card:nth-child(6n + 6) { width: 300px; height: 260px; }
+
+  .ca-brands__empty {
+    padding: 40px;
+    text-align: center;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text));
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-brand-card,
+    .ca-brand-card:nth-child(6n + 2),
+    .ca-brand-card:nth-child(6n + 3),
+    .ca-brand-card:nth-child(6n + 4),
+    .ca-brand-card:nth-child(6n + 5),
+    .ca-brand-card:nth-child(6n + 6) {
+      width: 60vw;
+      height: 60vw;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero + brands carousel",
+  "tag": "section",
+  "class": "ca-brands-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero content"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_image",
+      "label": "Badge image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We know Shopify. Your growth partner."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Los Angeles-based Shopify Plus design and development agency. Trusted since 2011 by high-growth eCommerce brands for strategic builds and long-term support. We help teams scale on Shopify with confidence.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Get Started"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "t:settings.style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" },
+        { "value": "button-custom", "label": "t:options.custom" }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_background",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_text",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_border",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Clients"
+    },
+    {
+      "type": "metaobject_list",
+      "id": "clients",
+      "label": "Clients",
+      "metaobject_type": "client",
+      "limit": 24
+    },
+    {
+      "type": "select",
+      "id": "image_field",
+      "label": "Card image",
+      "info": "Which client image fills the card behind the logo.",
+      "options": [
+        { "value": "featured_site_image", "label": "Featured site image" },
+        { "value": "work_preview", "label": "Work preview" },
+        { "value": "case_study_image", "label": "Case study image" }
+      ],
+      "default": "featured_site_image"
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Speed",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "type": "select",
+      "id": "movement_direction",
+      "label": "t:settings.motion_direction",
+      "options": [
+        { "value": "reverse", "label": "t:options.forward" },
+        { "value": "normal", "label": "t:options.reverse" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Transparent header"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_transparent_header",
+      "label": "Allow transparent header",
+      "info": "When this is the first section, the header overlays it transparently and turns solid on scroll.",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "transparent_header_text_color",
+      "label": "Transparent header text color",
+      "default": "#0d110d",
+      "visible_if": "{{ section.settings.allow_transparent_header }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero + brands carousel",
+      "category": "Conspire",
+      "settings": {
+        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
+        "heading": "We know Shopify. Your growth partner.",
+        "body": "<p>Los Angeles-based Shopify Plus design and development agency. Trusted since 2011 by high-growth eCommerce brands for strategic builds and long-term support. We help teams scale on Shopify with confidence.</p>",
+        "button_label": "Get Started",
+        "style_class": "button",
+        "clients": ["zia-tile", "cousins-maine-lobster", "body-bio", "tillamook-country-smoker-jerky", "kinto", "p-kay-metal", "natures-answer", "hustler-hollywood", "portola-paints"],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    }
+  ]
+}
+{% endschema %}

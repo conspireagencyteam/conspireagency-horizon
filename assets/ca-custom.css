@@ -5,4 +5,127 @@
  * Put ALL custom CSS here (or @import other ca-*.css files from here) so that
  * Shopify's own theme files stay untouched and pull cleanly from upstream.
  * Do NOT edit base.css or other upstream assets directly.
+ * CSS variables + @font-face live in snippets/ca-theme-variables.liquid.
  */
+
+/* ── Typography (Conspire v2.0) ─────────────────────────────────────────────
+ * Fonts + variables: snippets/ca-theme-variables.liquid. See docs/ca-typography.md.
+ * Body tracking — Horizon applies letter-spacing to h1–h6 only, not body. */
+body,
+.paragraph:not(.button),
+.paragraph > * {
+  letter-spacing: var(--letter-spacing--body-tight);
+}
+
+/* ── Shared CA section helpers (Conspire v2.0) ──────────────────────────────
+ * Reused across the ca-* content sections (services, apps, feature highlights,
+ * work list, faq, …). Kept here so each section's scoped stylesheet stays lean. */
+:root {
+  --ca-hairline: rgb(var(--color-foreground-rgb) / 0.14);
+}
+
+/* Page-width container for CA sections (mirrors .ca-hero__top). */
+.ca-inner {
+  width: 100%;
+  max-width: var(--page-width, 1440px);
+  margin-inline: auto;
+  padding-inline: var(--page-margin, 24px);
+}
+
+/* H6 overline / eyebrow (uses the typography-phase H6 tokens). */
+.ca-eyebrow {
+  margin: 0;
+  font-family: var(--font-h6--family);
+  font-size: var(--font-h6--size);
+  font-weight: var(--font-h6--weight);
+  line-height: var(--font-h6--line-height);
+  letter-spacing: var(--font-h6--letter-spacing);
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground-rgb) / 0.6);
+}
+
+/* =========================================================================
+   Marketing button arrow chip  (Figma: node 97-29 primary / 97-245 secondary)
+
+   The pill shape, colors, border, radius, font and text-case are GLOBAL and
+   come from the theme's button settings (config/settings_data.json), so every
+   .button / .button-secondary already matches Figma.
+
+   This block adds ONLY the circular arrow chip, and ONLY to marketing/link
+   buttons rendered by snippets/button.liquid — matched via `a.button.size-style`
+   / `a.button-secondary.size-style`. Commerce buttons (add-to-cart, buy,
+   payment) are <button> elements without `size-style`, so they are untouched.
+
+   Two pseudo-elements are used on purpose: ::after paints the circle, ::before
+   paints the masked arrow on top. A single element can't be a two-tone chip
+   because `mask` would clip the circle's background to the arrow shape.
+   ========================================================================= */
+:root {
+  /* solar:arrow-right-up-linear — used as a mask, so it recolors via background */
+  --ca-btn-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 15L15 5M15 15V5H5' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --ca-btn-chip-size: 2rem; /* 32px = 20px icon + 6px padding each side */
+  --ca-btn-icon-size: 1.25rem; /* 20px */
+  --ca-btn-gap: 1rem; /* 16px text -> chip */
+}
+
+a.button.size-style,
+a.button-secondary.size-style,
+a.button-custom.size-style {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ca-btn-gap);
+  /* tight right padding seats the chip flush: 14px left, 5px right/top/bottom */
+  padding-block: 5px;
+  padding-inline: 14px 5px;
+  font-size: 1.125rem; /* 18px */
+  letter-spacing: -0.02em; /* ~ -0.36px at 18px */
+  line-height: 1;
+
+  /* Pin height so all 3 styles match: chip (32px) + 5px padding top/bottom = 42px.
+     Overrides the .size-style height var, which is unset here (no size-style snippet). */
+  box-sizing: border-box;
+  height: auto;
+  min-height: calc(var(--ca-btn-chip-size) + 10px);
+
+  /* chip fill = button text color (inverted); arrow = a contrasting color */
+  --ca-btn-chip-color: var(--button-color);
+  --ca-btn-arrow-color: var(--button-background-color);
+}
+
+/* Secondary's button background is transparent, so drive the arrow from the
+   color scheme's background instead (light arrow on the dark chip). */
+a.button-secondary.size-style {
+  --ca-btn-arrow-color: var(--color-background);
+}
+
+/* The circle chip */
+a.button.size-style::after,
+a.button-secondary.size-style::after,
+a.button-custom.size-style::after {
+  content: "";
+  flex: 0 0 auto;
+  width: var(--ca-btn-chip-size);
+  height: var(--ca-btn-chip-size);
+  border-radius: 100px;
+  background-color: var(--ca-btn-chip-color);
+}
+
+/* The arrow, masked and overlaid on the chip */
+a.button.size-style::before,
+a.button-secondary.size-style::before,
+a.button-custom.size-style::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  /* 5px button padding + 6px chip padding = arrow box flush inside the chip */
+  right: calc(5px + (var(--ca-btn-chip-size) - var(--ca-btn-icon-size)) / 2);
+  width: var(--ca-btn-icon-size);
+  height: var(--ca-btn-icon-size);
+  transform: translateY(-50%);
+  background-color: var(--ca-btn-arrow-color);
+  -webkit-mask: var(--ca-btn-arrow) center / contain no-repeat;
+  mask: var(--ca-btn-arrow) center / contain no-repeat;
+  pointer-events: none;
+}

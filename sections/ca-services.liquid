@@ -1,0 +1,243 @@
+{%- comment -%}
+  ca-services.liquid — Conspire Agency "Our Services" list (Conspire v2.0, Figma 97-287).
+
+  Numbered rows (01…) driven by a product picker. Each service is a Product:
+    title       → product.title
+    description → product.metafields.product_details.excerpt (fallback: body)
+    link        → product.url ("Learn More")
+{%- endcomment -%}
+
+{%- liquid
+  assign products = section.settings.products
+  assign show_numbers = section.settings.show_numbers
+  assign button_label = section.settings.button_label | default: 'Learn More'
+  assign style_class = section.settings.style_class | default: 'button-secondary'
+-%}
+
+<div class="ca-services spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if style_class == 'button-custom' -%}
+      {%- render 'button-custom-styles', block_settings: section.settings, block_id: section.id -%}
+    {%- endif -%}
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ca-eyebrow ca-services__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if products.size > 0 -%}
+      <div class="ca-services__list">
+        {%- for product in products -%}
+          {%- liquid
+            assign excerpt = product.metafields.product_details.excerpt
+            assign svc_title = product.metafields.product_details.display_title.value | default: product.title
+          -%}
+          <div class="ca-services__row">
+            {%- if show_numbers -%}
+              <div class="ca-services__index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</div>
+            {%- endif -%}
+            <h3 class="ca-services__title">{{ svc_title }}</h3>
+            <div class="ca-services__detail">
+              {%- if excerpt != blank -%}
+                <div class="ca-services__body">{{ excerpt | metafield_tag }}</div>
+              {%- elsif product.description != blank -%}
+                <div class="ca-services__body">{{ product.description }}</div>
+              {%- endif -%}
+              <a class="{{ style_class }} size-style ca-services__cta{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ product.url }}">{{ button_label }}</a>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- elsif request.design_mode -%}
+      <p class="ca-services__empty">Add <strong>products</strong> in this section's settings to populate the list.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-services {
+    background-color: var(--color-background);
+  }
+
+  .ca-services__eyebrow {
+    margin-block-end: 24px;
+  }
+
+  .ca-services__list {
+    border-block-end: 1px solid var(--ca-hairline);
+  }
+
+  .ca-services__row {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px 40px;
+    align-items: start;
+    padding-block: 32px;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-services__index {
+    color: rgb(var(--color-foreground-rgb) / 0.45);
+    font-size: var(--font-h3--size);
+    line-height: 1;
+  }
+
+  .ca-services__title {
+    margin: 0;
+  }
+
+  .ca-services__detail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .ca-services__body {
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-services__body > :first-child { margin-block-start: 0; }
+  .ca-services__body > :last-child { margin-block-end: 0; }
+
+  .ca-services__empty {
+    padding-block: 40px;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-services__row {
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+    }
+
+    .ca-services__detail {
+      grid-column: 1 / -1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Services list",
+  "tag": "section",
+  "class": "ca-services-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Services"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Services (products)",
+      "limit": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show numbers (01, 02…)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" },
+        { "value": "button-custom", "label": "t:options.custom" }
+      ],
+      "default": "button-secondary"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_background",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_text",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_border",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Services list",
+      "category": "Conspire",
+      "settings": {
+        "eyebrow": "Our Services",
+        "products": ["shopify-websites", "shopify-fractional-teams", "custom-shopify-applications", "shopify-cro-agency"],
+        "show_numbers": true,
+        "button_label": "Learn More",
+        "style_class": "button-secondary"
+      }
+    }
+  ]
+}
+{% endschema %}

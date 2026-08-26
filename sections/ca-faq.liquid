@@ -1,0 +1,354 @@
+{%- comment -%}
+  ca-faq.liquid — Conspire Agency "Frequently asked questions" (Conspire v2.0, Figma 97-379).
+  Light section.
+
+  Data: two metaobjects.
+    faq_category → name (single line), faqs (LIST of `faq` references)
+    faq          → question (single line), answer (RICH TEXT — render with metafield_tag)
+
+  Layout: eyebrow top-right, big heading top-left; below a LEFT column of category
+  nav buttons and a RIGHT column accordion of Q&A per category.
+
+  Progressive enhancement: category panels + <details>/<summary> work with NO JS.
+  ca-faq.js adds category switching (hide inactive panels) and single-open accordion.
+{%- endcomment -%}
+
+<script src="{{ 'ca-faq.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{%- liquid
+  assign categories = section.settings.categories
+  assign section_id = section.id
+-%}
+
+<div class="ca-faq spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+  {% render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id %}
+  <div class="ca-inner">
+    <div class="ca-faq__head">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ca-faq__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ca-eyebrow ca-faq__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if categories.count > 0 -%}
+      <ca-faq class="ca-faq__body">
+        <div class="ca-faq__nav" role="tablist" aria-label="FAQ categories">
+          {%- for category in categories -%}
+            {%- assign is_first = forloop.first -%}
+            <button
+              type="button"
+              class="ca-faq__cat{% if is_first %} is-active{% endif %}"
+              role="tab"
+              aria-selected="{% if is_first %}true{% else %}false{% endif %}"
+              aria-controls="ca-faq-panel-{{ section_id }}-{{ forloop.index0 }}"
+              data-panel="{{ forloop.index0 }}"
+            >
+              {{ category.name.value | default: category.system.handle }}
+            </button>
+          {%- endfor -%}
+        </div>
+
+        <div class="ca-faq__panels">
+          {%- for category in categories -%}
+            <div
+              class="ca-faq__panel{% unless forloop.first %} is-hidden{% endunless %}"
+              id="ca-faq-panel-{{ section_id }}-{{ forloop.index0 }}"
+              role="tabpanel"
+              data-panel="{{ forloop.index0 }}"
+              {% unless forloop.first %}hidden{% endunless %}
+            >
+              {%- for item in category.faqs.value -%}
+                <details class="ca-faq__item"{% if forloop.parentloop.first and forloop.first %} open{% endif %}>
+                  <summary class="ca-faq__q">
+                    <span class="ca-faq__q-text">{{ item.question.value }}</span>
+                    <span class="ca-faq__marker" aria-hidden="true"></span>
+                  </summary>
+                  <div class="ca-faq__answer">{{ item.answer | metafield_tag }}</div>
+                </details>
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </ca-faq>
+    {%- elsif request.design_mode -%}
+      <p class="ca-faq__empty">Add <strong>FAQ categories</strong> in this section's settings to populate the accordion.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-faq {
+    background-color: var(--color-background);
+  }
+
+  .ca-faq__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 24px 40px;
+    margin-block-end: 72px;
+  }
+
+  .ca-faq__heading {
+    margin: 0;
+    max-width: 920px;
+    text-indent: 8vw;
+  }
+
+  .ca-faq__eyebrow {
+    justify-self: end;
+    padding-block-start: 8px;
+    text-align: end;
+  }
+
+  .ca-faq__body {
+    display: grid;
+    grid-template-columns: minmax(0, 448px) minmax(0, 802px);
+    gap: 40px 140px;
+    align-items: start;
+  }
+
+  /* ── Category nav ──────────────────────────────────────────────── */
+  .ca-faq__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  .ca-faq__cat {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-block-end: 1px solid var(--ca-hairline);
+    padding-block-end: 24px;
+    padding-inline: 0;
+    font: inherit;
+    text-align: start;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, padding 0.15s ease;
+  }
+
+  .ca-faq__cat:hover,
+  .ca-faq__cat:focus-visible {
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  /* Active tab: full-opacity foreground border + left indent (Figma 97:387). */
+  .ca-faq__cat.is-active {
+    color: rgb(var(--color-foreground-rgb));
+    font-weight: 600;
+    border-block-end-color: rgb(var(--color-foreground-rgb));
+    padding-inline-start: 24px;
+  }
+
+  /* ── Panels / accordion ────────────────────────────────────────── */
+  .ca-faq__panel.is-hidden {
+    display: none;
+  }
+
+  .ca-faq__item {
+    border-block-end: 1px solid var(--ca-hairline);
+  }
+
+  .ca-faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-block: 16px;
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--font-h6--size, 1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .ca-faq__q-text {
+    min-width: 0;
+  }
+
+  /* "+" marker that becomes "×" when open */
+  .ca-faq__marker {
+    position: relative;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+  }
+
+  .ca-faq__marker::before,
+  .ca-faq__marker::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    width: 16px;
+    height: 1.5px;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .ca-faq__marker::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .ca-faq__item[open] .ca-faq__marker::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+    opacity: 0;
+  }
+
+  .ca-faq__answer {
+    padding-block-end: 24px;
+    max-width: 802px;
+    font-size: clamp(1.375rem, 0.9rem + 1.6vw, 2rem);
+    line-height: 1.4;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-faq__answer > :first-child { margin-block-start: 0; }
+  .ca-faq__answer > :last-child { margin-block-end: 0; }
+
+  .ca-faq__empty {
+    padding-block: 40px;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
+  }
+
+  /* ── Mobile ────────────────────────────────────────────────────── */
+  @media screen and (max-width: 749px) {
+    .ca-faq__head {
+      grid-template-columns: 1fr;
+      margin-block-end: 40px;
+    }
+
+    .ca-faq__eyebrow {
+      grid-row: 1;
+      justify-self: start;
+      text-align: start;
+      padding-block-start: 0;
+      margin-block-end: 16px;
+    }
+
+    .ca-faq__body {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    /* Category nav becomes a horizontal scrollable row. */
+    .ca-faq__nav {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .ca-faq__nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ca-faq__cat {
+      flex: 0 0 auto;
+      border: 1px solid var(--ca-hairline);
+      border-radius: 999px;
+      padding-block: 8px;
+      padding-inline: 16px;
+      white-space: nowrap;
+    }
+
+    .ca-faq__cat:first-child {
+      border-block-start: 1px solid var(--ca-hairline);
+    }
+
+    .ca-faq__cat.is-active {
+      background: rgb(var(--color-foreground-rgb));
+      color: rgb(var(--color-background-rgb));
+      border-color: rgb(var(--color-foreground-rgb));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "ca-faq-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get answers to common questions about our Los Angeles-based Shopify development, migration, and B2B services"
+    },
+    {
+      "type": "metaobject_list",
+      "id": "categories",
+      "label": "Categories",
+      "metaobject_type": "faq_category",
+      "limit": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "category": "Conspire"
+    }
+  ]
+}
+{% endschema %}

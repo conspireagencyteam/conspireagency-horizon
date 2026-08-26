@@ -1,0 +1,413 @@
+{%- comment -%}
+  ca-apps.liquid — Conspire Agency "Our Shopify Apps" (Conspire v2.0, Figma 97-241).
+
+  Condensed per direction: NO app screenshots — just icon + name + tagline +
+  description + App Store link. Driven by a metaobject_list of the `app` metaobject.
+  Fields used (see docs/ca-metaobjects-setup.md):
+    name (single line), tagline (single line), icon (file/image),
+    description (RICH TEXT), app_store_url (url)
+{%- endcomment -%}
+
+{%- liquid
+  assign apps = section.settings.apps
+  assign store_label_top = section.settings.store_label_top | default: 'Find it on the'
+  assign store_label_bottom = section.settings.store_label_bottom | default: 'Shopify App Store'
+  assign contact_label = section.settings.contact_label
+  assign contact_link = section.settings.contact_link
+-%}
+
+<div class="ca-apps spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or contact_link != blank or contact_label != blank -%}
+      <div class="ca-apps__head">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ca-apps__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        <div class="ca-apps__head-aside">
+          {%- if contact_link != blank or contact_label != blank -%}
+            <a class="ca-apps__contact" {% if contact_link != blank %}href="{{ contact_link }}"{% endif %}>
+              <span class="ca-apps__contact-label">{{ contact_label | default: 'Contact Us' }}</span>
+              <span class="ca-apps__contact-chip" aria-hidden="true">
+                <svg viewBox="0 0 20 20" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="ca-eyebrow ca-apps__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if apps.count > 0 -%}
+      <div class="ca-apps__list">
+        {%- for app in apps -%}
+          {%- liquid
+            assign icon = app.icon.value
+            if icon.image
+              assign icon = icon.image
+            endif
+          -%}
+          <div class="ca-app">
+            <div class="ca-app__id">
+              {%- if icon != blank -%}
+                <span class="ca-app__icon">{% render 'image', image: icon, height: 128, class: 'ca-app__icon-img', alt_text_fallback: app.name.value %}</span>
+              {%- endif -%}
+              <span class="ca-app__titles">
+                <h3 class="ca-app__name">{{ app.name.value }}</h3>
+                {%- if app.tagline.value != blank -%}
+                  <span class="ca-app__tagline">{{ app.tagline.value }}</span>
+                {%- endif -%}
+              </span>
+            </div>
+            {%- if app.description != blank -%}
+              <div class="ca-app__body">{{ app.description | metafield_tag }}</div>
+            {%- endif -%}
+            <div class="ca-app__cta">
+              {%- if app.app_store_url.value != blank -%}
+                <a class="ca-app__store" href="{{ app.app_store_url.value }}" target="_blank" rel="noopener" aria-label="{{ store_label_top }} {{ store_label_bottom }}">
+                  <span class="ca-app__store-icon" aria-hidden="true">
+                    {% render 'ca-icon', name: 'shopify', size: 24 %}
+                  </span>
+                  <span class="ca-app__store-label">
+                    <span class="ca-app__store-top">{{ store_label_top }}</span>
+                    <span class="ca-app__store-bottom">{{ store_label_bottom }}</span>
+                  </span>
+                </a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- elsif request.design_mode -%}
+      <p class="ca-apps__empty">Add <strong>App</strong> metaobject entries in this section's settings to populate the list.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-apps {
+    background-color: var(--color-background);
+  }
+
+  .ca-apps__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+    margin-block-end: 160px;
+  }
+
+  .ca-apps__heading {
+    margin: 0;
+    max-width: 802px;
+    text-indent: 8vw;
+  }
+
+  .ca-apps__head-aside {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    align-self: stretch;
+    gap: 24px;
+  }
+
+  .ca-apps__contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 5px 5px 5px 14px;
+    border: 1px solid var(--color-foreground);
+    border-radius: 1000px;
+    text-decoration: none;
+    color: var(--color-foreground);
+    font-size: 1.125rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .ca-apps__contact-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 100px;
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+    flex: 0 0 auto;
+  }
+
+  .ca-apps__contact:hover {
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  .ca-apps__contact:hover .ca-apps__contact-chip {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .ca-apps__eyebrow {
+    text-align: right;
+    margin: 0;
+  }
+
+  .ca-apps__list {
+    border-block-end: 1px solid var(--ca-hairline);
+  }
+
+  .ca-app {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) auto;
+    gap: 24px 40px;
+    align-items: start;
+    padding-block: 32px;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-app__id {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .ca-app__icon-img {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .ca-app__titles {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ca-app__name {
+    margin: 0;
+    font-size: var(--font-h5--size);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .ca-app__tagline {
+    font-size: 0.875rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .ca-app__cta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .ca-app__body {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-app__body > :first-child { margin-block-start: 0; }
+  .ca-app__body > :last-child { margin-block-end: 0; }
+
+  .ca-app__store {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 18px;
+    border-radius: 100px;
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .ca-app__store:hover {
+    opacity: 0.85;
+  }
+
+  .ca-app__store-icon {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+
+  .ca-app__store-label {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    line-height: 1;
+  }
+
+  .ca-app__store-top {
+    font-size: 0.525rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .ca-app__store-bottom {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .ca-apps__empty {
+    padding-block: 40px;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-apps__head {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ca-apps__head-aside {
+      align-items: flex-start;
+      align-self: auto;
+      order: -1;
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .ca-apps__eyebrow {
+      text-align: left;
+    }
+
+    .ca-apps__head {
+      margin-block-end: 64px;
+    }
+
+    .ca-app {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .ca-app__cta {
+      justify-content: flex-start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Apps",
+  "tag": "section",
+  "class": "ca-apps-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Shopify Apps"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our apps power hundreds of Shopify stores and reach millions of customers every month. They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores."
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact button label",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Contact button link"
+    },
+    {
+      "type": "metaobject_list",
+      "id": "apps",
+      "label": "Apps",
+      "metaobject_type": "app",
+      "limit": 12
+    },
+    {
+      "type": "text",
+      "id": "store_label_top",
+      "label": "App Store button — top line",
+      "default": "Find it on the"
+    },
+    {
+      "type": "text",
+      "id": "store_label_bottom",
+      "label": "App Store button — bottom line",
+      "default": "Shopify App Store"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Apps",
+      "category": "Conspire",
+      "settings": {
+        "eyebrow": "Our Shopify Apps",
+        "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month. They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.",
+        "contact_label": "Contact Us",
+        "store_label_top": "Find it on the",
+        "store_label_bottom": "Shopify App Store",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
+    }
+  ]
+}
+{% endschema %}

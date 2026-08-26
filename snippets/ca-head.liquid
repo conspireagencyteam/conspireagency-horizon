@@ -10,9 +10,9 @@
   here wins on CSS specificity / cascade order.
 {%- endcomment -%}
 
-{%- comment -%} Custom CSS variables driven by Liquid / theme settings {%- endcomment -%}
+{%- comment -%} Custom fonts + CSS variables (needs Liquid: asset_url / settings) {%- endcomment -%}
 {%- render 'ca-theme-variables' -%}
 
-{%- comment -%} Static custom styles and scripts {%- endcomment -%}
+{%- comment -%} Static custom style rules and scripts {%- endcomment -%}
 {{ 'ca-custom.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'ca-custom.js' | asset_url }}" defer></script>

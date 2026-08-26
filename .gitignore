@@ -1,0 +1,8 @@
+# Environment / secrets — never commit real credentials.
+# Matches any file literally named ".env" in any directory (e.g. scripts/.env).
+# ".env.example" has a different name, so it stays tracked as documentation.
+.env
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

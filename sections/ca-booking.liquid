@@ -1,0 +1,482 @@
+{%- comment -%}
+  ca-booking.liquid — Conspire Agency booking / scheduling block
+  (Conspire v2.0, Figma 97-489).
+
+  Layout: heading (top-left) + eyebrow (top-right), then two columns —
+    LEFT  : a dark rounded panel with a top-down "spiral staircase" photo
+            montage (section "photo" blocks, image_picker each). Tiles are
+            arranged along a spiral seen from above and continuously CLIMB the
+            spiral toward the viewer — emerging small/blurred/dark near the
+            centre (deep down the well), then winding outward while growing,
+            sharpening and brightening until they reach the front rim and fade,
+            cycling seamlessly. Depth is faked with per-phase scale, z-index,
+            blur and opacity.
+    RIGHT : a Calendly inline embed (matches the live site).
+
+  Calendly auto-initialises any .calendly-inline-widget once widget.js loads.
+{%- endcomment -%}
+
+{%- liquid
+  assign photos = section.blocks
+  assign photo_count = photos.size
+  assign montage_bg = section.settings.montage_background | default: '#0d110d'
+-%}
+
+<div class="ca-booking spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+  {% render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  %}
+  <div class="ca-inner">
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank -%}
+      <div class="ca-booking__head">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ca-booking__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ca-eyebrow ca-booking__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="ca-booking__grid">
+      {%- comment -%} LEFT — top-down spiral-staircase photo montage {%- endcomment -%}
+      <div class="ca-booking__montage" style="--ca-montage-bg: {{ montage_bg }};">
+        {%- if photo_count > 0 -%}
+          {%- comment -%}
+            SPIRAL MATH (all computed in Liquid → passed as CSS custom props so
+            it is stable for ANY photo-block count).
+
+            Every tile shares ONE spiral trajectory keyframe (ca-booking-climb)
+            that carries it from the centre of the well (phase 0: small, dark,
+            blurred, low z) out to the front rim (phase 1: large, bright, sharp,
+            high z) then fades it out so the loop wraps seamlessly. Every tile
+            follows the SAME path (angle 0→720° = two turns, radius + scale grow
+            outward); they differ only in WHEN they are along it:
+
+              --ca-delay   : a NEGATIVE animation-delay = -(index/count)·duration
+                             so the tiles are evenly distributed in time along
+                             the one spiral — small/blurred near the centre,
+                             large/sharp at the rim — reading as a continuous
+                             climb. (--ca-a/--ca-r/--ca-s are the static snapshot
+                             used only for the reduced-motion fallback.)
+          {%- endcomment -%}
+          {%- assign climb_dur = 26 -%}
+          {%- comment -%} Duplicate the photo blocks until there are at least 32
+            tiles, so the spiral stays long/full even with only a few photos. {%- endcomment -%}
+          {%- assign min_tiles = 32 -%}
+          {%- assign total_tiles = photo_count -%}
+          {%- if photo_count < min_tiles -%}
+            {%- assign reps = min_tiles | plus: photo_count | minus: 1 | divided_by: photo_count -%}
+            {%- assign total_tiles = photo_count | times: reps -%}
+          {%- endif -%}
+          <div class="ca-booking__spiral" style="--ca-spiral-count: {{ total_tiles }}; --ca-climb-dur: {{ climb_dur }}s;">
+            {%- for i in (1..total_tiles) -%}
+              {%- assign idx = forloop.index0 -%}
+              {%- assign block_index = idx | modulo: photo_count -%}
+              {%- assign block = photos[block_index] -%}
+              {%- comment -%} phase each tile evenly in TIME along the ONE shared spiral {%- endcomment -%}
+              {%- assign delay_ms = idx | times: climb_dur | times: 1000 | divided_by: total_tiles -%}
+              {%- assign delay = 0 | minus: delay_ms -%}
+              {%- comment -%} static snapshot for reduced-motion: angle 0→720°, radius+scale grow outward (per-mille) {%- endcomment -%}
+              {%- assign a_deg = idx | times: 720 | divided_by: total_tiles -%}
+              {%- assign r_pm = idx | times: idx | times: 820 | divided_by: total_tiles | divided_by: total_tiles | plus: 180 -%}
+              {%- assign s_pm = idx | times: 650 | divided_by: total_tiles | plus: 350 -%}
+              {%- assign tilt_seed = idx | modulo: 5 -%}
+              {%- assign tilt = tilt_seed | times: 4 | minus: 8 -%}
+              <div
+                class="ca-booking__tile"
+                style="--ca-delay: {{ delay }}ms; --ca-tilt: {{ tilt }}deg; --ca-a: {{ a_deg }}deg; --ca-r: {{ r_pm }}; --ca-s: {{ s_pm }};"
+                {% if idx < photo_count %}{{ block.shopify_attributes }}{% endif %}
+              >
+                {%- if block.settings.image != blank -%}
+                  {% render 'image',
+                    image: block.settings.image,
+                    width: 240,
+                    class: 'ca-booking__photo',
+                    alt_text_fallback: 'Conspire project'
+                  %}
+                {%- else -%}
+                  <span class="ca-booking__photo ca-booking__photo--placeholder" aria-hidden="true"></span>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- elsif request.design_mode -%}
+          <p class="ca-booking__empty">Add <strong>Photo</strong> blocks to build the spiral montage.</p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} RIGHT — Calendly inline embed {%- endcomment -%}
+      <div class="ca-booking__calendar">
+        {%- if section.settings.calendly_url != blank -%}
+          <div
+            class="calendly-inline-widget"
+            data-url="{{ section.settings.calendly_url }}"
+            style="min-width:320px;height:600px;"
+          ></div>
+          <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+        {%- elsif request.design_mode -%}
+          <p class="ca-booking__empty">Add a <strong>Calendly URL</strong> in this section's settings.</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-booking {
+    background-color: var(--color-background);
+  }
+
+  .ca-booking__head {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: end;
+    margin-block-end: 48px;
+  }
+
+  .ca-booking__heading {
+    margin: 0;
+    text-indent: 8vw;
+  }
+
+  .ca-booking__eyebrow {
+    justify-self: end;
+    text-align: end;
+    margin: 0;
+  }
+
+  /* Column split mirrors the Figma frame: montage panel 904px, calendar
+     432px, 24px gutter → ~2.09 : 1. */
+  .ca-booking__grid {
+    display: grid;
+    grid-template-columns: 1fr 432px;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  /* ---- LEFT: dark panel + top-down spiral-staircase montage ------------ */
+  .ca-booking__montage {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--ca-montage-bg, #0d110d);
+    display: grid;
+    place-items: center;
+    /* soft vignette darkening toward the centre of the well so tiles reaching
+       the middle read as receding "down" the spiral staircase. */
+    isolation: isolate;
+  }
+
+  .ca-booking__montage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgb(0 0 0 / 0.55) 0%,
+      rgb(0 0 0 / 0.28) 24%,
+      rgb(0 0 0 / 0) 52%
+    );
+  }
+
+  /* The spiral is a centred square stage. Every tile is absolutely centred and
+     shares ONE climb trajectory; individual tiles carry a base angular offset
+     (--ca-spin) and a negative time offset (--ca-delay) so they populate the
+     spiral evenly and ascend it continuously. */
+  .ca-booking__spiral {
+    position: relative;
+    width: 300%;
+    height: 300%;
+    /* mirror the whole stage to flip the spiral's winding direction to match
+       Figma; the photos are un-mirrored below so images stay correct.
+       --ca-spiral-orient rotates the spiral so the start (where tiles emerge)
+       sits up-and-right; --ca-spiral-x / --ca-spiral-y nudge the whole spiral in
+       screen space (negative x = left, positive y = down) so the first visible
+       item reads as centred. Tweak all three to taste. */
+    transform:
+      translate(var(--ca-spiral-x, -60px), var(--ca-spiral-y, 60px))
+      rotate(var(--ca-spiral-orient, 90deg))
+      scaleX(-1);
+    /* absolute max radius (the front rim). % would resolve against the tile,
+       not the stage, so use absolute units. */
+    --ca-spiral-radius: 600px;
+  }
+
+  .ca-booking__tile {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(82px, 20%, 132px);
+    aspect-ratio: 1 / 1;
+    margin: calc(clamp(82px, 20%, 132px) / -2);
+    transform-origin: center;
+    /* The climb keyframe drives rotation (winding around the well), outward
+       translate (radius grows with phase → the log-spiral feel), scale
+       and z-index. --ca-tilt is a fixed lean carried through in each waypoint.
+       Because scale is animated on the tile itself, and the trajectory ends
+       where it began (radius 0), the loop wraps seamlessly. */
+    animation:
+      ca-booking-climb var(--ca-climb-dur, 26s) linear infinite,
+      ca-booking-fade var(--ca-climb-dur, 26s) linear infinite;
+    animation-delay: var(--ca-delay, 0s), var(--ca-delay, 0s);
+    will-change: transform, opacity;
+  }
+
+  .ca-booking__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.45);
+    /* scaleX(-1) un-mirrors the image against the mirrored stage. */
+    transform: scaleX(-1) rotate(var(--ca-tilt, 0deg));
+    /* blur is animated separately so it can peak deep in the well (centre) and
+       clear as the tile rises to the front. */
+    animation: ca-booking-focus var(--ca-climb-dur, 26s) linear infinite;
+    animation-delay: var(--ca-delay, 0s);
+    will-change: filter;
+  }
+
+  .ca-booking__photo--placeholder {
+    background: rgb(255 255 255 / 0.08);
+    animation: ca-booking-focus var(--ca-climb-dur, 26s) linear infinite;
+    animation-delay: var(--ca-delay, 0s);
+  }
+
+  /* CLIMB — the spiral trajectory, seen from the top. Phase 0 = bottom of the
+     well (centre, tiny, transparent, behind everything); phase ~0.85 = front
+     rim (full radius, largest, brightest, in front); then it fades out and
+     snaps back to the centre for the next tile. The rotate() term advances a
+     full turn across the loop so tiles WIND around the spiral as they rise, and
+     --ca-spin gives each tile a different starting bearing. */
+  @keyframes ca-booking-climb {
+    0%    { transform: rotate(0deg)   translate(calc(var(--ca-spiral-radius) * 0.18)) rotate(0deg)    scale(0); z-index: 1; }
+    12.5% { transform: rotate(90deg)  translate(calc(var(--ca-spiral-radius) * 0.24)) rotate(-90deg)  scale(0.125); z-index: 2; }
+    25%   { transform: rotate(180deg) translate(calc(var(--ca-spiral-radius) * 0.33)) rotate(-180deg) scale(0.25); z-index: 3; }
+    37.5% { transform: rotate(270deg) translate(calc(var(--ca-spiral-radius) * 0.40)) rotate(-270deg) scale(0.375); z-index: 4; }
+    50%   { transform: rotate(360deg) translate(calc(var(--ca-spiral-radius) * 0.48)) rotate(-360deg) scale(0.5); z-index: 5; }
+    62.5% { transform: rotate(450deg) translate(calc(var(--ca-spiral-radius) * 0.56)) rotate(-450deg) scale(0.625); z-index: 6; }
+    75%   { transform: rotate(540deg) translate(calc(var(--ca-spiral-radius) * 0.641)) rotate(-540deg) scale(0.75); z-index: 7; }
+    87.5% { transform: rotate(630deg) translate(calc(var(--ca-spiral-radius) * 0.808)) rotate(-630deg) scale(0.875); z-index: 8; }
+    100%  { transform: rotate(720deg) translate(calc(var(--ca-spiral-radius) * 1)) rotate(-720deg) scale(1); z-index: 9; }
+  }
+
+  /* OPACITY — isolated so the fade-out point is easy to tune. Change the 80%
+     stop to move where each image disappears along its climb. */
+  @keyframes ca-booking-fade {
+    0%   { opacity: 0; }
+    10%  { opacity: 1; }
+    92%  { opacity: 1; }
+    95%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* FOCUS — blurred deep in the well, sharp at the front rim, softening again
+     as it flies past the near edge. Kept on the inner photo so it composes with
+     the tile's transform without smearing the z-index sort. */
+  @keyframes ca-booking-focus {
+    0% { filter: blur(20px) brightness(0.6); }
+    45% { filter: blur(0) brightness(0.9); }
+    100% { filter: blur(0) brightness(1); }
+  }
+
+  /* ---- RIGHT: Calendly ------------------------------------------------- */
+  .ca-booking__calendar {
+    overflow: hidden;
+    background-color: var(--color-background);
+  }
+
+  .ca-booking__empty {
+    padding: 40px;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-booking__tile,
+    .ca-booking__photo,
+    .ca-booking__photo--placeholder {
+      animation: none !important;
+    }
+
+    /* With motion disabled, freeze the tiles into a static top-down spiral
+       spread (using their base spin bearing) so the panel still reads as a
+       spiral montage rather than a single stack in the centre. */
+    .ca-booking__tile {
+      transform:
+        rotate(var(--ca-a, 0deg))
+        translate(calc(var(--ca-spiral-radius) * var(--ca-r, 500) / 1000))
+        rotate(calc(-1 * var(--ca-a, 0deg)))
+        scale(calc(var(--ca-s, 700) / 1000));
+      opacity: 1;
+    }
+
+    .ca-booking__photo {
+      filter: none;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-booking__head {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-block-end: 32px;
+    }
+
+    .ca-booking__eyebrow {
+      justify-self: start;
+      text-align: start;
+    }
+
+    .ca-booking__grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: 300px 1fr;
+      gap: 24px;
+    }
+
+    .ca-booking__spiral {
+      --ca-spiral-radius: 300px;
+    }
+
+    /* smaller tiles to suit the reduced mobile radius (margin = -½ width to keep
+       each tile centred on the spiral). */
+    .ca-booking__tile {
+      width: 64px;
+      margin: -32px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Booking",
+  "tag": "section",
+  "class": "ca-booking-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Ready to grow your business"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "To discuss your project please select a convenient date & time and we will contact you!"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text"
+    },
+    {
+      "type": "header",
+      "content": "Calendly"
+    },
+    {
+      "type": "text",
+      "id": "calendly_url",
+      "label": "Calendly URL",
+      "default": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1"
+    },
+    {
+      "type": "range",
+      "id": "calendly_height",
+      "label": "Calendly height",
+      "min": 500,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Montage"
+    },
+    {
+      "type": "color",
+      "id": "montage_background",
+      "label": "Montage background",
+      "default": "#0d110d"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Booking",
+      "category": "Conspire",
+      "settings": {
+        "eyebrow": "Ready to grow your business",
+        "heading": "To discuss your project please select a convenient date & time and we will contact you!",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      },
+      "blocks": [
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" },
+        { "type": "photo" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -9,274 +9,343 @@
  */
 {
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "ca_brands_carousel": {
+      "type": "ca-brands-marquee",
+      "settings": {
+        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
+        "heading": "We know Shopify. Your growth partner.",
+        "body": "<p>Los Angeles-based Shopify Plus design and development agency. Trusted since 2011 by high-growth eCommerce brands for strategic builds and long-term support. We help teams scale on Shopify with confidence.</p>",
+        "button_label": "Get Started",
+        "button_link": "",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "body-bio",
+          "tillamook-country-smoker-jerky",
+          "kinto",
+          "p-kay-metal",
+          "natures-answer",
+          "hustler-hollywood",
+          "portola-paints"
+        ],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "allow_transparent_header": false,
+        "transparent_header_text_color": "#0d110d",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "ca_feature_highlights": {
+      "type": "ca-feature-highlights",
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "feature_1": {
+          "type": "feature",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "text_color": "{{ settings.color_palette.background }}",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "image": "shopify://shop_images/shopify-website-design-development.gif",
+            "media_background": "#0d110d",
+            "image_ratio": "11 / 10",
+            "eyebrow": "Builds & Migrations",
+            "title": "Shopify Website Design & Development",
+            "body": "<p>Whether you need a fast, strategic Shopify launch or a fully custom tailored shopping experience.</p>",
+            "link": "shopify://products/shopify-websites"
+          }
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "feature_2": {
+          "type": "feature",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0, 0, 0, 0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
+            "image": "shopify://shop_images/fractional-shopify-website-teams.gif",
+            "media_background": "#000005",
+            "image_ratio": "3 / 2",
+            "eyebrow": "Grow Your Team With Top Talent Fast",
+            "title": "Fractional Shopify Website Teams",
+            "body": "<p>Our Los Angeles-based team provides senior strategy, design, and development to own your website end-to-end.</p>",
+            "link": "shopify://products/shopify-fractional-teams"
+          }
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
+        "feature_1",
+        "feature_2"
       ],
-      "name": "t:names.hero",
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
+        "eyebrow": "Shopify Agency Ecommerce Website Development",
+        "heading": "Trusted by the largest brands for high converting websites. We employ strategies to get the most out of your traffic and unlock scale.",
+        "background_color": "{{ settings.color_palette.color2 }}",
+        "text_color": "",
+        "padding-block-start": 72,
         "padding-block-end": 72
       }
     },
-    "product_list_fa6P9H": {
-      "type": "product-list",
+    "ca_work_list": {
+      "type": "ca-work-list",
+      "settings": {
+        "eyebrow": "100+ completed projects",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "natures-answer",
+          "kinto"
+        ],
+        "default_image_field": "work_preview",
+        "media_ratio": "8 / 7",
+        "button_label": "Learn More",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
+    },
+    "ca_testimonials": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [
+          "bodybio",
+          "danny-mitchell-bsd-haus"
+        ],
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "ca_apps": {
+      "type": "ca-apps",
+      "settings": {
+        "eyebrow": "Our Shopify Apps",
+        "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month. They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.",
+        "contact_label": "Contact Us",
+        "contact_link": "",
+        "apps": [
+          "bonde",
+          "wholesale-goat"
+        ],
+        "store_label_top": "Find it on the",
+        "store_label_bottom": "Shopify App Store",
+        "background_color": "{{ settings.color_palette.color2 }}",
+        "text_color": "",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
+    },
+    "ca_services": {
+      "type": "ca-services",
+      "settings": {
+        "eyebrow": "Our Services",
+        "products": [
+          "shopify-websites",
+          "shopify-fractional-teams",
+          "custom-shopify-applications",
+          "shopify-cro-agency"
+        ],
+        "show_numbers": true,
+        "button_label": "Learn More",
+        "style_class": "button-secondary",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "ca_blog": {
+      "type": "ca-blog",
+      "settings": {
+        "eyebrow": "Scale & Shopify Blog",
+        "source": "recent",
+        "blog": "shopify",
+        "post_limit": 3,
+        "article_1": "",
+        "article_2": "",
+        "article_3": "",
+        "article_4": "",
+        "article_5": "",
+        "article_6": "",
+        "view_all_link": "shopify://blogs/shopify",
+        "button_label": "View All",
+        "style_class": "button-custom",
+        "custom_button_background": "{{ settings.color_palette.background }}",
+        "custom_button_text": "{{ settings.color_palette.foreground }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "#0d110d",
+        "text_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "ca_faq": {
+      "type": "ca-faq",
+      "settings": {
+        "eyebrow": "Frequently asked questions",
+        "heading": "Get answers to common questions about our Los Angeles-based Shopify development, migration, and B2B services",
+        "categories": [
+          "shopify-development-migration",
+          "ongoing-support-maintenance",
+          "pricing-project-scope"
+        ],
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
+    },
+    "ca_booking": {
+      "type": "ca-booking",
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "t:names.header",
-          "static": true,
+        "photo_G6Nfg6": {
+          "type": "photo",
           "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_list_text_YFtzcL": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h4",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "button-unstyled",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
         },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
+        "photo_94gPph": {
+          "type": "photo",
           "settings": {
-            "product_card_gap": 4,
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_677WP3": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_title_YXxMTj": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "price_JQzVV4": {
-              "type": "price",
-              "name": "t:names.product_price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
-          ]
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
         }
       },
-      "name": "t:names.featured_collection",
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "eyebrow": "Ready to grow your business",
+        "heading": "To discuss your project please select a convenient date & time and we will contact you!",
+        "background_color": "{{ settings.color_palette.color2 }}",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 72,
+        "padding-block-end": 72
       }
     }
   },
   "order": [
-    "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "ca_brands_carousel",
+    "ca_feature_highlights",
+    "ca_work_list",
+    "ca_testimonials",
+    "ca_apps",
+    "ca_services",
+    "ca_blog",
+    "ca_faq",
+    "ca_booking"
   ]
 }

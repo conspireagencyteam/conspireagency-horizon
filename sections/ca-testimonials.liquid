@@ -1,0 +1,379 @@
+{%- comment -%}
+  ca-testimonials.liquid — Conspire Agency testimonials carousel
+  (Conspire v2.0, Figma 97-206). Dark section.
+
+  metaobject_list of the existing `quote` metaobject. Fields:
+    quote (rich text — bold renders highlighted/white, rest muted),
+    partner_since (integer YEAR, e.g. 2009 → computes "+N years partnered"),
+    logo (image).
+
+  "Flip" toggle moves the years + logo above the quote.
+{%- endcomment -%}
+
+<script src="{{ 'ca-testimonials.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{%- liquid
+  assign quotes = section.settings.quotes
+  assign flip = section.settings.flip_meta
+  assign autoplay_ms = 0
+  if section.settings.autoplay
+    assign autoplay_ms = section.settings.autoplay_interval | times: 1000
+  endif
+-%}
+
+{% render 'contrast-override',
+  background_color: section.settings.background_color,
+  text_color: section.settings.text_color,
+  section_id: section.id
+%}
+
+<div
+  class="ca-testimonials spacing-style color-custom-{{ section.id }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  <div class="ca-inner ca-testimonials__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ca-eyebrow ca-testimonials__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    <div class="ca-testimonials__main">
+      {%- if quotes.count > 0 -%}
+        <ca-carousel class="ca-testimonials__carousel" data-autoplay="{{ autoplay_ms }}">
+          <div class="ca-testimonials__viewport">
+            <div class="ca-testimonials__track" ref="track">
+              {%- for quote in quotes -%}
+                {%- liquid
+                  assign years = ''
+                  assign py = quote.partner_since.value
+                  if py != blank and py > 0
+                    assign current_year = 'now' | date: '%Y' | times: 1
+                    assign years = current_year | minus: py
+                  endif
+                  assign logo = quote.logo.value
+                  if logo.image
+                    assign logo = logo.image
+                  endif
+                -%}
+                <article class="ca-quote{% if flip %} ca-quote--flip{% endif %}">
+                  <div class="ca-quote__text">{{ quote.quote | metafield_tag }}</div>
+                  {%- if years != blank or logo != blank -%}
+                    <div class="ca-quote__meta">
+                      {%- if years != blank and years > 0 -%}
+                        <span class="ca-quote__years"><span class="ca-quote__years-num">+{{ years }}</span> years partnered</span>
+                      {%- endif -%}
+                      {%- if logo != blank -%}
+                        <span class="ca-quote__logo">{% render 'image', image: logo, class: 'ca-quote__logo-img', alt_text_fallback: 'Client logo' %}</span>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                </article>
+              {%- endfor -%}
+            </div>
+          </div>
+
+          <div class="ca-testimonials__foot">
+            <div class="ca-testimonials__dots" ref="dots"></div>
+            <div class="ca-testimonials__arrows">
+              <button class="ca-testimonials__arrow ca-testimonials__arrow--prev" ref="prev" type="button" aria-label="Previous testimonial">
+                <svg class="ca-testimonials__arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                  <path d="M18.3666 12.0003H5.63871M12.0027 5.63633L5.63871 12.0003L12.0027 18.3643" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button class="ca-testimonials__arrow ca-testimonials__arrow--next" ref="next" type="button" aria-label="Next testimonial">
+                <svg class="ca-testimonials__arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                  <path d="M5.63677 11.9997H18.3647M12.0007 18.3637L18.3647 11.9997L12.0007 5.63574" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </ca-carousel>
+      {%- elsif request.design_mode -%}
+        <p class="ca-testimonials__empty">Add <strong>Quote</strong> entries in this section's settings to populate the testimonials.</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-testimonials__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 40px;
+    align-items: start;
+  }
+
+  .ca-testimonials__eyebrow {
+    padding-block-start: 6px;
+  }
+
+  .ca-testimonials__main {
+    min-width: 0;
+  }
+
+  .ca-testimonials__viewport {
+    overflow: hidden;
+  }
+
+  .ca-testimonials__track {
+    display: flex;
+    gap: clamp(24px, 4vw, 64px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-testimonials__track {
+      transition: none;
+    }
+  }
+
+  .ca-quote {
+    flex: 0 0 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .ca-quote__text {
+    order: 1;
+    font-size: var(--font-h2--size);
+    line-height: 1.25;
+    text-indent: 8vw;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  /* Bold in the rich text = highlighted (full colour), same weight. */
+  .ca-quote__text strong,
+  .ca-quote__text b {
+    color: rgb(var(--color-foreground-rgb));
+    font-weight: inherit;
+  }
+
+  .ca-quote__text > :first-child { margin-block-start: 0; }
+  .ca-quote__text > :last-child { margin-block-end: 0; }
+
+  .ca-quote__meta {
+    order: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .ca-quote--flip .ca-quote__text { order: 2; }
+  .ca-quote--flip .ca-quote__meta { order: 1; }
+
+  .ca-quote__years {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.25rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .ca-quote__years-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    min-width: 30px;
+    background-color: rgb(var(--color-foreground-rgb));
+    color: rgb(var(--color-background-rgb));
+    text-transform: uppercase;
+  }
+
+  .ca-quote__logo-img {
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    max-height: clamp(48px, 6vw, 72px);
+    max-width: clamp(120px, 18vw, 200px);
+  }
+
+  .ca-testimonials__foot {
+    margin-block-start: 40px;
+    padding-block-start: 16px;
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ca-testimonials__dots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ca-testimonials__dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: 0;
+    border-radius: 100px;
+    background-color: rgb(var(--color-foreground-rgb) / 0.3);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .ca-testimonials__dot.is-active {
+    background-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-testimonials__arrows {
+    display: flex;
+    gap: 4px;
+  }
+
+  .ca-testimonials__arrow {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    padding: 6px;
+    border: 0;
+    border-radius: 100px;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .ca-testimonials__arrow-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+  .ca-testimonials__arrow:hover {
+    opacity: 0.7;
+  }
+
+  .ca-testimonials__empty {
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-testimonials__inner {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .ca-quote__text {
+      font-size: var(--font-h3--size);
+      text-indent: 12vw;
+    }
+
+    .ca-quote__meta {
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "ca-testimonials-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "What our clients say"
+    },
+    {
+      "type": "metaobject_list",
+      "id": "quotes",
+      "label": "Quotes",
+      "metaobject_type": "quote",
+      "limit": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "flip_meta",
+      "label": "Show years & logo above the quote",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-advance",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Interval",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 6,
+      "visible_if": "{{ section.settings.autoplay }}"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0d110d"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#f6f7f6"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "category": "Conspire",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": ["danny-mitchell-bsd-haus"],
+        "flip_meta": true,
+        "background_color": "#0d110d",
+        "text_color": "#f6f7f6",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  ]
+}
+{% endschema %}

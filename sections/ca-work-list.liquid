@@ -1,0 +1,451 @@
+{%- comment -%}
+  ca-work-list.liquid — Conspire Agency selected projects (Conspire v2.0, Figma 97-114).
+
+  Rows of the existing `client` metaobject: big name + "Services included" pills +
+  Learn More chip on the left, a fixed-ratio media box on the right.
+
+  Media behaviour:
+    - Default state shows `work_preview` (configurable).
+    - On hover (desktop) the box reveals `featured_site_media` (fallback
+      `featured_site_image`): if an image, it smooth-scrolls via object-position;
+      if a video, it autoplays muted/looping. Fade-in + zoom-out reveal.
+    - On mobile there is no hover — the reveal media is shown by default.
+
+  Client field keys: name, services (list), work_preview, featured_site_media
+  (image|video), featured_site_image (fallback), case_study_reference. See
+  docs/ca-metaobjects-setup.md.
+{%- endcomment -%}
+
+{%- liquid
+  assign clients = section.settings.clients
+  assign ratio = section.settings.media_ratio | default: '8 / 7'
+  assign button_label = section.settings.button_label | default: 'Learn More'
+  assign style_class = section.settings.style_class | default: 'button-secondary'
+  assign default_field = section.settings.default_image_field | default: 'work_preview'
+-%}
+
+<script src="{{ 'ca-work.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+<div class="ca-work spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if style_class == 'button-custom' -%}
+      {%- render 'button-custom-styles', block_settings: section.settings, block_id: section.id -%}
+    {%- endif -%}
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ca-eyebrow ca-work__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if clients.count > 0 -%}
+      <ca-work-list class="ca-work__list">
+        {%- for client in clients -%}
+          {%- liquid
+            assign default_img = client[default_field].value
+            if default_img.image
+              assign default_img = default_img.image
+            endif
+
+            assign fmv = client.featured_site_media.value
+            assign reveal_img = blank
+            assign reveal_video = blank
+            assign reveal_vtype = 'video/mp4'
+            if fmv.image
+              assign reveal_img = fmv.image
+            elsif fmv.sources
+              assign fm_src = fmv.sources | last
+              assign reveal_video = fm_src.url
+              assign reveal_vtype = fm_src.mime_type | default: 'video/mp4'
+            elsif fmv.url
+              assign fm_ext = fmv.url | split: '?' | first | split: '.' | last | downcase
+              if fm_ext == 'mp4' or fm_ext == 'webm' or fm_ext == 'mov' or fm_ext == 'm4v'
+                assign reveal_video = fmv.url
+                if fm_ext == 'webm'
+                  assign reveal_vtype = 'video/webm'
+                endif
+              else
+                assign reveal_img = fmv
+              endif
+            elsif fmv != blank
+              assign reveal_img = fmv
+            endif
+
+            if reveal_img == blank and reveal_video == blank
+              assign fsi = client.featured_site_image.value
+              if fsi.image
+                assign fsi = fsi.image
+              endif
+              assign reveal_img = fsi
+            endif
+
+            assign case_url = client.case_study_reference.value
+          -%}
+          <div class="ca-work__row">
+            <h3 class="ca-work__name">{{ client.name.value | default: client.system.handle }}</h3>
+
+            <div class="ca-work__media" style="--ca-work-ratio: {{ ratio }};">
+              {%- if default_img != blank -%}
+                <div class="ca-work__layer ca-work__default">
+                  {% render 'image', image: default_img, height: 800, class: 'ca-work__img', alt_text_fallback: client.name.value %}
+                </div>
+              {%- endif -%}
+              {%- if reveal_video != blank -%}
+                <div class="ca-work__layer ca-work__reveal ca-work__reveal--video">
+                  <div class="ca-work__fg">
+                    <video class="ca-work__video" muted loop playsinline preload="metadata">
+                      <source src="{{ reveal_video }}" type="{{ reveal_vtype }}">
+                    </video>
+                  </div>
+                </div>
+              {%- elsif reveal_img != blank -%}
+                <div class="ca-work__layer ca-work__reveal ca-work__reveal--image">
+                  <div class="ca-work__fg">
+                    {% render 'image', image: reveal_img, height: 1600, class: 'ca-work__img ca-work__reveal-img', alt_text_fallback: client.name.value %}
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div class="ca-work__services">
+              {%- if client.services.value.size > 0 -%}
+                <p class="ca-work__services-label">Services included:</p>
+              {%- endif -%}
+              <div class="ca-work__tags">
+                {%- for svc in client.services.value -%}
+                  <span class="ca-work__tag">{{ svc }}</span>
+                {%- endfor -%}
+                {%- if case_url != blank -%}
+                  <a class="{{ style_class }} size-style ca-work__more{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ case_url }}">{{ button_label }}</a>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </ca-work-list>
+    {%- elsif request.design_mode -%}
+      <p class="ca-work__empty">Add <strong>Client</strong> entries in this section's settings to populate the work list.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-work {
+    background-color: var(--color-background);
+  }
+
+  .ca-work__eyebrow {
+    margin-block-end: 24px;
+  }
+
+  .ca-work__list {
+    display: block;
+    border-block-end: 1px solid var(--ca-hairline);
+  }
+
+  .ca-work__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "name  media"
+      "services media";
+    gap: 24px 40px;
+    padding-block: 40px;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-work__name {
+    grid-area: name;
+    margin: 0;
+    font-size: var(--font-h1--size);
+    line-height: 0.95;
+  }
+
+  .ca-work__services {
+    grid-area: services;
+    align-self: end;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ca-work__services-label {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .ca-work__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .ca-work__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 14px;
+    border: 1px solid var(--ca-hairline);
+    border-radius: 100px;
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+
+  .ca-work__more {
+    align-self: center;
+  }
+
+  /* Media box */
+  .ca-work__media {
+    grid-area: media;
+    position: relative;
+    aspect-ratio: var(--ca-work-ratio, 8 / 7);
+    overflow: hidden;
+    background-color: rgb(var(--color-foreground-rgb) / 0.04);
+  }
+
+  .ca-work__layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ca-work__img,
+  .ca-work__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ca-work__video {
+    pointer-events: none;
+  }
+
+  .ca-work__default {
+    z-index: 1;
+  }
+
+  /* Reveal layer: the foreground media sits centered on the background work
+     image at a clamped (responsive) width — not full width. */
+  .ca-work__reveal {
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ca-work__fg {
+    width: clamp(200px, 54%, 420px);
+    height: 80%;
+    overflow: hidden;
+  }
+
+  /* Foreground video shows in full; foreground image stays cover (and scrolls). */
+  .ca-work__fg .ca-work__video {
+    object-fit: contain;
+  }
+
+  /* Video foreground is landscape — give it a wider window. */
+  .ca-work__reveal--video .ca-work__fg {
+    width: clamp(280px, 80%, 640px);
+  }
+
+  .ca-work__reveal-img {
+    object-position: center top;
+  }
+
+  /* Active row (JS: hovered on desktop / in-view on mobile) — reveal + yoyo scroll. */
+  .ca-work__row.is-active .ca-work__reveal {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .ca-work__row.is-active .ca-work__reveal-img {
+    animation: ca-work-scroll 7s ease-in-out infinite alternate;
+  }
+
+  @keyframes ca-work-scroll {
+    from { object-position: center top; }
+    to { object-position: center bottom; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-work__reveal {
+      transition: none;
+    }
+
+    .ca-work__row.is-active .ca-work__reveal-img {
+      animation: none;
+    }
+  }
+
+  .ca-work__empty {
+    padding-block: 40px;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
+  }
+
+  /* Mobile: no hover — JS activates the in-view row; background stays visible. */
+  @media screen and (max-width: 749px) {
+    .ca-work__row {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "name"
+        "media"
+        "services";
+      gap: 20px;
+    }
+
+    .ca-work__name {
+      font-size: var(--font-h2--size);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Work list",
+  "tag": "section",
+  "class": "ca-work-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "100+ completed projects"
+    },
+    {
+      "type": "metaobject_list",
+      "id": "clients",
+      "label": "Clients",
+      "metaobject_type": "client",
+      "limit": 24
+    },
+    {
+      "type": "select",
+      "id": "default_image_field",
+      "label": "Default (non-hover) image",
+      "info": "Shown before hover. Hover reveals Featured site media (fallback Featured site image).",
+      "options": [
+        { "value": "work_preview", "label": "Work preview" },
+        { "value": "featured_site_image", "label": "Featured site image" },
+        { "value": "case_study_image", "label": "Case study image" }
+      ],
+      "default": "work_preview"
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Media aspect ratio",
+      "options": [
+        { "value": "8 / 7", "label": "Tall (8:7)" },
+        { "value": "6 / 5", "label": "Tall (6:5)" },
+        { "value": "5 / 4", "label": "Landscape (5:4)" },
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" },
+        { "value": "3 / 2", "label": "Landscape (3:2)" }
+      ],
+      "default": "8 / 7"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" },
+        { "value": "button-custom", "label": "t:options.custom" }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_background",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_text",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_border",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ section.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Work list",
+      "category": "Conspire",
+      "settings": {
+        "eyebrow": "100+ completed projects",
+        "clients": ["zia-tile", "cousins-maine-lobster", "natures-answer", "kinto"],
+        "default_image_field": "work_preview",
+        "media_ratio": "8 / 7",
+        "button_label": "Learn More",
+        "style_class": "button"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,321 @@
+{%- comment -%}
+  ca-feature-highlights.liquid — Conspire Agency intro + feature cards
+  (Conspire v2.0, Figma 97-85).
+
+  Static, blocks-based: an eyebrow + big heading, then feature cards (image,
+  eyebrow, title, body, optional link). No metaobject data.
+{%- endcomment -%}
+
+<div class="ca-feature spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <div class="ca-feature__head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ca-eyebrow ca-feature__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ca-feature__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="ca-feature__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign has_link = false
+            if block.settings.link != blank
+              assign has_link = true
+            endif
+            assign ratio = block.settings.image_ratio | default: '11 / 10'
+          -%}
+          {%- capture card_inner -%}
+            {%- if block.settings.image != blank -%}
+              <div class="ca-feature__media" style="--ca-feature-ratio: {{ ratio }};{% if block.settings.media_background != blank %} --ca-feature-media-bg: {{ block.settings.media_background }};{% endif %}">
+                {% render 'image', image: block.settings.image, height: 1000, class: 'ca-feature__img', alt_text_fallback: block.settings.title %}
+                {%- if has_link -%}<span class="ca-feature__btn" aria-hidden="true"></span>{%- endif -%}
+              </div>
+            {%- endif -%}
+            <div class="ca-feature__text">
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="ca-eyebrow ca-feature__card-eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if block.settings.title != blank -%}
+                <h3 class="ca-feature__title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.body != blank -%}
+                <div class="ca-feature__body">{{ block.settings.body }}</div>
+              {%- endif -%}
+            </div>
+          {%- endcapture -%}
+
+          {%- if has_link -%}
+            <a class="ca-feature__card ca-feature__card--link" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ card_inner }}</a>
+          {%- else -%}
+            <div class="ca-feature__card" {{ block.shopify_attributes }}>{{ card_inner }}</div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-feature {
+    background-color: var(--color-background);
+    /* icon button size + media padding (button overlays the image) */
+    --ca-fbtn: 72px;
+    --ca-feature-pad: 32px;
+    --ca-feature-media-bg: var(--color-foreground);
+    --ca-feature-btn-bg: var(--color-background);
+    --ca-feature-btn-arrow: var(--color-foreground);
+  }
+
+  .ca-feature__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 40px;
+    align-items: start;
+    margin-block-end: 64px;
+  }
+
+  .ca-feature__eyebrow {
+    padding-block-start: 8px;
+  }
+
+  .ca-feature__heading {
+    margin: 0;
+    text-indent: 8vw;
+  }
+
+  .ca-feature__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .ca-feature__card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Media = black frame with padding; the GIF/image sits inside, the icon
+     button is overlaid bottom-right and revealed on hover. */
+  .ca-feature__media {
+    position: relative;
+    aspect-ratio: var(--ca-feature-ratio, 11 / 10);
+    padding: var(--ca-feature-pad);
+    overflow: hidden;
+    background-color: var(--ca-feature-media-bg);
+  }
+
+  .ca-feature__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  /* Icon-only circular arrow button — overlaid, hidden until card hover/focus (desktop). */
+  .ca-feature__btn {
+    position: absolute;
+    right: var(--ca-feature-pad);
+    bottom: var(--ca-feature-pad);
+    width: var(--ca-fbtn);
+    height: var(--ca-fbtn);
+    border-radius: 50%;
+    background-color: var(--ca-feature-btn-bg);
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ca-feature__btn::before {
+    content: "";
+    width: 42%;
+    height: 42%;
+    background-color: var(--ca-feature-btn-arrow);
+    -webkit-mask: var(--ca-btn-arrow) center / contain no-repeat;
+    mask: var(--ca-btn-arrow) center / contain no-repeat;
+  }
+
+  .ca-feature__card--link:hover .ca-feature__btn,
+  .ca-feature__card--link:focus-visible .ca-feature__btn {
+    opacity: 1;
+  }
+
+  .ca-feature__text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ca-feature__title {
+    margin: 0;
+  }
+
+  .ca-feature__body {
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-feature__body > :first-child { margin-block-start: 0; }
+  .ca-feature__body > :last-child { margin-block-end: 0; }
+
+  @media screen and (max-width: 749px) {
+    .ca-feature {
+      --ca-fbtn: 40px;
+      --ca-feature-pad: 12px;
+    }
+
+    .ca-feature__head {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-block-end: 40px;
+    }
+
+    .ca-feature__grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* No hover on mobile — button always visible. */
+    .ca-feature__btn {
+      opacity: 1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Feature highlights",
+  "tag": "section",
+  "class": "ca-feature-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Shopify Agency Ecommerce Website Development"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trusted by the largest brands for high converting websites. We employ strategies to get the most out of your traffic and unlock scale."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image (GIF supported)" },
+        { "type": "color", "id": "media_background", "label": "Media background", "default": "#0d110d" },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "label": "Media aspect ratio",
+          "options": [
+            { "value": "11 / 10", "label": "Tall (11:10)" },
+            { "value": "3 / 2", "label": "Landscape (3:2)" },
+            { "value": "1 / 1", "label": "Square (1:1)" },
+            { "value": "4 / 3", "label": "Landscape (4:3)" },
+            { "value": "16 / 9", "label": "Wide (16:9)" }
+          ],
+          "default": "11 / 10"
+        },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "richtext", "id": "body", "label": "Body" },
+        { "type": "url", "id": "link", "label": "Link (makes the whole card clickable)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature highlights",
+      "category": "Conspire",
+      "settings": {
+        "eyebrow": "Shopify Agency Ecommerce Website Development",
+        "heading": "Trusted by the largest brands for high converting websites. We employ strategies to get the most out of your traffic and unlock scale.",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      },
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/shopify-website-design-development.gif",
+            "media_background": "#0d110d",
+            "image_ratio": "11 / 10",
+            "eyebrow": "Builds & Migrations",
+            "title": "Shopify Website Design & Development",
+            "body": "<p>Whether you need a fast, strategic Shopify launch or a fully custom tailored shopping experience.</p>",
+            "link": "shopify://products/shopify-websites"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/fractional-shopify-website-teams.gif",
+            "media_background": "#000005",
+            "image_ratio": "3 / 2",
+            "eyebrow": "Grow Your Team With Top Talent Fast",
+            "title": "Fractional Shopify Website Teams",
+            "body": "<p>Our Los Angeles-based team provides senior strategy, design, and development to own your website end-to-end.</p>",
+            "link": "shopify://products/shopify-fractional-teams"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

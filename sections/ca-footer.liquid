@@ -1,0 +1,302 @@
+{%- comment -%}
+  ca-footer.liquid — Conspire Agency footer (Conspire v2.0, Figma 97-450). Dark section.
+
+  Layout: three link columns (Services / Information / Markets) each with a small
+  uppercase heading + a Shopify menu (link_list), a Shopify Plus Partner badge
+  top-right, and the full-width theme logo along the bottom.
+{%- endcomment -%}
+
+{%- liquid
+  # Pick the theme logo based on logo_variant, falling back to the other variant.
+  if section.settings.logo_variant == 'default'
+    assign footer_logo = settings.logo | default: settings.logo_inverse
+  else
+    assign footer_logo = settings.logo_inverse | default: settings.logo
+  endif
+-%}
+
+{% render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id %}
+
+<div
+  class="ca-footer spacing-style color-custom-{{ section.id }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  <div class="ca-inner ca-footer__inner">
+    <div class="ca-footer__top">
+      <div class="ca-footer__columns">
+        {%- for i in (1..3) -%}
+          {%- liquid
+            case i
+              when 1
+                assign heading = section.settings.col1_heading
+                assign menu = section.settings.col1_menu
+              when 2
+                assign heading = section.settings.col2_heading
+                assign menu = section.settings.col2_menu
+              when 3
+                assign heading = section.settings.col3_heading
+                assign menu = section.settings.col3_menu
+            endcase
+          -%}
+          {%- if heading != blank or menu.links.size > 0 -%}
+            <div class="ca-footer__col">
+              {%- if heading != blank -%}
+                <p class="ca-eyebrow ca-footer__col-heading">{{ heading }}</p>
+              {%- endif -%}
+              {%- if menu.links.size > 0 -%}
+                <ul class="ca-footer__links" role="list">
+                  {%- for link in menu.links -%}
+                    <li><a class="ca-footer__link" href="{{ link.url }}">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.badge_image != blank -%}
+        <div class="ca-footer__badge">
+          {% render 'image', image: section.settings.badge_image, height: 48, class: 'ca-footer__badge-img', alt_text_fallback: 'Shopify Plus Partner' %}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if footer_logo != blank -%}
+      <div class="ca-footer__logo">
+        {% render 'image', image: footer_logo, class: 'ca-footer__logo-img' %}
+      </div>
+    {%- elsif request.design_mode -%}
+      <div class="ca-footer__logo ca-footer__logo--empty">
+        <p class="ca-footer__logo-hint">Upload a logo in <strong>Theme settings &rarr; Logo</strong> to display it here.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .ca-footer__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .ca-footer__columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px;
+    flex: 1 1 auto;
+    max-width: 920px;
+  }
+
+  .ca-footer__col-heading {
+    margin: 0 0 24px;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-footer__links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ca-footer__link {
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .ca-footer__link:hover {
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-footer__badge {
+    flex: 0 0 auto;
+  }
+
+  .ca-footer__badge-img {
+    display: block;
+    height: 48px;
+    width: auto;
+  }
+
+  .ca-footer__logo {
+    width: 100%;
+  }
+
+  .ca-footer__logo-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .ca-footer__logo-hint {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-footer__inner {
+      gap: 40px;
+    }
+
+    .ca-footer__top {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 32px;
+    }
+
+    .ca-footer__columns {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 24px;
+      max-width: none;
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "footer",
+  "class": "ca-footer-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "col1_heading",
+      "label": "Heading",
+      "default": "Services"
+    },
+    {
+      "type": "link_list",
+      "id": "col1_menu",
+      "label": "Menu"
+    },
+    {
+      "type": "header",
+      "content": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "col2_heading",
+      "label": "Heading",
+      "default": "Information"
+    },
+    {
+      "type": "link_list",
+      "id": "col2_menu",
+      "label": "Menu"
+    },
+    {
+      "type": "header",
+      "content": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "col3_heading",
+      "label": "Heading",
+      "default": "Markets"
+    },
+    {
+      "type": "link_list",
+      "id": "col3_menu",
+      "label": "Menu"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_image",
+      "label": "Badge image",
+      "info": "Shopify Plus Partner badge (top-right)."
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "select",
+      "id": "logo_variant",
+      "label": "Logo variant",
+      "info": "Uses the theme's Logo / Inverse logo (Theme settings). Inverse suits the dark footer.",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "inverse", "label": "Inverse" }
+      ],
+      "default": "inverse"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0d110d"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#f6f7f6"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "category": "Conspire",
+      "settings": {
+        "col1_heading": "Services",
+        "col2_heading": "Information",
+        "col3_heading": "Markets",
+        "logo_variant": "inverse",
+        "background_color": "#0d110d",
+        "text_color": "#f6f7f6",
+        "padding-block-start": 80,
+        "padding-block-end": 40
+      }
+    }
+  ]
+}
+{% endschema %}

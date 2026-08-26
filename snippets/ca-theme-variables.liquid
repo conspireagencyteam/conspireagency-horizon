@@ -1,21 +1,105 @@
 {%- comment -%}
-  ca-theme-variables.liquid — Conspire Agency custom CSS variables.
+  ca-theme-variables.liquid — Conspire Agency custom fonts + CSS variables.
 
-  Use this for :root variables that need Liquid (e.g. values pulled from theme
-  settings), which plain CSS in ca-custom.css cannot do. For static values or
-  simple overrides of Shopify's variables, prefer ca-custom.css instead.
+  Single home for all CA custom-property declarations and @font-face rules
+  (things that need Liquid — asset_url, theme settings). Style RULES (selectors)
+  live in ca-custom.css.
 
   Rendered from ca-head.liquid, after Shopify's theme-styles-variables, so these
   override the theme's values.
 
-  Example:
-    :root {
-      --ca-brand-accent: {{ settings.color_accent | default: '#ff5a1f' }};
-    }
+  ── Custom fonts ────────────────────────────────────────────────────────────
+  Horizon's font pickers only list Shopify-library fonts, so the brand fonts are
+  loaded here with @font-face and wired to Horizon's font-family variables below.
+
+  REQUIRED: upload these woff2 files to /assets before fonts render (until then,
+  system-stack fallback via font-display: swap):
+    pp-mori-regular.woff2  400   ashcroft-medium.woff2  500
+    pp-mori-medium.woff2   500   syne-regular.woff2     400
+  NOTE: Figma uses the trial "Ashcroft Test"; ship the licensed Ashcroft. Syne is
+  open-source (OFL).
 {%- endcomment -%}
 
+{%- liquid
+  assign mori_regular = 'pp-mori-regular.woff2'
+  assign mori_medium = 'pp-mori-medium.woff2'
+  assign ashcroft_medium = 'ashcroft-medium.woff2'
+  assign syne_regular = 'syne-regular.woff2'
+-%}
+
+{%- comment -%} Preload the two most critical faces (body + display headings) {%- endcomment -%}
+{{ mori_regular | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{{ mori_medium | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+
 {% style %}
+  @font-face {
+    font-family: 'PP Mori';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url({{ mori_regular | asset_url }}) format('woff2');
+  }
+  @font-face {
+    font-family: 'PP Mori';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url({{ mori_medium | asset_url }}) format('woff2');
+  }
+  @font-face {
+    font-family: 'Ashcroft';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url({{ ashcroft_medium | asset_url }}) format('woff2');
+  }
+  @font-face {
+    font-family: 'Syne';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url({{ syne_regular | asset_url }}) format('woff2');
+  }
+
   :root {
-    /* Add Liquid-driven custom variables here */
+    /* ── Typography: Conspire v2.0 scale on Horizon's presets ──
+       Sizes / line-height / tracking / case are driven from settings_data.json;
+       only values with no settings/token slot live here. Style RULES (body,
+       .button) are in ca-custom.css. See docs/ca-typography.md. */
+
+    /* Font families → Horizon's four slots (custom fonts have no picker slot) */
+    --font-body--family: 'PP Mori', 'Helvetica Neue', Arial, sans-serif;
+    --font-heading--family: 'PP Mori', 'Helvetica Neue', Arial, sans-serif;
+    --font-subheading--family: 'Syne', 'Helvetica Neue', Arial, sans-serif;
+    --font-accent--family: 'Ashcroft', Georgia, 'Times New Roman', serif;
+
+    /* Slot weights (pickers resolve to Inter weights wrong for these fonts) */
+    --font-heading--weight: 400;    /* picker inter_n7 = 700 → PP Mori Regular */
+    --font-subheading--weight: 400; /* picker inter_n5 = 500 → Syne Regular */
+    --font-accent--weight: 500;     /* picker inter_n7 = 700 → Ashcroft Medium */
+    --font-h6--weight: 500;         /* PP Mori Medium — no PP-Mori-500 slot */
+
+    /* Re-tuned tokens (brand values Horizon's defaults don't hit) */
+    --line-height--display-tight: 0.95;    /* H1 (was 1) */
+    --line-height--body-normal: 1.5;       /* body copy (was 1.4) */
+    --letter-spacing--body-tight: -0.02em; /* body + small-text tracking (was -0.03em) */
+
+    /* H5/H6 pull letter-spacing from the heading family (no -0.02em step), so
+       point them at the body-tight tracking above. */
+    --font-h5--letter-spacing: var(--letter-spacing--body-tight);
+    --font-h6--letter-spacing: var(--letter-spacing--body-tight);
+
+    {%- comment -%}
+      H1 (86px) and H3 (36px) aren't in Horizon's size enum (nearest 88/32).
+      settings_data mirrors the nearest values so the admin sliders stay live;
+      snap those two defaults to the exact design sizes. If a merchant picks a
+      different H1/H3 size the override doesn't fire and their choice passes through.
+    {%- endcomment -%}
+    {%- if settings.type_size_h1 == '88' -%}
+      --font-h1--size: clamp(2.75rem, 6vw, 5.375rem); /* 86px */
+    {%- endif -%}
+    {%- if settings.type_size_h3 == '32' -%}
+      --font-h3--size: 2.25rem; /* 36px */
+    {%- endif -%}
   }
 {% endstyle %}
