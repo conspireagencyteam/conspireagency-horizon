@@ -21,7 +21,7 @@ Conspire Agency (CA) layer and loads after Horizon so it wins the cascade.
 | Family | Weights | Horizon slot | Used for |
 |---|---|---|---|
 | **PP Mori** | 400, 500 | `body` + `heading` | Body, all headings, H6 overline |
-| **Syne** (OFL) | 400 | `subheading` | Footer column headings |
+| ~~Syne~~ | n/a | `subheading` now maps to PP Mori | Not used in the final frames (checked 2026-10-06); no longer loaded |
 | **Ashcroft** | 500 | `accent` | Top navigation |
 
 ## Type scale (desktop @1440)

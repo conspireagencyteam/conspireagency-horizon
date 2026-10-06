@@ -17,17 +17,18 @@
 
   REQUIRED: upload these woff2 files to /assets before fonts render (until then,
   system-stack fallback via font-display: swap):
-    pp-mori-regular.woff2  400   ashcroft-medium.woff2  500
-    pp-mori-medium.woff2   500   syne-regular.woff2     400
-  NOTE: Figma uses the trial "Ashcroft Test"; ship the licensed Ashcroft. Syne is
-  open-source (OFL).
+    pp-mori-regular.woff2  400 (in /assets)
+    pp-mori-medium.woff2   500 (still needed)
+    ashcroft-medium.woff2  500 (still needed)
+  NOTE: Figma uses the trial "Ashcroft Test"; ship the licensed Ashcroft. Syne was
+  in the early art direction only and is not used in the final frames, so it is
+  no longer loaded.
 {%- endcomment -%}
 
 {%- liquid
   assign mori_regular = 'pp-mori-regular.woff2'
   assign mori_medium = 'pp-mori-regular.woff2'
   assign ashcroft_medium = 'ashcroft-medium.woff2'
-  assign syne_regular = 'syne-regular.woff2'
 -%}
 
 {%- comment -%} Preload the two most critical faces (body + display headings) {%- endcomment -%}
@@ -56,13 +57,6 @@
     font-display: swap;
     src: url({{ ashcroft_medium | asset_url }}) format('woff2');
   }
-  @font-face {
-    font-family: 'Syne';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url({{ syne_regular | asset_url }}) format('woff2');
-  }
 
   :root {
     /* ── Typography: Conspire v2.0 scale on Horizon's presets ──
@@ -73,12 +67,12 @@
     /* Font families → Horizon's four slots (custom fonts have no picker slot) */
     --font-body--family: 'PP Mori', 'Helvetica Neue', Arial, sans-serif;
     --font-heading--family: 'PP Mori', 'Helvetica Neue', Arial, sans-serif;
-    --font-subheading--family: 'Syne', 'Helvetica Neue', Arial, sans-serif;
+    --font-subheading--family: 'PP Mori', 'Helvetica Neue', Arial, sans-serif; /* Syne is not in the final designs */
     --font-accent--family: 'Ashcroft', Georgia, 'Times New Roman', serif;
 
     /* Slot weights (pickers resolve to Inter weights wrong for these fonts) */
     --font-heading--weight: 400;    /* picker inter_n7 = 700 → PP Mori Regular */
-    --font-subheading--weight: 400; /* picker inter_n5 = 500 → Syne Regular */
+    --font-subheading--weight: 400; /* picker inter_n5 = 500 → PP Mori Regular */
     --font-accent--weight: 500;     /* picker inter_n7 = 700 → Ashcroft Medium */
     --font-h6--weight: 500;         /* PP Mori Medium — no PP-Mori-500 slot */
 
