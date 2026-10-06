@@ -1,0 +1,137 @@
+{%- comment -%}
+  ca-lead-tracking.liquid — lead conversion tracking, carried over unchanged
+  from the previous theme's layout so reporting does not break at launch.
+
+  After marketing consent it loads the OpenAI pixel, gtag (Google Ads + the two
+  GA4 streams) and the Meta pixel, then reports ONE lead per platform when:
+    - a contact form succeeds (Shopify redirects back with ?contact_posted=true;
+      skipped on article pages, so job applications do not count as leads), or
+    - a Calendly inline widget announces a booking (postMessage).
+  Calendly's own Meta integration already sends invitee_meeting_scheduled, so
+  that event is deliberately not re-fired here.
+
+  Rendered once from snippets/ca-head.liquid.
+{%- endcomment -%}
+<script>
+  !function(w, d, s, u) {if (w.oaiq) return;var q = function() {q.q.push(arguments);};q.q = [];w.oaiq = q;var j = d.createElement(s);j.async = 1;j.src = u;var f = d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j, f);}(window, document, "script", "https://bzrcdn.openai.com/sdk/oaiq.min.js");
+  (function () {
+    var started = false;
+
+    function startTracking() {
+      if (started) return;
+      started = true;
+
+      oaiq("init", {
+        pixelId: "1oL7w4fggKyZHso15kwmcu"
+      });
+
+      // Google Ads conversion tag (AW-852658178). The Google & YouTube channel reports
+      // store events from inside Shopify's pixel sandbox, where page scripts cannot reach,
+      // so gtag is loaded here (after consent) to report lead events as Ads conversions.
+      if (!window.gtag) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag("js", new Date());
+        window.gtag("config", "AW-852658178");
+        var gtagScript = document.createElement("script");
+        gtagScript.async = true;
+        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=AW-852658178";
+        document.head.appendChild(gtagScript);
+      }
+
+      // GA4 streams (both IDs the Google & YouTube channel is configured with). The channel
+      // already reports page views and store events from its sandbox, so page_view is
+      // disabled here; this config exists only so generate_lead can be sent as a key event
+      // and attributed to the session's campaign.
+      window.gtag("config", "G-MS33YR263E", { send_page_view: false });
+      window.gtag("config", "G-DDS9Q60DBE", { send_page_view: false });
+
+      // Meta pixel (same pixel the Facebook & Instagram channel runs from its sandbox).
+      // No PageView here — the channel sends it — this instance only reports lead events,
+      // which the sandbox cannot see and which the lead campaigns optimize toward.
+      if (!window.fbq) {
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        window.fbq("init", "1095554111683693");
+      }
+
+      // One lead = one event on every platform. source: "contact_form" | "calendly"
+      // Calendly's own Meta integration already sends invitee_meeting_scheduled (the event the
+      // ad sets optimize toward) from inside its widget — do not re-fire it here.
+      function reportLead(source) {
+        window.gtag("event", "generate_lead", { method: source });
+        window.fbq("track", "Lead", { content_name: source });
+      }
+
+      oaiq("measure", "page_viewed", {
+        type: "contents",
+        contents: [
+          {
+            id: {{ request.path | json }},
+            name: {{ page_title | default: shop.name | json }},
+            content_type: "page"
+          }
+        ]
+      });
+
+      {%- unless request.page_type == 'article' -%}
+      // Shopify redirects back with ?contact_posted=true after a successful contact form submission
+      if (window.location.search.indexOf("contact_posted=true") !== -1) {
+        var dedupeKey = "oaiq_lead_" + window.location.pathname;
+        var isDuplicate = false;
+        try {
+          isDuplicate = !!sessionStorage.getItem(dedupeKey);
+          sessionStorage.setItem(dedupeKey, "1");
+        } catch (e) {}
+        if (!isDuplicate) {
+          oaiq("measure", "lead_created", { type: "customer_action" });
+          window.gtag("event", "conversion", { send_to: "AW-852658178/d0puCLKnrvQcEIKQypYD" });
+          reportLead("contact_form");
+        }
+      }
+      {%- endunless -%}
+
+      // Calendly inline widgets announce bookings via postMessage
+      window.addEventListener("message", function (e) {
+        if (e.origin === "https://calendly.com" && e.data && e.data.event === "calendly.event_scheduled") {
+          oaiq("measure", "appointment_scheduled", { type: "customer_action" });
+          window.gtag("event", "conversion", { send_to: "AW-852658178/0p8cCLWnrvQcEIKQypYD" });
+          reportLead("calendly");
+        }
+      });
+    }
+
+    function marketingAllowed(customerPrivacy) {
+      if (typeof customerPrivacy.marketingAllowed === "function") return customerPrivacy.marketingAllowed();
+      if (typeof customerPrivacy.userCanBeTracked === "function") return customerPrivacy.userCanBeTracked();
+      return true;
+    }
+
+    // The cookie banner (sections/cookie-banner.liquid) writes consent through
+    // Shopify's Customer Privacy API; visitorConsentCollected fires on accept/decline
+    document.addEventListener("visitorConsentCollected", function () {
+      var customerPrivacy = window.Shopify && window.Shopify.customerPrivacy;
+      if (customerPrivacy && marketingAllowed(customerPrivacy)) startTracking();
+    });
+
+    // Shopify.loadFeatures is defined by content_for_header, which runs after this script
+    function bootstrap() {
+      if (!window.Shopify || typeof window.Shopify.loadFeatures !== "function") {
+        startTracking();
+        return;
+      }
+      window.Shopify.loadFeatures([{
+        name: "consent-tracking-api",
+        version: "0.1",
+        onLoad: function () {
+          if (marketingAllowed(window.Shopify.customerPrivacy)) startTracking();
+        }
+      }]);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootstrap);
+    } else {
+      bootstrap();
+    }
+  })();
+</script>

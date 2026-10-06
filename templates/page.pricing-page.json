@@ -1,0 +1,404 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-brands-marquee",
+      "settings": {
+        "badge_image": "",
+        "heading": "Our Pricing",
+        "body": "<p>We work with established Shopify brands that need their website to perform at a higher level. Our model replaces fragmented execution with one accountable team - through conversion-focused rebuilds & migrations, fractional web ownership, and targeted sprints that unlock momentum.</p>",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "body-bio",
+          "tillamook-country-smoker-jerky",
+          "kinto",
+          "p-kay-metal",
+          "natures-answer",
+          "hustler-hollywood",
+          "portola-paints"
+        ],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "allow_transparent_header": false,
+        "transparent_header_text_color": "#0d110d",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "tiers": {
+      "type": "ca-pricing-tiers",
+      "blocks": {
+        "tier_1": {
+          "type": "tier",
+          "settings": {
+            "name": "Optimization Partner",
+            "fit": "For brands doing $3M to $8M",
+            "price": "$6k",
+            "cycle": "/ month"
+          }
+        },
+        "tier_2": {
+          "type": "tier",
+          "settings": {
+            "name": "Growth Partner",
+            "fit": "For brands doing $8M to $20M",
+            "price": "$10k",
+            "cycle": "/ month"
+          }
+        },
+        "tier_3": {
+          "type": "tier",
+          "settings": {
+            "name": "Dedicated Partner",
+            "fit": "For brands doing $20M+",
+            "price": "$18k",
+            "cycle": "/ month"
+          }
+        }
+      },
+      "block_order": [
+        "tier_1",
+        "tier_2",
+        "tier_3"
+      ],
+      "settings": {
+        "eyebrow": "The best hire you've made.",
+        "heading": "Yearly commitment rates. Six month terms available.",
+        "intro_button_label": "Get Started",
+        "intro_button_link": "#book-a-call",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button-secondary",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "sprints": {
+      "type": "ca-sprints-table",
+      "blocks": {
+        "plan_1": {
+          "type": "plan",
+          "settings": {
+            "name": "Starter Sprint",
+            "price": "$7.5k",
+            "values": "1 week\nTargeted updates and feature builds\nHighly focused, tight orchestration\nno\nyes",
+            "highlight": false,
+            "button_label": "Get Started",
+            "button_link": "#book-a-call"
+          }
+        },
+        "plan_2": {
+          "type": "plan",
+          "settings": {
+            "name": "Full Sprint",
+            "price": "$14k",
+            "values": "2 weeks\nMigrations and smaller builds\nBetter weekly rate than a single week\nyes\nyes",
+            "highlight": true,
+            "button_label": "Get Started",
+            "button_link": "#book-a-call"
+          }
+        }
+      },
+      "block_order": [
+        "plan_1",
+        "plan_2"
+      ],
+      "settings": {
+        "eyebrow": "Focused Builds sprints",
+        "heading": "For businesses that require speed and have a specific need. Good for migrations, partial redesigns, or feature build. Businesses that want dedicated focus without a long-term commitment.",
+        "rows": "Dedicated team focus\nBest suited for\nEngagement style\nWeekly progress updates\nDedicated project manager",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "build": {
+      "type": "ca-build-pricing",
+      "settings": {
+        "eyebrow": "Pricing, scoped line by line",
+        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.</strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.</strong>",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "min_amount": "$15k",
+        "min_caption": "Starting point",
+        "mid_amount": "$25-45k",
+        "mid_caption": "Where most builds land",
+        "max_amount": "$100k+",
+        "max_caption": "Full scope",
+        "axis_start": "8 weeks",
+        "axis_end": "14 weeks",
+        "accent_color": "#ff4d00",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "clients": {
+      "type": "ca-client-rows",
+      "blocks": {
+        "client_1": {
+          "type": "client",
+          "settings": {
+            "client": "zia-tile",
+            "name": "Zia Tile",
+            "years": "6",
+            "summary": "Six years of daily development on systems their checkout depends on: arrival estimates based on order quantity, LTL freight, custom warehouse pickup, and the trade program that takes a pro from application to managed account. Around it: ADA compliance, privacy preferences, email flows, and attribution for their paid team.",
+            "pills": "Checkout-critical software\nArrival estimates\nLTL freight\nWarehouse pickup\nTrade program\nADA & privacy compliance\nAttribution setup"
+          }
+        },
+        "client_2": {
+          "type": "client",
+          "settings": {
+            "client": "body-bio",
+            "name": "BodyBio",
+            "years": "7",
+            "summary": "We manage four Shopify stores for BodyBio: consumer stores for the US and international markets, and healthcare practitioner stores for the US and Europe. We built and maintain the custom software that takes a practitioner from application to approval to welcome sample bundle, and we support every new release, protocol bundle, and fulfillment issue.",
+            "pills": "4 stores\nPractitioner onboarding systems\nCustom bundle software\nNew product launch support\nFulfillment triage"
+          }
+        },
+        "client_3": {
+          "type": "client",
+          "settings": {
+            "client": "cousins-maine-lobster",
+            "name": "Cousins Maine Lobster",
+            "years": "6",
+            "summary": "Every Cousins storefront runs through us, including the Cousins Fried Seafood store and the franchise portal we built, which handles ordering, compliance, and training for roughly 70 locations. We created their multimillion dollar direct-to-consumer business where other agencies could not, and our events tooling keeps each franchise visible in its market.",
+            "pills": "Franchise portal build & management\nOrdering & compliance systems\nTraining systems\nFranchise events tooling\nDTC store build"
+          }
+        },
+        "client_4": {
+          "type": "client",
+          "settings": {
+            "client": "tillamook-country-smoker-jerky",
+            "name": "Tillamook Country Smoker",
+            "years": "7",
+            "summary": "We built the original store and have supported every launch since, including their recent rebrand. Day to day we support their marketing teams, especially email, and Bonde Bundles, our own app, lifts conversion and average order value with bundle and save.",
+            "pills": "Original build\nOngoing launches\nEmail marketing support\nBonde Bundles\nRebrand rollout"
+          }
+        }
+      },
+      "block_order": [
+        "client_1",
+        "client_2",
+        "client_3",
+        "client_4"
+      ],
+      "settings": {
+        "eyebrow": "Built to stick around",
+        "heading": "We don't just launch projects. <strong>We build long-term partnerships, becoming an extension of your team as your business evolves.</strong>",
+        "link_names": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "testimonials": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [
+          "bodybio",
+          "danny-mitchell-bsd-haus"
+        ],
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "call": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "Who it's for",
+            "answer": "<p>Brands pushing into at minimum eight figures, if not nine, where improvements at scale pay for themselves.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "Who it's not for",
+            "answer": "<p>Brands earlier than that, or teams looking for sporadic help. The model only works at the right stage, and we hold to that.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2"
+      ],
+      "settings": {
+        "eyebrow": "Book a strategy call",
+        "heading": "",
+        "button_label": "",
+        "statement": "<p>The first call is an introduction: some light discovery and a feel for whether we are a fit on both sides. If we are, the next step is an audit and a roadmap for at least the next six months. Then you hand your store's entire task list to a senior team that integrates with yours. No training, no ramp.</p>",
+        "column_start": "6",
+        "answer_size": "regular",
+        "open_first": true,
+        "structured_data": false,
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 0,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "tiers",
+    "sprints",
+    "build",
+    "clients",
+    "testimonials",
+    "call",
+    "booking"
+  ]
+}

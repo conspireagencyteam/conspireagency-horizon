@@ -1,0 +1,343 @@
+{%- comment -%}
+  ca-contact.liquid — contact page (Conspire v2.0, Figma 433:3028).
+
+  Dark, and runs up under the transparent header. Heading left with a short
+  eyebrow right; then the inquiry form (two thirds) beside a sidebar with a
+  client quote card and a featured case study.
+
+  The form is Shopify's native contact form. Field names are unchanged from the
+  previous theme's contact form, so inbox filters and any reporting built on
+  those labels keep working, and the consent-gated lead tracking
+  (snippets/ca-lead-tracking) still fires on the ?contact_posted=true redirect.
+  Option lists are editable in the section settings, one per line.
+{%- endcomment -%}
+
+{%- liquid
+  assign transparent = section.settings.allow_transparent_header
+  assign form_id = 'ContactModernForm'
+  assign client = section.settings.case_client
+  assign case_name = section.settings.case_name | default: client.name.value
+  assign case_url = section.settings.case_link | default: client.case_study_reference.value
+  assign case_image = section.settings.case_image
+  if case_image == blank
+    assign case_image = client.work_preview.value
+    if case_image.image
+      assign case_image = case_image.image
+    endif
+  endif
+-%}
+
+{%- if transparent and section.settings.text_color != blank -%}
+  {%- style -%}
+    .ca-header { --ca-header-transparent-text: {{ section.settings.text_color }}; }
+  {%- endstyle -%}
+{%- endif -%}
+
+<div
+  class="ca-contact spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header ca-under-header{% endif %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    <div class="ca-contact__head">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="ca-statement ca-contact__heading">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ca-eyebrow ca-contact__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="ca-contact__grid">
+      <div class="ca-contact__form">
+        {%- if section.settings.bar_caption != blank -%}
+          <p class="ca-eyebrow ca-contact__bar">{{ section.settings.bar_caption }}</p>
+        {%- endif -%}
+
+        {%- form 'contact', id: form_id, class: 'ca-form' -%}
+          <input type="hidden" name="contact[Submitted On]" value="{{ 'now' | date: '%B %d, %Y at %I:%M %p' }}">
+
+          {%- if form.posted_successfully? -%}
+            <p class="ca-form__status" role="status">{{ section.settings.success_text }}</p>
+          {%- elsif form.errors -%}
+            <div class="ca-form__status ca-form__status--error" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+
+          <div class="ca-field">
+            <label class="ca-field__label" for="ContactModernName">Full name</label>
+            <input class="ca-field__input" id="ContactModernName" type="text" name="contact[name]" autocomplete="name" placeholder="Your name" value="{{ form.name }}" required>
+          </div>
+          <div class="ca-field">
+            <label class="ca-field__label" for="ContactModernEmail">Work email</label>
+            <input class="ca-field__input" id="ContactModernEmail" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@brand.com" value="{{ form.email }}" required>
+          </div>
+          <div class="ca-field">
+            <label class="ca-field__label" for="ContactModernBrand">Brand</label>
+            <input class="ca-field__input" id="ContactModernBrand" type="text" name="contact[Brand]" autocomplete="organization" placeholder="Brand or company name">
+          </div>
+          {%- render 'ca-select', id: 'ContactModernRole', name: 'contact[Your Role]', label: 'Your role', options: section.settings.role_options -%}
+          {%- render 'ca-select', id: 'ContactModernPlatform', name: 'contact[Current Platform]', label: 'Current platform', options: section.settings.platform_options -%}
+          {%- render 'ca-select', id: 'ContactModernErp', name: 'contact[ERP / Back-office]', label: 'ERP / back-office', options: section.settings.erp_options -%}
+          {%- render 'ca-select', id: 'ContactModernTimeline', name: 'contact[Timeline]', label: 'Timeline', options: section.settings.timeline_options -%}
+          {%- render 'ca-select', id: 'ContactModernRevenue', name: 'contact[Annual eCommerce Revenue]', label: 'Annual eCommerce revenue', options: section.settings.revenue_options -%}
+          {%- render 'ca-select', id: 'ContactModernSpend', name: 'contact[Monthly Paid Media Spend]', label: 'Monthly paid media spend', options: section.settings.spend_options, full: true -%}
+          <div class="ca-field ca-field--full">
+            <label class="ca-field__label" for="ContactModernMessage">What problems is the business facing?</label>
+            <textarea class="ca-field__input" id="ContactModernMessage" name="contact[message]" rows="6" placeholder="What's getting in the way right now, and what good would look like." required></textarea>
+          </div>
+          {%- render 'ca-select', id: 'ContactModernSource', name: 'contact[How did you hear about us]', label: 'How did you hear about us?', options: section.settings.source_options, full: true -%}
+
+          <div class="ca-form__foot">
+            {%- if section.settings.note != blank -%}
+              <p class="ca-form__note">{{ section.settings.note }}</p>
+            {%- else -%}
+              <span></span>
+            {%- endif -%}
+            <button class="ca-button" type="submit">{{ section.settings.button_label }}</button>
+          </div>
+        {%- endform -%}
+      </div>
+
+      <aside class="ca-contact__aside">
+        {%- if section.settings.quote != blank -%}
+          <figure class="ca-contact__quote">
+            <svg width="27" height="17" viewBox="5 7 16 10" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+            <blockquote class="ca-contact__quote-text">{{ section.settings.quote }}</blockquote>
+            {%- if section.settings.quote_years != blank or section.settings.quote_author != blank -%}
+              <figcaption class="ca-contact__quote-meta">
+                {%- render 'ca-years', years: section.settings.quote_years, label: section.settings.quote_years_label -%}
+                {%- if section.settings.quote_author != blank -%}
+                  <span class="ca-sr-only">{{ section.settings.quote_author }}</span>
+                {%- endif -%}
+              </figcaption>
+            {%- endif -%}
+          </figure>
+        {%- endif -%}
+
+        {%- if case_name != blank -%}
+          <div class="ca-contact__case">
+            {%- if case_image != blank -%}
+              <div class="ca-contact__case-media">
+                {{ case_image | image_url: width: 900 | image_tag: class: 'ca-contact__case-img', alt: case_name, loading: 'lazy', widths: '450, 900', sizes: '(min-width: 990px) 31vw, 100vw' }}
+              </div>
+            {%- endif -%}
+            {%- if section.settings.case_eyebrow != blank -%}
+              <p class="ca-eyebrow ca-contact__case-eyebrow">{{ section.settings.case_eyebrow }}</p>
+            {%- endif -%}
+            <h2 class="ca-contact__case-name">{{ case_name }}</h2>
+            {%- if section.settings.case_text != blank -%}
+              <p class="ca-contact__case-text">{{ section.settings.case_text }}</p>
+            {%- endif -%}
+            {%- if case_url != blank and section.settings.case_button_label != blank -%}
+              <a class="button-secondary size-style ca-contact__case-button" href="{{ case_url }}">{{ section.settings.case_button_label }}</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </aside>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-contact {
+    background-color: var(--color-background);
+  }
+
+  .ca-contact__head {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 16px;
+    align-items: start;
+    margin-block-end: 120px;
+  }
+
+  .ca-contact__heading {
+    grid-column: 1 / span 8;
+    max-width: 920px;
+  }
+
+  .ca-contact__eyebrow {
+    grid-column: 9 / -1;
+    padding-block-start: 6px;
+    text-align: end;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-contact__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 64px;
+    align-items: start;
+  }
+
+  .ca-contact__form {
+    grid-column: 1 / span 7;
+  }
+
+  .ca-contact__bar {
+    margin-block-end: 40px;
+    padding-block-end: 17px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-contact__aside {
+    grid-column: 9 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* Quote card: always light, with a speech-bubble tail under the right corner. */
+  .ca-contact__quote {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: 0 0 12px;
+    padding: 24px;
+    background-color: rgb(var(--color-foreground-rgb));
+    color: var(--color-background);
+  }
+
+  .ca-contact__quote::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-end: 0;
+    width: 22px;
+    height: 12px;
+    background-color: rgb(var(--color-foreground-rgb));
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+
+  .ca-contact__quote-text {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: var(--ca-fs-24);
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-contact__quote-meta .ca-years__num {
+    background-color: var(--color-background);
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-contact__case {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ca-contact__case-media {
+    width: 100%;
+    aspect-ratio: 7 / 5;
+    overflow: hidden;
+    margin-block-end: 24px;
+  }
+
+  .ca-contact__case-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ca-contact__case-eyebrow {
+    margin-block-end: 24px;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-contact__case-name {
+    margin: 0 0 12px;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-contact__case-text {
+    width: 100%;
+    margin: 0;
+    padding-block-end: 24px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-contact__case-button {
+    align-self: flex-end;
+    margin-block-start: 24px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-contact__head {
+      margin-block-end: 56px;
+    }
+
+    .ca-contact__heading,
+    .ca-contact__eyebrow,
+    .ca-contact__form,
+    .ca-contact__aside {
+      grid-column: 1 / -1;
+    }
+
+    .ca-contact__eyebrow {
+      order: -1;
+      text-align: start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact",
+  "tag": "section",
+  "class": "ca-contact-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "info": "Bold the words to emphasise. The rest is shown muted.", "default": "<strong>Let's talk.</strong> We diagnose before we prescribe." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "A senior leader reads every inquiry" },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "bar_caption", "label": "Caption above the form", "default": "Conspire · New inquiry" },
+    { "type": "text", "id": "note", "label": "Note beside the button", "default": "What you share here shapes the first call. We don't use it for anything else." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Send Message" },
+    { "type": "textarea", "id": "success_text", "label": "Success message", "default": "Thanks for reaching out. A senior member of the team will reply within one business day." },
+    { "type": "header", "content": "Dropdown options", "info": "One per line" },
+    { "type": "textarea", "id": "role_options", "label": "Your role", "default": "Founder / CEO\nCMO / Head of Marketing\nHead of Ecommerce / Digital\nCTO / Head of Engineering / IT\nOps / Supply chain\nAgency / Partner\nOther" },
+    { "type": "textarea", "id": "platform_options", "label": "Current platform", "default": "Shopify Plus\nShopify\nMagento / Adobe Commerce\nBigCommerce\nSalesforce Commerce Cloud\nWooCommerce\nCustom / in-house\nNot online yet" },
+    { "type": "textarea", "id": "erp_options", "label": "ERP / back-office", "default": "Microsoft Dynamics 365 F&O\nMicrosoft Dynamics 365 Business Central\nNetSuite\nSAP\nSalsify (PIM)\nOther\nNone yet" },
+    { "type": "textarea", "id": "timeline_options", "label": "Timeline", "default": "Live as soon as possible\nThis quarter\nNext 6 months\nExploring / planning" },
+    { "type": "textarea", "id": "revenue_options", "label": "Annual eCommerce revenue", "default": "Under $5M\n$5M to $20M\n$20M to $50M\n$50M to $100M\n$100M+" },
+    { "type": "textarea", "id": "spend_options", "label": "Monthly paid media spend", "default": "Under $50K/month\n$50K to $150K/month\n$150K to $500K/month\n$500K to $1M/month\n$1M+/month" },
+    { "type": "textarea", "id": "source_options", "label": "How did you hear about us", "default": "Shopify referral\nSearch\nAI assistant (ChatGPT, Perplexity)\nReferral / word of mouth\nSocial\nEvent\nOther" },
+    { "type": "header", "content": "Quote card" },
+    { "type": "textarea", "id": "quote", "label": "Quote", "default": "We literally would not be where we are today if it weren't for Conspire. I cannot recommend them enough." },
+    { "type": "text", "id": "quote_author", "label": "Author", "default": "BodyBio" },
+    { "type": "text", "id": "quote_years", "label": "Years", "default": "7" },
+    { "type": "text", "id": "quote_years_label", "label": "Years label", "default": "years working together" },
+    { "type": "header", "content": "Case study card" },
+    { "type": "metaobject", "id": "case_client", "label": "Client", "metaobject_type": "client" },
+    { "type": "text", "id": "case_eyebrow", "label": "Eyebrow", "default": "Case study" },
+    { "type": "text", "id": "case_name", "label": "Name", "info": "Defaults to the client's name." },
+    { "type": "textarea", "id": "case_text", "label": "Text" },
+    { "type": "image_picker", "id": "case_image", "label": "Image", "info": "Defaults to the client's work preview." },
+    { "type": "text", "id": "case_button_label", "label": "Button label", "default": "View Case Study" },
+    { "type": "url", "id": "case_link", "label": "Link", "info": "Defaults to the client's case study." },
+    { "type": "header", "content": "Layout" },
+    { "type": "checkbox", "id": "allow_transparent_header", "label": "Run under a transparent header", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#0d110d" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text", "default": "#ffffff" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Contact", "category": "Conspire" }]
+}
+{% endschema %}

@@ -1,0 +1,263 @@
+{%- comment -%}
+  ca-sprints-table.liquid — "Focused Builds sprints" comparison
+  (Conspire v2.0, Figma 429:2598).
+
+  Intro (eyebrow + statement), then a comparison grid: row labels down the left,
+  one column per "plan" block with its name, price and button on top.
+
+  Row labels are a textarea on the section (one per line). Each plan's values
+  are a textarea in the same order: plain text becomes a pill, and the words
+  "yes" / "no" become a check or a cross. The highlighted plan gets filled pills
+  and the primary button.
+
+  The cells are placed on a CSS grid by row/column number, so rows line up
+  across plans however the pills wrap. On small screens the grid collapses to
+  one card per plan and each value shows its own label.
+{%- endcomment -%}
+
+{%- liquid
+  assign labels = section.settings.rows | newline_to_br | split: '<br />'
+  assign plans = section.blocks | where: 'type', 'plan'
+  assign plan_count = plans.size | at_most: 3
+-%}
+
+<div
+  class="ca-sprints spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      class: 'ca-sprints__intro'
+    -%}
+
+    {%- if plan_count > 0 -%}
+      <div class="ca-sprints__grid" style="--ca-sprints-plans: {{ plan_count }};">
+        {%- for label in labels -%}
+          {%- assign label_text = label | strip -%}
+          {%- if label_text != blank -%}
+            <p class="ca-sprints__label" style="grid-row: {{ forloop.index | plus: 1 }};" aria-hidden="true">{{ label_text }}</p>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- for block in plans limit: 3 -%}
+          {%- liquid
+            assign column = forloop.index | plus: 1
+            assign values = block.settings.values | newline_to_br | split: '<br />'
+            assign button_class = 'button-secondary'
+            if block.settings.highlight
+              assign button_class = 'button'
+            endif
+          -%}
+          <div class="ca-sprints__head{% if block.settings.highlight %} ca-sprints__head--highlight{% endif %}" style="grid-column: {{ column }};" {{ block.shopify_attributes }}>
+            <h3 class="ca-eyebrow ca-sprints__name">{{ block.settings.name }}</h3>
+            <p class="ca-sprints__price">{{ block.settings.price }}</p>
+            {%- if block.settings.button_label != blank -%}
+              <a class="{{ button_class }} size-style" {% if block.settings.button_link != blank %}href="{{ block.settings.button_link }}"{% endif %}>
+                {{- block.settings.button_label }}<span class="ca-sr-only">: {{ block.settings.name }}</span>
+              </a>
+            {%- endif -%}
+          </div>
+
+          {%- for label in labels -%}
+            {%- liquid
+              assign label_text = label | strip
+              if label_text == blank
+                continue
+              endif
+              assign value = values[forloop.index0] | strip
+              assign value_key = value | downcase
+            -%}
+            <div
+              class="ca-sprints__cell{% if block.settings.highlight %} ca-sprints__cell--highlight{% endif %}"
+              style="grid-column: {{ column }}; grid-row: {{ forloop.index | plus: 1 }};"
+            >
+              <span class="ca-sprints__cell-label">{{ label_text }}</span>
+              {%- if value_key == 'yes' -%}
+                <span class="ca-sprints__mark">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M2.5 7.5 5.6 10.5 11.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="ca-sr-only">Included</span>
+                </span>
+              {%- elsif value_key == 'no' -%}
+                <span class="ca-sprints__mark">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7m0-7l-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <span class="ca-sr-only">Not included</span>
+                </span>
+              {%- elsif value != blank -%}
+                <span class="ca-pill ca-sprints__pill">{{ value }}</span>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-sprints {
+    background-color: var(--color-background);
+  }
+
+  .ca-sprints__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-sprints__grid {
+    display: grid;
+    grid-template-columns: repeat(calc(var(--ca-sprints-plans, 2) + 1), minmax(0, 1fr));
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-sprints__head {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding-block-end: 24px;
+  }
+
+  .ca-sprints__name {
+    margin: 0;
+  }
+
+  .ca-sprints__price {
+    margin: 0;
+    font-size: var(--ca-fs-86);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-sprints__label,
+  .ca-sprints__cell {
+    display: flex;
+    align-items: center;
+    min-height: 90px;
+    margin: 0;
+    padding-block: 24px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-sprints__label {
+    grid-column: 1;
+    padding-inline-end: 24px;
+    font-size: var(--ca-fs-18);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    text-transform: capitalize;
+    color: var(--ca-soft);
+  }
+
+  .ca-sprints__cell-label {
+    display: none;
+  }
+
+  .ca-sprints__pill {
+    min-height: 42px;
+    font-size: var(--ca-fs-18);
+    background-color: var(--color-background);
+  }
+
+  .ca-sprints__mark {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--ca-hairline-strong);
+    border-radius: 50%;
+    background-color: var(--color-background);
+  }
+
+  .ca-sprints__cell--highlight .ca-sprints__pill,
+  .ca-sprints__cell--highlight .ca-sprints__mark {
+    border-color: transparent;
+    background-color: rgb(var(--color-foreground-rgb) / 0.14);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-sprints__intro {
+      margin-block-end: 48px;
+    }
+  }
+
+  /* One card per plan; every value carries its own label. */
+  @media screen and (max-width: 749px) {
+    .ca-sprints__grid {
+      display: block;
+      border-block-end: 0;
+    }
+
+    .ca-sprints__label {
+      display: none;
+    }
+
+    .ca-sprints__head {
+      padding-block: 40px 24px;
+      border-block-start: 1px solid rgb(var(--color-foreground-rgb));
+    }
+
+    .ca-sprints__head:first-of-type {
+      padding-block-start: 0;
+      border-block-start: 0;
+    }
+
+    .ca-sprints__cell {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      min-height: 0;
+      padding-block: 16px;
+    }
+
+    .ca-sprints__cell-label {
+      display: block;
+      text-transform: capitalize;
+      color: var(--ca-muted);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Sprints table",
+  "tag": "section",
+  "class": "ca-sprints-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Focused Builds sprints" },
+    { "type": "inline_richtext", "id": "heading", "label": "Statement", "default": "For businesses that require speed and have a specific need." },
+    { "type": "textarea", "id": "rows", "label": "Row labels", "info": "One per line", "default": "Dedicated team focus\nBest suited for\nEngagement style\nWeekly progress updates\nDedicated project manager" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Plan",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "name", "label": "Name", "default": "Starter Sprint" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$7.5k" },
+        { "type": "textarea", "id": "values", "label": "Values", "info": "One per line, in the same order as the row labels. Use yes or no for a check or a cross.", "default": "1 week\nTargeted updates and feature builds\nHighly focused, tight orchestration\nno\nyes" },
+        { "type": "checkbox", "id": "highlight", "label": "Highlight this plan", "default": false },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Get Started" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Sprints table", "category": "Conspire", "blocks": [{ "type": "plan" }, { "type": "plan" }] }
+  ]
+}
+{% endschema %}

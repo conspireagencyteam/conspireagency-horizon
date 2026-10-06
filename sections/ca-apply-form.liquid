@@ -55,6 +55,7 @@
         </div>
         <div class="ca-field">
           <label class="ca-field__label" for="{{ form_id }}-experience">Years of Shopify Experience</label>
+          <span class="ca-field__select">
           <select class="ca-field__input" id="{{ form_id }}-experience" name="contact[shopify_experience]" required>
             <option value="" disabled selected>Select</option>
             {%- for option in options -%}
@@ -64,6 +65,7 @@
               {%- endif -%}
             {%- endfor -%}
           </select>
+          </span>
         </div>
         <div class="ca-field">
           <label class="ca-field__label" for="{{ form_id }}-location">Your Location</label>

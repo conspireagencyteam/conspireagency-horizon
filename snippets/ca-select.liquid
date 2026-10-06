@@ -1,0 +1,25 @@
+{%- comment -%}
+  ca-select.liquid — one labelled <select> for the ca-form layout.
+
+  @param {string} id
+  @param {string} name - full field name, e.g. contact[Timeline]
+  @param {string} label
+  @param {string} options - one option per line
+  @param {boolean} [full] - span both form columns
+  @param {boolean} [required]
+{%- endcomment -%}
+{%- assign ca_options = options | newline_to_br | split: '<br />' -%}
+<div class="ca-field{% if full %} ca-field--full{% endif %}">
+  <label class="ca-field__label" for="{{ id }}">{{ label }}</label>
+  <span class="ca-field__select">
+    <select class="ca-field__input" id="{{ id }}" name="{{ name }}"{% if required %} required{% endif %}>
+      <option value="" disabled selected>Select</option>
+      {%- for ca_option in ca_options -%}
+        {%- assign ca_option_text = ca_option | strip -%}
+        {%- if ca_option_text != blank -%}
+          <option value="{{ ca_option_text | escape }}">{{ ca_option_text }}</option>
+        {%- endif -%}
+      {%- endfor -%}
+    </select>
+  </span>
+</div>

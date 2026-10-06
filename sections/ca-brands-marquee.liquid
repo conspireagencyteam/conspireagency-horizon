@@ -19,8 +19,26 @@
   assign clients = section.settings.clients
   assign image_key = section.settings.image_field
   assign transparent = section.settings.allow_transparent_header
+  comment
+    On article templates (market pages) an empty heading/body falls back to the
+    article's own title and blurb, so one template serves every city.
+  endcomment
+  assign hero_heading = section.settings.heading
+  assign hero_body = section.settings.body
+  if template.name == 'article'
+    if hero_heading == blank
+      assign hero_heading = article.title
+    endif
+    if hero_body == blank
+      assign hero_blurb = article.metafields.custom.market_blurb.value | default: article.excerpt
+      if hero_blurb != blank
+        assign hero_body = hero_blurb | strip_html | prepend: '<p>' | append: '</p>'
+      endif
+    endif
+  endif
+
   assign has_intro = false
-  if section.settings.badge_image != blank or section.settings.heading != blank or section.settings.body != blank or section.settings.button_label != blank
+  if section.settings.badge_image != blank or hero_heading != blank or hero_body != blank or section.settings.button_label != blank
     assign has_intro = true
   endif
 -%}
@@ -43,13 +61,13 @@
             {% render 'image', image: section.settings.badge_image, height: 48, class: 'ca-hero__badge-img' %}
           </div>
         {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <h1 class="ca-hero__heading">{{ section.settings.heading }}</h1>
+        {%- if hero_heading != blank -%}
+          <h1 class="ca-hero__heading">{{ hero_heading }}</h1>
         {%- endif -%}
       </div>
       <div class="ca-hero__aside">
-        {%- if section.settings.body != blank -%}
-          <div class="ca-hero__body">{{ section.settings.body }}</div>
+        {%- if hero_body != blank -%}
+          <div class="ca-hero__body">{{ hero_body }}</div>
         {%- endif -%}
         {%- if section.settings.button_label != blank -%}
           {%- render 'button-custom-styles', block_settings: section.settings, block_id: section.id -%}

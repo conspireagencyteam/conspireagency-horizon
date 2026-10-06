@@ -16,3 +16,6 @@
 {%- comment -%} Static custom style rules and scripts {%- endcomment -%}
 {{ 'ca-custom.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'ca-custom.js' | asset_url }}" defer></script>
+
+{%- comment -%} Lead conversion tracking (contact form + Calendly bookings), consent-gated {%- endcomment -%}
+{%- render 'ca-lead-tracking' -%}

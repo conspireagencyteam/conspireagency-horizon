@@ -1,0 +1,276 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-brands-marquee",
+      "settings": {
+        "badge_image": "",
+        "heading": "",
+        "body": "",
+        "button_label": "Book a Strategy Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "body-bio",
+          "tillamook-country-smoker-jerky",
+          "kinto",
+          "p-kay-metal",
+          "natures-answer",
+          "hustler-hollywood",
+          "portola-paints"
+        ],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "allow_transparent_header": false,
+        "transparent_header_text_color": "#0d110d",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "body": {
+      "type": "ca-article-body",
+      "settings": {
+        "heading_level": "auto",
+        "show_headings": true,
+        "toc_label": "On this page",
+        "lead": true,
+        "bullets": "dot",
+        "intro_label": "",
+        "intro_display": false,
+        "extra_label": "",
+        "extra_link": "",
+        "back_label": "View All Markets",
+        "back_link": "shopify://blogs/markets",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "advantage": {
+      "type": "ca-split-feature",
+      "settings": {
+        "eyebrow": "The Conspire advantage",
+        "heading": "<strong>What sets us apart is</strong> our boutique focus, platform mastery, strategy first thinking, <strong>proven results and our experience as eCommerce brand founders.</strong>",
+        "text": "<p>As a Shopify development agency in California, we understand the unique challenges facing modern eCommerce brands. Our location in Los Angeles puts us at the heart of innovation, surrounded by forward-thinking entrepreneurs and cutting-edge businesses.</p>",
+        "button_label": "",
+        "button_link": "",
+        "image_small": "shopify://shop_images/conspire-la-palms.png",
+        "image_large": "shopify://shop_images/conspire-la-skyline.png",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "services": {
+      "type": "ca-services",
+      "settings": {
+        "eyebrow": "Our Services",
+        "products": [
+          "shopify-websites",
+          "shopify-fractional-teams",
+          "custom-shopify-applications",
+          "shopify-cro-agency"
+        ],
+        "show_numbers": true,
+        "button_label": "Learn More",
+        "style_class": "button-secondary",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "grid": {
+      "type": "ca-work-grid",
+      "settings": {
+        "eyebrow": "Top projects",
+        "clients": [
+          "zia-tile",
+          "body-bio",
+          "cousins-maine-lobster",
+          "tillamook-country-smoker-jerky",
+          "natures-answer",
+          "kinto",
+          "portola-paints",
+          "omre"
+        ],
+        "default_image_field": "work_preview",
+        "stagger": true,
+        "button_label": "Learn More",
+        "style_class": "button",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "testimonials": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [
+          "bodybio",
+          "danny-mitchell-bsd-haus"
+        ],
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "body",
+    "advantage",
+    "services",
+    "grid",
+    "testimonials",
+    "booking"
+  ]
+}
