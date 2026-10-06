@@ -145,6 +145,8 @@
 {% stylesheet %}
   .ca-booking {
     background-color: var(--color-background);
+    /* "Book a call" buttons link to #book-a-call; keep the panel clear of the sticky header. */
+    scroll-margin-block-start: 80px;
   }
 
   /* Copy over the montage: always light-on-dark, whatever the section colours. */

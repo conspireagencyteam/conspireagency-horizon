@@ -194,7 +194,7 @@
       "type": "ca-faq",
       "settings": {
         "eyebrow": "Frequently asked questions",
-        "heading": "Get answers to common questions about our Los Angeles-based Shopify development, migration, and B2B services",
+        "heading": "Get answers to common questions about our Los Angeles-based Shopify development, migration, and CRO services",
         "categories": [
           "shopify-development-migration",
           "ongoing-support-maintenance",
@@ -325,15 +325,15 @@
         "photo_ir8P8n"
       ],
       "settings": {
-        "eyebrow": "Ready to grow your business",
-        "heading": "To discuss your project please select a convenient date & time and we will contact you!",
-        "background_color": "{{ settings.color_palette.color2 }}",
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
         "text_color": "",
         "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
         "calendly_height": 700,
         "montage_background": "#0d110d",
-        "padding-block-start": 72,
-        "padding-block-end": 72
+        "padding-block-start": 80,
+        "padding-block-end": 80
       }
     }
   },

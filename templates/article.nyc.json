@@ -3,7 +3,7 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
-        "badge_image": "",
+        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
         "heading": "",
         "body": "",
         "button_label": "Book a Strategy Call",

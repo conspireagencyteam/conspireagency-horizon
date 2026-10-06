@@ -3,7 +3,7 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
-        "badge_image": "",
+        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
         "heading": "Shopify Plus Partner Agency in Los Angeles",
         "body": "<p>From our Los Angeles roots to serving brands worldwide, Conspire is the boutique Shopify agency that understands your growth ambitions. We're not just pixel pushers – we're strategic partners who've been perfecting eCommerce since the platform's early days.</p>",
         "button_label": "Book a Strategy Call",
