@@ -1,0 +1,213 @@
+{%- comment -%}
+  ca-blog-grid.liquid — paginated article grid for blog index pages
+  (no dedicated Figma frame; cards follow the homepage blog block 278:2164).
+
+  Lists the articles of the blog this template is used on: image, title and
+  date per card, three across. Articles without an image render as text cards.
+  Falls back to a chosen blog when used outside a blog template.
+{%- endcomment -%}
+
+{%- liquid
+  assign source_blog = section.settings.blog | default: blog
+  assign per_page = section.settings.per_page | default: 12
+-%}
+
+<div
+  class="ca-bgrid spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <h2 class="ca-eyebrow ca-bgrid__eyebrow">{{ section.settings.eyebrow }}</h2>
+    {%- endif -%}
+
+    {%- paginate source_blog.articles by per_page -%}
+      {%- if source_blog.articles.size > 0 -%}
+        <ul class="ca-bgrid__grid">
+          {%- for article in source_blog.articles -%}
+            {%- liquid
+              assign has_image = false
+              if section.settings.show_images and article.image != blank
+                assign has_image = true
+              endif
+            -%}
+            <li class="ca-bgrid__card{% unless has_image %} ca-bgrid__card--text{% endunless %}">
+              <a class="ca-bgrid__link" href="{{ article.url }}">
+                {%- if has_image -%}
+                  <div class="ca-bgrid__media">
+                    {{ article.image | image_url: width: 900 | image_tag: class: 'ca-bgrid__img', loading: 'lazy', alt: article.image.alt | default: '', widths: '450, 700, 900', sizes: '(min-width: 990px) 31vw, (min-width: 750px) 48vw, 100vw' }}
+                  </div>
+                {%- endif -%}
+                <h3 class="ca-bgrid__title">{{ article.title }}</h3>
+                {%- if section.settings.show_date -%}
+                  <p class="ca-eyebrow ca-bgrid__date">
+                    <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%b %d, %Y' }}</time>
+                  </p>
+                {%- endif -%}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="ca-bgrid__pagination" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a class="button-secondary size-style" href="{{ paginate.previous.url }}">Newer posts</a>
+            {%- else -%}
+              <span></span>
+            {%- endif -%}
+            <p class="ca-eyebrow ca-bgrid__page">Page {{ paginate.current_page }} of {{ paginate.pages }}</p>
+            {%- if paginate.next -%}
+              <a class="button size-style" href="{{ paginate.next.url }}">Older posts</a>
+            {%- else -%}
+              <span></span>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <p class="ca-bgrid__empty">{{ section.settings.empty_text }}</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-bgrid {
+    background-color: var(--color-background);
+  }
+
+  .ca-bgrid__eyebrow {
+    margin: 0 0 40px;
+    padding-block-end: 24px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-bgrid__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 56px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ca-bgrid__link {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-bgrid__media {
+    aspect-ratio: 448 / 411;
+    overflow: hidden;
+    margin-block-end: 24px;
+    background-color: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  .ca-bgrid__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ca-bgrid__link:hover .ca-bgrid__img {
+    transform: scale(1.04);
+  }
+
+  .ca-bgrid__title {
+    margin: 0 0 16px;
+    font-size: var(--ca-fs-20);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-bgrid__link:hover .ca-bgrid__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+  }
+
+  /* No image: the card becomes a hairline-topped text row with a larger title. */
+  .ca-bgrid__card--text .ca-bgrid__link {
+    padding-block-start: 24px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-bgrid__card--text .ca-bgrid__title {
+    font-size: var(--ca-fs-24);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-bgrid__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-block-start: 64px;
+    padding-block-start: 24px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-bgrid__page {
+    margin: 0;
+  }
+
+  .ca-bgrid__empty {
+    margin: 0;
+    font-size: var(--ca-fs-24);
+    letter-spacing: -0.03em;
+    color: var(--ca-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-bgrid__img {
+      transition: none;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-bgrid__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-bgrid__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog grid",
+  "tag": "section",
+  "class": "ca-bgrid-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Latest articles" },
+    { "type": "blog", "id": "blog", "label": "Blog", "info": "Leave empty on a blog template to list that blog's posts." },
+    { "type": "range", "id": "per_page", "label": "Posts per page", "min": 6, "max": 48, "step": 3, "default": 12 },
+    { "type": "checkbox", "id": "show_images", "label": "Show article images", "info": "Turn off for a text-only list, for example the market pages.", "default": true },
+    { "type": "checkbox", "id": "show_date", "label": "Show date", "default": true },
+    { "type": "text", "id": "empty_text", "label": "Text when there are no posts", "default": "Nothing here yet." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Blog grid", "category": "Conspire" }]
+}
+{% endschema %}

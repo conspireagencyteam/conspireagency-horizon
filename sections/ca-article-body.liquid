@@ -16,14 +16,15 @@
   Anything before the first heading is the intro. With an intro label set
   (career posts: "Overview") it gets its own row with that label on the left.
 
-  Works on article templates and on pages (uses page.content there). An article
-  with no matching headings renders as plain content with no list.
+  Works on article templates, pages (page.content), products (description) and
+  collections (description). Content with no matching headings renders plain,
+  with no list.
 {%- endcomment -%}
 
 <script src="{{ 'ca-toc.js' | asset_url }}" type="module" fetchpriority="low"></script>
 
 {%- liquid
-  assign source = article.content | default: page.content
+  assign source = article.content | default: page.content | default: product.description | default: collection.description
   assign level = section.settings.heading_level | default: 'auto'
   comment
     Auto: editors are not consistent about heading levels (one career post uses

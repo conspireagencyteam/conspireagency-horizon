@@ -6,11 +6,21 @@
   The statement is rich text, so it can run to several paragraphs; bold marks
   the emphasised words and the rest drops back. Set the heading level to H1
   when this is the first section on a page. With "Allow transparent header" on
-  it also works under the overlaid header like the homepage hero does.
+  it also works under the overlaid header like the homepage hero does. With the
+  statement left empty it shows the page, blog, collection or product title.
 {%- endcomment -%}
 
 {%- liquid
   assign tag = section.settings.heading_tag | default: 'div'
+
+  comment
+    Left empty, the statement falls back to the title of whatever the template
+    is showing, so one default template serves every page, blog or product.
+  endcomment
+  assign intro_heading = section.settings.heading
+  if intro_heading == blank
+    assign intro_heading = page.title | default: article.title | default: blog.title | default: collection.title | default: product.title
+  endif
   assign transparent = section.settings.allow_transparent_header
 -%}
 
@@ -32,7 +42,7 @@
   <div class="ca-inner">
     {%- render 'ca-intro',
       eyebrow: section.settings.eyebrow,
-      heading: section.settings.heading,
+      heading: intro_heading,
       tag: tag,
       start: section.settings.column_start,
       size: section.settings.size,
@@ -68,8 +78,7 @@
       "type": "richtext",
       "id": "heading",
       "label": "Statement",
-      "info": "Bold the words to emphasise. The rest is shown muted.",
-      "default": "<p>We build Shopify stores for brands that are ready to scale.</p>"
+      "info": "Bold the words to emphasise. The rest is shown muted. Leave empty to show the page title."
     },
     {
       "type": "select",

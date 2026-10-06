@@ -3,7 +3,7 @@
     "intro": {
       "type": "ca-page-intro",
       "settings": {
-        "eyebrow": "Blog",
+        "eyebrow": "Markets",
         "heading": "",
         "heading_tag": "h1",
         "column_start": "5",
@@ -22,10 +22,10 @@
     "grid": {
       "type": "ca-blog-grid",
       "settings": {
-        "eyebrow": "Latest articles",
-        "per_page": 12,
-        "show_images": true,
-        "show_date": true,
+        "eyebrow": "Where we work",
+        "per_page": 48,
+        "show_images": false,
+        "show_date": false,
         "empty_text": "Nothing here yet.",
         "background_color": "#f2f2f2",
         "text_color": "",
