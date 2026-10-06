@@ -12,6 +12,9 @@
   Horizon's font pickers only list Shopify-library fonts, so the brand fonts are
   loaded here with @font-face and wired to Horizon's font-family variables below.
 
+  INTERIM: pp-mori-medium.woff2 has not been supplied yet, so the 500 weight is
+  aliased to the Regular file below (swap the assign back once Medium is in /assets).
+
   REQUIRED: upload these woff2 files to /assets before fonts render (until then,
   system-stack fallback via font-display: swap):
     pp-mori-regular.woff2  400   ashcroft-medium.woff2  500
@@ -22,7 +25,7 @@
 
 {%- liquid
   assign mori_regular = 'pp-mori-regular.woff2'
-  assign mori_medium = 'pp-mori-medium.woff2'
+  assign mori_medium = 'pp-mori-regular.woff2'
   assign ashcroft_medium = 'ashcroft-medium.woff2'
   assign syne_regular = 'syne-regular.woff2'
 -%}

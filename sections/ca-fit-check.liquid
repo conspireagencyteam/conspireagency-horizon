@@ -1,0 +1,181 @@
+{%- comment -%}
+  ca-fit-check.liquid — "A fit if / Not a fit if" (Conspire v2.0, Figma 279:2788 / 396:453).
+
+  Intro (eyebrow + statement), then two hairline lists side by side. The fit
+  list gets filled check boxes; the not-a-fit list gets outlined crosses and
+  muted text. Each list is a textarea, one item per line.
+{%- endcomment -%}
+
+{%- liquid
+  assign fit_items = section.settings.fit_items | newline_to_br | split: '<br />'
+  assign not_items = section.settings.not_items | newline_to_br | split: '<br />'
+-%}
+
+<div
+  class="ca-fit spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      start: 7,
+      class: 'ca-fit__intro'
+    -%}
+
+    <div class="ca-fit__cols">
+      <div class="ca-fit__col">
+        {%- if section.settings.fit_label != blank -%}
+          <h3 class="ca-fit__label">{{ section.settings.fit_label }}</h3>
+        {%- endif -%}
+        <ul class="ca-fit__list">
+          {%- for item in fit_items -%}
+            {%- assign text = item | strip -%}
+            {%- if text != blank -%}
+              <li class="ca-fit__item">
+                <span class="ca-fit__icon ca-fit__icon--yes" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" focusable="false"><path d="M2.5 7.5 5.6 10.5 11.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span>{{ text }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="ca-fit__col ca-fit__col--not">
+        {%- if section.settings.not_label != blank -%}
+          <h3 class="ca-fit__label">{{ section.settings.not_label }}</h3>
+        {%- endif -%}
+        <ul class="ca-fit__list">
+          {%- for item in not_items -%}
+            {%- assign text = item | strip -%}
+            {%- if text != blank -%}
+              <li class="ca-fit__item">
+                <span class="ca-fit__icon ca-fit__icon--no" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" focusable="false"><path d="M3.5 3.5l7 7m0-7l-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <span>{{ text }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-fit {
+    background-color: var(--color-background);
+  }
+
+  .ca-fit__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-fit__cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+    row-gap: 56px;
+  }
+
+  .ca-fit__label {
+    margin: 0;
+    padding-block-end: 24px;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-fit__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-fit__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-block: 32px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+    font-size: var(--ca-fs-20);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .ca-fit__col--not .ca-fit__item {
+    color: var(--ca-muted);
+  }
+
+  .ca-fit__icon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .ca-fit__icon--yes {
+    background-color: rgb(var(--color-foreground-rgb));
+    color: var(--color-background);
+  }
+
+  .ca-fit__icon--no {
+    border: 1px solid var(--ca-hairline-strong);
+    background-color: rgb(var(--color-foreground-rgb) / 0.04);
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-fit__intro {
+      margin-block-end: 48px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-fit__cols {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ca-fit__item {
+      padding-block: 20px;
+      font-size: 1.0625rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Fit check",
+  "tag": "section",
+  "class": "ca-fit-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Is this right for you?" },
+    { "type": "inline_richtext", "id": "heading", "label": "Statement", "default": "Built for brands that take their store seriously." },
+    { "type": "header", "content": "A fit" },
+    { "type": "text", "id": "fit_label", "label": "Label", "default": "A Fit If" },
+    { "type": "textarea", "id": "fit_items", "label": "Items", "info": "One per line" },
+    { "type": "header", "content": "Not a fit" },
+    { "type": "text", "id": "not_label", "label": "Label", "default": "Not a Fit If" },
+    { "type": "textarea", "id": "not_items", "label": "Items", "info": "One per line" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Fit check", "category": "Conspire" }]
+}
+{% endschema %}

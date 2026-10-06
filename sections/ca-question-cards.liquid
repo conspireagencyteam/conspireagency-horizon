@@ -1,0 +1,248 @@
+{%- comment -%}
+  ca-question-cards.liquid — "The questions change" (Conspire v2.0, Figma 279:2541).
+
+  Intro (eyebrow + two-tone statement), then three columns of speech-bubble
+  cards that drift vertically and fade out at the bottom edge. Each card is a
+  "quote" block; blocks are dealt round-robin into the three columns.
+
+  Motion is CSS only: every column's track holds its cards four times (so a
+  short column still fills the window) and slides by half its height, so the loop is seamless. The middle column runs the other
+  way. Pauses on hover/focus, and is static under prefers-reduced-motion and on
+  mobile, where the cards simply stack.
+{%- endcomment -%}
+
+{%- liquid
+  assign quotes = section.blocks | where: 'type', 'quote'
+  assign speed = section.settings.speed | default: 40
+-%}
+
+<div
+  class="ca-questions spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      class: 'ca-questions__intro'
+    -%}
+
+    {%- if quotes.size > 0 -%}
+      <div class="ca-questions__cols" style="--ca-questions-speed: {{ speed }}s;">
+        {%- for col in (0..2) -%}
+          <div class="ca-questions__col">
+            <div class="ca-questions__track">
+              {%- for pass in (1..4) -%}
+                <ul class="ca-questions__set"{% if pass > 1 %} aria-hidden="true"{% endif %}>
+                  {%- for block in quotes -%}
+                    {%- assign block_col = forloop.index0 | modulo: 3 -%}
+                    {%- if block_col == col and block.settings.text != blank -%}
+                      <li class="ca-questions__card" {% if pass == 1 %}{{ block.shopify_attributes }}{% endif %}>
+                        <svg class="ca-questions__mark" width="27" height="17" viewBox="5 7 16 10" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+                        <p class="ca-questions__text">{{ block.settings.text }}</p>
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- elsif request.design_mode -%}
+      <p class="ca-questions__empty">Add <strong>Quote</strong> blocks to fill the columns.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-questions {
+    background-color: var(--color-background);
+  }
+
+  .ca-questions__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-questions__cols {
+    --ca-questions-gap: 32px;
+    --ca-questions-tail: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 24px;
+    height: 620px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 66%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0, #000 66%, transparent 100%);
+  }
+
+  .ca-questions__track {
+    display: flex;
+    flex-direction: column;
+    animation: ca-questions-drift var(--ca-questions-speed, 40s) linear infinite;
+    will-change: transform;
+  }
+
+  .ca-questions__col:nth-child(2) .ca-questions__track {
+    animation-direction: reverse;
+    animation-duration: calc(var(--ca-questions-speed, 40s) * 1.25);
+  }
+
+  .ca-questions__col:nth-child(3) .ca-questions__track {
+    animation-duration: calc(var(--ca-questions-speed, 40s) * 0.9);
+  }
+
+  .ca-questions__cols:hover .ca-questions__track,
+  .ca-questions__cols:focus-within .ca-questions__track {
+    animation-play-state: paused;
+  }
+
+  @keyframes ca-questions-drift {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50%); }
+  }
+
+  .ca-questions__set {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ca-questions-gap);
+    margin: 0;
+    padding: 0 0 var(--ca-questions-gap);
+    list-style: none;
+  }
+
+  .ca-questions__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    background-color: rgb(var(--color-foreground-rgb));
+    color: var(--color-background);
+  }
+
+  /* Speech-bubble tail: a small wedge under one bottom corner, alternating sides. */
+  .ca-questions__card::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    width: 22px;
+    height: var(--ca-questions-tail);
+    background-color: rgb(var(--color-foreground-rgb));
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  .ca-questions__card:nth-child(even)::after {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+
+  .ca-questions__mark {
+    flex: 0 0 auto;
+  }
+
+  .ca-questions__text {
+    margin: 0;
+    font-size: var(--ca-fs-24);
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-questions__empty {
+    color: var(--ca-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-questions__track {
+      animation: none;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-questions__intro {
+      margin-block-end: 48px;
+    }
+
+    .ca-questions__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ca-questions__col:nth-child(3) {
+      display: none;
+    }
+  }
+
+  /* Mobile: one static stack of every card, no drift and no duplicates. */
+  @media screen and (max-width: 749px) {
+    .ca-questions__cols {
+      display: block;
+      height: auto;
+      overflow: visible;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .ca-questions__col:nth-child(3) {
+      display: block;
+    }
+
+    .ca-questions__track {
+      animation: none;
+    }
+
+    .ca-questions__set[aria-hidden="true"] {
+      display: none;
+    }
+
+    .ca-questions__set {
+      --ca-questions-gap: 28px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Question cards",
+  "tag": "section",
+  "class": "ca-questions-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The questions change" },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Statement",
+      "info": "Bold the words to emphasise. The rest is shown muted.",
+      "default": "Past eight figures, <strong>the problems stop being cosmetic.</strong>"
+    },
+    { "type": "range", "id": "speed", "label": "Drift duration", "min": 20, "max": 90, "step": 5, "unit": "s", "default": 40 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#0d110d" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text", "default": "#ffffff" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Quote",
+      "settings": [{ "type": "textarea", "id": "text", "label": "Text" }]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Question cards",
+      "category": "Conspire",
+      "blocks": [{ "type": "quote" }, { "type": "quote" }, { "type": "quote" }]
+    }
+  ]
+}
+{% endschema %}

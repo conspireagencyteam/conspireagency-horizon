@@ -1,0 +1,643 @@
+{%- comment -%}
+  ca-communication.liquid — "Communication is everything" (Conspire v2.0, Figma 279:2602).
+
+  Three numbered columns. Each pairs an app-surface mockup (a Slack Connect
+  thread, the client portal task queue, an email thread) with the point it
+  proves. The mockups are real HTML, ported from the previous theme's
+  "What changes" section, so their copy stays editable and they stay sharp:
+  messages type in on scroll and one portal task flips to Completed, then the
+  sequence loops. Static (everything visible) under prefers-reduced-motion.
+
+  Task rows and points are blocks. Mockup styles: assets/ca-communication.css.
+{%- endcomment -%}
+
+{{ 'ca-communication.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="ca-comm spacing-style color-custom-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.heading != blank -%}
+      <div class="ca-comm__head">
+        <h2 class="ca-eyebrow ca-comm__eyebrow">{{ section.settings.heading }}</h2>
+      </div>
+    {%- endif -%}
+
+    {%- assign points = section.blocks | where: 'type', 'point' -%}
+
+    <div class="ca-comm__grid">
+      <div class="ca-comm__col">
+      <span class="ca-comm__number" aria-hidden="true">01</span>
+      <!-- Slack surface -->
+      <div class="ca-comm__card ca-comm__slack" aria-label="Example Slack conversation">
+        <div class="ca-comm__slack-header">
+          <span class="ca-comm__slack-channel"><span class="ca-comm__slack-hash">#</span>{{ section.settings.slack_channel | default: 'yourcompany-conspire' }}</span>
+          <span class="ca-comm__slack-connect">Slack Connect</span>
+        </div>
+        <div class="ca-comm__slack-body">
+          <div class="ca-comm__typing ca-wc-hide" data-ca-wc="typing-1" aria-hidden="true">
+            <span class="ca-comm__avatar ca-comm__avatar--client">{{ section.settings.client_name | default: 'You' | slice: 0 }}</span>
+            <span class="ca-comm__typing-bubble"><i></i><i></i><i></i></span>
+          </div>
+          <div class="ca-comm__message" data-ca-wc="slack-1">
+            <span class="ca-comm__avatar ca-comm__avatar--client">{{ section.settings.client_name | default: 'You' | slice: 0 }}</span>
+            <div class="ca-comm__message-content">
+              <p class="ca-comm__message-meta">
+                <span class="ca-comm__message-name">{{ section.settings.client_name | default: 'You' }}</span>
+                <span class="ca-comm__message-tag">{{ section.settings.client_tag | default: 'Your Team' }}</span>
+                <span class="ca-comm__message-time">{{ section.settings.client_time | default: '9:42 AM' }}</span>
+              </p>
+              <p class="ca-comm__message-text">{{ section.settings.client_message | default: 'How is the accessibility audit going?' }}</p>
+            </div>
+          </div>
+          <div class="ca-comm__message" data-ca-wc="slack-2">
+            <span class="ca-comm__avatar ca-comm__avatar--conspire">C</span>
+            <div class="ca-comm__message-content">
+              <p class="ca-comm__message-meta">
+                <span class="ca-comm__message-name">{{ section.settings.reply_name | default: 'Conspire' }}</span>
+                {%- if section.settings.reply_tag != blank -%}
+                  <span class="ca-comm__message-tag">{{ section.settings.reply_tag }}</span>
+                {%- endif -%}
+                <span class="ca-comm__message-time">{{ section.settings.reply_time | default: '9:44 AM' }}</span>
+              </p>
+              <p class="ca-comm__message-text">{{ section.settings.reply_message | default: "Hey we've moved through all the P1 issues. We're now working through the P2 issues and should be good to schedule a rescan tomorrow." }}</p>
+            </div>
+          </div>
+          <div class="ca-comm__typing ca-wc-hide" data-ca-wc="typing-2" aria-hidden="true">
+            <span class="ca-comm__avatar ca-comm__avatar--client">{{ section.settings.client_name | default: 'You' | slice: 0 }}</span>
+            <span class="ca-comm__typing-bubble"><i></i><i></i><i></i></span>
+          </div>
+          <div class="ca-comm__message" data-ca-wc="slack-3">
+            <span class="ca-comm__avatar ca-comm__avatar--client">{{ section.settings.client_name | default: 'You' | slice: 0 }}</span>
+            <div class="ca-comm__message-content">
+              <p class="ca-comm__message-meta">
+                <span class="ca-comm__message-name">{{ section.settings.client_name | default: 'You' }}</span>
+                <span class="ca-comm__message-tag">{{ section.settings.client_tag | default: 'Your Team' }}</span>
+                <span class="ca-comm__message-time">{{ section.settings.followup_time | default: '9:46 AM' }}</span>
+              </p>
+              <p class="ca-comm__message-text">{{ section.settings.followup_message | default: 'Perfect. Also, heads up: the new collection is coming together for early next month. Can we grab 30 minutes this week to walk through the launch plan?' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {%- if points[0] -%}
+        <div class="ca-comm__point" {{ points[0].shopify_attributes }}>
+          <h3 class="ca-comm__point-title">{{ points[0].settings.title }}</h3>
+          <p class="ca-comm__point-text">{{ points[0].settings.text }}</p>
+        </div>
+      {%- endif -%}
+      </div>
+
+      <div class="ca-comm__col">
+      <span class="ca-comm__number" aria-hidden="true">02</span>
+      <!-- Portal surface -->
+      <div class="ca-comm__card ca-comm__portal" aria-label="Example client portal task queue">
+        <div class="ca-comm__portal-header">
+          <span class="ca-comm__portal-title">Tasks</span>
+          <span class="ca-comm__portal-label">{{ section.settings.portal_label | default: 'Client portal' }}</span>
+        </div>
+        <div class="ca-comm__table" role="table">
+          <div class="ca-comm__row ca-comm__row--head" role="row">
+            <span class="ca-comm__cell ca-comm__cell--task" role="columnheader">Task</span>
+            <span class="ca-comm__cell ca-comm__cell--priority" role="columnheader">Priority</span>
+            <span class="ca-comm__cell ca-comm__cell--status" role="columnheader">Status</span>
+          </div>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'task' -%}
+              <div class="ca-comm__row" role="row" {{ block.shopify_attributes }}>
+                <span class="ca-comm__cell ca-comm__cell--task" role="cell">{{ block.settings.title }}</span>
+                <span class="ca-comm__cell ca-comm__cell--priority" role="cell">
+                  <span class="ca-comm__chip ca-comm__chip--{{ block.settings.priority }}">
+                    {{- block.settings.priority | capitalize -}}
+                  </span>
+                </span>
+                <span class="ca-comm__cell ca-comm__cell--status" role="cell">
+                  <span class="ca-comm__status ca-comm__status--{{ block.settings.status }}">
+                    {%- case block.settings.status -%}
+                      {%- when 'not_started' -%}Open
+                      {%- when 'in_progress' -%}In Progress
+                      {%- when 'needs_review' -%}Needs Review
+                      {%- when 'completed' -%}Completed (Live)
+                    {%- endcase -%}
+                  </span>
+                </span>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- if points[1] -%}
+        <div class="ca-comm__point" {{ points[1].shopify_attributes }}>
+          <h3 class="ca-comm__point-title">{{ points[1].settings.title }}</h3>
+          <p class="ca-comm__point-text">{{ points[1].settings.text }}</p>
+        </div>
+      {%- endif -%}
+      </div>
+
+      <div class="ca-comm__col">
+      <span class="ca-comm__number" aria-hidden="true">03</span>
+      <!-- Email surface -->
+      <div class="ca-comm__card ca-comm__email" aria-label="Example email thread">
+        <div class="ca-comm__email-header">
+          <span class="ca-comm__email-subject">{{ section.settings.email_subject | default: 'Lead times on product pages' }}</span>
+          <span class="ca-comm__email-label">Inbox</span>
+        </div>
+        <div class="ca-comm__email-body">
+          <div class="ca-comm__email-message" data-ca-wc="email-1">
+            <p class="ca-comm__email-meta">
+              <span class="ca-comm__email-from">{{ section.settings.email1_from | default: 'Dana (Customer Service)' }}</span>
+              <span class="ca-comm__email-detail">{{ section.settings.email1_detail | default: 'to Conspire, cc Alex (Ecomm Manager)' }}</span>
+            </p>
+            <p class="ca-comm__email-text">{{ section.settings.email1_text | default: 'Quick one from the CS side. NetSuite lead times changed on a few SKUs this morning. How do those pull through to the product pages, and how fast do they update?' }}</p>
+          </div>
+          <div class="ca-comm__email-message ca-comm__email-message--reply" data-ca-wc="email-2">
+            <p class="ca-comm__email-meta">
+              <span class="ca-comm__email-from">{{ section.settings.email2_from | default: 'Conspire' }}</span>
+              <span class="ca-comm__email-detail">{{ section.settings.email2_detail | default: 'to Dana, Alex' }}</span>
+            </p>
+            <p class="ca-comm__email-text">{{ section.settings.email2_text | default: "Lead times sync from NetSuite once an hour and the product pages read the synced value, so this morning's change is already live. If you ever need one through faster, reply here and we can push the sync on demand." }}</p>
+          </div>
+        </div>
+      </div>
+
+      {%- if points[2] -%}
+        <div class="ca-comm__point" {{ points[2].shopify_attributes }}>
+          <h3 class="ca-comm__point-title">{{ points[2].settings.title }}</h3>
+          <p class="ca-comm__point-text">{{ points[2].settings.text }}</p>
+        </div>
+      {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var section = document.querySelector('.ca-comm[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      return; // static state: all messages visible, typing rows stay hidden
+    }
+
+    function q(name) {
+      return section.querySelector('[data-ca-wc="' + name + '"]');
+    }
+
+    var typing1 = q('typing-1');
+    var typing2 = q('typing-2');
+    var seq = ['slack-1', 'slack-2', 'slack-3', 'email-1', 'email-2'].map(q);
+
+    /* Lock all three cards to the tallest full-content height so the layout
+       never shifts while messages appear, and the three columns stay lined
+       up. Re-measured on resize (with hidden messages force-shown). */
+    var cards = Array.prototype.slice.call(section.querySelectorAll('.ca-comm__card'));
+
+    function lockHeights() {
+      section.classList.add('ca-wc-measuring');
+      cards.forEach(function (card) {
+        card.style.height = 'auto';
+      });
+      if (window.matchMedia('(min-width: 1025px)').matches) {
+        /* Side-by-side columns: uniform height keeps the three lined up. */
+        var max = 0;
+        cards.forEach(function (card) {
+          max = Math.max(max, card.offsetHeight);
+        });
+        cards.forEach(function (card) {
+          card.style.height = max + 'px';
+        });
+      } else {
+        /* Stacked: lock each card to its own full height so nothing shifts
+           during the sequence, without dead space in shorter cards. */
+        var heights = cards.map(function (card) {
+          return card.offsetHeight;
+        });
+        cards.forEach(function (card, i) {
+          card.style.height = heights[i] + 'px';
+        });
+      }
+      section.classList.remove('ca-wc-measuring');
+    }
+
+    lockHeights();
+    window.addEventListener('load', lockHeights);
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(lockHeights, 200);
+    });
+
+    seq.forEach(function (el) {
+      if (el) el.classList.add('ca-wc-hide');
+    });
+
+    function show(el) {
+      if (!el) return;
+      el.classList.remove('ca-wc-hide');
+      el.classList.add('ca-wc-appear');
+    }
+
+    function hide(el) {
+      if (!el) return;
+      el.classList.add('ca-wc-hide');
+      el.classList.remove('ca-wc-appear');
+    }
+
+    /* Portal demo row: captured once so the loop can reset it each cycle */
+    var portalRows = Array.prototype.slice.call(
+      section.querySelectorAll('.ca-comm__portal .ca-comm__row:not(.ca-comm__row--head)')
+    );
+    var demoRow = null;
+    for (var i = 0; i < portalRows.length; i++) {
+      if (portalRows[i].querySelector('.ca-comm__status--not_started')) {
+        demoRow = portalRows[i];
+        break;
+      }
+    }
+    var demoPill = demoRow ? demoRow.querySelector('.ca-comm__status') : null;
+    var demoPillText = demoPill ? demoPill.textContent : '';
+
+    function portalComplete() {
+      if (!demoRow || !demoPill) return;
+      demoPill.classList.remove('ca-comm__status--not_started');
+      demoPill.classList.add('ca-comm__status--completed', 'ca-wc-pop');
+      demoPill.textContent = 'Completed (Live)';
+
+      schedule(function () {
+        var after = [];
+        var next = demoRow.nextElementSibling;
+        while (next) {
+          after.push(next);
+          next = next.nextElementSibling;
+        }
+        if (!after.length) return;
+        var drop = 0;
+        after.forEach(function (row) {
+          drop += row.offsetHeight;
+        });
+        var rise = demoRow.offsetHeight;
+        var ease = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+        demoRow.style.transition = ease;
+        demoRow.style.transform = 'translateY(' + drop + 'px)';
+        after.forEach(function (row) {
+          row.style.transition = ease;
+          row.style.transform = 'translateY(-' + rise + 'px)';
+        });
+      }, 800);
+    }
+
+    function portalReset() {
+      if (!demoRow || !demoPill) return;
+      var rows = [demoRow];
+      var next = demoRow.nextElementSibling;
+      while (next) {
+        rows.push(next);
+        next = next.nextElementSibling;
+      }
+      rows.forEach(function (row) {
+        row.style.transition = 'none';
+        row.style.transform = '';
+      });
+      demoPill.classList.remove('ca-comm__status--completed', 'ca-wc-pop');
+      demoPill.classList.add('ca-comm__status--not_started');
+      demoPill.textContent = demoPillText;
+    }
+
+    var timers = [];
+    var running = false;
+
+    function schedule(fn, ms) {
+      timers.push(setTimeout(fn, ms));
+    }
+
+    function clearTimers() {
+      timers.forEach(clearTimeout);
+      timers = [];
+    }
+
+    function resetState() {
+      hide(typing1);
+      hide(typing2);
+      seq.forEach(function (el) {
+        if (el) {
+          el.classList.add('ca-wc-hide');
+          el.classList.remove('ca-wc-appear');
+        }
+      });
+      portalReset();
+    }
+
+    var CYCLE_MS = 10500; /* last beat ~5.7s + hold on the finished state */
+
+    function cycle() {
+      resetState();
+      schedule(function () { show(typing1); }, 300);
+      schedule(function () { hide(typing1); show(q('slack-1')); }, 1600);
+      schedule(function () { show(q('slack-2')); }, 2700);
+      schedule(function () { show(typing2); }, 4100);
+      schedule(function () { hide(typing2); show(q('slack-3')); }, 5300);
+      schedule(function () { show(q('email-1')); }, 700);
+      schedule(function () { show(q('email-2')); }, 2400);
+      schedule(portalComplete, 3200);
+      schedule(cycle, CYCLE_MS);
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            if (!running) {
+              running = true;
+              cycle();
+            }
+          } else if (running) {
+            running = false;
+            clearTimers();
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(section);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Communication",
+  "tag": "section",
+  "class": "ca-comm-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Eyebrow",
+      "default": "Communication is everything"
+    },
+    {
+      "type": "header",
+      "content": "Slack mockup"
+    },
+    {
+      "type": "text",
+      "id": "slack_channel",
+      "label": "Channel name",
+      "default": "yourcompany-conspire"
+    },
+    {
+      "type": "text",
+      "id": "client_name",
+      "label": "Client sender name",
+      "default": "You"
+    },
+    {
+      "type": "text",
+      "id": "client_tag",
+      "label": "Client sender tag",
+      "default": "Your Team"
+    },
+    {
+      "type": "text",
+      "id": "client_time",
+      "label": "Client message time",
+      "default": "9:42 AM"
+    },
+    {
+      "type": "textarea",
+      "id": "client_message",
+      "label": "Client message",
+      "default": "How is the accessibility audit going?"
+    },
+    {
+      "type": "text",
+      "id": "reply_name",
+      "label": "Reply sender name",
+      "default": "Conspire"
+    },
+    {
+      "type": "text",
+      "id": "reply_tag",
+      "label": "Reply sender tag"
+    },
+    {
+      "type": "text",
+      "id": "reply_time",
+      "label": "Reply message time",
+      "default": "9:44 AM"
+    },
+    {
+      "type": "textarea",
+      "id": "reply_message",
+      "label": "Reply message",
+      "default": "Hey we've moved through all the P1 issues. We're now working through the P2 issues and should be good to schedule a rescan tomorrow."
+    },
+    {
+      "type": "text",
+      "id": "followup_time",
+      "label": "Client follow-up time",
+      "default": "9:46 AM"
+    },
+    {
+      "type": "textarea",
+      "id": "followup_message",
+      "label": "Client follow-up message",
+      "default": "Perfect. Also, heads up: the new collection is coming together for early next month. Can we grab 30 minutes this week to walk through the launch plan?"
+    },
+    {
+      "type": "header",
+      "content": "Portal mockup"
+    },
+    {
+      "type": "text",
+      "id": "portal_label",
+      "label": "Portal label",
+      "default": "Client portal"
+    },
+    {
+      "type": "header",
+      "content": "Email mockup"
+    },
+    {
+      "type": "text",
+      "id": "email_subject",
+      "label": "Subject",
+      "default": "Lead times on product pages"
+    },
+    {
+      "type": "text",
+      "id": "email1_from",
+      "label": "First email sender",
+      "default": "Dana (Customer Service)"
+    },
+    {
+      "type": "text",
+      "id": "email1_detail",
+      "label": "First email recipients line",
+      "default": "to Conspire, cc Alex (Ecomm Manager)"
+    },
+    {
+      "type": "textarea",
+      "id": "email1_text",
+      "label": "First email text",
+      "default": "Quick one from the CS side. NetSuite lead times changed on a few SKUs this morning. How do those pull through to the product pages, and how fast do they update?"
+    },
+    {
+      "type": "text",
+      "id": "email2_from",
+      "label": "Reply sender",
+      "default": "Conspire"
+    },
+    {
+      "type": "text",
+      "id": "email2_detail",
+      "label": "Reply recipients line",
+      "default": "to Dana, Alex"
+    },
+    {
+      "type": "textarea",
+      "id": "email2_text",
+      "label": "Reply text",
+      "default": "Lead times sync from NetSuite once an hour and the product pages read the synced value, so this morning's change is already live. If you ever need one through faster, reply here and we can push the sync on demand."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "task",
+      "name": "Portal task row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Task title"
+        },
+        {
+          "type": "select",
+          "id": "priority",
+          "label": "Priority",
+          "options": [
+            {
+              "value": "urgent",
+              "label": "Urgent"
+            },
+            {
+              "value": "high",
+              "label": "High"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "low",
+              "label": "Low"
+            }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "Status",
+          "options": [
+            {
+              "value": "not_started",
+              "label": "Open"
+            },
+            {
+              "value": "in_progress",
+              "label": "In Progress"
+            },
+            {
+              "value": "needs_review",
+              "label": "Needs Review"
+            },
+            {
+              "value": "completed",
+              "label": "Completed (Live)"
+            }
+          ],
+          "default": "in_progress"
+        }
+      ]
+    },
+    {
+      "type": "point",
+      "name": "Numbered point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Communication",
+      "category": "Conspire"
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  }
+}
+{% endschema %}

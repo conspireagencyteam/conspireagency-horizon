@@ -129,3 +129,292 @@ a.button-custom.size-style::before {
   mask: var(--ca-btn-arrow) center / contain no-repeat;
   pointer-events: none;
 }
+
+/* =========================================================================
+   Shared layout + type helpers for the inner pages (Conspire v2.0)
+
+   The Figma pages sit on a 12 column grid (1392px content, 24px gutters).
+   Section intros, pills, the years badge and hairline rows repeat on almost
+   every page, so they live here instead of in each section's stylesheet.
+   ========================================================================= */
+:root {
+  --ca-fs-86: var(--font-h1--size);
+  --ca-fs-48: clamp(2rem, 3.4vw, 3rem);
+  --ca-fs-36: clamp(1.625rem, 2.5vw, 2.25rem);
+  --ca-fs-32: clamp(1.375rem, 2.25vw, 2rem);
+  --ca-fs-24: clamp(1.25rem, 1.7vw, 1.5rem);
+  --ca-fs-20: 1.25rem;
+  --ca-fs-18: 1.125rem;
+  --ca-indent: 1.78em; /* 86px at the 48px statement size, 56px at 32px */
+  --ca-hairline-strong: rgb(var(--color-foreground-rgb) / 0.2);
+  --ca-muted: rgb(var(--color-foreground-rgb) / 0.6);
+  --ca-soft: rgb(var(--color-foreground-rgb) / 0.8);
+}
+
+.ca-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+}
+
+/* Section intro: eyebrow in the left columns, statement on the right. */
+.ca-intro {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.ca-intro__eyebrow {
+  grid-column: 1 / span 4;
+  padding-block-start: 6px;
+}
+
+.ca-intro__main {
+  grid-column: var(--ca-intro-start, 5) / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.ca-intro__main > * {
+  max-width: 100%;
+}
+
+.ca-statement {
+  width: 100%;
+  margin: 0;
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight, 400);
+  font-size: var(--ca-fs-48);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-indent: var(--ca-indent);
+  text-wrap: pretty;
+}
+
+.ca-statement--xl {
+  font-size: var(--ca-fs-32);
+  line-height: 1.3;
+}
+
+.ca-statement p {
+  margin: 0;
+}
+
+/* Bold marks the emphasised words; everything else drops back (as in the testimonials). */
+.ca-statement:has(strong) {
+  color: rgb(var(--color-foreground-rgb) / 0.5);
+}
+
+.ca-statement strong {
+  font-weight: inherit;
+  color: rgb(var(--color-foreground-rgb));
+}
+
+@media screen and (max-width: 989px) {
+  .ca-intro__eyebrow,
+  .ca-intro__main {
+    grid-column: 1 / -1;
+  }
+
+  .ca-intro__main {
+    align-items: flex-start;
+  }
+}
+
+/* Pill tags */
+.ca-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ca-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--ca-hairline-strong);
+  border-radius: 100px;
+  font-size: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-transform: capitalize;
+}
+
+.ca-pills--lg .ca-pill {
+  min-height: 42px;
+  font-size: var(--ca-fs-18);
+}
+
+/* "+6 years partnered" */
+.ca-years {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--ca-fs-20);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.ca-years__num {
+  padding-inline: 3px;
+  background-color: rgb(var(--color-foreground-rgb));
+  color: var(--color-background);
+}
+
+.ca-years--sm {
+  font-size: 1rem;
+}
+
+/* Dark sections: primary button turns light, secondary keeps an outline. */
+.ca-invert .button,
+.ca-invert .button:hover {
+  --button-color: var(--color-background);
+  --button-background-color: var(--color-foreground);
+  --button-border-color: var(--color-foreground);
+}
+
+.ca-invert .button-secondary,
+.ca-invert .button-secondary:hover {
+  --button-color: var(--color-foreground);
+  --button-background-color: transparent;
+  --button-border-color: var(--color-foreground);
+}
+
+.ca-invert a.button-secondary.size-style {
+  --ca-btn-arrow-color: var(--color-background);
+}
+
+/* Visually hidden, still read by assistive tech. */
+.ca-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Accordion (native <details>, exclusive per group via the name attribute).
+   Question is the 20px uppercase label; the marker is a plus that becomes a minus. */
+.ca-accordion {
+  border-block-start: 1px solid var(--ca-hairline-strong);
+}
+
+.ca-accordion--flush {
+  border-block-start: 0;
+}
+
+.ca-accordion__item {
+  border-block-end: 1px solid var(--ca-hairline-strong);
+}
+
+.ca-accordion__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 36px;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--ca-fs-20);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ca-muted);
+  transition: color 0.15s ease;
+}
+
+.ca-accordion__q::-webkit-details-marker {
+  display: none;
+}
+
+.ca-accordion__q:hover,
+.ca-accordion__item[open] > .ca-accordion__q {
+  color: rgb(var(--color-foreground-rgb));
+}
+
+.ca-accordion__item[open] > .ca-accordion__q {
+  color: var(--ca-muted);
+  padding-block-end: 24px;
+}
+
+.ca-accordion__marker {
+  position: relative;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  color: rgb(var(--color-foreground-rgb));
+}
+
+.ca-accordion__marker::before,
+.ca-accordion__marker::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: 16px;
+  height: 1.5px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+.ca-accordion__marker::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.ca-accordion__item[open] .ca-accordion__marker::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.ca-accordion__a {
+  max-width: 802px;
+  padding-block-end: 36px;
+  font-size: var(--ca-fs-18);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.ca-accordion__a > :first-child {
+  margin-block-start: 0;
+}
+
+.ca-accordion__a > :last-child {
+  margin-block-end: 0;
+}
+
+.ca-accordion--lg .ca-accordion__a {
+  font-size: var(--ca-fs-32);
+  letter-spacing: -0.03em;
+  padding-block-end: 44px;
+}
+
+@media screen and (max-width: 749px) {
+  .ca-accordion__q {
+    padding-block: 24px;
+    font-size: 1.0625rem;
+  }
+
+  .ca-accordion__a {
+    padding-block-end: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ca-accordion__marker::before,
+  .ca-accordion__marker::after {
+    transition: none;
+  }
+}

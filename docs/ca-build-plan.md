@@ -1,0 +1,256 @@
+# Conspire v2.0 on Horizon: build plan
+
+Written 2026-10-06. Figma file: `ccmuKMyD8c4709qOwluhGu` (Conspire v2.0). All frames are
+desktop only (1440 wide). Every section node ID needed for the build is recorded in §5, so
+no further Figma links are needed to keep going.
+
+Status key: ✅ built · 🔨 to build from Figma · 🧩 no design, assemble from the section library
+
+---
+
+## 1. Where things stand
+
+- **This repo** is Horizon v4.1.3 plus a `ca-*` customization layer. The homepage is
+  already built (11 `ca-*` sections, header and footer groups swapped to `ca-header` /
+  `ca-footer`). It was built against the older homepage frame `97:2`; the current frame is
+  `278:1875`, so it needs a diff pass (the apps section `390:793` in particular is newer).
+- **GitHub `main` syncs to the unpublished theme `conspireagency-horizon/main`**
+  (#193036189877) on `conspireagency.myshopify.com`. Nothing here is live. The live theme
+  is still Conspire Concept (`conspire-concept` repo, where a push to `main` IS a deploy).
+- **Brand font files are not in `/assets` yet** (`pp-mori-regular.woff2`,
+  `pp-mori-medium.woff2`, `ashcroft-medium.woff2`, `syne-regular.woff2`). Everything
+  renders in fallback fonts until they are added.
+- Only `templates/index.json` is customized. Every other template is stock Horizon.
+
+## 2. Ground rules for the build
+
+1. **Upstream-safe.** All custom code lives in `ca-*` files (sections, snippets, blocks,
+   assets). Stock Horizon files are not edited, apart from the one `ca-head` render line
+   already in `layout/theme.liquid`.
+2. **Keep the live template suffixes.** A template suffix is stored on the page, product,
+   blog or article itself, not in the theme. If the new theme has a file with the same
+   suffix, the resource picks up the new design the moment the theme is published, with no
+   reassignment in admin and a clean rollback. A suffix with no matching file falls back to
+   the default template. So: name new templates after the suffixes already in use (§3), and
+   only create a suffixed file where the layout really differs from the default.
+3. **Reuse the store's existing custom data** (§4) before adding anything new.
+4. **Content from the store, layout from Figma.** Figma repeats placeholder data (every
+   case study shows "+6 years partnered" and the same pills). Real values come from the
+   `client` metaobjects and article metafields.
+5. **Copy.** Marketing copy is taken from Figma as written. Rules from the old repo still
+   apply to anything I write myself (no em dashes, "Shopify store" not "site", "Conspire
+   Build" naming). Where Figma copy conflicts with those rules I flag it instead of
+   silently rewriting.
+6. **Typography** comes from Horizon's presets as tuned in `docs/ca-typography.md`. New
+   one-off sizes need a reason.
+7. **Responsive.** No mobile designs exist, so mobile and tablet layouts are derived from
+   the homepage patterns already in the repo.
+8. **Per section workflow:** pull the node with `get_design_context`, build, run
+   `shopify theme dev --store conspireagency.myshopify.com`, compare against the Figma
+   screenshot in the browser, then move on.
+
+## 3. Template map
+
+Live usage was read from the store on 2026-10-06 (pages, blogs, articles via Admin API;
+products inferred from the live pages because the CLI token has no product scope).
+
+| Area | Live resource(s) | Live suffix | Figma | File in this theme | Status |
+|---|---|---|---|---|---|
+| Homepage | `/` | n/a | `278:1875` | `index.json` | ✅ needs diff pass |
+| Our work | blog `work` (24 articles) | `work` | `315:1651`, hover `315:1939` | `blog.work.json` | 🔨 |
+| Case study | 22 in `work`, 2 in `shopify-application-development` | `case-study-template` | `315:1213` | `article.case-study-template.json` | 🔨 |
+| Fractional teams | product `shopify-fractional-teams` | `new-fractional-teams` (inferred) | `279:2371` | `product.new-fractional-teams.json` | 🔨 |
+| Conspire Build | product `shopify-website-development-agency` | `guided-builds` (inferred) | `396:54` | `product.guided-builds.json` | 🔨 |
+| Pricing | page `pricing` | `pricing-page` | `429:2502` | `page.pricing-page.json` | 🔨 |
+| Contact | page `contact` | `contact` | `433:3025` | `page.contact.json` (replace stock) | 🔨 |
+| Blog article | blog `shopify` (24 articles, suffixes `article` / `basic` / none) | all resolve to default | `443:147` | `article.json` | 🔨 |
+| LA agency page | page `los-angeles-shopify-agency` | `la-shopify-agency` | `458:100` | `page.la-shopify-agency.json` | 🔨 |
+| Market pages | blog `markets`: 24 articles + NYC | `market`, `nyc` | `458:100` (same design) | `article.market.json`, `article.nyc.json` | 🔨 |
+| About | page `about-us` | `about-us` | `458:100` (same design) | `page.about-us.json` | 🔨 |
+| Careers | blog `careers` (2 articles) | `careers` | `474:1217` | `blog.careers.json` | 🔨 |
+| Career detail | articles in `careers` | `careers` | `474:774` | `article.careers.json` | 🔨 |
+| Blog index | blog `shopify` | `shopstack` | none | `blog.shopstack.json` + `blog.json` | 🧩 |
+| Markets index | blog `markets` | `market` | none | `blog.market.json` | 🧩 |
+| Industry landers | 2 `health-brand` articles, 1 `tile-paint` | `health-brand`, `tile-paint` | none | fall back to case study layout unless told otherwise | 🧩 |
+| Other service products | `shopify-websites`, `shopify-cro-agency`, 5 migration products, `custom-shopify-applications`, landing pages, 2 app products | various | none | `product.json` rebuilt as a service page from the library, suffixed files only where needed | 🧩 |
+| Collections | `services`, `shopify-migrations`, 2 more | `services`, `shopify-migrations` | none | `collection.json` as a services list | 🧩 |
+| Plain pages | privacy policies, accessibility, app pages, `shopify-services`, `guided-shopify-website`, `reviews` (hidden) | mostly default | none | `page.json` (rich text in the new type system) | 🧩 |
+| Utility | 404, search, password, cart, customers | n/a | none | restyle stock Horizon | 🧩 |
+
+## 4. Custom data map
+
+Already in the store and reused as is:
+
+| Data | Fields that matter | Used for |
+|---|---|---|
+| Metaobject `client` (17) | `name`, `logo`, `work_preview`, `work_summary`, `featured_site_image`, `featured_site_media`, `years`, `services` (list), `case_study_reference` (url), `testimonial` | Work grid, client rows, more projects, homepage work list |
+| Metaobject `quote` (3) | `quote`, `name`, `partner_since`, `logo` | Testimonials, contact sidebar quote |
+| Metaobjects `faq` (10), `faq_category` (3) | | FAQ sections |
+| Metaobject `app` (1) | `name`, `tagline`, `description`, `icon`, `app_store_url` | Apps section |
+| Article `custom.banner_video` (file) | | **The optional featured video** on case studies. Reused for regular blog articles too (falls back to the article image) |
+| Article `custom.service_list`, `custom.website_url`, `custom.blog_short_description`, `custom.blog_logo`, `custom.quote` | | Case study hero pills, Visit Website button, summary |
+| Article `custom.work_location`, `work_type`, `work_hours`, `work_country` | | Career pills (San Diego, CA / Hybrid / Full-time / United States Only) |
+| Article `custom.market_data_*`, `custom.market_blurb` | | Market pages |
+| Product `product_details.display_title`, `product_details.excerpt` | | Services section |
+| Page `header.*`, `custom.footer_hide_footer` booleans | | Per page header and footer toggles (port to `ca-header` / `ca-footer`) |
+
+Proposed additions (both additive, neither affects the live theme):
+
+1. **Article metafield `custom.client`** (metaobject reference to `client`). Gives each case
+   study its years partnered, services and site media from one source instead of
+   duplicating them per article. Falls back to the article's own metafields when empty.
+2. Nothing else. Pricing tiers, sprints, fit lists and process steps are section blocks,
+   not metaobjects, since they are page copy.
+
+## 5. Pages, section by section
+
+Node IDs are the direct children of each page frame. Header and footer are the global
+groups and are not repeated below. "Booking" is the existing `ca-booking` section.
+
+**Our work `315:1651`** (hover state `315:1939`)
+- `315:1652` Hero: eyebrow left, large statement right, button → `ca-page-intro` (new)
+- `315:1663` Top projects: 2 column staggered grid of client cards (image, name, years,
+  service pills, Learn More) → `ca-work-grid` (new). Hover: the lifestyle image stays as
+  the backdrop and the store screenshot fades in on top of it as a centered card
+  (`work_preview` behind, `featured_site_media` or `featured_site_image` in front).
+- `315:1864` More projects: client names inline, separated by slashes; hovering a name
+  highlights it and shows that client's preview image at the cursor → `ca-more-projects` (new)
+- `315:1891` Booking
+
+**Case study `315:1213`**
+- `315:1214` Dark hero: years partnered, title, featured video (optional, else image),
+  service pills, summary, Visit Website → `ca-case-hero` (new)
+- `315:1246`, `315:1260`, `315:1360` Body with a sticky left table of contents →
+  `ca-article-body` (new, shared). The TOC is generated from the `<h2>` tags in
+  `article.content` (the Nature's Answer article already has Background / The Problem /
+  The Approach / The Result as H2s). Server side Liquid adds anchor IDs and builds the
+  list; a small script marks the active item on scroll. H2s are visually hidden on desktop
+  (the TOC is the label) and shown on mobile where the TOC collapses. First paragraph after
+  each H2 is the large lead style; H3s, lists, images and inline videos get article styles.
+- `315:1378` More cases: intro + client rows → `ca-page-intro` + existing `ca-work-list`
+- `315:1453` Booking
+
+**Blog article `443:147`**
+- `443:148` Header: date eyebrow + title → `ca-page-intro` variant
+- `443:155` Full width media: article image, or `custom.banner_video` when set
+- `443:156` Body with TOC ("Chapter 1, 2, 3" are the article's H2s) → `ca-article-body`
+- `443:264` Related articles → existing `ca-blog`
+- `443:287` Booking
+
+**Career detail `474:774`**
+- `474:775` Header: posted date, title, pills → `ca-page-intro` variant
+- `474:793` Overview: eyebrow + lead paragraphs (content before the first H2)
+- `474:804` Body with TOC, plus a "View All Open Positions" link under it → `ca-article-body`
+- `474:1129` Apply form (last TOC entry) → `ca-apply-form` (new, native Shopify contact form)
+- Note: the live career articles use H1 and H3 with no H2. The TOC needs H2s, so the
+  section will treat top level headings as TOC entries, and the two articles should be
+  tidied in admin.
+
+**Careers `474:1217`**
+- `474:1218` Hero → `ca-page-intro`
+- `474:1226` Open positions: rows with title, pills, excerpt, button → `ca-careers-list` (new)
+
+**Fractional teams `279:2371`**
+- `279:2372` Hero: H1 + copy + button + image strip → generalize the homepage hero (`ca-hero`)
+- `279:2433` Built to stick around: intro + client rows (name, years, summary, pills, image)
+  → `ca-client-rows` (new, shared with Build and Pricing)
+- `279:2541` The questions change: intro + drifting rows of quote cards → `ca-question-cards` (new)
+- `279:2602` Communication is everything: numbered 01 to 03 → `ca-numbered-steps` (new)
+- `279:2632` Retainer tiers ($6k / $10k / $18k rows) → `ca-pricing-tiers` (new, shared with Pricing)
+- `279:2666` FAQ → existing `ca-faq`
+- `279:2723` Testimonials → existing `ca-testimonials`
+- `279:2758` Book a strategy call + Who it's for / not for accordion + booking → `ca-booking` variant
+- `279:2788` Is this right for you (A fit if / Not a fit if) → `ca-fit-check` (new, shared with Build)
+
+**Conspire Build `396:54`**
+- `396:55` Hero → `ca-hero`
+- `396:136` The Conspire Build: Art direction / UX / Development / Migration → `ca-process` (new)
+- `396:187` Shopify migrations split feature → `ca-split-feature` (new)
+- `396:195` Our case studies → `ca-client-rows`
+- `396:300` More projects → `ca-more-projects`
+- `396:726` Pricing, scoped line by line: $15k / $25-45k / $100k+ bar graphic, 8 to 14 weeks
+  → `ca-build-pricing` (new, shared with Pricing). `396:327` is a hidden older version; ignore.
+- `396:420` Built for growth: 3 value cards → `ca-value-cards` (new)
+- `396:453` Fit check → `ca-fit-check`
+- `396:535` Testimonials, `396:570` Services (expanded variant of `ca-services`), `396:677` Booking
+
+**Pricing `429:2502`** (frame is mislabeled "Fractional teams" in Figma)
+- `429:2503` Hero → `ca-hero`
+- `429:2564` Retainer tiers → `ca-pricing-tiers`
+- `429:2598` Focused Builds sprints comparison ($7.5k / $14k) → `ca-sprints-table` (new)
+- `429:2660` Build pricing → `ca-build-pricing` (Signature Builds block `429:2724` is hidden in Figma)
+- `429:2752` Client rows, `429:2860` Testimonials, `429:2895` Booking with accordion
+
+**Contact `433:3025`**
+- `433:3028` Headline + form (name, work email, brand, role, platform, ERP, timeline,
+  revenue, paid media spend, problems, how did you hear) + sidebar (quote card, case study
+  card) → `ca-contact` (new). Native Shopify contact form with `contact[...]` fields.
+- `433:3114` Booking
+
+**LA agency / market / about `458:100`** (frame is mislabeled "Shopify Website Builds")
+- `458:101` Hero → `ca-hero`
+- `458:182` Statement → `ca-page-intro`
+- `458:188` Story 01 to 04 with images → `ca-numbered-steps` variant
+- `458:216` The Conspire Advantage → `ca-split-feature` variant
+- `458:321` Services, `458:366` Top projects (`ca-work-grid`), `458:567` Testimonials, `458:602` Booking
+- Market articles reuse this layout with city data from `custom.market_data_*`.
+
+## 6. New section library (summary)
+
+Shared pieces first, since most pages are combinations of them:
+
+`ca-page-intro`, `ca-hero` (generalized homepage hero), `ca-article-body` (TOC),
+`ca-work-grid`, `ca-more-projects`, `ca-client-rows`, `ca-pricing-tiers`, `ca-build-pricing`,
+`ca-fit-check`, `ca-numbered-steps`, `ca-split-feature`
+
+Page specific: `ca-case-hero`, `ca-careers-list`, `ca-apply-form`, `ca-contact`,
+`ca-question-cards`, `ca-process`, `ca-value-cards`, `ca-sprints-table`
+
+Shared snippets: pill, years-partnered badge, arrow button, eyebrow + hairline row (some
+exist in `ca-custom.css` already).
+
+## 7. Build order
+
+0. **Foundations.** Font files in, shared snippets, `ca-page-intro`, `ca-hero`
+   generalization, homepage diff against `278:1875`, header and footer links checked
+   against the live URLs.
+1. **Work and case studies.** `blog.work`, `article.case-study-template`, including
+   `ca-article-body` and the TOC.
+2. **Editorial.** `article.json`, `blog.careers`, `article.careers`.
+3. **Service pages.** Fractional teams, then Conspire Build, then Pricing (each one adds
+   sections the next reuses).
+4. **Contact, LA / market / about.**
+5. **No design pages** (§3 rows marked 🧩) assembled from the library.
+6. **Launch prep** (§8).
+
+Each step ends with a commit, so the unpublished theme always shows current progress.
+
+## 8. Launch checklist (parity with the live theme)
+
+- Lead tracking ported from `conspire-concept/layout/theme.liquid`: GA4 `generate_lead`,
+  Meta pixel `Lead`, Google Ads conversions loaded after consent, for the contact form and
+  Calendly bookings. Do not re-add `invitee_meeting_scheduled` (Calendly's Meta
+  integration already sends it).
+- Calendly embed in `ca-booking` verified on every page that uses it.
+- Contact and careers forms deliver email, with spam protection.
+- Every live suffix in §3 resolves to a designed or assembled template. Crawl the old
+  sitemap against a preview of this theme and check for 404s and missing content.
+- Template content entered for every JSON template (theme JSON does not carry over from
+  the old theme).
+- SEO: titles, meta descriptions, structured data, canonical tags, one H1 per page.
+- Accessibility pass per the `.cursor/rules/*accessibility*` standards, performance pass.
+- Navigation menus, redirects, announcement and consent banner checked.
+- Publish, smoke test, keep Conspire Concept as the rollback.
+
+## 9. Open questions
+
+1. **Fonts.** Licensed PP Mori (Regular, Medium) and Ashcroft (Medium) woff2 files are
+   needed. Figma uses the trial "Ashcroft Test".
+2. **Build pricing numbers.** Visible Figma says $15k, $25-45k, **$100k+** with the
+   Signature Builds block hidden. The old repo's copy rules say Conspire Build is $15K to
+   $75K and Signature Build is $100K+. Default: follow visible Figma.
+3. **Store data changes.** OK to add the `custom.client` article metafield and to change
+   the two career articles' top level headings to H2?
+4. **No design pages.** OK to assemble them from the library, or are some being retired
+   (for example `guided-shopify-website`, the landing pages product, the industry landers)?
+5. **Mobile.** Derived from the desktop designs unless mobile frames exist.

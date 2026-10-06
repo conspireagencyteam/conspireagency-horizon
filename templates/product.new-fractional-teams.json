@@ -1,0 +1,603 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-brands-marquee",
+      "settings": {
+        "badge_image": "",
+        "heading": "A team to solve your complex problems.",
+        "body": "<p>Your team can't do it all. You need a senior team, that knows your business, sits in your Slack alongside your people, and has the senior experience to transform business problems into solutions.</p>",
+        "button_label": "Book a Strategy Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "body-bio",
+          "tillamook-country-smoker-jerky",
+          "kinto",
+          "p-kay-metal",
+          "natures-answer",
+          "hustler-hollywood",
+          "portola-paints"
+        ],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "allow_transparent_header": false,
+        "transparent_header_text_color": "#0d110d",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "clients": {
+      "type": "ca-client-rows",
+      "blocks": {
+        "client_1": {
+          "type": "client",
+          "settings": {
+            "client": "zia-tile",
+            "name": "Zia Tile",
+            "years": "6",
+            "summary": "Six years of daily development on systems their checkout depends on: arrival estimates based on order quantity, LTL freight, custom warehouse pickup, and the trade program that takes a pro from application to managed account. Around it: ADA compliance, privacy preferences, email flows, and attribution for their paid team.",
+            "pills": "Checkout-critical software\nArrival estimates\nLTL freight\nWarehouse pickup\nTrade program\nADA & privacy compliance\nAttribution setup"
+          }
+        },
+        "client_2": {
+          "type": "client",
+          "settings": {
+            "client": "body-bio",
+            "name": "BodyBio",
+            "years": "7",
+            "summary": "We manage four Shopify stores for BodyBio: consumer stores for the US and international markets, and healthcare practitioner stores for the US and Europe. We built and maintain the custom software that takes a practitioner from application to approval to welcome sample bundle, and we support every new release, protocol bundle, and fulfillment issue.",
+            "pills": "4 stores\nPractitioner onboarding systems\nCustom bundle software\nNew product launch support\nFulfillment triage"
+          }
+        },
+        "client_3": {
+          "type": "client",
+          "settings": {
+            "client": "cousins-maine-lobster",
+            "name": "Cousins Maine Lobster",
+            "years": "6",
+            "summary": "Every Cousins storefront runs through us, including the Cousins Fried Seafood store and the franchise portal we built, which handles ordering, compliance, and training for roughly 70 locations. We created their multimillion dollar direct-to-consumer business where other agencies could not, and our events tooling keeps each franchise visible in its market.",
+            "pills": "Franchise portal build & management\nOrdering & compliance systems\nTraining systems\nFranchise events tooling\nDTC store build"
+          }
+        },
+        "client_4": {
+          "type": "client",
+          "settings": {
+            "client": "tillamook-country-smoker-jerky",
+            "name": "Tillamook Country Smoker",
+            "years": "7",
+            "summary": "We built the original store and have supported every launch since, including their recent rebrand. Day to day we support their marketing teams, especially email, and Bonde Bundles, our own app, lifts conversion and average order value with bundle and save.",
+            "pills": "Original build\nOngoing launches\nEmail marketing support\nBonde Bundles\nRebrand rollout"
+          }
+        }
+      },
+      "block_order": [
+        "client_1",
+        "client_2",
+        "client_3",
+        "client_4"
+      ],
+      "settings": {
+        "eyebrow": "Built to stick around",
+        "heading": "We don't just launch projects. <strong>We build long-term partnerships, becoming an extension of your team as your business evolves.</strong>",
+        "link_names": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "questions": {
+      "type": "ca-question-cards",
+      "blocks": {
+        "quote_1": {
+          "type": "quote",
+          "settings": {
+            "text": "We use NetSuite. Can you assist with the integration?"
+          }
+        },
+        "quote_2": {
+          "type": "quote",
+          "settings": {
+            "text": "Your accessibility audit is due. We've already scheduled the scan."
+          }
+        },
+        "quote_3": {
+          "type": "quote",
+          "settings": {
+            "text": "When a customer opts out, are our ad platforms actually honoring it?"
+          }
+        },
+        "quote_4": {
+          "type": "quote",
+          "settings": {
+            "text": "Paid media needs help setting up attribution. Can you get us going with Elevar or Triple Whale and implement these conversion events?"
+          }
+        },
+        "quote_5": {
+          "type": "quote",
+          "settings": {
+            "text": "The new collection drops in six weeks. We need landing pages to support the launch."
+          }
+        },
+        "quote_6": {
+          "type": "quote",
+          "settings": {
+            "text": "The shipment's delayed. Customer service wants the delivery estimates customers see pushed back a week or two."
+          }
+        },
+        "quote_7": {
+          "type": "quote",
+          "settings": {
+            "text": "We're losing people between the product page and checkout. Why?"
+          }
+        }
+      },
+      "block_order": [
+        "quote_1",
+        "quote_2",
+        "quote_3",
+        "quote_4",
+        "quote_5",
+        "quote_6",
+        "quote_7"
+      ],
+      "settings": {
+        "eyebrow": "The questions change",
+        "heading": "Past eight figures, <strong>the problems stop being cosmetic.</strong> We built Conspire for eight and nine figure brands. One hire gets you one skillset. <strong>We replace the department.</strong>",
+        "speed": 40,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "communication": {
+      "type": "ca-communication",
+      "blocks": {
+        "task_1": {
+          "type": "task",
+          "settings": {
+            "title": "Style and test your privacy choices",
+            "priority": "urgent",
+            "status": "in_progress"
+          }
+        },
+        "task_2": {
+          "type": "task",
+          "settings": {
+            "title": "Footer links don't match footer columns",
+            "priority": "high",
+            "status": "needs_review"
+          }
+        },
+        "task_3": {
+          "type": "task",
+          "settings": {
+            "title": "Refund line item currently looks unstyled",
+            "priority": "medium",
+            "status": "not_started"
+          }
+        },
+        "task_4": {
+          "type": "task",
+          "settings": {
+            "title": "Mobile height control for Editorial Hero",
+            "priority": "low",
+            "status": "completed"
+          }
+        },
+        "task_5": {
+          "type": "task",
+          "settings": {
+            "title": "Show temporarily unavailable badge on cards",
+            "priority": "medium",
+            "status": "completed"
+          }
+        },
+        "point_6": {
+          "type": "point",
+          "settings": {
+            "title": "You report it, we handle it",
+            "text": "Send it in Slack or email. It gets scored, assigned, built, QA'd, and shipped. You do not chase it, you do not test it for us, and you do not explain the context again."
+          }
+        },
+        "point_7": {
+          "type": "point",
+          "settings": {
+            "title": "You can see the queue",
+            "text": "Every open item, who has it, and where it stands, in a portal you log into. You should never learn that something was finished a month ago."
+          }
+        },
+        "point_8": {
+          "type": "point",
+          "settings": {
+            "title": "You get answers, not tickets",
+            "text": "When the question is architectural, someone senior enough to answer it is already on your account. That is the person you talk to, not a summary of what they said."
+          }
+        }
+      },
+      "block_order": [
+        "task_1",
+        "task_2",
+        "task_3",
+        "task_4",
+        "task_5",
+        "point_6",
+        "point_7",
+        "point_8"
+      ],
+      "settings": {
+        "slack_channel": "yourcompany-conspire",
+        "client_name": "You",
+        "client_tag": "Your Team",
+        "client_time": "9:42 AM",
+        "client_message": "How is the accessibility audit going?",
+        "reply_name": "Conspire",
+        "reply_tag": "",
+        "reply_time": "9:44 AM",
+        "reply_message": "Hey we've moved through all the P1 issues. We're now working through the P2 issues and should be good to schedule a rescan tomorrow.",
+        "followup_time": "9:46 AM",
+        "followup_message": "Perfect. Also, heads up: the new collection is coming together for early next month. Can we grab 30 minutes this week to walk through the launch plan?",
+        "portal_label": "Client portal",
+        "email_subject": "Lead times on product pages",
+        "email1_from": "Dana (Customer Service)",
+        "email1_detail": "to Conspire, cc Alex (Ecomm Manager)",
+        "email1_text": "Quick one from the CS side. NetSuite lead times changed on a few SKUs this morning. How do those pull through to the product pages, and how fast do they update?",
+        "email2_from": "Conspire",
+        "email2_detail": "to Dana, Alex",
+        "email2_text": "Lead times sync from NetSuite once an hour and the product pages read the synced value, so this morning's change is already live. If you ever need one through faster, reply here and we can push the sync on demand.",
+        "heading": "Communication is everything",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "tiers": {
+      "type": "ca-pricing-tiers",
+      "blocks": {
+        "tier_1": {
+          "type": "tier",
+          "settings": {
+            "name": "Optimization Partner",
+            "fit": "For brands doing $3M to $8M",
+            "price": "$6k",
+            "cycle": "/ month"
+          }
+        },
+        "tier_2": {
+          "type": "tier",
+          "settings": {
+            "name": "Growth Partner",
+            "fit": "For brands doing $8M to $20M",
+            "price": "$10k",
+            "cycle": "/ month"
+          }
+        },
+        "tier_3": {
+          "type": "tier",
+          "settings": {
+            "name": "Dedicated Partner",
+            "fit": "For brands doing $20M+",
+            "price": "$18k",
+            "cycle": "/ month"
+          }
+        }
+      },
+      "block_order": [
+        "tier_1",
+        "tier_2",
+        "tier_3"
+      ],
+      "settings": {
+        "eyebrow": "The best hire you've made.",
+        "heading": "Yearly commitment rates. Six month terms available.",
+        "intro_button_label": "See Full Pricing",
+        "intro_button_link": "shopify://pages/pricing",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button-secondary",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "What does replacing the department actually mean?",
+            "answer": "<p><p>Strategy, design, development, and project management under one accountable owner. You get the output of four or five hires without recruiting, ramp, or payroll, and one person answers for all of it.</p></p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "How fast do things actually get fixed?",
+            "answer": "<p><p>Urgent items jump the queue the day they land. Everything else gets scored, scheduled, and tracked in your portal, so you always know what ships next and nothing waits for a status meeting.</p></p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "question": "Can you work with our ad agency, SEO contractor, or in-house team?",
+            "answer": "<p><p>We already do. Your paid, SEO, and email partners keep their lanes, and we are the team that makes their asks real on the store, attribution included.</p></p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "question": "Can our team still make changes ourselves?",
+            "answer": "<p><p>Yes. It is your store and your admin. We build so your team can run content, products, and campaigns without us, and we take the work that needs engineers.</p></p>"
+          }
+        },
+        "item_5": {
+          "type": "item",
+          "settings": {
+            "question": "Do you handle rebuilds and migrations, or only ongoing work?",
+            "answer": "<p><p>All sorts. Clients point their bandwidth wherever it is needed, so a rebuild or migration can become the focus of the engagement for a stretch. When it is a big lift on a short clock, we scope it as a project alongside the retainer.</p></p>"
+          }
+        },
+        "item_6": {
+          "type": "item",
+          "settings": {
+            "question": "Is there a minimum commitment?",
+            "answer": "<p><p>Plans run on yearly or six month commitments. The first call costs you thirty minutes, and we are looking for brands where a long-term partnership is on the table.</p></p>"
+          }
+        },
+        "item_7": {
+          "type": "item",
+          "settings": {
+            "question": "Do you handle ads, SEO, or CRO?",
+            "answer": "<p><p>That is a nuanced one. Our clients keep dedicated agencies that specialize in those spaces, and we work alongside them. It is not our core capability, but the experience runs deep, so we support where it counts: SEO reports, retargeting campaigns, static ad design, and email flows and design.</p></p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4",
+        "item_5",
+        "item_6",
+        "item_7"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "The honest answers, before the call.",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "testimonials": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [
+          "bodybio",
+          "danny-mitchell-bsd-haus"
+        ],
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "call": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "Who it's for",
+            "answer": "<p><p>Brands pushing into at minimum eight figures, if not nine, where improvements at scale pay for themselves.</p></p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "Who it's not for",
+            "answer": "<p><p>Brands earlier than that, or teams looking for sporadic help. The model only works at the right stage, and we hold to that.</p></p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2"
+      ],
+      "settings": {
+        "eyebrow": "Book a strategy call",
+        "heading": "",
+        "button_label": "",
+        "statement": "<p><p>The first call is an introduction: some light discovery and a feel for whether we are a fit on both sides. If we are, the next step is an audit and a roadmap for at least the next six months. Then you hand your store's entire task list to a senior team that integrates with yours. No training, no ramp.</p></p>",
+        "column_start": "6",
+        "answer_size": "regular",
+        "open_first": true,
+        "structured_data": false,
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/cnc2-s2q-c5x/shopify-website-team-intro-call-conspire?hide_gdpr_banner=1&hide_event_type_details=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 0,
+        "padding-block-end": 80
+      }
+    },
+    "fit": {
+      "type": "ca-fit-check",
+      "settings": {
+        "eyebrow": "Is this right for you?",
+        "heading": "Built for brands that take their store seriously.",
+        "fit_label": "A Fit If",
+        "fit_items": "You already have traffic and revenue\nYour store is core to growth, not an afterthought\nYou're tired of juggling freelancers and agencies\nYou want consistent improvement, not one-off projects that start from zero\nYou need senior judgment, not junior execution",
+        "not_label": "Not a Fit If",
+        "not_items": "You're just getting started or still validating\nYou just need \"a few tweaks\"\nYou value lowest cost over best outcome\nYou want to manage multiple vendors yourself\nYou don't value long-term ownership",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "clients",
+    "questions",
+    "communication",
+    "tiers",
+    "faq",
+    "testimonials",
+    "call",
+    "booking",
+    "fit"
+  ]
+}

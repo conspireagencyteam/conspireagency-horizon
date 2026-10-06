@@ -1,0 +1,221 @@
+{%- comment -%}
+  ca-faq-list.liquid — a single accordion list with a flexible intro
+  (Conspire v2.0, Figma 279:2666 FAQ and 279:2758 "Book a strategy call").
+
+  Two looks from one section:
+    - FAQ: big heading + button in the left columns, accordion on the right with
+      large (32px) answers.
+    - Call intro: eyebrow on the left, a statement on the right with a short
+      accordion ("Who it's for / Who it's not for") under it.
+
+  Items are blocks. Uses native <details name="…"> so only one item is open at a
+  time without JavaScript. Optionally outputs FAQPage structured data.
+{%- endcomment -%}
+
+{%- liquid
+  assign start = section.settings.column_start | default: 5
+  assign group = 'ca-faq-' | append: section.id
+  assign has_left = false
+  if section.settings.heading != blank or section.settings.button_label != blank or section.settings.eyebrow != blank
+    assign has_left = true
+  endif
+-%}
+
+<div
+  class="ca-faql spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %} --ca-faql-start: {{ start }};"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    <div class="ca-faql__grid">
+      {%- if has_left -%}
+        <div class="ca-faql__aside">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="ca-eyebrow ca-faql__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="ca-statement ca-faql__heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.button_label != blank -%}
+            <a class="{{ section.settings.style_class }} size-style" {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}>
+              {{- section.settings.button_label -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="ca-faql__main">
+        {%- if section.settings.statement != blank -%}
+          <div class="ca-statement ca-statement--xl ca-faql__statement">{{ section.settings.statement }}</div>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <div class="ca-accordion{% if section.settings.answer_size == 'large' %} ca-accordion--lg{% endif %} ca-accordion--flush">
+            {%- for block in section.blocks -%}
+              <details
+                class="ca-accordion__item"
+                name="{{ group }}"
+                {% if forloop.first and section.settings.open_first %}open{% endif %}
+                {{ block.shopify_attributes }}
+              >
+                <summary class="ca-accordion__q">
+                  <span>{{ block.settings.question }}</span>
+                  <span class="ca-accordion__marker" aria-hidden="true"></span>
+                </summary>
+                <div class="ca-accordion__a">{{ block.settings.answer }}</div>
+              </details>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if section.settings.structured_data and section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | strip_html | json }},
+            "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | strip | json }} }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .ca-faql {
+    background-color: var(--color-background);
+  }
+
+  .ca-faql__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 40px;
+    align-items: start;
+  }
+
+  .ca-faql__aside {
+    grid-column: 1 / span 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .ca-faql__eyebrow {
+    padding-block-start: 6px;
+  }
+
+  /* The heading sits in four columns, so it runs a step smaller than a full-width statement. */
+  .ca-faql__heading {
+    font-size: clamp(1.875rem, 2.8vw, 2.5rem);
+    text-wrap: balance;
+  }
+
+  .ca-faql__main {
+    grid-column: var(--ca-faql-start, 5) / -1;
+  }
+
+  .ca-faql__statement {
+    margin-block-end: 52px;
+  }
+
+  /* The first question lines up with the heading beside it (or tucks under the statement). */
+  .ca-faql .ca-accordion > .ca-accordion__item:first-child > .ca-accordion__q {
+    padding-block-start: 12px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-faql__aside,
+    .ca-faql__main {
+      grid-column: 1 / -1;
+    }
+
+    .ca-faql__statement {
+      margin-block-end: 40px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ list",
+  "tag": "section",
+  "class": "ca-faql-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "header", "content": "Left column" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The honest answers, before the call." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Book a Call" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
+    },
+    { "type": "header", "content": "Right column" },
+    { "type": "richtext", "id": "statement", "label": "Statement", "info": "Optional text above the accordion." },
+    {
+      "type": "select",
+      "id": "column_start",
+      "label": "Right column width",
+      "options": [
+        { "value": "5", "label": "Wide (8 of 12 columns)" },
+        { "value": "6", "label": "Medium (7 of 12 columns)" },
+        { "value": "7", "label": "Half" }
+      ],
+      "default": "5"
+    },
+    {
+      "type": "select",
+      "id": "answer_size",
+      "label": "Answer text size",
+      "options": [
+        { "value": "large", "label": "Large" },
+        { "value": "regular", "label": "Regular" }
+      ],
+      "default": "large"
+    },
+    { "type": "checkbox", "id": "open_first", "label": "Open the first item", "default": true },
+    { "type": "checkbox", "id": "structured_data", "label": "Output FAQ structured data", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Answer</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "FAQ list", "category": "Conspire", "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }] }
+  ]
+}
+{% endschema %}

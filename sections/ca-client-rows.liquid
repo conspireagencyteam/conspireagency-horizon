@@ -1,0 +1,259 @@
+{%- comment -%}
+  ca-client-rows.liquid — "Built to stick around" client rows
+  (Conspire v2.0, Figma 279:2433 / 396:195 / 429:2752).
+
+  Intro (eyebrow + statement), then one hairline row per block: client name and
+  years partnered on the left, a summary with service pills in the middle, and
+  an image on the right.
+
+  Each block picks a `client` metaobject and can override the summary, pills and
+  image, because this copy is written per page (the fractional page talks about
+  the ongoing relationship, the build page about the build). Anything left blank
+  falls back to the client entry: name, years, work_summary, services,
+  work_preview, case_study_reference.
+{%- endcomment -%}
+
+<div
+  class="ca-clients spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      class: 'ca-clients__intro'
+    -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="ca-clients__list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign client = block.settings.client
+            assign name = block.settings.name | default: client.name.value
+            assign years = block.settings.years | default: client.years.value
+            assign summary = block.settings.summary | default: client.work_summary.value
+            assign url = block.settings.link | default: client.case_study_reference.value
+
+            assign pills = block.settings.pills | newline_to_br | split: '<br />'
+            if block.settings.pills == blank
+              assign pills = client.services.value
+            endif
+
+            assign image = block.settings.image
+            if image == blank
+              assign image = client.work_preview.value
+              if image.image
+                assign image = image.image
+              endif
+            endif
+          -%}
+          <article class="ca-clients__row" {{ block.shopify_attributes }}>
+            <div class="ca-clients__who">
+              {%- if name != blank -%}
+                <h3 class="ca-clients__name">
+                  {%- if url != blank and section.settings.link_names -%}
+                    <a href="{{ url }}">{{ name }}</a>
+                  {%- else -%}
+                    {{ name }}
+                  {%- endif -%}
+                </h3>
+              {%- endif -%}
+              {%- render 'ca-years', years: years -%}
+            </div>
+
+            <div class="ca-clients__detail">
+              {%- if summary != blank -%}
+                <p class="ca-clients__summary">{{ summary }}</p>
+              {%- endif -%}
+              {%- if pills.size > 0 -%}
+                <ul class="ca-pills ca-clients__pills" aria-label="Services">
+                  {%- for pill in pills -%}
+                    {%- assign pill_text = pill | strip -%}
+                    {%- if pill_text != blank -%}
+                      <li class="ca-pill">{{ pill_text }}</li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+
+            <div class="ca-clients__media">
+              {%- if image != blank -%}
+                {% render 'image', image: image, height: 600, class: 'ca-clients__img', alt_text_fallback: name %}
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- elsif request.design_mode -%}
+      <p class="ca-clients__empty">Add <strong>Client</strong> blocks to build the list.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-clients {
+    background-color: var(--color-background);
+  }
+
+  .ca-clients__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-clients__list {
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-clients__row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    padding-block: 40px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-clients__who {
+    grid-column: 1 / span 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .ca-clients__name {
+    margin: 0;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-clients__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-clients__name a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+    text-decoration-thickness: 1px;
+  }
+
+  .ca-clients__detail {
+    grid-column: 4 / span 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .ca-clients__summary {
+    margin: 0;
+    color: var(--ca-soft);
+  }
+
+  .ca-clients__media {
+    grid-column: 9 / -1;
+    padding-inline-start: 28px;
+  }
+
+  .ca-clients__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 7 / 5;
+    object-fit: cover;
+  }
+
+  .ca-clients__empty {
+    padding-block: 40px;
+    color: var(--ca-muted);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-clients__intro {
+      margin-block-end: 48px;
+    }
+
+    .ca-clients__row {
+      row-gap: 24px;
+      padding-block: 32px;
+    }
+
+    .ca-clients__who {
+      grid-column: 1 / -1;
+    }
+
+    .ca-clients__detail {
+      grid-column: 1 / span 7;
+    }
+
+    .ca-clients__media {
+      grid-column: 8 / -1;
+      padding-inline-start: 0;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-clients__detail,
+    .ca-clients__media {
+      grid-column: 1 / -1;
+    }
+
+    .ca-clients__media {
+      order: 2;
+    }
+
+    .ca-clients__detail {
+      order: 3;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Client rows",
+  "tag": "section",
+  "class": "ca-clients-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Built to stick around" },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Statement",
+      "info": "Bold the words to emphasise. The rest is shown muted.",
+      "default": "We don't just launch projects. <strong>We build long-term partnerships, becoming an extension of your team as your business evolves.</strong>"
+    },
+    { "type": "checkbox", "id": "link_names", "label": "Link client names to their case study", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "client",
+      "name": "Client",
+      "settings": [
+        { "type": "metaobject", "id": "client", "label": "Client", "metaobject_type": "client" },
+        { "type": "paragraph", "content": "Leave the fields below empty to use the client entry's own values." },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "years", "label": "Years partnered", "info": "Number only, for example 6" },
+        { "type": "textarea", "id": "summary", "label": "Summary" },
+        { "type": "textarea", "id": "pills", "label": "Pills", "info": "One per line" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Client rows", "category": "Conspire", "blocks": [{ "type": "client" }, { "type": "client" }] }
+  ]
+}
+{% endschema %}

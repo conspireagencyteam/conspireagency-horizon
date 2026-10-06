@@ -1,0 +1,17 @@
+{%- comment -%}
+  ca-years.liquid — the "+6 years partnered" badge.
+
+  Accepts the client metaobject's free-text `years` value ("6+", "7", "5+") or a
+  plain number, and renders nothing when it holds no digits.
+
+  @param {string|number} years
+  @param {string} [label] - defaults to "years partnered"
+  @param {string} [class]
+{%- endcomment -%}
+{%- liquid
+  assign ca_years_num = years | append: '' | remove: '+' | strip
+  assign ca_years_label = label | default: 'years partnered'
+-%}
+{%- if ca_years_num != blank and ca_years_num != '0' -%}
+  <p class="ca-years{% if class %} {{ class }}{% endif %}"><span class="ca-years__num">+{{ ca_years_num }}</span> {{ ca_years_label }}</p>
+{%- endif -%}

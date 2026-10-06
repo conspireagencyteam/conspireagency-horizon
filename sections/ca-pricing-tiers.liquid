@@ -1,0 +1,185 @@
+{%- comment -%}
+  ca-pricing-tiers.liquid — retainer tiers as hairline rows
+  (Conspire v2.0, Figma 279:2632 / 429:2564).
+
+  Intro (eyebrow, statement, optional link button), then one row per "tier"
+  block: tier name over who it is for, the price with its billing cycle, and a
+  call to action on the right.
+{%- endcomment -%}
+
+<div
+  class="ca-tiers spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      start: 7,
+      button_label: section.settings.intro_button_label,
+      button_link: section.settings.intro_button_link,
+      class: 'ca-tiers__intro'
+    -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="ca-tiers__list">
+        {%- for block in section.blocks -%}
+          <div class="ca-tiers__row" {{ block.shopify_attributes }}>
+            <div class="ca-tiers__who">
+              {%- if block.settings.name != blank -%}
+                <h3 class="ca-eyebrow ca-tiers__name">{{ block.settings.name }}</h3>
+              {%- endif -%}
+              {%- if block.settings.fit != blank -%}
+                <p class="ca-tiers__fit">{{ block.settings.fit }}</p>
+              {%- endif -%}
+            </div>
+            <p class="ca-tiers__price">
+              <span class="ca-tiers__amount">{{ block.settings.price }}</span>
+              {%- if block.settings.cycle != blank %} <span class="ca-tiers__cycle">{{ block.settings.cycle }}</span>{% endif -%}
+            </p>
+            {%- if section.settings.button_label != blank -%}
+              {%- assign row_link = block.settings.link | default: section.settings.button_link -%}
+              <a class="{{ section.settings.style_class }} size-style ca-tiers__cta" {% if row_link != blank %}href="{{ row_link }}"{% endif %}>
+                {{- section.settings.button_label -}}
+                {%- if block.settings.name != blank %}<span class="ca-sr-only">: {{ block.settings.name }}</span>{% endif -%}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-tiers {
+    background-color: var(--color-background);
+  }
+
+  .ca-tiers__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-tiers__list {
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-tiers__row {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    padding-block: 40px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-tiers__who {
+    flex: 0 0 40.3%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ca-tiers__name {
+    margin: 0;
+  }
+
+  .ca-tiers__fit {
+    margin: 0;
+    font-size: var(--ca-fs-24);
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-tiers__price {
+    flex: 1 1 auto;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+
+  .ca-tiers__amount {
+    font-size: var(--ca-fs-86);
+  }
+
+  .ca-tiers__cycle {
+    margin-inline-start: 0.2em;
+    font-size: var(--ca-fs-48);
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  .ca-tiers__cta {
+    flex: 0 0 auto;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-tiers__intro {
+      margin-block-end: 48px;
+    }
+
+    .ca-tiers__row {
+      flex-wrap: wrap;
+      align-items: center;
+      padding-block: 32px;
+    }
+
+    .ca-tiers__who {
+      flex: 1 1 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pricing tiers",
+  "tag": "section",
+  "class": "ca-tiers-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The best hire you've made." },
+    { "type": "inline_richtext", "id": "heading", "label": "Statement", "default": "Yearly commitment rates. Six month terms available." },
+    { "type": "text", "id": "intro_button_label", "label": "Intro button label", "default": "See Full Pricing" },
+    { "type": "url", "id": "intro_button_link", "label": "Intro button link" },
+    { "type": "header", "content": "Row button" },
+    { "type": "text", "id": "button_label", "label": "Label", "default": "Book a Call" },
+    { "type": "url", "id": "button_link", "label": "Link", "info": "Used by every row unless the row sets its own." },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button-secondary"
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "tier",
+      "name": "Tier",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Name", "default": "Growth Partner" },
+        { "type": "text", "id": "fit", "label": "Who it is for", "default": "For brands doing $8M to $20M" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$10k" },
+        { "type": "text", "id": "cycle", "label": "Billing cycle", "default": "/ month" },
+        { "type": "url", "id": "link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Pricing tiers", "category": "Conspire", "blocks": [{ "type": "tier" }, { "type": "tier" }, { "type": "tier" }] }
+  ]
+}
+{% endschema %}

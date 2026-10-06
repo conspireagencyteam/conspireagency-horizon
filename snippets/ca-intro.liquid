@@ -1,0 +1,35 @@
+{%- comment -%}
+  ca-intro.liquid — section intro row: eyebrow left, large statement right,
+  optional button under the statement. Bold text in the statement is the
+  emphasised part; the rest renders muted.
+
+  @param {string} [eyebrow]
+  @param {string} [heading] - inline richtext
+  @param {string} [tag] - heading element, default h2
+  @param {number} [start] - grid column the statement starts on (5, 6 or 7), default 5
+  @param {string} [size] - 'xl' for the smaller 32px statement
+  @param {string} [button_label]
+  @param {string} [button_link]
+  @param {string} [button_class] - button | button-secondary, default button
+  @param {string} [class]
+{%- endcomment -%}
+{%- liquid
+  assign ca_tag = tag | default: 'h2'
+  assign ca_start = start | default: 5
+  assign ca_btn = button_class | default: 'button'
+-%}
+{%- if eyebrow != blank or heading != blank or button_label != blank -%}
+  <div class="ca-intro{% if class %} {{ class }}{% endif %}" style="--ca-intro-start: {{ ca_start }};">
+    {%- if eyebrow != blank -%}
+      <p class="ca-eyebrow ca-intro__eyebrow">{{ eyebrow }}</p>
+    {%- endif -%}
+    <div class="ca-intro__main">
+      {%- if heading != blank -%}
+        <{{ ca_tag }} class="ca-statement{% if size == 'xl' %} ca-statement--xl{% endif %}">{{ heading }}</{{ ca_tag }}>
+      {%- endif -%}
+      {%- if button_label != blank -%}
+        <a class="{{ ca_btn }} size-style" {% if button_link != blank %}href="{{ button_link }}"{% endif %}>{{ button_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

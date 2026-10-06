@@ -22,7 +22,7 @@
   assign montage_bg = section.settings.montage_background | default: '#0d110d'
 -%}
 
-<div class="ca-booking spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+<div id="book-a-call" class="ca-booking spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
   {% render 'contrast-override',
     background_color: section.settings.background_color,
     text_color: section.settings.text_color,
@@ -106,6 +106,23 @@
         {%- elsif request.design_mode -%}
           <p class="ca-booking__empty">Add <strong>Photo</strong> blocks to build the spiral montage.</p>
         {%- endif -%}
+
+        {%- comment -%} Optional copy centred over the montage (Figma 315:1891) {%- endcomment -%}
+        {%- if section.settings.panel_heading != blank or section.settings.panel_text != blank or section.settings.panel_button_label != blank -%}
+          <div class="ca-booking__overlay ca-invert">
+            {%- if section.settings.panel_heading != blank -%}
+              <p class="ca-booking__overlay-heading">{{ section.settings.panel_heading }}</p>
+            {%- endif -%}
+            {%- if section.settings.panel_text != blank -%}
+              <p class="ca-booking__overlay-text">{{ section.settings.panel_text }}</p>
+            {%- endif -%}
+            {%- if section.settings.panel_button_label != blank -%}
+              <a class="button size-style ca-booking__overlay-button" {% if section.settings.panel_button_link != blank %}href="{{ section.settings.panel_button_link }}"{% endif %}>
+                {{- section.settings.panel_button_label -}}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
       </div>
 
       {%- comment -%} RIGHT — Calendly inline embed {%- endcomment -%}
@@ -128,6 +145,42 @@
 {% stylesheet %}
   .ca-booking {
     background-color: var(--color-background);
+  }
+
+  /* Copy over the montage: always light-on-dark, whatever the section colours. */
+  .ca-booking__overlay {
+    --color-foreground: #ffffff;
+    --color-foreground-rgb: 255 255 255;
+    --color-background: var(--ca-montage-bg, #0d110d);
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 24px;
+    text-align: center;
+    color: #ffffff;
+    pointer-events: none;
+  }
+
+  .ca-booking__overlay > * {
+    pointer-events: auto;
+  }
+
+  .ca-booking__overlay-heading {
+    margin: 0;
+    font-size: var(--ca-fs-48);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-booking__overlay-text {
+    max-width: 440px;
+    margin: 0;
+    color: rgb(255 255 255 / 0.8);
   }
 
   .ca-booking__head {
@@ -414,6 +467,11 @@
       "label": "Montage background",
       "default": "#0d110d"
     },
+    { "type": "header", "content": "Copy over the montage" },
+    { "type": "text", "id": "panel_heading", "label": "Heading", "default": "Ready to grow your business?" },
+    { "type": "textarea", "id": "panel_text", "label": "Text", "default": "To discuss your project please select a convenient date & time for you and we will contact you!" },
+    { "type": "text", "id": "panel_button_label", "label": "Button label", "default": "Contact Us" },
+    { "type": "url", "id": "panel_button_link", "label": "Button link" },
     {
       "type": "header",
       "content": "t:content.padding"

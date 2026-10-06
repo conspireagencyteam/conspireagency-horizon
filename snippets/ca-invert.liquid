@@ -1,0 +1,12 @@
+{%- comment -%}
+  ca-invert.liquid — outputs " ca-invert" when a section's custom background is
+  dark, so buttons inside it flip to the light treatment (see ca-custom.css).
+
+  Usage: class="ca-thing{% render 'ca-invert', color: section.settings.background_color %}"
+
+  @param {color} [color] - the section's background color setting
+{%- endcomment -%}
+{%- if color != blank and color.alpha != 0 -%}
+  {%- assign ca_brightness = color | color_brightness -%}
+  {%- if ca_brightness < 128 %} ca-invert{% endif -%}
+{%- endif -%}
