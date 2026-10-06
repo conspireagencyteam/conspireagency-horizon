@@ -23,10 +23,16 @@
     section_id: section.id
   -%}
   <div class="ca-inner">
+    {%- liquid
+      assign intro_class = 'ca-clients__intro'
+      if section.settings.heading == blank
+        assign intro_class = 'ca-clients__intro ca-clients__intro--compact'
+      endif
+    -%}
     {%- render 'ca-intro',
       eyebrow: section.settings.eyebrow,
       heading: section.settings.heading,
-      class: 'ca-clients__intro'
+      class: intro_class
     -%}
 
     {%- if section.blocks.size > 0 -%}
@@ -103,6 +109,11 @@
 
   .ca-clients__intro {
     margin-block-end: 80px;
+  }
+
+  /* Eyebrow only: it sits straight on top of the first hairline. */
+  .ca-clients__intro--compact {
+    margin-block-end: 24px;
   }
 
   .ca-clients__list {

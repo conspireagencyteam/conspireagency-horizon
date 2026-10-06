@@ -203,6 +203,15 @@ a.button-custom.size-style::before {
   margin: 0;
 }
 
+.ca-statement p + p,
+.ca-statement__p + .ca-statement__p {
+  margin-block-start: 1.1em;
+}
+
+.ca-statement__p {
+  display: block;
+}
+
 /* Bold marks the emphasised words; everything else drops back (as in the testimonials). */
 .ca-statement:has(strong) {
   color: rgb(var(--color-foreground-rgb) / 0.5);

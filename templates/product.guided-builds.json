@@ -1,0 +1,474 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-brands-marquee",
+      "settings": {
+        "badge_image": "",
+        "heading": "Your store is the flagship. We build it like one.",
+        "body": "<p>Every marketing dollar you spend lands there first. We design Shopify stores that earn trust, guide the customer journey, and convert the traffic you're already paying for.</p>",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "body-bio",
+          "tillamook-country-smoker-jerky",
+          "kinto",
+          "p-kay-metal",
+          "natures-answer",
+          "hustler-hollywood",
+          "portola-paints"
+        ],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "allow_transparent_header": false,
+        "transparent_header_text_color": "#0d110d",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "process": {
+      "type": "ca-process",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "label": "Art Direction",
+            "text": "Your brand, translated into a store customers remember and trust"
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "label": "Strategy",
+            "text": "Online strategy review, positioning, and content strategy"
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "label": "UX",
+            "text": "The core purchasing journey, wireframed with working copy your team refines"
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "label": "Design",
+            "text": "Home and product pages designed in full, desktop and mobile"
+          }
+        },
+        "step_5": {
+          "type": "step",
+          "settings": {
+            "label": "Development",
+            "text": "Modern Shopify theme architecture, optimized for SEO and speed"
+          }
+        },
+        "step_6": {
+          "type": "step",
+          "settings": {
+            "label": "Handoff",
+            "text": "Expert training and an app stack review; your team runs it without a developer"
+          }
+        },
+        "step_7": {
+          "type": "step",
+          "settings": {
+            "label": "Migration",
+            "text": "Nearly a hundred completed, from every major platform"
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4",
+        "step_5",
+        "step_6",
+        "step_7"
+      ],
+      "settings": {
+        "eyebrow": "The Conspire Build",
+        "heading": "<p><strong>Your store has seconds to earn trust and guide customers</strong> toward purchase<strong>.</strong></p><p>Our <strong>six-phase process is built around exactly that:</strong> strategic onboarding, art direction, conversion-focused UX, full design, development, and launch. <strong>A beautiful, on-brand store</strong> engineered around the customer journey<strong>, built end to end by our senior team.</strong></p>",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "migrations": {
+      "type": "ca-page-intro",
+      "settings": {
+        "eyebrow": "Shopify migrations",
+        "heading": "<p><strong>Migrating to Shopify?</strong> Trusted SEO preservation.</p><p>Our team has <strong>completed</strong> close to a <strong>hundred migrations</strong> from Magento, WooCommerce, etc. <strong>No migration is too complex</strong>. Ensure your migration goes smoothly with <strong>no SEO loss</strong>.</p>",
+        "heading_tag": "h2",
+        "column_start": "5",
+        "size": "lg",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "rule": false,
+        "allow_transparent_header": false,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "clients": {
+      "type": "ca-client-rows",
+      "blocks": {
+        "client_1": {
+          "type": "client",
+          "settings": {
+            "client": "zia-tile",
+            "name": "Zia Tile",
+            "years": "6",
+            "summary": "Six years of daily development on systems their checkout depends on: arrival estimates based on order quantity, LTL freight, custom warehouse pickup, and the trade program that takes a pro from application to managed account. Around it: ADA compliance, privacy preferences, email flows, and attribution for their paid team.",
+            "pills": "Checkout-critical software\nArrival estimates\nLTL freight\nWarehouse pickup\nTrade program\nADA & privacy compliance\nAttribution setup"
+          }
+        },
+        "client_2": {
+          "type": "client",
+          "settings": {
+            "client": "body-bio",
+            "name": "BodyBio",
+            "years": "7",
+            "summary": "We manage four Shopify stores for BodyBio: consumer stores for the US and international markets, and healthcare practitioner stores for the US and Europe. We built and maintain the custom software that takes a practitioner from application to approval to welcome sample bundle, and we support every new release, protocol bundle, and fulfillment issue.",
+            "pills": "4 stores\nPractitioner onboarding systems\nCustom bundle software\nNew product launch support\nFulfillment triage"
+          }
+        },
+        "client_3": {
+          "type": "client",
+          "settings": {
+            "client": "cousins-maine-lobster",
+            "name": "Cousins Maine Lobster",
+            "years": "6",
+            "summary": "Every Cousins storefront runs through us, including the Cousins Fried Seafood store and the franchise portal we built, which handles ordering, compliance, and training for roughly 70 locations. We created their multimillion dollar direct-to-consumer business where other agencies could not, and our events tooling keeps each franchise visible in its market.",
+            "pills": "Franchise portal build & management\nOrdering & compliance systems\nTraining systems\nFranchise events tooling\nDTC store build"
+          }
+        },
+        "client_4": {
+          "type": "client",
+          "settings": {
+            "client": "tillamook-country-smoker-jerky",
+            "name": "Tillamook Country Smoker",
+            "years": "7",
+            "summary": "We built the original store and have supported every launch since, including their recent rebrand. Day to day we support their marketing teams, especially email, and Bonde Bundles, our own app, lifts conversion and average order value with bundle and save.",
+            "pills": "Original build\nOngoing launches\nEmail marketing support\nBonde Bundles\nRebrand rollout"
+          }
+        }
+      },
+      "block_order": [
+        "client_1",
+        "client_2",
+        "client_3",
+        "client_4"
+      ],
+      "settings": {
+        "eyebrow": "Our case studies",
+        "heading": "",
+        "link_names": true,
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "more": {
+      "type": "ca-more-projects",
+      "settings": {
+        "eyebrow": "More projects",
+        "clients": [
+          "p-kay-metal",
+          "sto-n-sho",
+          "portola-paints",
+          "omre",
+          "simms-fishing",
+          "elway-capital",
+          "embodied-moxie",
+          "kinto",
+          "natures-answer"
+        ],
+        "image_field": "featured_site_image",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 0
+      }
+    },
+    "pricing": {
+      "type": "ca-build-pricing",
+      "settings": {
+        "eyebrow": "Pricing, scoped line by line",
+        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.</strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.</strong>",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "min_amount": "$15k",
+        "min_caption": "Starting point",
+        "mid_amount": "$25-45k",
+        "mid_caption": "Where most builds land",
+        "max_amount": "$100k+",
+        "max_caption": "Full scope",
+        "axis_start": "8 weeks",
+        "axis_end": "14 weeks",
+        "accent_color": "#ff4d00",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "growth": {
+      "type": "ca-value-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your team",
+            "title": "Publish without\na developer",
+            "text": "<p>The pain we hear most: the current store is hard to change, and every update waits on a developer.</p><p>Our builds are modular. Reusable sections your marketing team assembles into new pages and edits directly, no ticket required.</p>"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your ad spend",
+            "title": "Landing pages at\ncampaign speed",
+            "text": "<p>Paid campaigns need dedicated landing pages, and they need them this week, not next sprint.</p><p>The same reusable sections spin up campaign pages per audience or offer, so your ad team can test and iterate without touching code.</p>"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your rankings",
+            "title": "Migrate without\nlosing SEO",
+            "text": "<p>The biggest fear in any replatform is losing years of earned SEO overnight.</p><p>Nearly a hundred migrations in, our process carries your URLs, redirects, and structured data across, so rankings and traffic come with you.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {
+        "eyebrow": "Built for growth",
+        "heading": "Your next build decides the next few years of revenue",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "fit": {
+      "type": "ca-fit-check",
+      "settings": {
+        "eyebrow": "Built for brands ready to scale up",
+        "heading": "Built for brands that take their store seriously.",
+        "fit_label": "A Fit If",
+        "fit_items": "You’re investing in traffic and want stronger returns\nTraffic isn’t the issue - conversion is\nYou’re ready to clarify positioning, messaging, and structure\nYour design feels templated, generic, or misaligned with your brand\nYou understand that trust and journey drive performance",
+        "not_label": "Not a Fit If",
+        "not_items": "You’re not actively investing in traffic\nYou only need minor tweaks\nYou’re not yet generating meaningful revenue or backed by serious funding\nYou believe aesthetics alone will fix performance\nJust looking for implementation not guidance",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "testimonials": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [
+          "bodybio",
+          "danny-mitchell-bsd-haus"
+        ],
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "services": {
+      "type": "ca-services",
+      "settings": {
+        "eyebrow": "Our Services",
+        "products": [
+          "shopify-websites",
+          "shopify-fractional-teams",
+          "custom-shopify-applications",
+          "shopify-cro-agency"
+        ],
+        "show_numbers": true,
+        "button_label": "Learn More",
+        "style_class": "button-secondary",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "process",
+    "migrations",
+    "clients",
+    "more",
+    "pricing",
+    "growth",
+    "fit",
+    "testimonials",
+    "services",
+    "booking"
+  ]
+}

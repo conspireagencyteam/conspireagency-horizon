@@ -1,0 +1,147 @@
+{%- comment -%}
+  ca-value-cards.liquid — intro + three text cards (Conspire v2.0, Figma 396:420
+  "Built for growth").
+
+  Each "card" block: an eyebrow over a hairline, a two-line title, and body copy.
+{%- endcomment -%}
+
+<div
+  class="ca-values spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      start: 6,
+      button_label: section.settings.button_label,
+      button_link: section.settings.button_link,
+      button_class: section.settings.style_class,
+      class: 'ca-values__intro'
+    -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="ca-values__grid" style="--ca-values-count: {{ section.blocks.size | at_most: 4 }};">
+        {%- for block in section.blocks -%}
+          <article class="ca-values__card" {{ block.shopify_attributes }}>
+            {%- if block.settings.eyebrow != blank -%}
+              <p class="ca-eyebrow ca-values__eyebrow">{{ block.settings.eyebrow }}</p>
+            {%- endif -%}
+            {%- if block.settings.title != blank -%}
+              <h3 class="ca-values__title">{{ block.settings.title | newline_to_br }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="ca-values__text">{{ block.settings.text }}</div>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-values {
+    background-color: var(--color-background);
+  }
+
+  .ca-values__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-values__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ca-values-count, 3), minmax(0, 1fr));
+    gap: 48px 24px;
+  }
+
+  .ca-values__eyebrow {
+    margin-block-end: 24px;
+    padding-block-end: 16px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-values__title {
+    margin: 0 0 16px;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-transform: capitalize;
+  }
+
+  .ca-values__text {
+    color: var(--ca-soft);
+  }
+
+  .ca-values__text > :first-child {
+    margin-block-start: 0;
+  }
+
+  .ca-values__text > :last-child {
+    margin-block-end: 0;
+  }
+
+  .ca-values__text p + p {
+    margin-block-start: 1.5em;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-values__intro {
+      margin-block-end: 48px;
+    }
+
+    .ca-values__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Value cards",
+  "tag": "section",
+  "class": "ca-values-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Built for growth" },
+    { "type": "inline_richtext", "id": "heading", "label": "Statement", "default": "Your next build decides the next few years of revenue" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Schedule a Call" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Your team" },
+        { "type": "textarea", "id": "title", "label": "Title", "default": "Publish without\na developer" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Value cards", "category": "Conspire", "blocks": [{ "type": "card" }, { "type": "card" }, { "type": "card" }] }
+  ]
+}
+{% endschema %}

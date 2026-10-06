@@ -1,0 +1,195 @@
+{%- comment -%}
+  ca-more-projects.liquid — "More projects" (Conspire v2.0, Figma 315:1864 / 396:300).
+
+  Eyebrow over a hairline, then the remaining clients as one centred run of
+  large names separated by slashes. Hovering a name brings it to full strength
+  and shows that client's preview image at the cursor.
+
+  Data: a list of `client` metaobjects. Name links to case_study_reference when
+  there is one (otherwise it is plain text). The preview image is the client's
+  featured_site_image, falling back to work_preview; clients with neither just
+  highlight on hover.
+{%- endcomment -%}
+
+<script src="{{ 'ca-more-projects.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{%- liquid
+  assign clients = section.settings.clients
+  assign primary = section.settings.image_field | default: 'featured_site_image'
+  if primary == 'featured_site_image'
+    assign secondary = 'work_preview'
+  else
+    assign secondary = 'featured_site_image'
+  endif
+-%}
+
+<div
+  class="ca-more spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <h2 class="ca-eyebrow ca-more__eyebrow">{{ section.settings.eyebrow }}</h2>
+    {%- endif -%}
+
+    {%- if clients.count > 0 -%}
+      <ca-more-projects class="ca-more__list">
+        {%- for client in clients -%}
+          {%- liquid
+            assign name = client.name.value | default: client.system.handle
+            assign url = client.case_study_reference.value
+            assign image = client[primary].value
+            if image == blank
+              assign image = client[secondary].value
+            endif
+            if image.image
+              assign image = image.image
+            endif
+          -%}
+          {%- capture inner -%}
+            <span class="ca-more__name">{{ name }}</span>
+            {%- if image != blank -%}
+              {{- image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
+            {%- endif -%}
+          {%- endcapture -%}
+          {%- if url != blank -%}
+            <a class="ca-more__item" href="{{ url }}">{{ inner | strip }}</a>
+          {%- else -%}
+            <span class="ca-more__item">{{ inner | strip }}</span>
+          {%- endif -%}
+          {%- unless forloop.last -%}
+            <span class="ca-more__sep" aria-hidden="true">&nbsp;/ </span>
+          {%- endunless -%}
+        {%- endfor -%}
+      </ca-more-projects>
+    {%- elsif request.design_mode -%}
+      <p class="ca-more__empty">Add <strong>Client</strong> entries in this section's settings.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-more {
+    background-color: var(--color-background);
+  }
+
+  .ca-more__eyebrow {
+    margin: 0;
+    padding-block-end: 24px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-more__list {
+    display: block;
+    max-width: 1190px;
+    margin-inline: auto;
+    padding-block: clamp(96px, 16vw, 240px);
+    font-family: var(--font-heading--family);
+    font-size: var(--ca-fs-48);
+    line-height: 1.22;
+    letter-spacing: -0.03em;
+    text-align: center;
+    text-wrap: balance;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  .ca-more__item {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a.ca-more__item:hover,
+  a.ca-more__item:focus-visible,
+  .ca-more__item.is-previewing {
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+
+  /* Preview image pinned to the cursor (position set by ca-more-projects.js). */
+  .ca-more__preview {
+    position: fixed;
+    inset-block-start: var(--ca-more-y, 0);
+    inset-inline-start: var(--ca-more-x, 0);
+    z-index: 20;
+    width: auto;
+    height: 300px;
+    max-width: 320px;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, calc(-100% - 20px)) scale(0.96);
+    transform-origin: 50% 100%;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.2s;
+  }
+
+  .ca-more__item.is-previewing .ca-more__preview {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, calc(-100% - 20px)) scale(1);
+    transition-delay: 0s;
+  }
+
+  .ca-more__empty {
+    padding-block: 40px;
+    color: var(--ca-muted);
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .ca-more__preview {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-more__preview {
+      transition: none;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-more__list {
+      font-size: 1.75rem;
+      line-height: 1.3;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "More projects",
+  "tag": "section",
+  "class": "ca-more-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "More projects" },
+    { "type": "metaobject_list", "id": "clients", "label": "Clients", "metaobject_type": "client", "limit": 30 },
+    {
+      "type": "select",
+      "id": "image_field",
+      "label": "Hover image",
+      "info": "Falls back to the other field when empty. Clients with neither only highlight.",
+      "options": [
+        { "value": "featured_site_image", "label": "Featured site image" },
+        { "value": "work_preview", "label": "Work preview" }
+      ],
+      "default": "featured_site_image"
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "More projects", "category": "Conspire" }]
+}
+{% endschema %}
