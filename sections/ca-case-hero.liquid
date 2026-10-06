@@ -1,0 +1,201 @@
+{%- comment -%}
+  ca-case-hero.liquid — case study header (Conspire v2.0, Figma 315:1214).
+
+  Dark, and runs up under the transparent header. Left: years partnered, the
+  client name as the page title, and the featured media. Right: service pills,
+  a short summary, and a Visit Website button.
+
+  Everything comes from the article:
+    featured video   custom.banner_video (optional; falls back to the article image)
+    pills            custom.service_list (falls back to the client's services)
+    summary          custom.blog_short_description (falls back to the excerpt)
+    website          custom.website_url (falls back to custom.case_study_web_site)
+    years partnered  the matching `client` metaobject (see ca-article-client)
+{%- endcomment -%}
+
+{%- liquid
+  capture client_handle
+    render 'ca-article-client', article: article
+  endcapture
+  assign client_handle = client_handle | strip
+  if client_handle != blank
+    assign client = metaobjects.client[client_handle]
+  endif
+
+  assign title_parts = article.title | split: ':'
+  assign short_title = title_parts | first | strip
+  assign title_rest = article.title | remove_first: short_title | strip
+
+  assign video = article.metafields.custom.banner_video.value
+  assign pills = article.metafields.custom.service_list.value
+  if pills == blank
+    assign pills = client.services.value
+  endif
+
+  assign summary = article.metafields.custom.blog_short_description.value
+  if summary == blank
+    assign summary = article.excerpt | strip_html | strip
+  endif
+
+  assign website = article.metafields.custom.website_url.value | default: article.metafields.custom.case_study_web_site.value
+  assign transparent = section.settings.allow_transparent_header
+-%}
+
+{%- if transparent and section.settings.text_color != blank -%}
+  {%- style -%}
+    .ca-header { --ca-header-transparent-text: {{ section.settings.text_color }}; }
+  {%- endstyle -%}
+{%- endif -%}
+
+<div
+  class="ca-chero spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header ca-under-header{% endif %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner ca-chero__grid">
+    <div class="ca-chero__main">
+      {%- render 'ca-years', years: client.years.value, class: 'ca-years--sm' -%}
+      <h1 class="ca-chero__title">
+        {{- short_title -}}
+        {%- if title_rest != blank %}<span class="ca-sr-only">{{ title_rest }}</span>{% endif -%}
+      </h1>
+
+      {%- if video != blank or article.image != blank -%}
+        <div class="ca-chero__media">
+          {%- if video != blank -%}
+            {{ video | video_tag: image_size: '1400x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'ca-chero__video' }}
+          {%- else -%}
+            {{ article.image | image_url: width: 1400 | image_tag: class: 'ca-chero__img', alt: article.image.alt | default: short_title, widths: '700, 1000, 1400', sizes: '(min-width: 990px) 48vw, 100vw', loading: 'eager', fetchpriority: 'high' }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="ca-chero__aside">
+      <div class="ca-chero__about">
+        {%- if pills.size > 0 -%}
+          <ul class="ca-pills" aria-label="Services">
+            {%- for pill in pills -%}
+              <li class="ca-pill">{{ pill }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if summary != blank -%}
+          <p class="ca-chero__summary">{{ summary | newline_to_br }}</p>
+        {%- endif -%}
+      </div>
+      {%- if website != blank and section.settings.button_label != blank -%}
+        <a class="button size-style ca-chero__button" href="{{ website }}" target="_blank" rel="noopener">
+          {{- section.settings.button_label -}}
+          <span class="ca-sr-only"> (opens in a new tab)</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-chero {
+    background-color: var(--color-background);
+  }
+
+  .ca-chero__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 40px;
+  }
+
+  .ca-chero__main {
+    grid-column: 1 / span 6;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ca-chero__title {
+    margin: 20px 0 0;
+    font-size: var(--ca-fs-48);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-chero__media {
+    width: 100%;
+    margin-block-start: 24px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  .ca-chero__img,
+  .ca-chero__video,
+  .ca-chero__media video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ca-chero__aside {
+    grid-column: 9 / -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+  }
+
+  .ca-chero__about {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .ca-chero__summary {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-chero__main,
+    .ca-chero__aside {
+      grid-column: 1 / -1;
+    }
+
+    .ca-chero__aside {
+      align-items: flex-start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Case study hero",
+  "tag": "section",
+  "class": "ca-chero-section",
+  "enabled_on": { "templates": ["article"] },
+  "settings": [
+    { "type": "paragraph", "content": "Content comes from the article: title, image, and the Case Study metafields (banner video, service list, short description, website URL)." },
+    { "type": "text", "id": "button_label", "label": "Website button label", "default": "Visit Website" },
+    {
+      "type": "checkbox",
+      "id": "allow_transparent_header",
+      "label": "Run under a transparent header",
+      "default": true
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#0d110d" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text", "default": "#ffffff" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Case study hero", "category": "Conspire" }]
+}
+{% endschema %}

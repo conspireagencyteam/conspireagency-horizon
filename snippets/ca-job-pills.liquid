@@ -1,0 +1,22 @@
+{%- comment -%}
+  ca-job-pills.liquid — location / work type / hours / country pills for a
+  career post, from the article's custom.work_* metafields.
+
+  @param {object} article
+  @param {string} [country_suffix] - appended to the country, e.g. "Only" or "Applicants Only"
+  @param {string} [class]
+{%- endcomment -%}
+{%- liquid
+  assign ca_location = article.metafields.custom.work_location.value
+  assign ca_type = article.metafields.custom.work_type.value
+  assign ca_hours = article.metafields.custom.work_hours.value
+  assign ca_country = article.metafields.custom.work_country.value
+-%}
+{%- if ca_location != blank or ca_type != blank or ca_hours != blank or ca_country != blank -%}
+  <ul class="ca-pills{% if class %} {{ class }}{% endif %}" aria-label="Job details">
+    {%- if ca_location != blank -%}<li class="ca-pill">{{ ca_location }}</li>{%- endif -%}
+    {%- if ca_type != blank -%}<li class="ca-pill">{{ ca_type }}</li>{%- endif -%}
+    {%- if ca_hours != blank -%}<li class="ca-pill">{{ ca_hours }}</li>{%- endif -%}
+    {%- if ca_country != blank -%}<li class="ca-pill">{{ ca_country }}{% if country_suffix != blank %} {{ country_suffix }}{% endif %}</li>{%- endif -%}
+  </ul>
+{%- endif -%}

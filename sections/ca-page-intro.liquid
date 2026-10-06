@@ -14,8 +14,14 @@
   assign transparent = section.settings.allow_transparent_header
 -%}
 
+{%- if transparent and section.settings.text_color != blank -%}
+  {%- style -%}
+    .ca-header { --ca-header-transparent-text: {{ section.settings.text_color }}; }
+  {%- endstyle -%}
+{%- endif -%}
+
 <div
-  class="ca-pintro spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header{% endif %}{% if section.settings.rule %} ca-pintro--rule{% endif %}"
+  class="ca-pintro spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header ca-under-header{% endif %}{% if section.settings.rule %} ca-pintro--rule{% endif %}"
   style="{% render 'spacing-style', settings: section.settings %}"
 >
   {%- render 'contrast-override',
@@ -92,6 +98,7 @@
       "id": "size",
       "label": "Statement size",
       "options": [
+        { "value": "display", "label": "Display (page title)" },
         { "value": "lg", "label": "Large" },
         { "value": "xl", "label": "Medium" }
       ],
@@ -110,7 +117,13 @@
       "default": "button"
     },
     { "type": "checkbox", "id": "rule", "label": "Hairline under the section", "default": false },
-    { "type": "checkbox", "id": "allow_transparent_header", "label": "Allow transparent header", "default": false },
+    {
+      "type": "checkbox",
+      "id": "allow_transparent_header",
+      "label": "Run under a transparent header",
+      "info": "For a dark first section: the header sits on top of it and takes the text color below.",
+      "default": false
+    },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "t:settings.background" },
     { "type": "color", "id": "text_color", "label": "t:settings.text" },

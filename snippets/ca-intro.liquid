@@ -7,7 +7,7 @@
   @param {string} [heading] - inline richtext, or richtext (paragraphs) when tag is div/h1/h2
   @param {string} [tag] - heading element, default h2
   @param {number} [start] - grid column the statement starts on (5, 6 or 7), default 5
-  @param {string} [size] - 'xl' for the smaller 32px statement
+  @param {string} [size] - 'xl' for the smaller 32px statement, 'display' for the 86px page-title size
   @param {string} [button_label]
   @param {string} [button_link]
   @param {string} [button_class] - button | button-secondary, default button
@@ -31,7 +31,7 @@
         {%- else -%}
           {%- assign ca_heading = heading -%}
         {%- endif -%}
-        <{{ ca_tag }} class="ca-statement{% if size == 'xl' %} ca-statement--xl{% endif %}">{{ ca_heading }}</{{ ca_tag }}>
+        <{{ ca_tag }} class="ca-statement{% if size == 'xl' %} ca-statement--xl{% elsif size == 'display' %} ca-statement--display{% endif %}">{{ ca_heading }}</{{ ca_tag }}>
       {%- endif -%}
       {%- if button_label != blank -%}
         <a class="{{ ca_btn }} size-style" {% if button_link != blank %}href="{{ button_link }}"{% endif %}>{{ button_label }}</a>

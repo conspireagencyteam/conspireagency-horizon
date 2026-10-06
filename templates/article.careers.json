@@ -1,0 +1,59 @@
+{
+  "sections": {
+    "header": {
+      "type": "ca-article-header",
+      "settings": {
+        "show_date": true,
+        "date_prefix": "Posted",
+        "date_format": "%B %d, %Y",
+        "show_media": false,
+        "show_job_details": true,
+        "country_suffix": "Applicants Only",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "body": {
+      "type": "ca-article-body",
+      "settings": {
+        "heading_level": "auto",
+        "show_headings": true,
+        "toc_label": "On this page",
+        "lead": false,
+        "bullets": "diamond",
+        "intro_label": "Overview",
+        "intro_display": true,
+        "extra_label": "",
+        "extra_link": "",
+        "back_label": "View All Open Positions",
+        "back_link": "shopify://blogs/careers",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 0
+      }
+    },
+    "apply": {
+      "type": "ca-apply-form",
+      "settings": {
+        "heading": "Apply for this Position",
+        "anchor_id": "apply",
+        "experience_options": "Less than 1 year\n1-2 years\n3-5 years\n5-10 years\n10+ years",
+        "note": "",
+        "button_label": "Submit Application",
+        "success_text": "Thanks, your application is in. We read every one and will be in touch if there is a fit.",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "header",
+    "body",
+    "apply"
+  ]
+}

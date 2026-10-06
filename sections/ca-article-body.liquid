@@ -1,0 +1,405 @@
+{%- comment -%}
+  ca-article-body.liquid — long-form body with a sticky table of contents
+  (Conspire v2.0: case study 315:1246, blog article 443:156, career post 474:804).
+
+  The table of contents is built from the headings in the article's own rich
+  text (H2, or whichever level the article uses), so editors only ever write
+  the article:
+    - the content is split at each heading, every chunk becomes a <section>
+      with an anchor id made from the heading text;
+    - the left column lists those headings and stays in view while reading;
+    - <ca-toc> (assets/ca-toc.js) marks the section being read.
+  On desktop the headings themselves are visually hidden (the list is their
+  label, as in the design) but stay in the document for SEO and screen readers.
+  On small screens the list sits above the content and the headings show.
+
+  Anything before the first heading is the intro. With an intro label set
+  (career posts: "Overview") it gets its own row with that label on the left.
+
+  Works on article templates and on pages (uses page.content there). An article
+  with no matching headings renders as plain content with no list.
+{%- endcomment -%}
+
+<script src="{{ 'ca-toc.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{%- liquid
+  assign source = article.content | default: page.content
+  assign level = section.settings.heading_level | default: 'auto'
+  comment
+    Auto: editors are not consistent about heading levels (one career post uses
+    H2, the other H1), so take the highest level the content actually has.
+  endcomment
+  if level == 'auto'
+    if source contains '<h2'
+      assign level = 'h2'
+    elsif source contains '<h1'
+      assign level = 'h1'
+    else
+      assign level = 'h3'
+    endif
+  endif
+  assign open_tag = '<' | append: level
+  assign close_tag = '</' | append: level | append: '>'
+  assign parts = source | split: open_tag
+  assign intro = parts | first | strip
+  assign has_toc = false
+  if parts.size > 1 and source contains close_tag
+    assign has_toc = true
+  endif
+
+  assign rte_class = 'ca-rte'
+  if section.settings.lead
+    assign rte_class = rte_class | append: ' ca-rte--lead'
+  endif
+  if section.settings.bullets == 'diamond'
+    assign rte_class = rte_class | append: ' ca-rte--diamond'
+  endif
+
+  assign split_intro = false
+  if section.settings.intro_label != blank and intro != blank and has_toc
+    assign split_intro = true
+  endif
+-%}
+
+<div
+  class="ca-abody{% if section.settings.show_headings %} ca-abody--headings{% endif %} spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if split_intro -%}
+      <div class="ca-abody__intro">
+        <p class="ca-eyebrow ca-abody__intro-label">{{ section.settings.intro_label }}</p>
+        <div class="ca-rte ca-abody__intro-text{% if section.settings.intro_display %} ca-abody__intro-text--display{% endif %}">
+          {{ intro }}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="ca-abody__main{% unless has_toc %} ca-abody__main--plain{% endunless %}">
+      {%- if has_toc -%}
+        <ca-toc class="ca-abody__toc">
+          <nav aria-label="{{ section.settings.toc_label | default: 'On this page' | escape }}">
+            <ol class="ca-abody__toc-list">
+              {%- for part in parts offset: 1 -%}
+                {%- liquid
+                  assign heading_html = part | split: close_tag | first
+                  assign title = open_tag | append: heading_html | append: close_tag | strip_html | strip
+                  assign anchor = title | handleize
+                  if anchor == blank
+                    assign anchor = 'section-' | append: forloop.index
+                  endif
+                -%}
+                {%- if title != blank -%}
+                  <li>
+                    <a class="ca-abody__toc-link{% if forloop.first %} is-active{% endif %}" href="#{{ anchor }}">{{ title }}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if section.settings.extra_label != blank and section.settings.extra_link != blank -%}
+                <li>
+                  <a class="ca-abody__toc-link" href="{{ section.settings.extra_link }}">{{ section.settings.extra_label }}</a>
+                </li>
+              {%- endif -%}
+            </ol>
+          </nav>
+          {%- if section.settings.back_label != blank and section.settings.back_link != blank -%}
+            <a class="ca-abody__back" href="{{ section.settings.back_link }}">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M14 7l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              {{- section.settings.back_label -}}
+            </a>
+          {%- endif -%}
+        </ca-toc>
+      {%- endif -%}
+
+      <div class="ca-abody__content">
+        {%- if has_toc -%}
+          {%- if intro != blank and split_intro == false -%}
+            <div class="{{ rte_class }} ca-abody__lede">{{ intro }}</div>
+          {%- endif -%}
+
+          {%- for part in parts offset: 1 -%}
+            {%- liquid
+              assign heading_html = part | split: close_tag | first
+              assign title = open_tag | append: heading_html | append: close_tag | strip_html | strip
+              assign anchor = title | handleize
+              if anchor == blank
+                assign anchor = 'section-' | append: forloop.index
+              endif
+              assign body = part | remove_first: heading_html | remove_first: close_tag
+            -%}
+            <section class="ca-abody__section" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title">
+              <h2 class="ca-abody__heading" id="{{ anchor }}-title">{{ title }}</h2>
+              <div class="{{ rte_class }}">{{ body }}</div>
+            </section>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="{{ rte_class }}">{{ source }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-abody {
+    background-color: var(--color-background);
+  }
+
+  .ca-abody__intro,
+  .ca-abody__main {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    align-items: start;
+  }
+
+  .ca-abody__intro {
+    margin-block-end: 160px;
+  }
+
+  .ca-abody__intro-label {
+    grid-column: 1 / span 4;
+    padding-block-start: 6px;
+  }
+
+  .ca-abody__intro-text {
+    grid-column: 5 / -1;
+  }
+
+  /* Career posts: every intro paragraph is large, the first one largest. */
+  .ca-abody__intro-text--display > p {
+    margin-block-end: 24px;
+    font-size: var(--ca-fs-32);
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+    text-indent: var(--ca-indent);
+  }
+
+  .ca-abody__intro-text--display > p:first-child {
+    margin-block-end: 32px;
+    font-size: var(--ca-fs-48);
+    line-height: 1.1;
+  }
+
+  /* ── Table of contents ──────────────────────────────────────────── */
+  .ca-abody__toc {
+    grid-column: 1 / span 3;
+    position: sticky;
+    inset-block-start: 96px;
+    display: block;
+  }
+
+  .ca-abody__toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ca-abody__toc-link {
+    display: block;
+    padding-block-end: 24px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+    color: inherit;
+    font-size: var(--ca-fs-20);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  }
+
+  .ca-abody__toc-link:hover {
+    border-block-end-color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .ca-abody__toc-link.is-active {
+    padding-inline-start: 24px;
+    border-block-end-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-abody__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-block-start: 24px;
+    color: inherit;
+    font-size: var(--ca-fs-20);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+  }
+
+  .ca-abody__back:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  /* ── Content ────────────────────────────────────────────────────── */
+  .ca-abody__content {
+    grid-column: 5 / -1;
+    min-width: 0;
+  }
+
+  .ca-abody__main--plain .ca-abody__content {
+    grid-column: 5 / -1;
+  }
+
+  .ca-abody__section {
+    scroll-margin-block-start: 96px;
+  }
+
+  .ca-abody__lede + .ca-abody__section,
+  .ca-abody__section + .ca-abody__section {
+    margin-block-start: 80px;
+  }
+
+  /* The list is the label on desktop; keep the heading for assistive tech and SEO. */
+  .ca-abody__heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Career posts show the section headings in the content, with sub-headings a step down. */
+  .ca-abody--headings .ca-abody__heading {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0 0 40px;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-abody--headings .ca-rte h3 {
+    margin-block: 30px 20px;
+    font-size: var(--ca-fs-24);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-abody__toc-link {
+      transition: none;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-abody__intro {
+      margin-block-end: 64px;
+      row-gap: 16px;
+    }
+
+    .ca-abody__intro-label,
+    .ca-abody__intro-text,
+    .ca-abody__toc,
+    .ca-abody__content,
+    .ca-abody__main--plain .ca-abody__content {
+      grid-column: 1 / -1;
+    }
+
+    .ca-abody__toc {
+      position: static;
+      margin-block-end: 56px;
+    }
+
+    .ca-abody__toc-list {
+      gap: 16px;
+    }
+
+    .ca-abody__toc-link {
+      padding-block-end: 16px;
+      font-size: 1.125rem;
+    }
+
+    .ca-abody__toc-link.is-active {
+      padding-inline-start: 0;
+      border-block-end-color: var(--ca-hairline-strong);
+    }
+
+    .ca-abody__heading {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0 0 24px;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+      font-size: var(--ca-fs-36);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .ca-abody__lede + .ca-abody__section,
+    .ca-abody__section + .ca-abody__section {
+      margin-block-start: 56px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article body",
+  "tag": "section",
+  "class": "ca-abody-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "paragraph", "content": "Shows the article (or page) content. The list on the left is built from the headings inside that content." },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Headings used for the list",
+      "options": [
+        { "value": "auto", "label": "Automatic (highest level used)" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h3", "label": "Heading 3" }
+      ],
+      "default": "auto"
+    },
+    { "type": "text", "id": "toc_label", "label": "List label for screen readers", "default": "On this page" },
+    { "type": "checkbox", "id": "show_headings", "label": "Show section headings in the content", "info": "Off: the list is the only visible label on desktop (headings stay in the page for search engines and screen readers).", "default": false },
+    { "type": "checkbox", "id": "lead", "label": "Large first paragraph in each section", "default": true },
+    {
+      "type": "select",
+      "id": "bullets",
+      "label": "Bullet style",
+      "options": [
+        { "value": "dot", "label": "Dot" },
+        { "value": "diamond", "label": "Diamond" }
+      ],
+      "default": "dot"
+    },
+    { "type": "header", "content": "Intro" },
+    { "type": "text", "id": "intro_label", "label": "Intro label", "info": "When set, content before the first heading gets its own row with this label, for example Overview." },
+    { "type": "checkbox", "id": "intro_display", "label": "Large intro text", "default": true },
+    { "type": "header", "content": "Extra links in the list" },
+    { "type": "text", "id": "extra_label", "label": "Extra entry label", "info": "For example Apply" },
+    { "type": "text", "id": "extra_link", "label": "Extra entry link", "info": "For example #apply" },
+    { "type": "text", "id": "back_label", "label": "Back link label", "info": "For example View All Open Positions" },
+    { "type": "url", "id": "back_link", "label": "Back link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Article body", "category": "Conspire" }]
+}
+{% endschema %}

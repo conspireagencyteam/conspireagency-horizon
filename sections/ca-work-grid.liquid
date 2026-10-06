@@ -1,0 +1,299 @@
+{%- comment -%}
+  ca-work-grid.liquid — "Top projects" (Conspire v2.0, Figma 315:1663, hover 315:1939).
+
+  Eyebrow over a hairline, then client cards in a two column grid with the right
+  column dropped down a step. Each card: image, name with years partnered,
+  "Services included" pills, and a Learn More button to the case study.
+
+  Hover (pointer devices): the image eases in and the client's site screenshot
+  fades up on top of it as a centred window. The reveal is optional; a client
+  with a single image just gets the gentle zoom. See snippets/ca-client-media.
+
+  Data: `client` metaobjects (name, years, services, work_preview,
+  featured_site_media / featured_site_image, case_study_reference).
+{%- endcomment -%}
+
+<script src="{{ 'ca-work-grid.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{%- liquid
+  assign clients = section.settings.clients
+  assign button_label = section.settings.button_label | default: 'Learn More'
+-%}
+
+<div
+  class="ca-wgrid spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <h2 class="ca-eyebrow ca-wgrid__eyebrow">{{ section.settings.eyebrow }}</h2>
+    {%- endif -%}
+
+    {%- if clients.count > 0 -%}
+      <ca-work-grid class="ca-wgrid__grid{% if section.settings.stagger %} ca-wgrid__grid--stagger{% endif %}">
+        {%- for client in clients -%}
+          {%- liquid
+            assign name = client.name.value | default: client.system.handle
+            assign url = client.case_study_reference.value
+            assign services = client.services.value
+          -%}
+          <article class="ca-wcard">
+            {%- if url != blank -%}
+              <a class="ca-wcard__media" href="{{ url }}" aria-label="{{ name | escape }}: {{ button_label | escape }}" tabindex="-1">
+                {%- render 'ca-client-media', client: client, default_field: section.settings.default_image_field, sizes: '(min-width: 750px) 48vw, 100vw' -%}
+              </a>
+            {%- else -%}
+              <div class="ca-wcard__media">
+                {%- render 'ca-client-media', client: client, default_field: section.settings.default_image_field, sizes: '(min-width: 750px) 48vw, 100vw' -%}
+              </div>
+            {%- endif -%}
+
+            <div class="ca-wcard__head">
+              <h3 class="ca-wcard__name">{{ name }}</h3>
+              {%- render 'ca-years', years: client.years.value -%}
+            </div>
+
+            <div class="ca-wcard__body">
+              {%- if services.size > 0 -%}
+                <p class="ca-wcard__label">Services included:</p>
+                <ul class="ca-pills ca-pills--lg">
+                  {%- for service in services -%}
+                    <li class="ca-pill">{{ service }}</li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+              {%- if url != blank -%}
+                <a class="{{ section.settings.style_class }} size-style ca-wcard__more" href="{{ url }}">
+                  {{- button_label }}<span class="ca-sr-only">: {{ name }}</span>
+                </a>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      </ca-work-grid>
+    {%- elsif request.design_mode -%}
+      <p class="ca-wgrid__empty">Add <strong>Client</strong> entries in this section's settings.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-wgrid {
+    background-color: var(--color-background);
+  }
+
+  .ca-wgrid__eyebrow {
+    margin: 0 0 40px;
+    padding-block-end: 24px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-wgrid__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+  }
+
+  /* Right column sits a step lower, as in the design. */
+  .ca-wgrid__grid--stagger > .ca-wcard:nth-child(even) {
+    margin-block-start: 80px;
+  }
+
+  .ca-wgrid__grid--stagger > .ca-wcard:nth-child(odd) {
+    margin-block-end: 80px;
+  }
+
+  /* ── Card ───────────────────────────────────────────────────────── */
+  .ca-wcard {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .ca-wcard__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 676 / 600;
+    overflow: hidden;
+    background-color: rgb(var(--color-foreground-rgb) / 0.06);
+  }
+
+  .ca-wcard__layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ca-wcard__img,
+  .ca-wcard__video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ca-wcard__backdrop {
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Site screenshot: a centred window over the backdrop, hidden until hover. */
+  .ca-wcard__reveal {
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+    transition: opacity 0.45s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ca-wcard__window {
+    width: 55.6%;
+    height: 75%;
+    overflow: hidden;
+    background-color: var(--color-background);
+    box-shadow: 0 16px 48px rgb(0 0 0 / 0.28);
+  }
+
+  .ca-wcard__reveal--video .ca-wcard__window {
+    width: 80%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  .ca-wcard__site {
+    object-position: center top;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .ca-wcard:hover .ca-wcard__backdrop,
+    .ca-wcard:focus-within .ca-wcard__backdrop {
+      transform: scale(1.06);
+    }
+
+    .ca-wcard:hover .ca-wcard__reveal,
+    .ca-wcard:focus-within .ca-wcard__reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .ca-wcard__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 24px;
+    flex-wrap: wrap;
+    margin-block-start: 16px;
+  }
+
+  .ca-wcard__name {
+    margin: 0;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-wcard__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    margin-block-start: 24px;
+  }
+
+  .ca-wcard__label {
+    margin: 0;
+    font-size: var(--ca-fs-20);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-wcard__more {
+    margin-block-start: 4px;
+  }
+
+  .ca-wgrid__empty {
+    padding-block: 40px;
+    color: var(--ca-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-wcard__backdrop,
+    .ca-wcard__reveal {
+      transition: opacity 0.2s ease;
+      transform: none !important;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-wgrid__grid {
+      gap: 40px 24px;
+    }
+
+    .ca-wgrid__grid--stagger > .ca-wcard:nth-child(even) {
+      margin-block-start: 48px;
+    }
+
+    .ca-wgrid__grid--stagger > .ca-wcard:nth-child(odd) {
+      margin-block-end: 48px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-wgrid__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 56px;
+    }
+
+    .ca-wgrid__grid--stagger > .ca-wcard:nth-child(n) {
+      margin-block: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Work grid",
+  "tag": "section",
+  "class": "ca-wgrid-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Top projects" },
+    { "type": "metaobject_list", "id": "clients", "label": "Clients", "metaobject_type": "client", "limit": 24 },
+    {
+      "type": "select",
+      "id": "default_image_field",
+      "label": "Card image",
+      "info": "Hover reveals Featured site media (or Featured site image) when the client has one. Clients with a single image just show that image.",
+      "options": [
+        { "value": "work_preview", "label": "Work preview" },
+        { "value": "case_study_image", "label": "Case study image" },
+        { "value": "featured_site_image", "label": "Featured site image" }
+      ],
+      "default": "work_preview"
+    },
+    { "type": "checkbox", "id": "stagger", "label": "Offset the right column", "default": true },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Learn More" },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Work grid", "category": "Conspire" }]
+}
+{% endschema %}

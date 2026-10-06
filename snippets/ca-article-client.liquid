@@ -1,0 +1,23 @@
+{%- comment -%}
+  ca-article-client.liquid — finds the `client` metaobject whose
+  case_study_reference points at the given article, and outputs that client's
+  handle (or nothing). Lets a case study borrow years partnered and services
+  from its client entry without a per-article reference field.
+
+  Usage:
+    {%- capture client_handle -%}{%- render 'ca-article-client', article: article -%}{%- endcapture -%}
+    {%- assign client = metaobjects.client[client_handle] -%}
+
+  @param {object} article
+{%- endcomment -%}
+{%- liquid
+  assign ca_article_handle = article.handle | split: '/' | last
+  assign ca_needle = '/' | append: ca_article_handle | append: '|'
+  for ca_client in metaobjects.client.values
+    assign ca_ref = ca_client.case_study_reference.value | append: '|'
+    if ca_ref contains ca_needle
+      echo ca_client.system.handle
+      break
+    endif
+  endfor
+-%}

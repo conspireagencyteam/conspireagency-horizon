@@ -1,16 +1,12 @@
 {
   "sections": {
-    "header": {
-      "type": "ca-article-header",
+    "hero": {
+      "type": "ca-case-hero",
       "settings": {
-        "show_date": true,
-        "date_prefix": "",
-        "date_format": "%b %d, %Y",
-        "show_media": true,
-        "show_job_details": false,
-        "country_suffix": "Applicants Only",
-        "background_color": "#ffffff",
-        "text_color": "",
+        "button_label": "Visit Website",
+        "allow_transparent_header": true,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
         "padding-block-start": 80,
         "padding-block-end": 80
       }
@@ -35,28 +31,45 @@
         "padding-block-end": 80
       }
     },
-    "related": {
-      "type": "ca-blog",
+    "more_intro": {
+      "type": "ca-page-intro",
       "settings": {
-        "eyebrow": "Related articles",
-        "source": "recent",
-        "blog": "shopify",
-        "post_limit": 3,
-        "article_1": "",
-        "article_2": "",
-        "article_3": "",
-        "article_4": "",
-        "article_5": "",
-        "article_6": "",
-        "view_all_link": "shopify://blogs/shopify",
-        "button_label": "View All",
+        "eyebrow": "More cases",
+        "heading": "<p>Conspire is a Los Angeles based official Shopify Plus Partner specializing in Shopify web design and development for established eCommerce brands.</p>",
+        "heading_tag": "h2",
+        "column_start": "5",
+        "size": "lg",
+        "button_label": "",
+        "button_link": "",
         "style_class": "button",
-        "custom_button_background": "{{ settings.color_palette.background }}",
-        "custom_button_text": "{{ settings.color_palette.foreground }}",
-        "custom_button_border": "{{ settings.color_palette.background }}",
+        "rule": false,
+        "allow_transparent_header": false,
         "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 80,
+        "padding-block-end": 40
+      }
+    },
+    "more": {
+      "type": "ca-work-list",
+      "settings": {
+        "eyebrow": "",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "natures-answer",
+          "kinto"
+        ],
+        "default_image_field": "work_preview",
+        "media_ratio": "8 / 7",
+        "button_label": "Learn More",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 40,
         "padding-block-end": 80
       }
     },
@@ -192,9 +205,10 @@
     }
   },
   "order": [
-    "header",
+    "hero",
     "body",
-    "related",
+    "more_intro",
+    "more",
     "booking"
   ]
 }

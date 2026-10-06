@@ -1,0 +1,42 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-page-intro",
+      "settings": {
+        "eyebrow": "Our careers",
+        "heading": "<p>Join our team and help ambitious brands become household names</p>",
+        "heading_tag": "h1",
+        "column_start": "5",
+        "size": "display",
+        "button_label": "",
+        "button_link": "",
+        "style_class": "button",
+        "rule": false,
+        "allow_transparent_header": false,
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "jobs": {
+      "type": "ca-careers-list",
+      "settings": {
+        "eyebrow": "Open positions",
+        "country_suffix": "Only",
+        "excerpt_words": 28,
+        "button_label": "View Position",
+        "style_class": "button",
+        "empty_text": "No open positions right now. Check back soon.",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "jobs"
+  ]
+}

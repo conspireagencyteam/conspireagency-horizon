@@ -1,0 +1,152 @@
+{%- comment -%}
+  ca-article-header.liquid — article title block (Conspire v2.0: blog article
+  443:148 + 443:155, career post 474:775).
+
+  Date on the left, the title at display size on the right, optional job pills
+  under the title (career posts), and optional full-width featured media below:
+  the article's custom.banner_video when it has one, otherwise its image.
+{%- endcomment -%}
+
+{%- liquid
+  assign video = article.metafields.custom.banner_video.value
+  assign date_text = article.published_at | date: section.settings.date_format
+  if section.settings.date_prefix != blank
+    assign date_text = section.settings.date_prefix | append: ' ' | append: date_text
+  endif
+-%}
+
+<div
+  class="ca-ahead color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-ahead__top spacing-style" style="{% render 'spacing-style', settings: section.settings %}">
+    <div class="ca-inner ca-ahead__grid">
+      {%- if section.settings.show_date -%}
+        <p class="ca-eyebrow ca-ahead__date">
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ date_text }}</time>
+        </p>
+      {%- endif -%}
+      <div class="ca-ahead__main">
+        <h1 class="ca-statement ca-statement--display ca-ahead__title">{{ article.title }}</h1>
+        {%- if section.settings.show_job_details -%}
+          {%- render 'ca-job-pills', article: article, country_suffix: section.settings.country_suffix, class: 'ca-ahead__pills' -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if section.settings.show_media -%}
+    {%- if video != blank -%}
+      <div class="ca-ahead__media">
+        {{ video | video_tag: image_size: '2000x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'ca-ahead__video' }}
+      </div>
+    {%- elsif article.image != blank -%}
+      <div class="ca-ahead__media">
+        {{ article.image | image_url: width: 2880 | image_tag: class: 'ca-ahead__img', alt: article.image.alt | default: article.title, widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'eager', fetchpriority: 'high' }}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .ca-ahead {
+    background-color: var(--color-background);
+  }
+
+  .ca-ahead__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+  }
+
+  .ca-ahead__date {
+    grid-column: 1 / span 4;
+    padding-block-start: 6px;
+  }
+
+  .ca-ahead__main {
+    grid-column: 5 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ca-ahead__title {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .ca-ahead__pills {
+    justify-content: flex-end;
+  }
+
+  /* Full bleed at the design's 1440:808 ratio, capped so it never outgrows the screen. */
+  .ca-ahead__media {
+    width: 100%;
+    height: min(56.1vw, 90vh);
+    overflow: hidden;
+  }
+
+  .ca-ahead__img,
+  .ca-ahead__media video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-ahead__date,
+    .ca-ahead__main {
+      grid-column: 1 / -1;
+    }
+
+    .ca-ahead__pills {
+      justify-content: flex-start;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-ahead__media {
+      height: 75vw;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article header",
+  "tag": "section",
+  "class": "ca-ahead-section",
+  "enabled_on": { "templates": ["article"] },
+  "settings": [
+    { "type": "checkbox", "id": "show_date", "label": "Show date", "default": true },
+    { "type": "text", "id": "date_prefix", "label": "Date prefix", "info": "For example Posted" },
+    {
+      "type": "select",
+      "id": "date_format",
+      "label": "Date format",
+      "options": [
+        { "value": "%b %d, %Y", "label": "Feb 23, 2026" },
+        { "value": "%B %d, %Y", "label": "February 23, 2026" }
+      ],
+      "default": "%b %d, %Y"
+    },
+    { "type": "checkbox", "id": "show_media", "label": "Show featured video or image", "info": "Uses the article's Banner Video metafield when set, otherwise the article image.", "default": true },
+    { "type": "checkbox", "id": "show_job_details", "label": "Show job detail pills (career posts)", "default": false },
+    { "type": "text", "id": "country_suffix", "label": "Text after the country pill", "default": "Applicants Only" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Article header", "category": "Conspire" }]
+}
+{% endschema %}

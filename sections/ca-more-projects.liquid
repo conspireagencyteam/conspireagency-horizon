@@ -5,10 +5,16 @@
   large names separated by slashes. Hovering a name brings it to full strength
   and shows that client's preview image at the cursor.
 
-  Data: a list of `client` metaobjects. Name links to case_study_reference when
-  there is one (otherwise it is plain text). The preview image is the client's
-  featured_site_image, falling back to work_preview; clients with neither just
-  highlight on hover.
+  Data, in order:
+    1. A hand-picked list of `client` metaobjects. Name links to
+       case_study_reference when there is one (otherwise it is plain text). The
+       preview image is featured_site_image, falling back to work_preview.
+    2. Optionally, every article of a blog (the Work blog), so new case studies
+       appear on their own. Name is the article title up to any colon; preview is
+       the article image. Articles already featured elsewhere are skipped: pick
+       the featured clients under "Skip clients" (matched on their case study
+       URL), or list article handles to hide.
+  Entries with no image only highlight on hover.
 {%- endcomment -%}
 
 <script src="{{ 'ca-more-projects.js' | asset_url }}" type="module" fetchpriority="low"></script>
@@ -37,7 +43,20 @@
       <h2 class="ca-eyebrow ca-more__eyebrow">{{ section.settings.eyebrow }}</h2>
     {%- endif -%}
 
-    {%- if clients.count > 0 -%}
+    {%- liquid
+      assign blog = section.settings.blog
+      assign skip_urls = ''
+      for skipped in section.settings.exclude_clients
+        assign skip_urls = skip_urls | append: skipped.case_study_reference.value | append: '|'
+      endfor
+      assign skip_handles = section.settings.exclude_handles | remove: ' ' | prepend: ',' | append: ','
+      assign has_entries = false
+      if clients.count > 0 or blog.articles_count > 0
+        assign has_entries = true
+      endif
+      assign printed = 0
+    -%}
+    {%- if has_entries -%}
       <ca-more-projects class="ca-more__list">
         {%- for client in clients -%}
           {%- liquid
@@ -51,6 +70,10 @@
               assign image = image.image
             endif
           -%}
+          {%- if printed > 0 -%}
+            <span class="ca-more__sep" aria-hidden="true">&nbsp;/ </span>
+          {%- endif -%}
+          {%- assign printed = printed | plus: 1 -%}
           {%- capture inner -%}
             <span class="ca-more__name">{{ name }}</span>
             {%- if image != blank -%}
@@ -62,9 +85,34 @@
           {%- else -%}
             <span class="ca-more__item">{{ inner | strip }}</span>
           {%- endif -%}
-          {%- unless forloop.last -%}
+        {%- endfor -%}
+
+        {%- for article in blog.articles -%}
+          {%- liquid
+            comment
+              article.handle can come back as "blog/article", so keep only the last part.
+            endcomment
+            assign article_handle = article.handle | split: '/' | last
+            assign url_needle = '/' | append: article_handle | append: '|'
+            assign handle_needle = ',' | append: article_handle | append: ','
+            if skip_urls contains url_needle
+              continue
+            endif
+            if skip_handles contains handle_needle
+              continue
+            endif
+            assign name = article.title | split: ':' | first | strip
+          -%}
+          {%- if printed > 0 -%}
             <span class="ca-more__sep" aria-hidden="true">&nbsp;/ </span>
-          {%- endunless -%}
+          {%- endif -%}
+          {%- assign printed = printed | plus: 1 -%}
+          <a class="ca-more__item" href="{{ article.url }}">
+            <span class="ca-more__name">{{ name }}</span>
+            {%- if article.image != blank -%}
+              {{- article.image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
+            {%- endif -%}
+          </a>
         {%- endfor -%}
       </ca-more-projects>
     {%- elsif request.design_mode -%}
@@ -172,6 +220,10 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "More projects" },
     { "type": "metaobject_list", "id": "clients", "label": "Clients", "metaobject_type": "client", "limit": 30 },
+    { "type": "header", "content": "From a blog" },
+    { "type": "blog", "id": "blog", "label": "Blog", "info": "Lists every article after the clients above." },
+    { "type": "metaobject_list", "id": "exclude_clients", "label": "Skip clients", "info": "Articles that are these clients' case studies are left out. Pick the clients featured in the grid above.", "metaobject_type": "client", "limit": 30 },
+    { "type": "text", "id": "exclude_handles", "label": "Skip article handles", "info": "Comma separated" },
     {
       "type": "select",
       "id": "image_field",

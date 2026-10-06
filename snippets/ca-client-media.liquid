@@ -1,0 +1,82 @@
+{%- comment -%}
+  ca-client-media.liquid — resolves a `client` metaobject's two images for the
+  work cards: the default (backdrop) image and the optional hover reveal.
+
+  Reveal is featured_site_media (image or video), falling back to
+  featured_site_image. When the client has neither, or the reveal would be the
+  same field as the backdrop, nothing is revealed and the card simply shows its
+  one image.
+
+  Renders the two layers. Pair with the .ca-wcard__* styles in ca-work-grid.
+
+  @param {object} client - client metaobject
+  @param {string} [default_field] - field for the backdrop, default work_preview
+  @param {string} [sizes]
+{%- endcomment -%}
+{%- liquid
+  assign ca_field = default_field | default: 'work_preview'
+  assign ca_name = client.name.value | default: client.system.handle
+
+  assign ca_default = client[ca_field].value
+  if ca_default.image
+    assign ca_default = ca_default.image
+  endif
+
+  assign ca_media = client.featured_site_media.value
+  assign ca_reveal_img = blank
+  assign ca_reveal_video = blank
+  assign ca_reveal_type = 'video/mp4'
+  assign ca_reveal_poster = blank
+  if ca_media.sources
+    assign ca_source = ca_media.sources | last
+    assign ca_reveal_video = ca_source.url
+    assign ca_reveal_type = ca_source.mime_type | default: 'video/mp4'
+    assign ca_reveal_poster = ca_media.preview_image
+  elsif ca_media.image
+    assign ca_reveal_img = ca_media.image
+  elsif ca_media != blank
+    assign ca_reveal_img = ca_media
+  endif
+
+  if ca_reveal_img == blank and ca_reveal_video == blank and ca_field != 'featured_site_image'
+    assign ca_reveal_img = client.featured_site_image.value
+    if ca_reveal_img.image
+      assign ca_reveal_img = ca_reveal_img.image
+    endif
+  endif
+
+  comment
+    No backdrop but a site image: show the site image on its own, with no reveal.
+  endcomment
+  if ca_default == blank and ca_reveal_img != blank
+    assign ca_default = ca_reveal_img
+    assign ca_reveal_img = blank
+  endif
+-%}
+{%- if ca_default != blank -%}
+  <div class="ca-wcard__layer ca-wcard__backdrop">
+    {{ ca_default | image_url: width: 1400 | image_tag: class: 'ca-wcard__img', loading: 'lazy', alt: ca_name, widths: '480, 700, 1000, 1400', sizes: sizes }}
+  </div>
+{%- endif -%}
+{%- if ca_reveal_video != blank -%}
+  <div class="ca-wcard__layer ca-wcard__reveal ca-wcard__reveal--video" aria-hidden="true">
+    <div class="ca-wcard__window">
+      <video
+        class="ca-wcard__video"
+        muted
+        loop
+        playsinline
+        preload="none"
+        {% if ca_reveal_poster != blank %}poster="{{ ca_reveal_poster | image_url: width: 1000 }}"{% endif %}
+      >
+        <source src="{{ ca_reveal_video }}" type="{{ ca_reveal_type }}">
+      </video>
+    </div>
+  </div>
+{%- elsif ca_reveal_img != blank -%}
+  <div class="ca-wcard__layer ca-wcard__reveal" aria-hidden="true">
+    <div class="ca-wcard__window">
+      {{ ca_reveal_img | image_url: width: 900 | image_tag: class: 'ca-wcard__img ca-wcard__site', loading: 'lazy', alt: '', widths: '450, 900', sizes: '(min-width: 990px) 28vw, 60vw' }}
+    </div>
+  </div>
+{%- endif -%}
