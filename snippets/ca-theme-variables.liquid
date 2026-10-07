@@ -12,14 +12,11 @@
   Horizon's font pickers only list Shopify-library fonts, so the brand fonts are
   loaded here with @font-face and wired to Horizon's font-family variables below.
 
-  INTERIM: pp-mori-medium.woff2 has not been supplied yet, so the 500 weight is
-  aliased to the Regular file below (swap the assign back once Medium is in /assets).
-
   REQUIRED: upload these woff2 files to /assets before fonts render (until then,
   system-stack fallback via font-display: swap):
-    pp-mori-regular.woff2  400 (in /assets)
-    pp-mori-medium.woff2   500 (still needed)
-    ashcroft-medium.woff2  500 (still needed)
+    pp-mori-regular.woff2  400
+    pp-mori-medium.woff2   500
+    ashcroft-medium.woff2  500   (all three are in /assets)
   NOTE: Figma uses the trial "Ashcroft Test"; ship the licensed Ashcroft. Syne was
   in the early art direction only and is not used in the final frames, so it is
   no longer loaded.
@@ -27,7 +24,7 @@
 
 {%- liquid
   assign mori_regular = 'pp-mori-regular.woff2'
-  assign mori_medium = 'pp-mori-regular.woff2'
+  assign mori_medium = 'pp-mori-medium.woff2'
   assign ashcroft_medium = 'ashcroft-medium.woff2'
 -%}
 
