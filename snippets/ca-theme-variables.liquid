@@ -67,10 +67,11 @@
     --font-subheading--family: 'PP Mori', 'Helvetica Neue', Arial, sans-serif; /* Syne is not in the final designs */
     --font-accent--family: 'Ashcroft', Georgia, 'Times New Roman', serif;
 
-    /* Slot weights (pickers resolve to Inter weights wrong for these fonts) */
-    --font-heading--weight: 400;    /* picker inter_n7 = 700 → PP Mori Regular */
-    --font-subheading--weight: 400; /* picker inter_n5 = 500 → PP Mori Regular */
-    --font-accent--weight: 500;     /* picker inter_n7 = 700 → Ashcroft Medium */
+    /* Slot weights (the theme's font pickers hold a system font so nothing is
+       downloaded for them; the real families and weights are set here) */
+    --font-heading--weight: 400;    /* PP Mori Regular */
+    --font-subheading--weight: 400; /* PP Mori Regular */
+    --font-accent--weight: 500;     /* Ashcroft Medium */
     --font-h6--weight: 500;         /* PP Mori Medium — no PP-Mori-500 slot */
 
     /* Re-tuned tokens (brand values Horizon's defaults don't hit) */
