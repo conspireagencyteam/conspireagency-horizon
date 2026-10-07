@@ -72,11 +72,22 @@ class CaHeader extends HTMLElement {
 
     this._megas.forEach((item) => {
       const trigger = item.querySelector('[data-ca-mega-trigger]');
+      const toggle = item.querySelector('[data-ca-mega-toggle]');
       const panel = item.querySelector('[data-ca-mega-panel-root]');
       if (!trigger || !panel) return;
 
-      trigger.addEventListener('click', () => {
+      // The trigger is a real link to the section's landing page; the
+      // disclosure button (and ArrowDown on the link) opens the panel for
+      // keyboard and touch users, hover handles the mouse.
+      toggle?.addEventListener('click', () => {
         this._openMega === item ? this.closeMega() : this.openMega(item);
+      });
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          this.openMega(item);
+          panel.querySelector('a, button')?.focus();
+        }
       });
 
       // Hover intent: a short delay in, a longer grace period out so the
@@ -143,7 +154,7 @@ class CaHeader extends HTMLElement {
     if (this._openMega === item) return;
     this._openMega = item;
     item.setAttribute('data-open', '');
-    item.querySelector('[data-ca-mega-trigger]')?.setAttribute('aria-expanded', 'true');
+    item.querySelector('[data-ca-mega-toggle]')?.setAttribute('aria-expanded', 'true');
     const panel = item.querySelector('[data-ca-mega-panel-root]');
     panel?.removeAttribute('inert');
     this.setAttribute('data-mega-open', '');
@@ -156,7 +167,7 @@ class CaHeader extends HTMLElement {
     if (!item) return;
     this._openMega = null;
     item.removeAttribute('data-open');
-    item.querySelector('[data-ca-mega-trigger]')?.setAttribute('aria-expanded', 'false');
+    item.querySelector('[data-ca-mega-toggle]')?.setAttribute('aria-expanded', 'false');
     item.querySelector('[data-ca-mega-panel-root]')?.setAttribute('inert', '');
     this.removeAttribute('data-mega-open');
     item.querySelectorAll('video').forEach((v) => v.pause());
