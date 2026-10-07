@@ -167,9 +167,13 @@
     inset-block-start: var(--ca-more-y, 0);
     inset-inline-start: var(--ca-more-x, 0);
     z-index: 20;
-    width: auto;
-    height: 300px;
-    max-width: 320px;
+    /* Keep the image's own proportions (a landscape shot stays landscape);
+       only the extremes get cropped: a panorama to the floor, a tall store
+       screenshot to the cap (from the top). */
+    width: 320px;
+    height: auto;
+    min-height: 210px;
+    max-height: 360px;
     object-fit: cover;
     object-position: center top;
     opacity: 0;
