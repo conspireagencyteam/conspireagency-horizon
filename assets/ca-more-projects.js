@@ -1,9 +1,10 @@
 // ca-more-projects.js — <ca-more-projects>: the preview image that follows the
 // cursor over the inline list of project names.
 //
-// Each name may carry one preview <img>. On pointer devices the hovered (or
-// keyboard-focused) name's image is shown just above the cursor. Names without
-// an image only highlight. Touch devices never see the preview.
+// Each name may carry one preview <img> or <video>. On pointer devices the
+// hovered (or keyboard-focused) name's preview is shown just above the cursor
+// (a video plays while shown). Names without a preview only highlight. Touch
+// devices never see the preview.
 
 class CaMoreProjects extends HTMLElement {
   connectedCallback() {
@@ -32,6 +33,7 @@ class CaMoreProjects extends HTMLElement {
     if (!this.finePointer.matches) return;
     this.place(item, event.clientX, event.clientY);
     item.classList.add('is-previewing');
+    this.play(item);
   }
 
   move(item, event) {
@@ -46,10 +48,24 @@ class CaMoreProjects extends HTMLElement {
     const rect = item.getBoundingClientRect();
     this.place(item, rect.left + rect.width / 2, rect.top);
     item.classList.add('is-previewing');
+    this.play(item);
   }
 
   hide(item) {
     item.classList.remove('is-previewing');
+    item.querySelector('video.ca-more__preview')?.pause();
+  }
+
+  play(item) {
+    const video = item.querySelector('video.ca-more__preview');
+    if (!video) return;
+    // Chrome stalls play() on preload="none" videos that were hidden at parse
+    // until load() runs once.
+    if (video.readyState === 0 && !video.dataset.loaded) {
+      video.dataset.loaded = '1';
+      video.load();
+    }
+    video.play().catch(() => {});
   }
 
   place(item, x, y) {

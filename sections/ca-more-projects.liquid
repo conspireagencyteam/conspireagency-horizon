@@ -69,6 +69,21 @@
             if image.image
               assign image = image.image
             endif
+
+            comment
+              Prefer a video: the client's featured site media, else the linked
+              case study's banner video.
+            endcomment
+            assign video = blank
+            if client.featured_site_media.value.media_type == 'video'
+              assign video = client.featured_site_media.value
+            elsif url contains '/blogs/'
+              assign linked_handle = url | split: '/blogs/' | last | split: '/' | last | split: '?' | first | split: '#' | first
+              assign linked = articles[linked_handle]
+              if linked.metafields.custom.banner_video.value != blank
+                assign video = linked.metafields.custom.banner_video.value
+              endif
+            endif
           -%}
           {%- if printed > 0 -%}
             <span class="ca-more__sep" aria-hidden="true">&nbsp;/ </span>
@@ -76,7 +91,9 @@
           {%- assign printed = printed | plus: 1 -%}
           {%- capture inner -%}
             <span class="ca-more__name">{{ name }}</span>
-            {%- if image != blank -%}
+            {%- if video != blank -%}
+              {{- video | video_tag: image_size: '640x', loop: true, muted: true, controls: false, playsinline: true, preload: 'none', class: 'ca-more__preview', aria-hidden: true, tabindex: '-1' -}}
+            {%- elsif image != blank -%}
               {{- image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
             {%- endif -%}
           {%- endcapture -%}
@@ -109,7 +126,9 @@
           {%- assign printed = printed | plus: 1 -%}
           <a class="ca-more__item" href="{{ article.url }}">
             <span class="ca-more__name">{{ name }}</span>
-            {%- if article.image != blank -%}
+            {%- if article.metafields.custom.banner_video.value != blank -%}
+              {{- article.metafields.custom.banner_video.value | video_tag: image_size: '640x', loop: true, muted: true, controls: false, playsinline: true, preload: 'none', class: 'ca-more__preview', aria-hidden: true, tabindex: '-1' -}}
+            {%- elsif article.image != blank -%}
               {{- article.image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
             {%- endif -%}
           </a>
