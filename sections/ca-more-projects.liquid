@@ -92,7 +92,7 @@
           {%- capture inner -%}
             <span class="ca-more__name">{{ name }}</span>
             {%- if video != blank -%}
-              {{- video | video_tag: image_size: '640x', loop: true, muted: true, controls: false, playsinline: true, preload: 'none', class: 'ca-more__preview', aria-hidden: true, tabindex: '-1' -}}
+              {%- render 'ca-preview-video', video: video, class: 'ca-more__preview' -%}
             {%- elsif image != blank -%}
               {{- image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
             {%- endif -%}
@@ -127,7 +127,7 @@
           <a class="ca-more__item" href="{{ article.url }}">
             <span class="ca-more__name">{{ name }}</span>
             {%- if article.metafields.custom.banner_video.value != blank -%}
-              {{- article.metafields.custom.banner_video.value | video_tag: image_size: '640x', loop: true, muted: true, controls: false, playsinline: true, preload: 'none', class: 'ca-more__preview', aria-hidden: true, tabindex: '-1' -}}
+              {%- render 'ca-preview-video', video: article.metafields.custom.banner_video.value, class: 'ca-more__preview' -%}
             {%- elsif article.image != blank -%}
               {{- article.image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
             {%- endif -%}
@@ -189,10 +189,10 @@
     /* Keep the image's own proportions (a landscape shot stays landscape);
        only the extremes get cropped: a panorama to the floor, a tall store
        screenshot to the cap (from the top). */
-    width: 320px;
+    width: 400px;
     height: auto;
-    min-height: 210px;
-    max-height: 360px;
+    min-height: 225px; /* 16:9 at 400 wide, so a video is never side-cropped */
+    max-height: 440px;
     object-fit: cover;
     object-position: center top;
     opacity: 0;

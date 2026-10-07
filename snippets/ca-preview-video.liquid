@@ -1,0 +1,51 @@
+{%- comment -%}
+  ca-preview-video.liquid — a small, silent, looping <video> for hover previews.
+
+  Storefront Liquid only lists the 1080p MP4, but Shopify also encodes a
+  480p rendition at a predictable URL (`.HD-1080p-7.2Mbps-` becomes
+  `.SD-480p-1.5Mbps-`, or `1.0Mbps` for lower-bitrate uploads). Those guesses
+  go first as <source>s; if one 404s the browser moves on to the next, and the
+  real 1080p URL is always last, so the worst case is the full-size file.
+  Ships with preload="none"; ca-more-projects.js warms it up when the list
+  nears the viewport.
+
+  @param {object} video - a Shopify video object (metafield or media)
+  @param {string} [class] - class attribute for the <video>
+{%- endcomment -%}
+
+{%- liquid
+  assign src = blank
+  for source in video.sources
+    if source.format == 'mp4'
+      assign src = source.url
+      break
+    endif
+  endfor
+
+  assign sd_a = blank
+  assign sd_b = blank
+  assign parts = src | split: '.HD-1080p-'
+  if parts.size == 2
+    assign tail = parts[1] | split: 'Mbps-' | last
+    assign sd_a = parts[0] | append: '.SD-480p-1.5Mbps-' | append: tail
+    assign sd_b = parts[0] | append: '.SD-480p-1.0Mbps-' | append: tail
+  endif
+-%}
+{%- if src != blank -%}
+  <video
+    class="{{ class }}"
+    muted
+    loop
+    playsinline
+    preload="none"
+    aria-hidden="true"
+    tabindex="-1"
+    {% if video.preview_image %}poster="{{ video.preview_image | image_url: width: 800 }}"{% endif %}
+  >
+    {%- if sd_a != blank -%}
+      <source src="{{ sd_a }}" type="video/mp4">
+      <source src="{{ sd_b }}" type="video/mp4">
+    {%- endif -%}
+    <source src="{{ src }}" type="video/mp4">
+  </video>
+{%- endif -%}
