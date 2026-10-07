@@ -7,7 +7,7 @@
 
   Everything comes from the article:
     featured video   custom.banner_video (optional; falls back to the article image)
-    pills            custom.service_list (falls back to the client's services)
+    pills            the client's services (falls back to custom.service_list)
     summary          custom.blog_short_description (falls back to the excerpt)
     website          custom.website_url (falls back to custom.case_study_web_site)
     years partnered  the matching `client` metaobject (see ca-article-client)
@@ -27,9 +27,14 @@
   assign title_rest = article.title | remove_first: short_title | strip
 
   assign video = article.metafields.custom.banner_video.value
-  assign pills = article.metafields.custom.service_list.value
+  comment
+    Services: the client record is the source of truth (it also feeds the Our
+    Work grid and list, so every surface agrees); the article's own
+    custom.service_list is the fallback for case studies with no client record.
+  endcomment
+  assign pills = client.services.value
   if pills == blank
-    assign pills = client.services.value
+    assign pills = article.metafields.custom.service_list.value
   endif
 
   assign summary = article.metafields.custom.blog_short_description.value
