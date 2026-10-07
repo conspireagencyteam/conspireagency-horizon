@@ -1,0 +1,75 @@
+{%- comment -%}
+  ca-mega-work.liquid — Our Work mega menu (ported from the live site's
+  header-nav-work-mega, restyled to the Conspire v2.0 art direction).
+
+  Case study list on the left; hovering a name shows its panel (media,
+  industry, description, pills, link) across the other two columns. Case
+  studies are `work_case` blocks on the header section; the `work_mega` block
+  carries the list heading and the view-all link. The first case is the default.
+
+  Usage:
+  {% render 'ca-mega-work', block: block, section: section %}
+{%- endcomment -%}
+
+{%- assign work_cases = section.blocks | where: 'type', 'work_case' -%}
+
+<div class="ca-mega__grid ca-mega__grid--work">
+  <div class="ca-mega__col ca-mega__col--cases">
+    <p class="ca-eyebrow ca-mega__eyebrow">{{ block.settings.list_heading | default: 'Case studies' }}</p>
+    <ul class="ca-mega__list" role="list" data-ca-mega-targets>
+      {%- for case in work_cases -%}
+        <li>
+          <a class="ca-mega__list-link{% if forloop.first %} is-active{% endif %}" href="{{ case.settings.url | default: '/blogs/work' }}" data-ca-mega-target="{{ forloop.index }}" {{ case.shopify_attributes }}>{{ case.settings.title }}</a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    <a class="ca-mega__link ca-mega__view-all" href="{{ block.settings.view_all_url | default: '/blogs/work' }}">
+      {{ block.settings.view_all_text | default: 'View all work' }}
+      {%- render 'ca-icon', name: 'arrow-up-right', size: 16 -%}
+    </a>
+  </div>
+
+  <div class="ca-mega__col ca-mega__col--detail" data-ca-mega-panels>
+    {%- for case in work_cases -%}
+      <a
+        class="ca-mega__case{% if forloop.first %} is-active{% endif %}"
+        data-ca-mega-panel="{{ forloop.index }}"
+        href="{{ case.settings.url | default: '/blogs/work' }}"
+      >
+        <span class="ca-mega__media ca-mega__case-media">
+          {%- if case.settings.video_url != blank -%}
+            <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
+              <source src="{{ case.settings.video_url }}" type="video/mp4">
+            </video>
+          {%- elsif case.settings.image != blank -%}
+            {{ case.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', decoding: 'async', alt: case.settings.title }}
+          {%- endif -%}
+        </span>
+        <span class="ca-mega__case-body">
+          {%- if case.settings.industry != blank -%}
+            <span class="ca-eyebrow ca-mega__feature-eyebrow">{{ case.settings.industry }}</span>
+          {%- endif -%}
+          <span class="ca-mega__title">{{ case.settings.title }}</span>
+          {%- if case.settings.description != blank -%}
+            <span class="ca-mega__desc">{{ case.settings.description }}</span>
+          {%- endif -%}
+          {%- if case.settings.pills != blank -%}
+            <span class="ca-pills ca-mega__pills">
+              {%- assign pills = case.settings.pills | split: ',' -%}
+              {%- for pill in pills -%}
+                {%- assign pill_text = pill | strip -%}
+                {%- if pill_text != blank -%}
+                  <span class="ca-pill">{{ pill_text }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </span>
+          {%- endif -%}
+          <span class="ca-mega__link">
+            {{ case.settings.link_text | default: 'View case' }}
+            {%- render 'ca-icon', name: 'arrow-up-right', size: 16 -%}
+          </span>
+        </span>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>

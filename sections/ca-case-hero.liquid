@@ -44,6 +44,7 @@
 {%- if transparent and section.settings.text_color != blank -%}
   {%- style -%}
     .ca-header { --ca-header-transparent-text: {{ section.settings.text_color }}; }
+    .ca-header { --ca-header-transparent-bg: {{ section.settings.background_color | default: '#ffffff' }}; }
   {%- endstyle -%}
 {%- endif -%}
 

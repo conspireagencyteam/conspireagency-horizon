@@ -1,7 +1,10 @@
 {%- comment -%}
   ca-header.liquid — Conspire Agency minimal header (Conspire v2.0 design).
 
-  Nav (left, from a Shopify navigation menu) + logo (right, theme logo setting).
+  Nav (left, from a Shopify navigation menu) + "Let's Talk" button + logo (right,
+  theme logo setting). A nav item whose title matches a `services_mega` or
+  `work_mega` block's "Menu item title" opens that mega menu (hover or click,
+  desktop only); the mobile drawer lists the same content as nested groups.
   Solid + sticky by default. Goes transparent over the first section when that
   section opts in via `.ca-allow-transparent-header` (see ca-brands-marquee), and
   reverts to solid once scrolled (data-stuck, set by assets/ca-header.js).
@@ -15,6 +18,7 @@
   assign menu = section.settings.menu
   assign logo_height = settings.logo_height | default: 36
   assign logo_height_mobile = settings.logo_height_mobile | default: 28
+  assign work_cases = section.blocks | where: 'type', 'work_case'
 -%}
 
 <ca-header
@@ -40,14 +44,54 @@
       <nav class="ca-header__nav" aria-label="{{ 'accessibility.menu' | t }}">
         <ul class="ca-header__menu" role="list">
           {%- for link in menu.links -%}
-            <li>
-              <a
-                href="{{ link.url }}"
-                class="ca-header__link"
-                {% if link.current %}aria-current="page"{% endif %}
-              >{{ link.title }}</a>
-            </li>
+            {%- liquid
+              assign mega_block = blank
+              assign link_handle = link.title | downcase | handle
+              for block in section.blocks
+                if block.type == 'services_mega' or block.type == 'work_mega'
+                  assign block_handle = block.settings.menu_title | downcase | handle
+                  if block_handle == link_handle
+                    assign mega_block = block
+                    break
+                  endif
+                endif
+              endfor
+            -%}
+            {%- if mega_block != blank -%}
+              <li class="ca-header__item ca-header__item--mega" data-ca-mega {{ mega_block.shopify_attributes }}>
+                <button
+                  type="button"
+                  class="ca-header__link ca-header__link--mega"
+                  data-ca-mega-trigger
+                  aria-expanded="false"
+                  aria-controls="ca-mega-{{ mega_block.id }}"
+                  {% if link.current or link.child_active %}aria-current="page"{% endif %}
+                >{{ link.title }}</button>
+                <div class="ca-header__mega ca-mega" id="ca-mega-{{ mega_block.id }}" data-ca-mega-panel-root inert>
+                  <div class="ca-mega__inner">
+                    {%- if mega_block.type == 'services_mega' -%}
+                      {%- render 'ca-mega-services', block: mega_block -%}
+                    {%- else -%}
+                      {%- render 'ca-mega-work', block: mega_block, section: section -%}
+                    {%- endif -%}
+                  </div>
+                </div>
+              </li>
+            {%- else -%}
+              <li class="ca-header__item">
+                <a
+                  href="{{ link.url }}"
+                  class="ca-header__link"
+                  {% if link.current %}aria-current="page"{% endif %}
+                >{{ link.title }}</a>
+              </li>
+            {%- endif -%}
           {%- endfor -%}
+          {%- if section.settings.cta_label != blank -%}
+            <li class="ca-header__item ca-header__item--cta">
+              <a class="button size-style ca-header__cta" href="{{ section.settings.cta_link | default: '/pages/contact' }}">{{ section.settings.cta_label }}</a>
+            </li>
+          {%- endif -%}
         </ul>
       </nav>
     </div>
@@ -83,10 +127,52 @@
     <nav aria-label="{{ 'accessibility.menu' | t }}">
       <ul class="ca-header__drawer-menu" role="list">
         {%- for link in menu.links -%}
+          {%- liquid
+            assign mega_block = blank
+            assign link_handle = link.title | downcase | handle
+            for block in section.blocks
+              if block.type == 'services_mega' or block.type == 'work_mega'
+                assign block_handle = block.settings.menu_title | downcase | handle
+                if block_handle == link_handle
+                  assign mega_block = block
+                  break
+                endif
+              endif
+            endfor
+          -%}
           <li>
-            <a href="{{ link.url }}" class="ca-header__drawer-link"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            {%- if mega_block != blank -%}
+              <p class="ca-header__drawer-link ca-header__drawer-group">{{ link.title }}</p>
+              <ul class="ca-header__drawer-sub" role="list">
+                {%- if mega_block.type == 'services_mega' -%}
+                  <li><a href="{{ mega_block.settings.s2_url | default: '/products/shopify-fractional-teams' }}">{{ mega_block.settings.s2_title | default: 'Fractional Shopify Teams' }}</a></li>
+                  <li><a href="{{ mega_block.settings.s1_url | default: '/products/shopify-websites' }}">{{ mega_block.settings.s1_title | default: 'Shopify Website Builds' }}</a></li>
+                  {%- for i in (1..5) -%}
+                    {%- liquid
+                      assign label_key = 'i' | append: i | append: '_label'
+                      assign url_key = 'i' | append: i | append: '_url'
+                    -%}
+                    {%- if mega_block.settings[label_key] != blank -%}
+                      <li><a href="{{ mega_block.settings[url_key] | default: '/blogs/work' }}">{{ mega_block.settings[label_key] }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for case in work_cases -%}
+                    <li><a href="{{ case.settings.url | default: '/blogs/work' }}">{{ case.settings.title }}</a></li>
+                  {%- endfor -%}
+                  <li><a href="{{ mega_block.settings.view_all_url | default: '/blogs/work' }}">{{ mega_block.settings.view_all_text | default: 'View all work' }}</a></li>
+                {%- endif -%}
+              </ul>
+            {%- else -%}
+              <a href="{{ link.url }}" class="ca-header__drawer-link"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            {%- endif -%}
           </li>
         {%- endfor -%}
+        {%- if section.settings.cta_label != blank -%}
+          <li class="ca-header__drawer-cta">
+            <a class="button size-style" href="{{ section.settings.cta_link | default: '/pages/contact' }}">{{ section.settings.cta_label }}</a>
+          </li>
+        {%- endif -%}
       </ul>
     </nav>
   </div>
@@ -152,7 +238,16 @@
     list-style: none;
   }
 
+  .ca-header__item {
+    display: flex;
+    align-items: center;
+  }
+
   .ca-header__link {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
     font-family: var(--font-accent--family);
     font-weight: var(--font-accent--weight, 500);
     font-size: 1.25rem; /* 20px */
@@ -161,10 +256,320 @@
     line-height: 1;
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
+    transition: opacity var(--animation-speed, 0.12s) ease;
   }
 
-  .ca-header__link:hover {
+  .ca-header__link:hover,
+  .ca-header__link[aria-expanded="true"] {
     opacity: 0.6;
+  }
+
+  /* "Let's Talk": the standard arrow-chip button, trimmed to sit in the nav row */
+  .ca-header__item--cta {
+    margin-inline-start: -16px;
+  }
+
+  .ca-header__cta {
+    --ca-btn-chip-size: 1.75rem;
+    --ca-btn-icon-size: 1.125rem;
+    --ca-btn-gap: 0.75rem;
+    font-size: 1rem;
+  }
+
+  /* While a mega menu is open the header is always solid, even over a hero */
+  .ca-header[data-mega-open] {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* ── Mega menu ─────────────────────────────────────────────────────── */
+  .ca-mega {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    z-index: 1;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    border-block-start: 1px solid var(--ca-hairline);
+    box-shadow: 0 32px 48px -24px rgb(0 0 0 / 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.18s ease,
+      transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s linear 0.22s;
+    pointer-events: none;
+  }
+
+  .ca-header__item--mega[data-open] .ca-mega {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+    pointer-events: auto;
+  }
+
+  .ca-mega__inner {
+    max-width: var(--page-width, 1440px);
+    margin-inline: auto;
+    padding: 40px var(--page-margin, 24px) 48px;
+  }
+
+  .ca-mega__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+
+  .ca-mega__col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+  }
+
+  /* Services: 5 / 3 / 4 */
+  .ca-mega__col--services { grid-column: 1 / span 5; padding-inline-end: 24px; }
+  .ca-mega__col--specialties { grid-column: 6 / span 3; }
+  .ca-mega__col--featured { grid-column: 9 / -1; }
+
+  /* Work: 3 / 9 (media 6 + detail 3 inside the panel) */
+  .ca-mega__col--cases { grid-column: 1 / span 3; }
+  .ca-mega__col--detail { grid-column: 4 / -1; }
+
+  .ca-mega__col--specialties,
+  .ca-mega__col--featured,
+  .ca-mega__col--detail {
+    padding-inline-start: 24px;
+    border-inline-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-mega__eyebrow {
+    color: var(--ca-muted);
+  }
+
+  .ca-mega__title {
+    display: block;
+    font-family: var(--font-subheading--family);
+    font-size: var(--ca-fs-24);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-mega__desc {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ca-soft);
+  }
+
+  /* Primary services */
+  .ca-mega__services {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-mega__service {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-block: 24px;
+    border-block-end: 1px solid var(--ca-hairline);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-mega__service-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .ca-mega__arrow {
+    flex: 0 0 auto;
+    transition: transform 0.2s ease;
+  }
+
+  .ca-mega__service:hover .ca-mega__arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .ca-mega__service:hover .ca-mega__title {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Hairline lists (specialties, case studies) */
+  .ca-mega__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-mega__list-link {
+    display: block;
+    padding-block: 14px;
+    border-block-end: 1px solid var(--ca-hairline);
+    font-family: var(--font-subheading--family);
+    font-size: var(--ca-fs-20);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: inherit;
+    text-decoration: none;
+    transition: padding-inline-start 0.2s ease, color 0.2s ease;
+  }
+
+  .ca-mega__list-link:hover,
+  .ca-mega__list-link.is-active {
+    padding-inline-start: 8px;
+  }
+
+  .ca-mega__list-link.is-active {
+    color: var(--ca-soft);
+  }
+
+  /* Small uppercase link with arrow */
+  .ca-mega__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    font-family: var(--font-accent--family);
+    font-weight: var(--font-accent--weight, 500);
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-mega__link .ca-icon {
+    transition: transform 0.2s ease;
+  }
+
+  a:hover > .ca-mega__link .ca-icon,
+  a:hover > .ca-mega__case-body > .ca-mega__link .ca-icon,
+  a.ca-mega__link:hover .ca-icon {
+    transform: translate(2px, -2px);
+  }
+
+  .ca-mega__view-all {
+    margin-block-start: 8px;
+  }
+
+  /* Featured / case panels: stacked, one visible at a time */
+  .ca-mega__stack,
+  .ca-mega__col--detail {
+    position: relative;
+  }
+
+  .ca-mega__feature,
+  .ca-mega__case {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-mega__feature:not(.is-active),
+  .ca-mega__case:not(.is-active) {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  /* Fixed-ratio frame; media is absolutely positioned so a tall video can't
+     grow the frame (grid items default to min-height: auto). */
+  .ca-mega__media {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background-color: var(--ca-hairline);
+  }
+
+  .ca-mega__media > img,
+  .ca-mega__media > video {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ca-mega__feature-eyebrow {
+    color: var(--ca-muted);
+  }
+
+  .ca-mega__feature-title {
+    display: block;
+    font-family: var(--font-subheading--family);
+    font-size: var(--ca-fs-20);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-mega__feature:hover .ca-mega__feature-title,
+  .ca-mega__case:hover .ca-mega__title {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Work case panel: media left (6 cols), copy right (3 cols) */
+  .ca-mega__case {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    column-gap: 24px;
+    align-items: start;
+  }
+
+  .ca-mega__case-media {
+    grid-column: 1 / span 6;
+  }
+
+  .ca-mega__case-body {
+    grid-column: 7 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ca-mega__pills {
+    margin-block: 4px;
+  }
+
+  .ca-mega .ca-pill {
+    min-height: 32px;
+    padding: 5px 12px;
+    font-size: 0.875rem;
+  }
+
+  @media screen and (max-width: 1199px) {
+    .ca-header__menu {
+      gap: 40px;
+    }
+
+    .ca-mega__col--services { grid-column: 1 / span 4; }
+    .ca-mega__col--specialties { grid-column: 5 / span 3; }
+    .ca-mega__col--featured { grid-column: 8 / -1; }
   }
 
   /* Logo */
@@ -267,12 +672,41 @@
   }
 
   .ca-header__drawer-link {
+    margin: 0;
     font-family: var(--font-accent--family);
+    font-weight: var(--font-accent--weight, 500);
     font-size: 1.5rem;
     text-transform: uppercase;
     letter-spacing: -0.02em;
     color: inherit;
     text-decoration: none;
+  }
+
+  .ca-header__drawer-group {
+    margin-block-end: 12px;
+  }
+
+  .ca-header__drawer-sub {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-header__drawer-sub a {
+    display: block;
+    padding-block: 10px;
+    border-block-end: 1px solid var(--ca-hairline);
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-header__drawer-cta {
+    margin-block-start: 8px;
   }
 
   .ca-header__overlay {
@@ -321,21 +755,30 @@
    * The transparent text color + logo swap come from that section
    * (--ca-header-transparent-text, set on .ca-header).
    */
-  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]) {
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) {
     background-color: transparent;
     color: var(--ca-header-transparent-text, var(--color-foreground));
   }
 
-  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]) .ca-header__logo-img--original {
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__logo-img--original {
     display: var(--ca-header-logo-original-display, block);
   }
 
-  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):has(.ca-header__logo-img--inverse) .ca-header__logo-img--original {
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]):has(.ca-header__logo-img--inverse) .ca-header__logo-img--original {
     display: none;
   }
 
-  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]) .ca-header__logo-img--inverse {
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__logo-img--inverse {
     display: block;
+  }
+
+  /* Over a hero the CTA inverts to the hero's text/background pair so the pill
+     stays visible (a black pill on a near-black hero would vanish). */
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__cta,
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__cta:hover {
+    --button-background-color: var(--ca-header-transparent-text, var(--color-foreground));
+    --button-border-color: var(--ca-header-transparent-text, var(--color-foreground));
+    --button-color: var(--ca-header-transparent-bg, var(--color-background));
   }
 
   /* Solid state gets a hairline + subtle shadow once stuck */
@@ -367,6 +810,22 @@
     },
     {
       "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Let's Talk"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "info": "Defaults to the contact page"
+    },
+    {
+      "type": "header",
       "content": "t:content.padding"
     },
     {
@@ -388,6 +847,390 @@
       "step": 1,
       "unit": "px",
       "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "services_mega",
+      "name": "Services Mega Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item title",
+          "info": "Must match the nav item's title (e.g. Services)",
+          "default": "Services"
+        },
+        {
+          "type": "header",
+          "content": "Primary services"
+        },
+        {
+          "type": "text",
+          "id": "services_heading",
+          "label": "Column heading",
+          "default": "What we do"
+        },
+        {
+          "type": "text",
+          "id": "s1_title",
+          "label": "Service 1 title",
+          "default": "Shopify Website Builds"
+        },
+        {
+          "type": "text",
+          "id": "s1_desc",
+          "label": "Service 1 description",
+          "default": "Conversion-focused builds and migrations with clear scope, timeline, and pricing."
+        },
+        {
+          "type": "url",
+          "id": "s1_url",
+          "label": "Service 1 link"
+        },
+        {
+          "type": "text",
+          "id": "s2_title",
+          "label": "Service 2 title",
+          "default": "Fractional Shopify Teams"
+        },
+        {
+          "type": "text",
+          "id": "s2_desc",
+          "label": "Service 2 description",
+          "default": "Your team has hit its limit. The best hire you'll ever make: a full team that turns business problems into solutions."
+        },
+        {
+          "type": "url",
+          "id": "s2_url",
+          "label": "Service 2 link"
+        },
+        {
+          "type": "header",
+          "content": "Specialties"
+        },
+        {
+          "type": "text",
+          "id": "industries_heading",
+          "label": "Column heading",
+          "default": "Specialties"
+        },
+        {
+          "type": "paragraph",
+          "content": "Each specialty can optionally swap the featured column on hover. Fill in a hover title, text, and media below; leave them empty for no swap."
+        },
+        {
+          "type": "text",
+          "id": "ifeat_link_text",
+          "label": "Hover panel link text",
+          "default": "Learn more"
+        },
+        {
+          "type": "text",
+          "id": "i1_label",
+          "label": "Specialty 1",
+          "default": "B2B & Wholesale"
+        },
+        {
+          "type": "url",
+          "id": "i1_url",
+          "label": "Specialty 1 link"
+        },
+        {
+          "type": "text",
+          "id": "i1_feat_title",
+          "label": "Specialty 1 hover title"
+        },
+        {
+          "type": "textarea",
+          "id": "i1_feat_text",
+          "label": "Specialty 1 hover text"
+        },
+        {
+          "type": "text",
+          "id": "i1_feat_video_url",
+          "label": "Specialty 1 hover video (mp4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "i1_feat_image",
+          "label": "Specialty 1 hover image"
+        },
+        {
+          "type": "url",
+          "id": "i1_feat_url",
+          "label": "Specialty 1 hover link"
+        },
+        {
+          "type": "text",
+          "id": "i2_label",
+          "label": "Specialty 2",
+          "default": "Home Renovation"
+        },
+        {
+          "type": "url",
+          "id": "i2_url",
+          "label": "Specialty 2 link"
+        },
+        {
+          "type": "text",
+          "id": "i2_feat_title",
+          "label": "Specialty 2 hover title"
+        },
+        {
+          "type": "textarea",
+          "id": "i2_feat_text",
+          "label": "Specialty 2 hover text"
+        },
+        {
+          "type": "text",
+          "id": "i2_feat_video_url",
+          "label": "Specialty 2 hover video (mp4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "i2_feat_image",
+          "label": "Specialty 2 hover image"
+        },
+        {
+          "type": "url",
+          "id": "i2_feat_url",
+          "label": "Specialty 2 hover link"
+        },
+        {
+          "type": "text",
+          "id": "i3_label",
+          "label": "Specialty 3",
+          "default": "Health & Supplements"
+        },
+        {
+          "type": "url",
+          "id": "i3_url",
+          "label": "Specialty 3 link"
+        },
+        {
+          "type": "text",
+          "id": "i3_feat_title",
+          "label": "Specialty 3 hover title"
+        },
+        {
+          "type": "textarea",
+          "id": "i3_feat_text",
+          "label": "Specialty 3 hover text"
+        },
+        {
+          "type": "text",
+          "id": "i3_feat_video_url",
+          "label": "Specialty 3 hover video (mp4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "i3_feat_image",
+          "label": "Specialty 3 hover image"
+        },
+        {
+          "type": "url",
+          "id": "i3_feat_url",
+          "label": "Specialty 3 hover link"
+        },
+        {
+          "type": "text",
+          "id": "i4_label",
+          "label": "Specialty 4",
+          "default": "Food & Franchises"
+        },
+        {
+          "type": "url",
+          "id": "i4_url",
+          "label": "Specialty 4 link"
+        },
+        {
+          "type": "text",
+          "id": "i4_feat_title",
+          "label": "Specialty 4 hover title"
+        },
+        {
+          "type": "textarea",
+          "id": "i4_feat_text",
+          "label": "Specialty 4 hover text"
+        },
+        {
+          "type": "text",
+          "id": "i4_feat_video_url",
+          "label": "Specialty 4 hover video (mp4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "i4_feat_image",
+          "label": "Specialty 4 hover image"
+        },
+        {
+          "type": "url",
+          "id": "i4_feat_url",
+          "label": "Specialty 4 hover link"
+        },
+        {
+          "type": "text",
+          "id": "i5_label",
+          "label": "Specialty 5",
+          "default": "NetSuite / ERPs"
+        },
+        {
+          "type": "url",
+          "id": "i5_url",
+          "label": "Specialty 5 link"
+        },
+        {
+          "type": "text",
+          "id": "i5_feat_title",
+          "label": "Specialty 5 hover title"
+        },
+        {
+          "type": "textarea",
+          "id": "i5_feat_text",
+          "label": "Specialty 5 hover text"
+        },
+        {
+          "type": "text",
+          "id": "i5_feat_video_url",
+          "label": "Specialty 5 hover video (mp4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "i5_feat_image",
+          "label": "Specialty 5 hover image"
+        },
+        {
+          "type": "url",
+          "id": "i5_feat_url",
+          "label": "Specialty 5 hover link"
+        },
+        {
+          "type": "header",
+          "content": "Featured"
+        },
+        {
+          "type": "text",
+          "id": "feat_heading",
+          "label": "Column heading",
+          "default": "Featured work"
+        },
+        {
+          "type": "text",
+          "id": "feat_video_url",
+          "label": "Video URL (mp4, loops muted)"
+        },
+        {
+          "type": "image_picker",
+          "id": "feat_image",
+          "label": "Image (if no video)"
+        },
+        {
+          "type": "text",
+          "id": "feat_eyebrow",
+          "label": "Eyebrow",
+          "default": "Case study"
+        },
+        {
+          "type": "text",
+          "id": "feat_title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "feat_url",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "feat_link_text",
+          "label": "Link text",
+          "default": "View case"
+        }
+      ]
+    },
+    {
+      "type": "work_mega",
+      "name": "Our Work Mega Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item title",
+          "info": "Must match the nav item's title (e.g. Our Work)",
+          "default": "Our Work"
+        },
+        {
+          "type": "text",
+          "id": "list_heading",
+          "label": "List heading",
+          "default": "Case studies"
+        },
+        {
+          "type": "text",
+          "id": "view_all_text",
+          "label": "View all text",
+          "default": "View all work"
+        },
+        {
+          "type": "url",
+          "id": "view_all_url",
+          "label": "View all link"
+        },
+        {
+          "type": "paragraph",
+          "content": "Add one 'Work Case Study' block per case study. Hovering a name shows its panel; the first block is the default."
+        }
+      ]
+    },
+    {
+      "type": "work_case",
+      "name": "Work Case Study",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Client name",
+          "default": "Client"
+        },
+        {
+          "type": "text",
+          "id": "industry",
+          "label": "Industry eyebrow"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "pills",
+          "label": "Tag pills (comma separated)",
+          "info": "e.g. Shopify Plus, B2B & Wholesale, LTL Freight"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL (mp4, loops muted)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (if no video)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Case study link"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text",
+          "default": "View case"
+        }
+      ]
     }
   ]
 }

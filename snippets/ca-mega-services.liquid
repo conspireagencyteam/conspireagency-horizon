@@ -1,0 +1,149 @@
+{%- comment -%}
+  ca-mega-services.liquid — Services mega menu (ported from the live site's
+  header-nav-services-mega, restyled to the Conspire v2.0 art direction).
+
+  Three columns: the two primary services, the specialty links, and a featured
+  case. Hovering a specialty that has featured content swaps the featured
+  column; the swap resets when the menu closes (see ca-header.js).
+
+  Block settings are identical to the live theme's `services_mega` block so the
+  existing header-group.json values carry over unchanged.
+
+  Usage:
+  {% render 'ca-mega-services', block: block %}
+{%- endcomment -%}
+
+<div class="ca-mega__grid ca-mega__grid--services">
+  <div class="ca-mega__col ca-mega__col--services">
+    <p class="ca-eyebrow ca-mega__eyebrow">{{ block.settings.services_heading | default: 'What we do' }}</p>
+    <ul class="ca-mega__services" role="list">
+      {%- comment -%} Fractional Teams leads; Website Builds second (matches live). {%- endcomment -%}
+      <li>
+        <a class="ca-mega__service" href="{{ block.settings.s2_url | default: '/products/shopify-fractional-teams' }}">
+          <span class="ca-mega__service-row">
+            <span class="ca-mega__title">{{ block.settings.s2_title | default: 'Fractional Shopify Teams' }}</span>
+            {%- render 'ca-icon', name: 'arrow-up-right', size: 22, class: 'ca-mega__arrow' -%}
+          </span>
+          <span class="ca-mega__desc">{{ block.settings.s2_desc | default: "Your team has hit its limit. The best hire you'll ever make: a full team that turns business problems into solutions." }}</span>
+        </a>
+      </li>
+      <li>
+        <a class="ca-mega__service" href="{{ block.settings.s1_url | default: '/products/shopify-websites' }}">
+          <span class="ca-mega__service-row">
+            <span class="ca-mega__title">{{ block.settings.s1_title | default: 'Shopify Website Builds' }}</span>
+            {%- render 'ca-icon', name: 'arrow-up-right', size: 22, class: 'ca-mega__arrow' -%}
+          </span>
+          <span class="ca-mega__desc">{{ block.settings.s1_desc | default: 'Conversion-focused builds and migrations with clear scope, timeline, and pricing.' }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="ca-mega__col ca-mega__col--specialties">
+    <p class="ca-eyebrow ca-mega__eyebrow">{{ block.settings.industries_heading | default: 'Specialties' }}</p>
+    <ul class="ca-mega__list" role="list" data-ca-mega-targets>
+      {%- for i in (1..5) -%}
+        {%- liquid
+          assign label_key = 'i' | append: i | append: '_label'
+          assign url_key = 'i' | append: i | append: '_url'
+          assign f_title_key = 'i' | append: i | append: '_feat_title'
+          assign f_video_key = 'i' | append: i | append: '_feat_video_url'
+          assign f_image_key = 'i' | append: i | append: '_feat_image'
+          assign i_label = block.settings[label_key]
+          assign i_url = block.settings[url_key]
+          assign has_feature = false
+          if block.settings[f_title_key] != blank or block.settings[f_video_key] != blank or block.settings[f_image_key] != blank
+            assign has_feature = true
+          endif
+        -%}
+        {%- if i_label != blank -%}
+          <li>
+            <a class="ca-mega__list-link" href="{{ i_url | default: '/blogs/work' }}"{% if has_feature %} data-ca-mega-target="i{{ i }}"{% endif %}>{{ i_label }}</a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+
+  <div class="ca-mega__col ca-mega__col--featured" data-ca-mega-panels>
+    <p class="ca-eyebrow ca-mega__eyebrow">{{ block.settings.feat_heading | default: 'Featured work' }}</p>
+    <div class="ca-mega__stack">
+      <a class="ca-mega__feature is-active" data-ca-mega-panel="default" href="{{ block.settings.feat_url | default: '/blogs/work' }}">
+        <span class="ca-mega__media">
+          {%- if block.settings.feat_video_url != blank -%}
+            <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
+              <source src="{{ block.settings.feat_video_url }}" type="video/mp4">
+            </video>
+          {%- elsif block.settings.feat_image != blank -%}
+            {{ block.settings.feat_image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', alt: block.settings.feat_title }}
+          {%- endif -%}
+        </span>
+        {%- if block.settings.feat_eyebrow != blank -%}
+          <span class="ca-eyebrow ca-mega__feature-eyebrow">{{ block.settings.feat_eyebrow }}</span>
+        {%- endif -%}
+        {%- if block.settings.feat_title != blank -%}
+          <span class="ca-mega__feature-title">{{ block.settings.feat_title }}</span>
+        {%- endif -%}
+        <span class="ca-mega__link">
+          {{ block.settings.feat_link_text | default: 'View case' }}
+          {%- render 'ca-icon', name: 'arrow-up-right', size: 16 -%}
+        </span>
+      </a>
+
+      {%- for i in (1..5) -%}
+        {%- liquid
+          assign label_key = 'i' | append: i | append: '_label'
+          assign f_title_key = 'i' | append: i | append: '_feat_title'
+          assign f_text_key = 'i' | append: i | append: '_feat_text'
+          assign f_video_key = 'i' | append: i | append: '_feat_video_url'
+          assign f_image_key = 'i' | append: i | append: '_feat_image'
+          assign f_url_key = 'i' | append: i | append: '_feat_url'
+          assign i_label = block.settings[label_key]
+          assign f_title = block.settings[f_title_key]
+          assign f_text = block.settings[f_text_key]
+          assign f_video = block.settings[f_video_key]
+          assign f_image = block.settings[f_image_key]
+          assign f_url = block.settings[f_url_key]
+          assign has_feature = false
+          if f_title != blank or f_video != blank or f_image != blank
+            assign has_feature = true
+          endif
+          assign tag = 'div'
+          if f_url != blank
+            assign tag = 'a'
+          endif
+        -%}
+        {%- if has_feature -%}
+          <{{ tag }} class="ca-mega__feature" data-ca-mega-panel="i{{ i }}"{% if f_url != blank %} href="{{ f_url }}"{% endif %}>
+            {%- if f_video != blank or f_image != blank -%}
+              <span class="ca-mega__media">
+                {%- if f_video != blank -%}
+                  <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
+                    <source src="{{ f_video }}" type="video/mp4">
+                  </video>
+                {%- else -%}
+                  {{ f_image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', alt: f_title }}
+                {%- endif -%}
+              </span>
+            {%- endif -%}
+            {%- if i_label != blank -%}
+              <span class="ca-eyebrow ca-mega__feature-eyebrow">{{ i_label }}</span>
+            {%- endif -%}
+            {%- if f_title != blank -%}
+              <span class="ca-mega__feature-title">{{ f_title }}</span>
+            {%- endif -%}
+            {%- if f_text != blank -%}
+              <span class="ca-mega__desc">{{ f_text }}</span>
+            {%- endif -%}
+            {%- if f_url != blank -%}
+              <span class="ca-mega__link">
+                {{ block.settings.ifeat_link_text | default: 'Learn more' }}
+                {%- render 'ca-icon', name: 'arrow-up-right', size: 16 -%}
+              </span>
+            {%- endif -%}
+          </{{ tag }}>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>

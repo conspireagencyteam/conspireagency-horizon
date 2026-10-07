@@ -13,11 +13,135 @@
   "sections": {
     "ca_header": {
       "type": "ca-header",
+      "blocks": {
+        "services_mega_main": {
+          "type": "services_mega",
+          "settings": {
+            "menu_title": "Services",
+            "services_heading": "What we do",
+            "s1_title": "Shopify Website Builds",
+            "s1_desc": "Conversion-focused builds and migrations with clear scope, timeline, and pricing.",
+            "s1_url": "shopify://products/shopify-website-development-agency",
+            "s2_title": "Fractional Shopify Teams",
+            "s2_desc": "Your team has hit its limit. The best hire you'll ever make: a full team that turns business problems into solutions.",
+            "s2_url": "shopify://products/shopify-fractional-teams",
+            "industries_heading": "Specialties",
+            "ifeat_link_text": "Learn more",
+            "i1_label": "B2B & Wholesale",
+            "i1_url": "/blogs/work",
+            "i1_feat_title": "From onboarding to invoice, wholesale runs on Shopify.",
+            "i1_feat_text": "Our clients do eight figures a year in B2B and wholesale alone, powered by our public Shopify apps: program onboarding and document management, invoicing with draft orders, and project planning wish lists.",
+            "i1_feat_video_url": "",
+            "i1_feat_url": "",
+            "i2_label": "Home Renovation",
+            "i2_url": "shopify://blogs/work/shopify-websites-for-tile-paint-brands",
+            "i2_feat_title": "Purchase flows built for tile, paint, and surfaces.",
+            "i2_feat_text": "LTL freight shipping, trade programs for designers, sampling, and square footage to box and quart purchase flows. We've built them all.",
+            "i2_feat_video_url": "https://cdn.shopify.com/videos/c/o/v/f9b8a93f72864ea9bd0afed4a7dda373.mp4",
+            "i2_feat_url": "shopify://blogs/work/shopify-websites-for-tile-paint-brands",
+            "i3_label": "Health & Supplements",
+            "i3_url": "shopify://blogs/work/supplement-health-product-shopify-websites",
+            "i3_feat_title": "In the day to day of health brands' stores, for years at a time.",
+            "i3_feat_text": "B2B and wholesale, international markets, ADA and privacy compliance, and the daily development behind brands like Nature's Answer, BodyBio, and Vital Proteins.",
+            "i3_feat_video_url": "https://cdn.shopify.com/videos/c/o/v/05c6b5a10bdc4de9b9fa8c0abb5ac6ca.mp4",
+            "i3_feat_url": "shopify://blogs/work/supplement-health-product-shopify-websites",
+            "i4_label": "Food & Franchises",
+            "i4_url": "shopify://blogs/work/cousins-maine-lobster",
+            "i4_feat_title": "Cousins Maine Lobster: a new multi-million dollar DTC channel.",
+            "i4_feat_text": "We unlocked DTC where others couldn't, then built the franchise portal where 70+ locations order supplies, manage compliance, and run training.",
+            "i4_feat_video_url": "https://cdn.shopify.com/videos/c/o/v/80cfd9cb143343f6bb7c42360cee5d46.mp4",
+            "i4_feat_url": "shopify://blogs/work/cousins-maine-lobster",
+            "i5_label": "NetSuite / ERPs",
+            "i5_url": "/blogs/work",
+            "i5_feat_title": "Built for eight and nine figure volume.",
+            "i5_feat_text": "Behind that kind of volume there's an ERP. We integrate Shopify with NetSuite and similar systems, keeping inventory, orders, fulfillment, and customer data moving cleanly in both directions.",
+            "i5_feat_video_url": "",
+            "i5_feat_url": "",
+            "feat_heading": "Featured work",
+            "feat_video_url": "https://cdn.shopify.com/videos/c/o/v/d89bd037a1c2419e9a4684a32f2a6dbe.mp4",
+            "feat_eyebrow": "Case study · Zia Tile",
+            "feat_title": "Six years working together. Custom apps for their B2B trade program and LTL freight shipping.",
+            "feat_url": "shopify://blogs/work/zia-tile",
+            "feat_link_text": "View case"
+          }
+        },
+        "work_mega_main": {
+          "type": "work_mega",
+          "settings": {
+            "menu_title": "Our Work",
+            "list_heading": "Case studies",
+            "view_all_text": "View all work",
+            "view_all_url": "shopify://blogs/work"
+          }
+        },
+        "work_case_zia": {
+          "type": "work_case",
+          "settings": {
+            "title": "Zia Tile",
+            "industry": "Home Renovation",
+            "description": "Six years working together. We handle daily development on the store and built the custom apps behind their B2B trade program and LTL freight shipping.",
+            "pills": "Shopify Plus, B2B & Wholesale, Trade Program, LTL Freight",
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/d89bd037a1c2419e9a4684a32f2a6dbe.mp4",
+            "image": "shopify://shop_images/ceramics-header.jpg",
+            "url": "shopify://blogs/work/zia-tile",
+            "link_text": "View case"
+          }
+        },
+        "work_case_cousins": {
+          "type": "work_case",
+          "settings": {
+            "title": "Cousins Maine Lobster",
+            "industry": "Food & Franchises",
+            "description": "We unlocked a multi-million dollar DTC channel where others couldn't, then built the franchise portal where 70+ locations order supplies, manage compliance, and run training.",
+            "pills": "Shopify Plus, DTC, Franchise Portal, Compliance",
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/80cfd9cb143343f6bb7c42360cee5d46.mp4",
+            "image": "shopify://shop_images/cml-hero-opt.jpg",
+            "url": "shopify://blogs/work/cousins-maine-lobster",
+            "link_text": "View case"
+          }
+        },
+        "work_case_natures_answer": {
+          "type": "work_case",
+          "settings": {
+            "title": "Nature's Answer",
+            "industry": "Health & Supplements",
+            "description": "A WooCommerce to Shopify Plus migration for a heritage supplement brand, rebuilt around trust, education, and repeat purchase.",
+            "pills": "Shopify Plus, WooCommerce Migration, Health & Supplements",
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/05c6b5a10bdc4de9b9fa8c0abb5ac6ca.mp4",
+            "image": "shopify://shop_images/image-2.png",
+            "url": "shopify://blogs/work/natures-answer-woocommerce-migration-to-shopify-plus-website",
+            "link_text": "View case"
+          }
+        },
+        "work_case_simms": {
+          "type": "work_case",
+          "settings": {
+            "title": "Simms Fishing",
+            "industry": "Outdoor & Specialty",
+            "description": "Ongoing CRO and a fractional website team, running experiments and shipping improvements on Shopify Plus.",
+            "pills": "Shopify Plus, CRO, Fractional Team",
+            "video_url": "",
+            "image": "shopify://shop_images/PDP_S24_G4Z--rollover.webp",
+            "url": "shopify://blogs/work/simms-fishing-shopify-plus-cro",
+            "link_text": "View case"
+          }
+        }
+      },
+      "block_order": [
+        "services_mega_main",
+        "work_mega_main",
+        "work_case_zia",
+        "work_case_cousins",
+        "work_case_natures_answer",
+        "work_case_simms"
+      ],
       "settings": {
-        "menu": "main-menu",
+        "menu": "2025-header-nav",
         "sticky": true,
         "padding-block-start": 20,
-        "padding-block-end": 20
+        "padding-block-end": 20,
+        "cta_label": "Let's Talk",
+        "cta_link": "shopify://pages/contact"
       }
     }
   },

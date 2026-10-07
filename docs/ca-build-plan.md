@@ -27,14 +27,15 @@ contact and careers form field names, JSON-LD structured data, Calendly URLs, pa
 
 ### Needs Danny
 
-1. **Fonts.** Only PP Mori Regular is in `/assets`. PP Mori **Medium** and **Ashcroft
-   Medium** are used in the final designs (Ashcroft for the header navigation; Mori Medium
-   for the 20px label style) and still need to be supplied. Until then Medium is aliased to
-   Regular and the nav falls back to a serif. **Syne is not used in any final frame**, so
-   it does not need buying; its `@font-face` can be removed.
-2. **Header menu.** The header reads the store's `main-menu`, which the live theme also
-   uses. The design's menu is Shopify Websites / Fractional Teams / More. Create a second
-   menu in admin and select it in the header section so the live site is not affected.
+1. **Fonts.** Done 2026-10-07: PP Mori Regular/Medium and Ashcroft Medium are in
+   `/assets` and loaded by `snippets/ca-theme-variables.liquid`; Horizon's font pickers
+   hold a system font so Inter is no longer downloaded. Syne was removed.
+2. **Header menu.** Done 2026-10-07: the header reads `2025-header-nav` (Services / Our
+   Work / Pricing) plus a "Let's Talk" button, and the live site's Services and Our Work
+   mega menus are rebuilt as `services_mega` / `work_mega` / `work_case` blocks on the
+   header section (same settings as the live theme, so the values carried over). Edit them
+   in the theme editor under Header. The Figma header (Shopify Websites / Fractional
+   Teams / More) was not used, per Danny.
 3. **Client data gaps** (Content > Metaobjects > Client). The Work grid and client rows
    read these entries:
    - Simms Fishing, Elway Capital, Embodied Moxie and Sto N Sho have no `work_preview`
