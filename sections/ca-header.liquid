@@ -123,6 +123,22 @@
     </a>
   </div>
 
+  {%- if section.settings.badge_show -%}
+    {%- comment -%}
+      Shopify Premier Partner ribbon: hangs off the header's bottom-left, flush to
+      the viewport edge, and rides along with the sticky header over the page.
+    {%- endcomment -%}
+    <a
+      class="ca-header__badge"
+      href="{{ section.settings.badge_link | default: 'https://www.shopify.com/partners/directory/partner/conspire-agency' }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Shopify Premier Partner (opens in a new tab)"
+    >
+      {%- render 'ca-badge-premier' -%}
+    </a>
+  {%- endif -%}
+
   <div class="ca-header__drawer" id="ca-header-drawer" data-ca-header-drawer inert>
     <nav aria-label="{{ 'accessibility.menu' | t }}">
       <ul class="ca-header__drawer-menu" role="list">
@@ -605,6 +621,53 @@
     font-weight: 500;
   }
 
+  /* Premier Partner ribbon — a foreground-coloured tab with a notched tail,
+     pinned to the header's bottom-left and overlapping whatever is below.
+     Colours follow the header: foreground tab / background mark, and the
+     transparent-over-hero rule swaps them for the hero's pair. */
+  .ca-header__badge {
+    --ca-badge-fg: var(--color-foreground);
+    --ca-badge-bg: var(--color-background);
+    position: absolute;
+    inset-inline-start: 0;
+    top: 100%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 48px;
+    padding: 0 34px 0 12px; /* right: 12px + 22px tail */
+    background-color: var(--ca-badge-fg);
+    color: var(--ca-badge-bg);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%);
+    transition:
+      opacity var(--animation-speed, 0.2s) ease,
+      transform var(--animation-speed, 0.2s) ease;
+  }
+
+  .ca-header__badge:hover {
+    color: var(--ca-badge-bg);
+  }
+
+  .ca-header__badge:focus-visible {
+    outline: 2px solid var(--ca-badge-fg);
+    outline-offset: 2px;
+  }
+
+  .ca-badge__svg {
+    display: block;
+    height: 28px;
+    width: auto;
+  }
+
+  /* Tuck the ribbon away while a mega menu is open or the drawer is up */
+  .ca-header[data-mega-open] .ca-header__badge,
+  .ca-header[data-drawer-open] .ca-header__badge {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
   /* Hamburger — mobile only */
   .ca-header__toggle {
     display: none;
@@ -740,6 +803,11 @@
     .ca-header__logo-img {
       max-height: var(--ca-logo-height-mobile, 28px);
     }
+
+    /* The ribbon would sit on top of hero copy at the mobile margin */
+    .ca-header__badge {
+      display: none;
+    }
   }
 
   @media screen and (min-width: 750px) {
@@ -779,6 +847,11 @@
     --button-background-color: var(--ca-header-transparent-text, var(--color-foreground));
     --button-border-color: var(--ca-header-transparent-text, var(--color-foreground));
     --button-color: var(--ca-header-transparent-bg, var(--color-background));
+  }
+
+  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__badge {
+    --ca-badge-fg: var(--ca-header-transparent-text, var(--color-foreground));
+    --ca-badge-bg: var(--ca-header-transparent-bg, var(--color-background));
   }
 
   /* Solid state gets a hairline + subtle shadow once stuck */
@@ -823,6 +896,23 @@
       "id": "cta_link",
       "label": "Button link",
       "info": "Defaults to the contact page"
+    },
+    {
+      "type": "header",
+      "content": "Partner badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_show",
+      "label": "Show Shopify Premier Partner badge",
+      "info": "A ribbon pinned to the header's bottom-left that stays with the sticky header. Desktop only.",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "badge_link",
+      "label": "Badge link",
+      "info": "Defaults to Conspire's Shopify Partner directory listing"
     },
     {
       "type": "header",

@@ -12,7 +12,6 @@
     "ca_brands_carousel": {
       "type": "ca-brands-marquee",
       "settings": {
-        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
         "heading": "We know Shopify. Your growth partner.",
         "body": "<p>Los Angeles-based Shopify Plus design and development agency. Trusted since 2011 by high-growth eCommerce brands for strategic builds and long-term support. We help teams scale on Shopify with confidence.</p>",
         "button_label": "Get Started",
@@ -39,7 +38,7 @@
         "card_radius": 0,
         "allow_transparent_header": false,
         "transparent_header_text_color": "#0d110d",
-        "padding-block-start": 40,
+        "padding-block-start": 80,
         "padding-block-end": 40
       }
     },

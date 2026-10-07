@@ -38,7 +38,7 @@
   endif
 
   assign has_intro = false
-  if section.settings.badge_image != blank or hero_heading != blank or hero_body != blank or section.settings.button_label != blank
+  if hero_heading != blank or hero_body != blank or section.settings.button_label != blank
     assign has_intro = true
   endif
 -%}
@@ -56,11 +56,6 @@
   {%- if has_intro -%}
     <div class="ca-hero__top">
       <div class="ca-hero__intro">
-        {%- if section.settings.badge_image != blank -%}
-          <div class="ca-hero__badge">
-            {% render 'image', image: section.settings.badge_image, height: 48, class: 'ca-hero__badge-img' %}
-          </div>
-        {%- endif -%}
         {%- if hero_heading != blank -%}
           <h1 class="ca-hero__heading">{{ hero_heading }}</h1>
         {%- endif -%}
@@ -157,12 +152,6 @@
     align-items: flex-start;
     gap: 25px;
     max-width: 802px;
-  }
-
-  .ca-hero__badge-img {
-    display: block;
-    height: 48px;
-    width: auto;
   }
 
   .ca-hero__heading {
@@ -322,11 +311,6 @@
       "content": "Hero content"
     },
     {
-      "type": "image_picker",
-      "id": "badge_image",
-      "label": "Badge image"
-    },
-    {
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading",
@@ -480,7 +464,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 40
+      "default": 80
     },
     {
       "type": "range",
@@ -498,7 +482,6 @@
       "name": "Hero + brands carousel",
       "category": "Conspire",
       "settings": {
-        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
         "heading": "We know Shopify. Your growth partner.",
         "body": "<p>Los Angeles-based Shopify Plus design and development agency. Trusted since 2011 by high-growth eCommerce brands for strategic builds and long-term support. We help teams scale on Shopify with confidence.</p>",
         "button_label": "Get Started",

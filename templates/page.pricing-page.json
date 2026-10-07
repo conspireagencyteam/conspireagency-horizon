@@ -3,7 +3,6 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
-        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
         "heading": "Our Pricing",
         "body": "<p>We work with established Shopify brands that need their website to perform at a higher level. Our model replaces fragmented execution with one accountable team - through conversion-focused rebuilds & migrations, fractional web ownership, and targeted sprints that unlock momentum.</p>",
         "button_label": "Schedule a Call",
@@ -30,7 +29,7 @@
         "card_radius": 0,
         "allow_transparent_header": false,
         "transparent_header_text_color": "#0d110d",
-        "padding-block-start": 40,
+        "padding-block-start": 80,
         "padding-block-end": 40
       }
     },

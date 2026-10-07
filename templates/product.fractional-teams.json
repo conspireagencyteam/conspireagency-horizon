@@ -3,7 +3,6 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
-        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
         "heading": "A team to solve your complex problems.",
         "body": "<p>Your team can't do it all. You need a senior team, that knows your business, sits in your Slack alongside your people, and has the senior experience to transform business problems into solutions.</p>",
         "button_label": "Book a Strategy Call",
@@ -30,7 +29,7 @@
         "card_radius": 0,
         "allow_transparent_header": false,
         "transparent_header_text_color": "#0d110d",
-        "padding-block-start": 40,
+        "padding-block-start": 80,
         "padding-block-end": 40
       }
     },

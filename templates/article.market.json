@@ -3,7 +3,6 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
-        "badge_image": "shopify://shop_images/shopify-plust-partner-logo.png",
         "heading": "",
         "body": "",
         "button_label": "Book a Strategy Call",
@@ -30,7 +29,7 @@
         "card_radius": 0,
         "allow_transparent_header": false,
         "transparent_header_text_color": "#0d110d",
-        "padding-block-start": 40,
+        "padding-block-start": 80,
         "padding-block-end": 40
       }
     },
