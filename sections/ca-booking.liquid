@@ -13,7 +13,7 @@
             blur and opacity.
     RIGHT : a Calendly inline embed (matches the live site).
 
-  Calendly auto-initialises any .calendly-inline-widget once widget.js loads.
+  Calendly is lazy-loaded by the <ca-calendly> element at the bottom of this file.
 {%- endcomment -%}
 
 {%- liquid
@@ -134,13 +134,19 @@
       {%- comment -%} RIGHT — Calendly inline embed {%- endcomment -%}
       <div class="ca-booking__calendar">
         {%- if section.settings.calendly_url != blank -%}
-          <div
-            class="calendly-inline-widget"
+          {%- comment -%}
+            Lazy: the Calendly iframe is ~3 MB of JS and CSS, so it is only
+            created once this section is within a screen of the viewport (see
+            <ca-calendly> below). The iframe is created by Calendly's widget.js,
+            so a title attribute can't be set here.
+          {%- endcomment -%}
+          <ca-calendly
+            class="ca-booking__embed"
             data-url="{{ section.settings.calendly_url }}"
             style="min-width:320px;height:{{ section.settings.calendly_height | default: 700 }}px;"
-          ></div>
-          {%- comment -%} The iframe is created by Calendly's widget.js, so a title attribute can't be set here. {%- endcomment -%}
-          <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+          >
+            <a class="ca-booking__fallback" href="{{ section.settings.calendly_url }}" target="_blank" rel="noopener">Open the scheduler</a>
+          </ca-calendly>
         {%- elsif request.design_mode -%}
           <p class="ca-booking__empty">Add a <strong>Calendly URL</strong> in this section's settings.</p>
         {%- endif -%}
@@ -358,6 +364,18 @@
     color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
   }
 
+  .ca-booking__embed {
+    display: block;
+  }
+
+  .ca-booking__fallback {
+    display: inline-block;
+    margin: 40px;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ca-booking__tile,
     .ca-booking__photo,
@@ -412,6 +430,51 @@
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  // Defers Calendly's widget.js and the inline iframe until the booking block
+  // is within ~a screen of the viewport, instead of on every page load.
+  class CaCalendly extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      if (!('IntersectionObserver' in window) || (window.Shopify && window.Shopify.designMode)) {
+        this.load();
+        return;
+      }
+      this._io = new IntersectionObserver((entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        this._io.disconnect();
+        this.load();
+      }, { rootMargin: '600px 0px' });
+      this._io.observe(this);
+    }
+
+    disconnectedCallback() {
+      this._io?.disconnect();
+    }
+
+    load() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = '1';
+      const init = () => {
+        if (!window.Calendly) return;
+        this.replaceChildren();
+        window.Calendly.initInlineWidget({ url: this.dataset.url, parentElement: this });
+      };
+      if (window.Calendly) return init();
+      let script = document.querySelector('script[data-ca-calendly]');
+      if (!script) {
+        script = document.createElement('script');
+        script.src = 'https://assets.calendly.com/assets/external/widget.js';
+        script.async = true;
+        script.dataset.caCalendly = '1';
+        document.head.appendChild(script);
+      }
+      script.addEventListener('load', init, { once: true });
+    }
+  }
+  if (!customElements.get('ca-calendly')) customElements.define('ca-calendly', CaCalendly);
+{% endjavascript %}
 
 {% schema %}
 {
