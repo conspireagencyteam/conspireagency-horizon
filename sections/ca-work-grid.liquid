@@ -180,6 +180,18 @@
     }
   }
 
+  /* Touch devices have no hover: ca-work-grid.js marks a card with a video
+     `is-active` while it is at least half in view, and the reveal plays
+     there instead. The backdrop image stays underneath, so nothing flashes. */
+  .ca-wcard.is-active .ca-wcard__backdrop {
+    transform: scale(1.06);
+  }
+
+  .ca-wcard.is-active .ca-wcard__reveal {
+    opacity: 1;
+    transform: none;
+  }
+
   .ca-wcard__head {
     display: flex;
     align-items: baseline;

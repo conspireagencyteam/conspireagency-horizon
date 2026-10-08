@@ -35,11 +35,28 @@
             assign ratio = block.settings.image_ratio | default: '11 / 10'
           -%}
           {%- capture card_inner -%}
-            {%- if block.settings.image != blank -%}
-              <div class="ca-feature__media" style="--ca-feature-ratio: {{ ratio }};{% if block.settings.media_background != blank %} --ca-feature-media-bg: {{ block.settings.media_background }};{% endif %}">
-                {% render 'image', image: block.settings.image, height: 1000, class: 'ca-feature__img', alt_text_fallback: block.settings.title %}
+            {%- if block.settings.video != blank or block.settings.image != blank -%}
+              <ca-feature-media class="ca-feature__media" style="--ca-feature-ratio: {{ ratio }};{% if block.settings.media_background != blank %} --ca-feature-media-bg: {{ block.settings.media_background }};{% endif %}">
+                {%- if block.settings.video != blank -%}
+                  {%- comment -%}
+                    Video beats image: an animated GIF is many MB on cellular,
+                    an MP4 rendition is a fraction of that. The video's own
+                    preview frame is the poster (a small JPEG); the image is
+                    only used when there is no video.
+                  {%- endcomment -%}
+                  {%- render 'ca-preview-video',
+                    video: block.settings.video,
+                    quality: 'hd',
+                    class: 'ca-feature__img ca-feature__video',
+                    preload: 'metadata',
+                    poster: block.settings.poster,
+                    poster_width: 1000
+                  -%}
+                {%- else -%}
+                  {% render 'image', image: block.settings.image, height: 1000, class: 'ca-feature__img', alt_text_fallback: block.settings.title %}
+                {%- endif -%}
                 {%- if has_link -%}<span class="ca-feature__btn" aria-hidden="true"></span>{%- endif -%}
-              </div>
+              </ca-feature-media>
             {%- endif -%}
             <div class="ca-feature__text">
               {%- if block.settings.eyebrow != blank -%}
@@ -64,6 +81,43 @@
     {%- endif -%}
   </div>
 </div>
+
+<script>
+  // <ca-feature-media>: plays the card video only while the card is at least
+  // half in view, pauses it otherwise, and never plays it at all when the
+  // visitor prefers reduced motion (the poster frame stays). Defined inline so
+  // the section has no asset dependency; guarded for repeat renders.
+  if (!customElements.get('ca-feature-media')) {
+    customElements.define('ca-feature-media', class extends HTMLElement {
+      connectedCallback() {
+        const video = this.querySelector('video');
+        if (!video || !('IntersectionObserver' in window)) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        this.io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+              // Chrome stalls play() on videos that were hidden at parse until
+              // load() runs once.
+              if (video.readyState === 0 && !video.dataset.loaded) {
+                video.dataset.loaded = '1';
+                video.load();
+              }
+              const attempt = video.play();
+              if (attempt && attempt.catch) attempt.catch(() => {});
+            } else if (!video.paused) {
+              video.pause();
+            }
+          });
+        }, { threshold: [0, 0.5] });
+        this.io.observe(this);
+      }
+
+      disconnectedCallback() {
+        this.io?.disconnect();
+      }
+    });
+  }
+</script>
 
 {% stylesheet %}
   .ca-feature {
@@ -110,6 +164,7 @@
   /* Media = black frame with padding; the GIF/image sits inside, the icon
      button is overlaid bottom-right and revealed on hover. */
   .ca-feature__media {
+    display: block;
     position: relative;
     aspect-ratio: var(--ca-feature-ratio, 11 / 10);
     padding: var(--ca-feature-pad);
@@ -257,7 +312,9 @@
       "type": "feature",
       "name": "Feature card",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image (GIF supported)" },
+        { "type": "image_picker", "id": "image", "label": "Image (GIF supported)", "info": "Used when there is no video." },
+        { "type": "video", "id": "video", "label": "Video", "info": "Preferred over the image: an MP4 is far lighter than an animated GIF. Plays muted and looped while the card is in view." },
+        { "type": "image_picker", "id": "poster", "label": "Video poster", "info": "Shown until the video plays. Falls back to the video's own preview frame (often a dark first frame)." },
         { "type": "color", "id": "media_background", "label": "Media background", "default": "#0d110d" },
         {
           "type": "select",

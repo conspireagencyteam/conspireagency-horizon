@@ -147,7 +147,23 @@
     </a>
   {%- endif -%}
 
-  <div class="ca-header__drawer" id="ca-header-drawer" data-ca-header-drawer inert>
+  <div class="ca-header__drawer" id="ca-header-drawer" data-ca-header-drawer tabindex="-1" inert>
+    {%- comment -%} Conspire Agency: phone-only top row mirroring the page header (close X where the hamburger sits, logo in its usual spot). {%- endcomment -%}
+    <div class="ca-header__drawer-top">
+      <button type="button" class="ca-header__drawer-close" data-ca-header-close aria-label="Close">
+        <span class="ca-header__toggle-box" aria-hidden="true">
+          <span class="ca-header__toggle-bar"></span>
+          <span class="ca-header__toggle-bar"></span>
+        </span>
+      </button>
+      <a href="{{ routes.root_url }}" class="ca-header__logo" aria-label="{{ shop.name }}">
+        {%- if settings.logo != blank -%}
+          <img class="ca-header__logo-img" src="{{ settings.logo | image_url: height: logo_height }}" width="{{ logo_height | times: settings.logo.aspect_ratio | ceil }}" height="{{ logo_height }}" alt="" loading="lazy">
+        {%- else -%}
+          <span class="ca-header__logo-text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </div>
     <nav aria-label="{{ 'accessibility.menu' | t }}">
       <ul class="ca-header__drawer-menu" role="list">
         {%- for link in menu.links -%}
@@ -171,15 +187,33 @@
                 {%- if mega_block.type == 'services_mega' -%}
                   <li><a href="{{ mega_block.settings.s2_url | default: '/products/shopify-fractional-teams' }}">{{ mega_block.settings.s2_title | default: 'Fractional Shopify Teams' }}</a></li>
                   <li><a href="{{ mega_block.settings.s1_url | default: '/products/shopify-websites' }}">{{ mega_block.settings.s1_title | default: 'Shopify Website Builds' }}</a></li>
+                  {%- comment -%} Conspire Agency: specialty areas (i1..i5) collapse into a disclosure on the drawer. {%- endcomment -%}
+                  {%- assign has_specialty = false -%}
                   {%- for i in (1..5) -%}
-                    {%- liquid
-                      assign label_key = 'i' | append: i | append: '_label'
-                      assign url_key = 'i' | append: i | append: '_url'
-                    -%}
-                    {%- if mega_block.settings[label_key] != blank -%}
-                      <li><a href="{{ mega_block.settings[url_key] | default: '/blogs/work' }}">{{ mega_block.settings[label_key] }}</a></li>
-                    {%- endif -%}
+                    {%- assign label_key = 'i' | append: i | append: '_label' -%}
+                    {%- if mega_block.settings[label_key] != blank -%}{%- assign has_specialty = true -%}{%- endif -%}
                   {%- endfor -%}
+                  {%- if has_specialty -%}
+                    <li>
+                      <details class="ca-header__drawer-more" data-ca-drawer-more>
+                        <summary class="ca-header__drawer-more-summary">
+                          <span>Specialty areas</span>
+                          <svg class="ca-header__drawer-more-chevron" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false"><path d="M2 4.5 6 8.5l4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </summary>
+                        <ul class="ca-header__drawer-more-list" role="list">
+                          {%- for i in (1..5) -%}
+                            {%- liquid
+                              assign label_key = 'i' | append: i | append: '_label'
+                              assign url_key = 'i' | append: i | append: '_url'
+                            -%}
+                            {%- if mega_block.settings[label_key] != blank -%}
+                              <li><a href="{{ mega_block.settings[url_key] | default: '/blogs/work' }}">{{ mega_block.settings[label_key] }}</a></li>
+                            {%- endif -%}
+                          {%- endfor -%}
+                        </ul>
+                      </details>
+                    </li>
+                  {%- endif -%}
                 {%- else -%}
                   {%- for case in work_cases -%}
                     <li><a href="{{ case.settings.url | default: '/blogs/work' }}">{{ case.settings.title }}</a></li>
@@ -711,6 +745,13 @@
     pointer-events: none;
   }
 
+  /* Touch/mouse-initiated focus must not paint a box (ca-header.js sets
+     data-input="pointer"). Keyboard focus keeps the stock :focus-visible ring. */
+  .ca-header__drawer:focus,
+  .ca-header[data-input="pointer"] :is(.ca-header__toggle, .ca-header__drawer-close, .ca-header__drawer-more-summary, .ca-header__drawer, .ca-header__drawer a, .ca-header__link, .ca-header__disclosure):focus {
+    outline: none;
+  }
+
   /* Hamburger — mobile only */
   .ca-header__toggle {
     display: none;
@@ -753,7 +794,7 @@
     position: fixed;
     inset: 0 0 0 auto;
     width: min(80vw, 360px);
-    padding: 96px 32px 32px;
+    padding: 96px 32px 32px; /* tablet side drawer; phones use the top row instead (<750px) */
     background-color: var(--color-background);
     color: var(--color-foreground);
     z-index: var(--layer-menu-drawer, 18);
@@ -816,6 +857,69 @@
     margin-block-start: 8px;
   }
 
+  .ca-header__drawer-top {
+    display: none;
+  }
+
+  /* Specialty areas disclosure */
+  .ca-header__drawer-more {
+    interpolate-size: allow-keywords;
+  }
+
+  .ca-header__drawer-more-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-block: 10px;
+    border-block-end: 1px solid var(--ca-hairline);
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .ca-header__drawer-more-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ca-header__drawer-more-chevron {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  .ca-header__drawer-more[open] .ca-header__drawer-more-chevron {
+    transform: rotate(180deg);
+  }
+
+  .ca-header__drawer-more::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition: block-size 0.2s ease, content-visibility 0.2s allow-discrete;
+  }
+
+  .ca-header__drawer-more[open]::details-content {
+    block-size: auto;
+  }
+
+  .ca-header__drawer-more-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ca-header__drawer-more-list a {
+    display: block;
+    padding-block: 10px;
+    padding-inline-start: 16px;
+    border-block-end: 1px solid var(--ca-hairline);
+    font-size: 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
   .ca-header__overlay {
     position: fixed;
     inset: 0;
@@ -832,6 +936,48 @@
   }
 
   @media screen and (max-width: 749px) {
+    /* Phones: full-width drawer (slides via transform) with its own top row.
+       The row copies the page header's geometry so the X lands exactly on the hamburger. */
+    .ca-header__drawer {
+      width: 100%;
+      padding: 0 0 32px;
+    }
+
+    .ca-header__drawer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding-block: 10px;
+      padding-inline: var(--page-margin, 24px);
+    }
+
+    .ca-header__drawer-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-inline-start: -10px;
+      padding: 0;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .ca-header__drawer-close .ca-header__toggle-bar:nth-child(1) {
+      transform: translateY(4px) rotate(45deg);
+    }
+
+    .ca-header__drawer-close .ca-header__toggle-bar:nth-child(2) {
+      transform: translateY(-4px) rotate(-45deg);
+    }
+
+    .ca-header__drawer .ca-header__drawer-menu {
+      padding: 8px var(--page-margin, 24px) 0;
+    }
+
     .ca-header__nav {
       display: none;
     }

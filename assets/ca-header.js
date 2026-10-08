@@ -31,11 +31,24 @@ class CaHeader extends HTMLElement {
     this._onScroll();
     this._scrollTarget.addEventListener('scroll', this._onScroll, { passive: true });
 
+    // Track the last input modality. Programmatic .focus() after a tap can match
+    // :focus-visible on mobile browsers (nothing was focused before), which
+    // paints a dark box. CSS keys off data-input="pointer" to suppress it, while
+    // keyboard users keep the ring.
+    this.setAttribute('data-input', 'pointer');
+    this._onModality = (e) => {
+      const mode = e.type === 'keydown' ? 'keyboard' : 'pointer';
+      if (this.getAttribute('data-input') !== mode) this.setAttribute('data-input', mode);
+    };
+    document.addEventListener('keydown', this._onModality, true);
+    document.addEventListener('pointerdown', this._onModality, true);
+
     this._setupMegaMenus();
 
     if (this.toggleBtn && this.drawer) {
       this.toggleBtn.addEventListener('click', () => (this.hasAttribute('data-drawer-open') ? this.close() : this.open()));
       this.overlay?.addEventListener('click', this.close);
+      this.drawer.querySelector('[data-ca-header-close]')?.addEventListener('click', this.close);
       this.drawer.addEventListener('click', (e) => {
         if (e.target.closest('a')) this.close();
       });
@@ -43,6 +56,8 @@ class CaHeader extends HTMLElement {
   }
 
   disconnectedCallback() {
+    document.removeEventListener('keydown', this._onModality, true);
+    document.removeEventListener('pointerdown', this._onModality, true);
     this._scrollTarget?.removeEventListener('scroll', this._onScroll);
     document.removeEventListener('keydown', this._onKeydown);
     document.removeEventListener('pointerdown', this._onOutsidePointer);
@@ -238,7 +253,9 @@ class CaHeader extends HTMLElement {
     this.overlay?.removeAttribute('inert');
     document.documentElement.style.overflow = 'hidden';
     document.addEventListener('keydown', this._onKeydown);
-    this.drawer?.querySelector(FOCUSABLE)?.focus();
+    // Focus the drawer container (tabindex=-1) rather than the first link, so
+    // screen readers land inside the menu without a ring on "Services".
+    this.drawer?.focus({ preventScroll: true });
   }
 
   close() {
@@ -265,7 +282,7 @@ class CaHeader extends HTMLElement {
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
 
-    if (e.shiftKey && document.activeElement === first) {
+    if (e.shiftKey && (document.activeElement === first || document.activeElement === this.drawer)) {
       e.preventDefault();
       last.focus();
     } else if (!e.shiftKey && document.activeElement === last) {

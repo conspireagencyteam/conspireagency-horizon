@@ -96,9 +96,18 @@
               {%- if reveal_video != blank -%}
                 <div class="ca-work__layer ca-work__reveal ca-work__reveal--video">
                   <div class="ca-work__fg">
-                    <video class="ca-work__video" muted loop playsinline preload="metadata">
-                      <source src="{{ reveal_video }}" type="{{ reveal_vtype }}">
-                    </video>
+                    {%- if fmv.sources -%}
+                      {%- comment -%}
+                        Shopify-hosted video: lightest rendition first (480p on
+                        touch devices, 720p on pointer devices, 1080p last).
+                        See snippets/ca-preview-video.
+                      {%- endcomment -%}
+                      {%- render 'ca-preview-video', video: fmv, quality: 'hd', class: 'ca-work__video', preload: 'metadata', poster_width: 900 -%}
+                    {%- else -%}
+                      <video class="ca-work__video" muted loop playsinline preload="metadata">
+                        <source src="{{ reveal_video }}" type="{{ reveal_vtype }}">
+                      </video>
+                    {%- endif -%}
                   </div>
                 </div>
               {%- elsif reveal_img != blank -%}

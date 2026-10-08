@@ -1,6 +1,6 @@
 // ca-work.js — <ca-work-list> media activation for the Conspire work list.
 // Desktop (wide + hover): the hovered row is active. Mobile (≤749px) or touch:
-// the most-visible row is active as you scroll. Only ONE row is active at a time;
+// the most-visible row (at least half in view) is active as you scroll. Only ONE row is active at a time;
 // its foreground media reveals, its video plays (others pause). Background stays
 // visible. Re-evaluates the mode on resize so it adapts live.
 
@@ -54,7 +54,17 @@ class CaWorkList extends HTMLElement {
     this.activeRow = row;
     row.classList.add('is-active');
     const video = row.querySelector('.ca-work__video');
-    if (video) { const p = video.play(); if (p && p.catch) p.catch(() => {}); }
+    if (!video) return;
+    // Reduced motion: reveal the layer but leave the poster frame still.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Chrome stalls play() on videos that were hidden at parse until load()
+    // runs once.
+    if (video.readyState === 0 && !video.dataset.loaded) {
+      video.dataset.loaded = '1';
+      video.load();
+    }
+    const p = video.play();
+    if (p && p.catch) p.catch(() => {});
   }
 
   deactivate(row) {
@@ -83,16 +93,18 @@ class CaWorkList extends HTMLElement {
     this.io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => this.ratios.set(e.target, e.isIntersecting ? e.intersectionRatio : 0));
+        // The most-visible row wins, and only once it is at least half in
+        // view, so a phone never streams more than one video at a time.
         let best = null;
-        let bestRatio = 0.4;
+        let bestRatio = 0.5;
         this.rows.forEach((row) => {
           const r = this.ratios.get(row) || 0;
-          if (r > bestRatio) { bestRatio = r; best = row; }
+          if (r >= bestRatio) { bestRatio = r; best = row; }
         });
         if (best) this.activate(best);
         else if (this.activeRow) this.deactivate(this.activeRow);
       },
-      { threshold: [0, 0.4, 0.6, 0.85] }
+      { threshold: [0, 0.5, 0.6, 0.85] }
     );
     this.rows.forEach((row) => this.io.observe(row));
   }

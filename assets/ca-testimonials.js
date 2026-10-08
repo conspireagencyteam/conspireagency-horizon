@@ -1,5 +1,7 @@
 // ca-testimonials.js — <ca-carousel> for the Conspire testimonials section.
-// Transform-based, wrapping, keyboard-accessible, optional autoplay.
+// Transform-based on desktop; on narrow/touch viewports (<= 989px) the viewport
+// becomes a native scroll-snap scroller so swiping works, and the active index
+// is synced from scroll events. Wrapping, keyboard-accessible, optional autoplay.
 
 class CaCarousel extends HTMLElement {
   connectedCallback() {
@@ -13,6 +15,10 @@ class CaCarousel extends HTMLElement {
     this.index = 0;
     this.autoplayMs = parseInt(this.dataset.autoplay || '0', 10);
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    this.viewport = this.querySelector('.ca-testimonials__viewport');
+    this.scrollMq = window.matchMedia('(max-width: 989px)');
+    this.scrollMode = false;
 
     this.buildDots();
     this.prevBtn?.addEventListener('click', () => this.go(this.index - 1));
@@ -34,6 +40,17 @@ class CaCarousel extends HTMLElement {
     this.onResize = () => this.update(false);
     window.addEventListener('resize', this.onResize);
 
+    this.onMq = () => this.applyMode();
+    this.scrollMq.addEventListener?.('change', this.onMq);
+    this.applyMode();
+    if (this.viewport) {
+      this.viewport.addEventListener('scroll', () => this.onScroll(), { passive: true });
+      // Pause autoplay while a finger / pointer is down or the user is flicking.
+      this.viewport.addEventListener('touchstart', () => this.touching(true), { passive: true });
+      this.viewport.addEventListener('touchend', () => this.touching(false), { passive: true });
+      this.viewport.addEventListener('touchcancel', () => this.touching(false), { passive: true });
+    }
+
     this.startAutoplay();
     this.addEventListener('mouseenter', () => this.stopAutoplay());
     this.addEventListener('mouseleave', () => this.startAutoplay());
@@ -44,6 +61,47 @@ class CaCarousel extends HTMLElement {
   disconnectedCallback() {
     this.stopAutoplay();
     if (this.onResize) window.removeEventListener('resize', this.onResize);
+    if (this.onMq) this.scrollMq?.removeEventListener?.('change', this.onMq);
+    clearTimeout(this.settleTimer);
+  }
+
+  applyMode() {
+    this.scrollMode = this.scrollMq.matches;
+    this.classList.toggle('is-scroll', this.scrollMode);
+    if (!this.scrollMode && this.viewport) this.viewport.scrollLeft = 0;
+    this.update(false);
+  }
+
+  touching(down) {
+    this.isTouching = down;
+    if (down) this.stopAutoplay();
+    else this.settle();
+  }
+
+  // Resume autoplay a beat after the user's swipe/momentum has finished.
+  settle() {
+    clearTimeout(this.settleTimer);
+    this.settleTimer = setTimeout(() => {
+      this.programmatic = false;
+      if (!this.isTouching) this.startAutoplay();
+    }, 600);
+  }
+
+  onScroll() {
+    if (!this.scrollMode) return;
+    if (!this.programmatic) this.stopAutoplay();
+    const left = this.viewport.scrollLeft;
+    let best = 0;
+    let dist = Infinity;
+    this.slides.forEach((s, i) => {
+      const d = Math.abs(s.offsetLeft - left);
+      if (d < dist) { dist = d; best = i; }
+    });
+    if (best !== this.index) {
+      this.index = best;
+      this.syncState();
+    }
+    this.settle();
   }
 
   buildDots() {
@@ -62,14 +120,25 @@ class CaCarousel extends HTMLElement {
   go(i) {
     const n = this.slides.length;
     this.index = ((i % n) + n) % n; // wrap around
-    this.update();
+    this.update(true);
     this.startAutoplay(); // reset timer on manual interaction
   }
 
-  update() {
-    // Translate by the active slide's offset so the inter-slide gap is respected.
+  update(animate = true) {
     const active = this.slides[this.index];
-    this.track.style.transform = `translateX(${active ? -active.offsetLeft : 0}px)`;
+    if (this.scrollMode && this.viewport) {
+      this.track.style.transform = '';
+      this.programmatic = true;
+      this.viewport.scrollTo({ left: active ? active.offsetLeft : 0, behavior: animate && !this.reduced ? 'smooth' : 'auto' });
+      this.settle();
+    } else {
+      // Translate by the active slide's offset so the inter-slide gap is respected.
+      this.track.style.transform = `translateX(${active ? -active.offsetLeft : 0}px)`;
+    }
+    this.syncState();
+  }
+
+  syncState() {
     this.dots?.forEach((d, i) => {
       const active = i === this.index;
       d.classList.toggle('is-active', active);

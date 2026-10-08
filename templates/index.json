@@ -54,7 +54,9 @@
             "eyebrow": "Builds & Migrations",
             "title": "Shopify Website Design & Development",
             "body": "<p>Whether you need a fast, strategic Shopify launch or a fully custom tailored shopping experience.</p>",
-            "link": "shopify://products/shopify-websites"
+            "link": "shopify://products/shopify-websites",
+            "video": "shopify://files/videos/shopify-websites-agency2.mp4",
+            "poster": "shopify://shop_images/shopify-websites-poster.jpg"
           }
         },
         "feature_2": {
@@ -66,7 +68,9 @@
             "eyebrow": "Grow Your Team With Top Talent Fast",
             "title": "Fractional Shopify Website Teams",
             "body": "<p>Our Los Angeles-based team provides senior strategy, design, and development to own your website end-to-end.</p>",
-            "link": "shopify://products/shopify-fractional-teams"
+            "link": "shopify://products/shopify-fractional-teams",
+            "video": "shopify://files/videos/Conspire-showreel.mp4",
+            "poster": "shopify://shop_images/conspire-showreel-poster.jpg"
           }
         }
       },
