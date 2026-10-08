@@ -38,7 +38,8 @@
       >
         <span class="ca-mega__media ca-mega__case-media">
           {%- if case.settings.video != blank -%}
-            {%- render 'ca-preview-video', video: case.settings.video, quality: 'hd', lazy_poster: true -%}
+            {%- comment -%} 480p: the panel window is ~500px wide; the 720p rendition is a 22 MB file. {%- endcomment -%}
+            {%- render 'ca-preview-video', video: case.settings.video, quality: 'sd', lazy_poster: true -%}
           {%- elsif case.settings.video_url != blank -%}
             <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
               <source src="{{ case.settings.video_url }}" type="video/mp4">
