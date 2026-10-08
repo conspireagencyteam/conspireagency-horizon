@@ -164,6 +164,18 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     hover, and Chrome then downloads the whole file — 3.5–8 MB each, 30–40 MB per page —
     saturating the connection. Warm-up is now `preload="metadata"` only (container header
     + first chunk). If it recurs, check the Network panel's media rows first.
+  - **Legacy URL sweep (2026-10-08).** Unpublished (not deleted, so reversible) and
+    301'd: `/pages/draft-order-invoice-shopify-application` → `/pages/draft-order-invoices`,
+    `/pages/project-planner-wishlist-shopify-application` → `/pages/b2b-wishlist-project-planner`,
+    `/pages/shopify-services` → `/collections/services`, and the two old collections
+    (`shopify-store-development`, `shopify-strategy-development-design-management-retainers`,
+    removed from the Online Store channel) → `/collections/services`. All had 0 GSC clicks in
+    90 days. `/collections/services` now lists Shopify Migrations second (product
+    `shopify-migration` added to the collection, with `product_details.display_title` /
+    `excerpt` set). Left alone: `bonde-demo-subscription-product` (ACTIVE, 7 channels,
+    nothing links to it — decide whether Bonde's demo needs it on the Online Store), the
+    five DRAFT products (four replaced by the migration hub, plus the Conspire Build draft
+    still attached to the services collection), `/pages/reviews` (unpublished), market pages plan.
   - **Keyword H1 vs tagline.** `ca-brands-marquee` has an optional `seo_heading`
     setting: when set, it renders as the H1 styled as an eyebrow above the tagline
     and the tagline becomes `<p class="h1">` (same type). Set on
