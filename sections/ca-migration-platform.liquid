@@ -3,8 +3,9 @@
   (WooCommerce, BigCommerce, Magento, Squarespace).
 
   Eyebrow left, H2 statement right (ca-intro, 32px size), then a two column
-  body: short paragraphs on the left, a "What we handle" checklist on the
-  right (same hairline list as ca-fit-check). The wrapper takes an optional
+  body: paragraphs on the left across columns 1-7 (under the eyebrow, so the
+  left gutter does not sit empty and the measure stays readable), and a
+  "What we handle" checklist in columns 9-12 (same hairline list as ca-fit-check). The wrapper takes an optional
   anchor id so redirects from the old per-platform pages can deep-link
   (/products/shopify-migration#woocommerce).
 {%- endcomment -%}
@@ -82,7 +83,7 @@
   }
 
   .ca-mig__text {
-    grid-column: 5 / span 4;
+    grid-column: 1 / span 7;
     font-size: var(--ca-fs-20);
     line-height: 1.4;
     letter-spacing: -0.02em;
