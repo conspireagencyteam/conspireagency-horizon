@@ -36,11 +36,13 @@
           "zia-tile",
           "body-bio",
           "cousins-maine-lobster",
+          "cousins-fried-seafood",
           "tillamook-country-smoker-jerky",
           "natures-answer",
           "kinto",
           "portola-paints",
-          "simms-fishing"
+          "simms-fishing",
+          "omre"
         ],
         "default_image_field": "work_preview",
         "stagger": true,
@@ -62,11 +64,13 @@
           "zia-tile",
           "body-bio",
           "cousins-maine-lobster",
+          "cousins-fried-seafood",
           "tillamook-country-smoker-jerky",
           "natures-answer",
           "kinto",
           "portola-paints",
-          "simms-fishing"
+          "simms-fishing",
+          "omre"
         ],
         "exclude_handles": "supplement-health-product-shopify-websites, shopify-websites-for-tile-paint-brands, conspire-agency-website",
         "image_field": "featured_site_image",
