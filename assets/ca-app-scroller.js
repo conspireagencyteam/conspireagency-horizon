@@ -45,6 +45,8 @@ class CaAppScroller extends HTMLElement {
     this.applyMode = () => {
       this.scrollMode = this.scrollMq.matches;
       this.classList.toggle('is-scroll', this.scrollMode);
+      // Native scroller must be reachable from the keyboard (axe scrollable-region-focusable)
+      if (this.viewport) this.viewport.tabIndex = this.scrollMode ? 0 : -1;
       this.update();
     };
     this.scrollMq.addEventListener('change', this.applyMode);

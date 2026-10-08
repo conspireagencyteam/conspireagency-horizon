@@ -229,21 +229,33 @@
 
   .ca-testimonials__dots {
     display: flex;
-    gap: 8px;
+    gap: 0;
   }
 
   .ca-testimonials__dot {
-    width: 10px;
-    height: 10px;
+    /* 24px hit target (WCAG 2.5.8); the visible dot is the ::before */
+    position: relative;
+    width: 24px;
+    height: 24px;
     padding: 0;
     border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .ca-testimonials__dot::before {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 10px;
+    height: 10px;
     border-radius: 100px;
     background-color: rgb(var(--color-foreground-rgb) / 0.3);
-    cursor: pointer;
+    transform: translate(-50%, -50%);
     transition: background-color 0.2s ease;
   }
 
-  .ca-testimonials__dot.is-active {
+  .ca-testimonials__dot.is-active::before {
     background-color: rgb(var(--color-foreground-rgb));
   }
 

@@ -215,6 +215,8 @@ class MarqueeComponent extends Component {
     const clone = /** @type {HTMLElement} */ (this.refs.content.cloneNode(true));
 
     clone.setAttribute('aria-hidden', 'true');
+    // aria-hidden alone leaves the cloned links in the tab order (axe aria-hidden-focus)
+    clone.setAttribute('inert', '');
     clone.removeAttribute('ref');
 
     this.refs.wrapper.appendChild(clone);

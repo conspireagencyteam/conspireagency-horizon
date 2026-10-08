@@ -78,8 +78,10 @@
         </div>
         <div class="ca-calc__result ca-calc__result--accent">
           <dt class="ca-eyebrow">Added revenue</dt>
-          <dd data-ca-calc-out="added">{{ added_fmt }}<span class="ca-calc__cycle"> / month</span></dd>
-          <p class="ca-calc__note"><span data-ca-calc-out="added_year">{{ added_year_fmt }}</span> a year, from the traffic you already pay for.</p>
+          <dd data-ca-calc-out="added">
+            {{ added_fmt }}<span class="ca-calc__cycle"> / month</span>
+            <span class="ca-calc__note"><span data-ca-calc-out="added_year">{{ added_year_fmt }}</span> a year, from the traffic you already pay for.</span>
+          </dd>
         </div>
       </dl>
     </div>
@@ -193,7 +195,13 @@
   }
 
   .ca-calc__note {
+    /* lives inside the 48px <dd> now (valid <dl> structure), so reset the type */
+    display: block;
     margin: 12px 0 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: normal;
+    font-variant-numeric: normal;
     color: var(--ca-soft);
   }
 

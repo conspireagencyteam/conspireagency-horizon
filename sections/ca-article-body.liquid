@@ -33,6 +33,30 @@
     setting therefore means the same as "Heading 2".
   endcomment
   assign source = source | replace: '<h1', '<h2' | replace: '</h1>', '</h2>'
+  comment
+    The heading split below assumes headings are top-level siblings. Bodies
+    pasted from the old page builder (data-instant-type containers), the
+    market pages (<div class="market-landing-page">) and a few posts wrap
+    everything in a <div> or <section> that spans headings; split apart, the
+    stray closing tags pop the browser out of <main> and .page-wrapper, which
+    hides everything below the article on desktop. Those wrappers carry no
+    meaning here, so flatten them: drop every <div ...>, <section ...> open
+    tag and their closers, keeping the content.
+  endcomment
+  assign wrapper_tags = '<div|<section' | split: '|'
+  for wrapper_tag in wrapper_tags
+    if source contains wrapper_tag
+      assign chunks = source | split: wrapper_tag
+      assign flat = chunks | first
+      for chunk in chunks offset: 1
+        assign attrs = chunk | split: '>' | first
+        assign rest = chunk | remove_first: attrs | remove_first: '>'
+        assign flat = flat | append: rest
+      endfor
+      assign source = flat
+    endif
+  endfor
+  assign source = source | remove: '</div>' | remove: '</section>'
   assign level = section.settings.heading_level | default: 'auto'
   if level == 'h1'
     assign level = 'h2'

@@ -132,7 +132,8 @@
     font-size: var(--ca-fs-24);
     line-height: 1.1;
     letter-spacing: -0.03em;
-    color: rgb(var(--color-foreground-rgb) / 0.3);
+    /* 0.55 keeps idle steps readable (>= 4.5:1 on the grey section; 0.3 was 2.1:1) */
+    color: rgb(var(--color-foreground-rgb) / 0.55);
     transition: font-size 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
   }
 
@@ -176,21 +177,33 @@
 
   .ca-process__dots {
     display: flex;
-    gap: 8px;
+    gap: 0;
   }
 
   .ca-process__dot {
-    width: 10px;
-    height: 10px;
+    /* 24px hit target (WCAG 2.5.8); the visible dot is the ::before */
+    position: relative;
+    width: 24px;
+    height: 24px;
     padding: 0;
     border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .ca-process__dot::before {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background-color: rgb(var(--color-foreground-rgb) / 0.2);
-    cursor: pointer;
+    transform: translate(-50%, -50%);
     transition: background-color 0.2s ease;
   }
 
-  .ca-process__dot.is-active {
+  .ca-process__dot.is-active::before {
     background-color: rgb(var(--color-foreground-rgb));
   }
 
