@@ -37,7 +37,9 @@
         href="{{ case.settings.url | default: '/blogs/work' }}"
       >
         <span class="ca-mega__media ca-mega__case-media">
-          {%- if case.settings.video_url != blank -%}
+          {%- if case.settings.video != blank -%}
+            {%- render 'ca-preview-video', video: case.settings.video, quality: 'hd' -%}
+          {%- elsif case.settings.video_url != blank -%}
             <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
               <source src="{{ case.settings.video_url }}" type="video/mp4">
             </video>

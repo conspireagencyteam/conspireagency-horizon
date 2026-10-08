@@ -37,18 +37,24 @@
             "i2_url": "shopify://blogs/work/shopify-websites-for-tile-paint-brands",
             "i2_feat_title": "Purchase flows built for tile, paint, and surfaces.",
             "i2_feat_text": "LTL freight shipping, trade programs for designers, sampling, and square footage to box and quart purchase flows. We've built them all.",
+            "i2_feat_video": "shopify://files/videos/Sequence 01_2.mp4",
+
             "i2_feat_video_url": "https://cdn.shopify.com/videos/c/o/v/f9b8a93f72864ea9bd0afed4a7dda373.mp4",
             "i2_feat_url": "shopify://blogs/work/shopify-websites-for-tile-paint-brands",
             "i3_label": "Health & Supplements",
             "i3_url": "shopify://blogs/work/supplement-health-product-shopify-websites",
             "i3_feat_title": "In the day to day of health brands' stores, for years at a time.",
             "i3_feat_text": "B2B and wholesale, international markets, ADA and privacy compliance, and the daily development behind brands like Nature's Answer, BodyBio, and Vital Proteins.",
+            "i3_feat_video": "shopify://files/videos/natures-answer-shopify-plus-woocommerce-migration.mp4",
+
             "i3_feat_video_url": "https://cdn.shopify.com/videos/c/o/v/05c6b5a10bdc4de9b9fa8c0abb5ac6ca.mp4",
             "i3_feat_url": "shopify://blogs/work/supplement-health-product-shopify-websites",
             "i4_label": "Food & Franchises",
             "i4_url": "shopify://blogs/work/cousins-maine-lobster",
             "i4_feat_title": "Cousins Maine Lobster: a new multi-million dollar DTC channel.",
             "i4_feat_text": "We unlocked DTC where others couldn't, then built the franchise portal where 70+ locations order supplies, manage compliance, and run training.",
+            "i4_feat_video": "shopify://files/videos/walkthrough.mp4",
+
             "i4_feat_video_url": "https://cdn.shopify.com/videos/c/o/v/80cfd9cb143343f6bb7c42360cee5d46.mp4",
             "i4_feat_url": "shopify://blogs/work/cousins-maine-lobster",
             "i5_label": "NetSuite / ERPs",
@@ -58,6 +64,8 @@
             "i5_feat_video_url": "",
             "i5_feat_url": "",
             "feat_heading": "Featured work",
+            "feat_video": "shopify://files/videos/walkthrough_d4b97b39-307a-4442-b708-f3347929e4af.mp4",
+
             "feat_video_url": "https://cdn.shopify.com/videos/c/o/v/d89bd037a1c2419e9a4684a32f2a6dbe.mp4",
             "feat_eyebrow": "Case study · Zia Tile",
             "feat_title": "Six years working together. Custom apps for their B2B trade program and LTL freight shipping.",
@@ -81,6 +89,8 @@
             "industry": "Home Renovation",
             "description": "Six years working together. We handle daily development on the store and built the custom apps behind their B2B trade program and LTL freight shipping.",
             "pills": "Shopify Plus, B2B & Wholesale, Trade Program, LTL Freight",
+            "video": "shopify://files/videos/walkthrough_d4b97b39-307a-4442-b708-f3347929e4af.mp4",
+
             "video_url": "https://cdn.shopify.com/videos/c/o/v/d89bd037a1c2419e9a4684a32f2a6dbe.mp4",
             "image": "shopify://shop_images/ceramics-header.jpg",
             "url": "shopify://blogs/work/zia-tile",
@@ -94,6 +104,8 @@
             "industry": "Food & Franchises",
             "description": "We unlocked a multi-million dollar DTC channel where others couldn't, then built the franchise portal where 70+ locations order supplies, manage compliance, and run training.",
             "pills": "Shopify Plus, DTC, Franchise Portal, Compliance",
+            "video": "shopify://files/videos/walkthrough.mp4",
+
             "video_url": "https://cdn.shopify.com/videos/c/o/v/80cfd9cb143343f6bb7c42360cee5d46.mp4",
             "image": "shopify://shop_images/cml-hero-opt.jpg",
             "url": "shopify://blogs/work/cousins-maine-lobster",
@@ -107,6 +119,8 @@
             "industry": "Health & Supplements",
             "description": "A WooCommerce to Shopify Plus migration for a heritage supplement brand, rebuilt around trust, education, and repeat purchase.",
             "pills": "Shopify Plus, WooCommerce Migration, Health & Supplements",
+            "video": "shopify://files/videos/natures-answer-shopify-plus-woocommerce-migration.mp4",
+
             "video_url": "https://cdn.shopify.com/videos/c/o/v/05c6b5a10bdc4de9b9fa8c0abb5ac6ca.mp4",
             "image": "shopify://shop_images/image-2.png",
             "url": "shopify://blogs/work/natures-answer-woocommerce-migration-to-shopify-plus-website",

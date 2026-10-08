@@ -48,11 +48,12 @@
           assign url_key = 'i' | append: i | append: '_url'
           assign f_title_key = 'i' | append: i | append: '_feat_title'
           assign f_video_key = 'i' | append: i | append: '_feat_video_url'
+          assign f_vid_key = 'i' | append: i | append: '_feat_video'
           assign f_image_key = 'i' | append: i | append: '_feat_image'
           assign i_label = block.settings[label_key]
           assign i_url = block.settings[url_key]
           assign has_feature = false
-          if block.settings[f_title_key] != blank or block.settings[f_video_key] != blank or block.settings[f_image_key] != blank
+          if block.settings[f_title_key] != blank or block.settings[f_video_key] != blank or block.settings[f_vid_key] != blank or block.settings[f_image_key] != blank
             assign has_feature = true
           endif
         -%}
@@ -70,7 +71,9 @@
     <div class="ca-mega__stack">
       <a class="ca-mega__feature is-active" data-ca-mega-panel="default" href="{{ block.settings.feat_url | default: '/blogs/work' }}">
         <span class="ca-mega__media">
-          {%- if block.settings.feat_video_url != blank -%}
+          {%- if block.settings.feat_video != blank -%}
+            {%- render 'ca-preview-video', video: block.settings.feat_video, quality: 'sd' -%}
+          {%- elsif block.settings.feat_video_url != blank -%}
             <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
               <source src="{{ block.settings.feat_video_url }}" type="video/mp4">
             </video>
@@ -96,16 +99,18 @@
           assign f_title_key = 'i' | append: i | append: '_feat_title'
           assign f_text_key = 'i' | append: i | append: '_feat_text'
           assign f_video_key = 'i' | append: i | append: '_feat_video_url'
+          assign f_vid_key = 'i' | append: i | append: '_feat_video'
           assign f_image_key = 'i' | append: i | append: '_feat_image'
           assign f_url_key = 'i' | append: i | append: '_feat_url'
           assign i_label = block.settings[label_key]
           assign f_title = block.settings[f_title_key]
           assign f_text = block.settings[f_text_key]
           assign f_video = block.settings[f_video_key]
+          assign f_vid = block.settings[f_vid_key]
           assign f_image = block.settings[f_image_key]
           assign f_url = block.settings[f_url_key]
           assign has_feature = false
-          if f_title != blank or f_video != blank or f_image != blank
+          if f_title != blank or f_video != blank or f_vid != blank or f_image != blank
             assign has_feature = true
           endif
           assign tag = 'div'
@@ -115,9 +120,11 @@
         -%}
         {%- if has_feature -%}
           <{{ tag }} class="ca-mega__feature" data-ca-mega-panel="i{{ i }}"{% if f_url != blank %} href="{{ f_url }}"{% endif %}>
-            {%- if f_video != blank or f_image != blank -%}
+            {%- if f_vid != blank or f_video != blank or f_image != blank -%}
               <span class="ca-mega__media">
-                {%- if f_video != blank -%}
+                {%- if f_vid != blank -%}
+                  {%- render 'ca-preview-video', video: f_vid, quality: 'sd' -%}
+                {%- elsif f_video != blank -%}
                   <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
                     <source src="{{ f_video }}" type="video/mp4">
                   </video>

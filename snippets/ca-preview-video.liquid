@@ -1,16 +1,19 @@
 {%- comment -%}
-  ca-preview-video.liquid — a small, silent, looping <video> for hover previews.
+  ca-preview-video.liquid — a silent, looping <video> for hover and menu
+  previews, served from the lightest rendition that fits.
 
-  Storefront Liquid only lists the 1080p MP4, but Shopify also encodes a
-  480p rendition at a predictable URL (`.HD-1080p-7.2Mbps-` becomes
-  `.SD-480p-1.5Mbps-`, or `1.0Mbps` for lower-bitrate uploads). Those guesses
-  go first as <source>s; if one 404s the browser moves on to the next, and the
-  real 1080p URL is always last, so the worst case is the full-size file.
-  Ships with preload="none"; ca-more-projects.js warms it up when the list
-  nears the viewport.
+  Storefront Liquid only lists the 1080p MP4, but Shopify also encodes 480p
+  and 720p renditions at predictable URLs (`.HD-1080p-7.2Mbps-` becomes
+  `.SD-480p-1.5Mbps-` / `.HD-720p-4.5Mbps-`, with lower bitrates for quieter
+  uploads). The guesses go first as <source>s; if one 404s the browser moves
+  on to the next, and the real 1080p URL is always last, so the worst case is
+  the full-size file. Ships with preload="none"; the owning script warms it
+  (see ca-more-projects.js, ca-work-grid.js, ca-header.js).
 
-  @param {object} video - a Shopify video object (metafield or media)
+  @param {object} video - a Shopify video object (metafield, media, or video setting)
+  @param {string} [quality] - 'sd' (480p, previews up to ~450px) or 'hd' (720p); default 'sd'
   @param {string} [class] - class attribute for the <video>
+  @param {string} [poster_width] - poster image width, default 800
 {%- endcomment -%}
 
 {%- liquid
@@ -22,14 +25,20 @@
     endif
   endfor
 
-  assign sd_a = blank
-  assign sd_b = blank
+  assign guess_a = blank
+  assign guess_b = blank
   assign parts = src | split: '.HD-1080p-'
   if parts.size == 2
     assign tail = parts[1] | split: 'Mbps-' | last
-    assign sd_a = parts[0] | append: '.SD-480p-1.5Mbps-' | append: tail
-    assign sd_b = parts[0] | append: '.SD-480p-1.0Mbps-' | append: tail
+    if quality == 'hd'
+      assign guess_a = parts[0] | append: '.HD-720p-4.5Mbps-' | append: tail
+      assign guess_b = parts[0] | append: '.HD-720p-2.1Mbps-' | append: tail
+    else
+      assign guess_a = parts[0] | append: '.SD-480p-1.5Mbps-' | append: tail
+      assign guess_b = parts[0] | append: '.SD-480p-1.0Mbps-' | append: tail
+    endif
   endif
+  assign poster_w = poster_width | default: 800
 -%}
 {%- if src != blank -%}
   <video
@@ -40,11 +49,11 @@
     preload="none"
     aria-hidden="true"
     tabindex="-1"
-    {% if video.preview_image %}poster="{{ video.preview_image | image_url: width: 800 }}"{% endif %}
+    {% if video.preview_image %}poster="{{ video.preview_image | image_url: width: poster_w }}"{% endif %}
   >
-    {%- if sd_a != blank -%}
-      <source src="{{ sd_a }}" type="video/mp4">
-      <source src="{{ sd_b }}" type="video/mp4">
+    {%- if guess_a != blank -%}
+      <source src="{{ guess_a }}" type="video/mp4">
+      <source src="{{ guess_b }}" type="video/mp4">
     {%- endif -%}
     <source src="{{ src }}" type="video/mp4">
   </video>

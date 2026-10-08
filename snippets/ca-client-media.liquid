@@ -25,13 +25,8 @@
   assign ca_media = client.featured_site_media.value
   assign ca_reveal_img = blank
   assign ca_reveal_video = blank
-  assign ca_reveal_type = 'video/mp4'
-  assign ca_reveal_poster = blank
   if ca_media.sources
-    assign ca_source = ca_media.sources | last
-    assign ca_reveal_video = ca_source.url
-    assign ca_reveal_type = ca_source.mime_type | default: 'video/mp4'
-    assign ca_reveal_poster = ca_media.preview_image
+    assign ca_reveal_video = ca_media
   elsif ca_media.image
     assign ca_reveal_img = ca_media.image
   elsif ca_media != blank
@@ -61,16 +56,7 @@
 {%- if ca_reveal_video != blank -%}
   <div class="ca-wcard__layer ca-wcard__reveal ca-wcard__reveal--video" aria-hidden="true">
     <div class="ca-wcard__window">
-      <video
-        class="ca-wcard__video"
-        muted
-        loop
-        playsinline
-        preload="none"
-        {% if ca_reveal_poster != blank %}poster="{{ ca_reveal_poster | image_url: width: 1000 }}"{% endif %}
-      >
-        <source src="{{ ca_reveal_video }}" type="{{ ca_reveal_type }}">
-      </video>
+      {%- render 'ca-preview-video', video: ca_reveal_video, quality: 'hd', class: 'ca-wcard__video', poster_width: 1000 -%}
     </div>
   </div>
 {%- elsif ca_reveal_img != blank -%}

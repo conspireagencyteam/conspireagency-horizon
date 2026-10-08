@@ -68,6 +68,16 @@ class CaHeader extends HTMLElement {
     document.addEventListener('pointerdown', this._onOutsidePointer);
     document.addEventListener('keydown', this._onMegaKeydown);
 
+    // Warm the mega-menu videos the first time the pointer reaches the header:
+    // by the time a panel opens (hover intent + fade) the first seconds are
+    // buffered, and pages where nobody goes near the nav download nothing.
+    this._onHeaderEnter = (e) => {
+      if (e.pointerType !== 'mouse') return;
+      this.removeEventListener('pointerenter', this._onHeaderEnter);
+      if (window.caWarmVideos) window.caWarmVideos(this.querySelectorAll('.ca-mega video'));
+    };
+    this.addEventListener('pointerenter', this._onHeaderEnter);
+
     const hoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)');
 
     this._megas.forEach((item) => {
@@ -121,7 +131,7 @@ class CaHeader extends HTMLElement {
           const active = p.dataset.caMegaPanel === id;
           p.classList.toggle('is-active', active);
           const video = p.querySelector('video');
-          if (video) active ? this._playVideo(video) : video.pause();
+          if (video) active ? this._playVideo(video) : this._pauseVideo(video);
         });
         targets.forEach((t) => t.classList.toggle('is-active', t.dataset.caMegaTarget === id));
       };
@@ -170,11 +180,12 @@ class CaHeader extends HTMLElement {
     item.querySelector('[data-ca-mega-toggle]')?.setAttribute('aria-expanded', 'false');
     item.querySelector('[data-ca-mega-panel-root]')?.setAttribute('inert', '');
     this.removeAttribute('data-mega-open');
-    item.querySelectorAll('video').forEach((v) => v.pause());
+    item.querySelectorAll('video').forEach((v) => this._pauseVideo(v));
     if (item._showPanel) item._showPanel(item._defaultPanel);
   }
 
   _playVideo(video) {
+    video.dataset.playing = '1';
     // Chrome stalls play() on preload="none" videos that were hidden at parse
     // until load() runs once.
     if (video.readyState === 0 && !video.dataset.loaded) {
@@ -182,6 +193,11 @@ class CaHeader extends HTMLElement {
       video.load();
     }
     video.play().catch(() => {});
+  }
+
+  _pauseVideo(video) {
+    delete video.dataset.playing;
+    video.pause();
   }
 
   _scrollTop() {
