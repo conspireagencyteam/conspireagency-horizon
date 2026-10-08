@@ -132,7 +132,7 @@
       </div>
 
       {%- comment -%} RIGHT — Calendly inline embed {%- endcomment -%}
-      <div class="ca-booking__calendar">
+      <div class="ca-booking__calendar" style="--ca-booking-h: {{ section.settings.calendly_height | default: 700 }}px;">
         {%- if section.settings.calendly_url != blank -%}
           {%- comment -%}
             Lazy: the Calendly iframe is ~3 MB of JS and CSS, so it is only
@@ -356,7 +356,17 @@
   /* ---- RIGHT: Calendly ------------------------------------------------- */
   .ca-booking__calendar {
     overflow: hidden;
-    background-color: var(--color-background);
+    /* White so the box reads as a full-height panel beside the montage. Calendly's
+       current embed draws a content-height card on a transparent background, so
+       without this the section background shows under the calendar. */
+    background-color: var(--ca-booking-calendar-bg, #fff);
+    /* Calendly's resize option sets the embed's height to the scheduler's content
+       (including a ~20px loading state), so the column keeps its own minimum
+       height — the montage row never collapses — and centres the embed. */
+    min-height: var(--ca-booking-h, 700px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .ca-booking__empty {
@@ -366,6 +376,7 @@
 
   .ca-booking__embed {
     display: block;
+    width: 100%;
   }
 
   .ca-booking__fallback {
@@ -459,7 +470,9 @@
       const init = () => {
         if (!window.Calendly) return;
         this.replaceChildren();
-        window.Calendly.initInlineWidget({ url: this.dataset.url, parentElement: this });
+        // resize: the iframe follows the scheduler's content height instead of
+        // a fixed 700px, so it can be centred in the column (see .ca-booking__embed).
+        window.Calendly.initInlineWidget({ url: this.dataset.url, parentElement: this, resize: true });
       };
       if (window.Calendly) return init();
       let script = document.querySelector('script[data-ca-calendly]');
