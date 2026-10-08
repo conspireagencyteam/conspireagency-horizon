@@ -52,6 +52,32 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   CH; nowhere else; no data-sale opt-out regions (California gets the footer link, not a
   banner, on purpose — LA is the main market).
 
+### Done 2026-10-07 (evening: mobile, home sections, B2B apps)
+
+- **Mobile.** Full-width phone drawer with its own top row (X where the hamburger
+  sits), SERVICES = two main services + collapsed "Specialty areas"; no focus boxes
+  (pointer-initiated focus is unstyled, keyboard keeps rings). Service squares are
+  videos (show reel on Website Design; the website-reveal GIF converted to an MP4 on
+  Fractional) with poster frames; case-study cards autoplay the 480p preview when
+  half in view on touch; `ca-process` and `ca-testimonials` are scroll-snap scrollers
+  below 990px. Shopify-websites page: booking after the quote.
+- **Home.** Blog section per Figma `278:2164` (three design images as fallbacks:
+  `blog-fallback-1..3.jpg`; natural ratio on mobile). Apps section per Figma
+  `390:793`, driven by app blocks. Booking above the FAQ.
+- **B2B apps moved onto this site** (docs stay on apps.conspireagency.com): hub
+  `/pages/best-shopify-apps` (`page.best-shopify-apps.json`, `ca-apps-cards`), and
+  `/pages/b2b-onboarding-wholesale`, `/pages/b2b-wishlist-project-planner`,
+  `/pages/draft-order-invoices` (`ca-app-*` sections, shared `ca-app-features`).
+  Current app names are the subsite's — "GOAT" is retired everywhere. Old product
+  listings are drafts and 301 to the pages. `goat-apps-site/middleware.ts` 308s the
+  four marketing routes to these pages (pushed 2026-10-07). Inventory of the subsite
+  lived in the session scratchpad; the subsite source is
+  `~/dev/internal/apps/conspire/shopifyapps/goat-apps-site`.
+- **Still to do for the apps:** update the three App Store listings' website URLs
+  to the Shopify pages; the wishlist page's 4th brand card is a placeholder; the
+  drafts hero's first "New" pill wraps on phones; populate the home apps rows'
+  optional hover-preview screenshots.
+
 ### Open (decide, then do)
 
 - **Market pages** (`/blogs/markets/*`, 24 articles): keep. GSC Jul–Oct 2026: ~14k
