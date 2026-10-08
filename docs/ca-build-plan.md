@@ -187,10 +187,16 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     back to the first YouTube embed in the body for older posts
     (`snippets/ca-article-video.liquid`). `ca-article-body` (`hoist_video`) drops
     that first body embed so it is not shown twice; a no-op once the pipeline
-    stops inserting the iframe. With a video up top the featured image is a
-    320px band (`image_strip`), since the full-bleed image mostly pushed the
-    article down. `ca-article-schema` seeds the VideoObject list with the
-    metafield id and uses `video_thumbnail_url` for the first video.
+    stops inserting the iframe. With hero media the header is two columns
+    (date + smaller title left, media right) so the video is in view without
+    scrolling; the featured image is the fallback when there is no video, in
+    the same slot. Under the header a decorative band (`band_image`, the
+    design's stock shot = `blog-fallback-3.jpg`) separates the dark header
+    from the white article. `ca-article-schema` seeds the VideoObject list
+    with the metafield id and uses `video_thumbnail_url` for the first video.
+  - `ca-article-apps` must not use Horizon's `"class": "section"`: that class
+    is a 3-column grid that puts the section's children in the centre column,
+    so a background colour stops at the page margin.
   - Still plain: the blog index grid (`ca-blog-grid`) has no fallback images.
 
 ### Open (decide, then do)
