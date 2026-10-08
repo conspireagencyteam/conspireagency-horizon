@@ -447,6 +447,9 @@
 {% endstylesheet %}
 
 {% javascript %}
+  // Also used by ca-article-apps.liquid (B2B app cards under articles), together
+  // with the .ca-ahero__dialog* styles above: Horizon bundles section JS/CSS
+  // site-wide, so that section renders the same modal without this hero.
   if (!customElements.get('ca-tour-dialog')) {
     customElements.define(
       'ca-tour-dialog',

@@ -9,8 +9,14 @@
 
   Layout: intro row, then a grid of "app" cards (one column per block, up to
   four), then one "services" line under the cards that points at custom
-  development. Each card: eyebrow over a hairline, app name (links to the app
-  page), one-line pitch, and App page / App Store links.
+  development. Each card: eyebrow, tour poster (opens the YouTube tour in a
+  modal), app name (links to the app page), one-line pitch, and App page /
+  App Store links.
+
+  The tour modal reuses `<ca-tour-dialog>` and the `.ca-ahero__dialog*` classes
+  from ca-app-hero.liquid: Horizon bundles every section's javascript and
+  stylesheet tags into one file served on every page, so they are available
+  here without the hero on the page. Keep them in sync if the hero changes.
 {%- endcomment -%}
 
 {%- liquid
@@ -49,10 +55,49 @@
               assign name = block.settings.name
               assign page_link = block.settings.page_link
               assign store_link = block.settings.store_link
+              assign youtube_id = block.settings.youtube_id | strip
+              assign tour_title = block.settings.tour_title | default: name | append: ' app tour'
+              if block.settings.tour_title != blank
+                assign tour_title = block.settings.tour_title
+              endif
+              assign has_poster = false
+              if block.settings.tour_image != blank or youtube_id != blank
+                assign has_poster = true
+              endif
             -%}
             <li class="ca-article-apps__card" {{ block.shopify_attributes }}>
               {%- if block.settings.eyebrow != blank -%}
                 <p class="ca-eyebrow ca-article-apps__eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if has_poster -%}
+                {%- capture poster_img -%}
+                  {%- if block.settings.tour_image != blank -%}
+                    {{ block.settings.tour_image | image_url: width: 1280 | image_tag: loading: 'lazy', widths: '480, 760, 1280', sizes: '(min-width: 990px) 30vw, (min-width: 750px) 50vw, 100vw', alt: '' }}
+                  {%- else -%}
+                    <img src="https://i.ytimg.com/vi/{{ youtube_id | escape }}/maxresdefault.jpg" width="1280" height="720" alt="" loading="lazy">
+                  {%- endif -%}
+                {%- endcapture -%}
+                {%- if youtube_id != blank -%}
+                  <ca-tour-dialog class="ca-article-apps__media" data-video-id="{{ youtube_id | escape }}" data-title="{{ tour_title | escape }}">
+                    <button type="button" class="ca-article-apps__poster" aria-haspopup="dialog" aria-label="Watch the tour{% if block.settings.tour_duration != blank %} ({{ block.settings.tour_duration }}){% endif %}: {{ tour_title | escape }}" data-tour-open>
+                      {{ poster_img }}
+                      <span class="ca-article-apps__play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3.5v17l14-8.5z"/></svg></span>
+                      <span class="ca-article-apps__tour-label" aria-hidden="true">Watch the tour{% if block.settings.tour_duration != blank %} <span>· {{ block.settings.tour_duration }}</span>{% endif %}</span>
+                    </button>
+                    <dialog class="ca-ahero__dialog" aria-label="{{ tour_title | escape }}">
+                      <div class="ca-ahero__dialog-box">
+                        <button type="button" class="ca-ahero__close" aria-label="Close video" data-tour-close>
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                        </button>
+                        <div class="ca-ahero__frame" data-tour-frame></div>
+                      </div>
+                    </dialog>
+                  </ca-tour-dialog>
+                {%- elsif page_link != blank -%}
+                  <a class="ca-article-apps__media ca-article-apps__poster" href="{{ page_link }}" aria-label="{{ name | escape }}" tabindex="-1">{{ poster_img }}</a>
+                {%- else -%}
+                  <div class="ca-article-apps__media ca-article-apps__poster">{{ poster_img }}</div>
+                {%- endif -%}
               {%- endif -%}
               {%- if name != blank -%}
                 <h3 class="ca-article-apps__name">
@@ -129,9 +174,88 @@
 
   .ca-article-apps__eyebrow {
     width: 100%;
-    margin: 0 0 24px;
+    margin: 0 0 16px;
     padding-block-end: 16px;
     border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-article-apps__media {
+    display: block;
+    width: 100%;
+    margin-block-end: 24px;
+  }
+
+  .ca-article-apps__poster {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--ca-hairline);
+    border-radius: 12px;
+    background: var(--ca-ink, #0d110d);
+    color: inherit;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
+  }
+
+  div.ca-article-apps__poster {
+    cursor: default;
+  }
+
+  .ca-article-apps__poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .ca-article-apps__poster:hover img {
+    transform: scale(1.02);
+  }
+
+  .ca-article-apps__play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #fff;
+    color: #0d110d;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.35), 0 0 0 4px rgb(255 255 255 / 0.4);
+    transition: transform 0.2s;
+  }
+
+  .ca-article-apps__play svg {
+    margin-inline-start: 3px;
+  }
+
+  .ca-article-apps__poster:hover .ca-article-apps__play {
+    transform: scale(1.05);
+  }
+
+  .ca-article-apps__tour-label {
+    position: absolute;
+    inset-inline-start: 12px;
+    inset-block-end: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(13, 17, 13, 0.82);
+    color: #fff;
+    font-size: 0.8125rem;
+    letter-spacing: -0.02em;
+    backdrop-filter: blur(6px);
+  }
+
+  .ca-article-apps__tour-label span {
+    opacity: 0.7;
   }
 
   .ca-article-apps__name {
@@ -194,6 +318,13 @@
     color: var(--ca-soft);
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .ca-article-apps__poster img,
+    .ca-article-apps__play {
+      transition: none;
+    }
+  }
+
   @media screen and (max-width: 989px) {
     .ca-article-apps__intro {
       margin-block-end: 48px;
@@ -208,6 +339,10 @@
     .ca-article-apps__grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 40px;
+    }
+
+    .ca-article-apps__media {
+      margin-block-end: 20px;
     }
 
     .ca-article-apps__services {
@@ -245,6 +380,12 @@
         { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
         { "type": "text", "id": "name", "label": "App name" },
         { "type": "text", "id": "text", "label": "One-line pitch" },
+        { "type": "header", "content": "App tour" },
+        { "type": "text", "id": "youtube_id", "label": "YouTube video id", "info": "Opens the tour in a modal, like the app page hero." },
+        { "type": "text", "id": "tour_duration", "label": "Duration label", "info": "e.g. 1:32" },
+        { "type": "text", "id": "tour_title", "label": "Video title", "info": "Accessible name of the player; falls back to the app name." },
+        { "type": "image_picker", "id": "tour_image", "label": "Tour thumbnail", "info": "Falls back to the YouTube poster." },
+        { "type": "header", "content": "Links" },
         { "type": "url", "id": "page_link", "label": "App page" },
         { "type": "text", "id": "page_label", "label": "App page label", "default": "Learn more" },
         { "type": "url", "id": "store_link", "label": "App Store listing" },
@@ -257,9 +398,9 @@
       "name": "Article: B2B apps",
       "category": "Conspire",
       "blocks": [
-        { "type": "app", "settings": { "eyebrow": "Wholesale", "name": "B2B Onboarding & Wholesale", "text": "Wholesale registration with approval, buyer documents, and B2B pricing on any Shopify plan." } },
-        { "type": "app", "settings": { "eyebrow": "Wishlists", "name": "B2B Wishlist Project Planner", "text": "Multiple wishlists with quantities, sharing, PDF quotes, and draft orders for project buyers." } },
-        { "type": "app", "settings": { "eyebrow": "Invoices", "name": "B2B Draft Order Invoices", "text": "Customers view and pay draft order invoices from their account, with reminders and POS support." } }
+        { "type": "app", "settings": { "eyebrow": "Wholesale", "name": "B2B Onboarding & Wholesale", "youtube_id": "PEF3yQ564Uo", "tour_duration": "1:32", "text": "Wholesale registration with approval, buyer documents, and B2B pricing on any Shopify plan." } },
+        { "type": "app", "settings": { "eyebrow": "Wishlists", "name": "B2B Wishlist Project Planner", "youtube_id": "EjvqM4SR11Q", "tour_duration": "1:28", "text": "Multiple wishlists with quantities, sharing, PDF quotes, and draft orders for project buyers." } },
+        { "type": "app", "settings": { "eyebrow": "Invoices", "name": "B2B Draft Order Invoices", "youtube_id": "6YJXBUOeImo", "tour_duration": "1:31", "text": "Customers view and pay draft order invoices from their account, with reminders and POS support." } }
       ]
     }
   ]
