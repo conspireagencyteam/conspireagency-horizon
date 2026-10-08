@@ -35,19 +35,30 @@
           {%- liquid
             assign excerpt = product.metafields.product_details.excerpt
             assign svc_title = product.metafields.product_details.display_title.value | default: product.title
+            comment
+              Every row's button reads "Learn More"; give each a distinct accessible name
+              without changing the visible label.
+            endcomment
+            assign label_down = button_label | downcase | strip
+            if label_down == 'learn more'
+              assign cta_name = 'Learn more about ' | append: svc_title
+            else
+              assign cta_name = button_label | append: ': ' | append: svc_title
+            endif
           -%}
           <div class="ca-services__row">
             {%- if show_numbers -%}
               <div class="ca-services__index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</div>
             {%- endif -%}
-            <h3 class="ca-services__title">{{ svc_title }}</h3>
+            {%- comment -%} h2: the section has no heading of its own, so these are the top-level headings under the page H1 {%- endcomment -%}
+            <h2 class="ca-services__title">{{ svc_title }}</h2>
             <div class="ca-services__detail">
               {%- if excerpt != blank -%}
                 <div class="ca-services__body">{{ excerpt | metafield_tag }}</div>
               {%- elsif product.description != blank -%}
                 <div class="ca-services__body">{{ product.description }}</div>
               {%- endif -%}
-              <a class="{{ style_class }} size-style ca-services__cta{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ product.url }}">{{ button_label }}</a>
+              <a class="{{ style_class }} size-style ca-services__cta{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ product.url }}" aria-label="{{ cta_name | escape }}">{{ button_label }}</a>
             </div>
           </div>
         {%- endfor -%}
