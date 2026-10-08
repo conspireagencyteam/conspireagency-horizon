@@ -1,0 +1,130 @@
+{%- comment -%}
+  ca-app-ticker.liquid — slim auto-scrolling strip of pill links between an app
+  hero and its features grid (port of apps.conspireagency.com FeatureTicker).
+  Built on the theme's marquee (<ca-marquee-component>, assets/ca-marquee.js),
+  the same construction as ca-brands-marquee: the row is repeated to fill the
+  viewport, cloned once (aria-hidden) and animated -50%; slows to a stop on
+  hover; static under prefers-reduced-motion. Items are "pill" blocks.
+{%- endcomment -%}
+<script src="{{ 'ca-marquee.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+<div
+  class="ca-ticker color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  aria-label="{{ section.settings.aria_label | default: 'Feature highlights' | escape }}"
+>
+  {%- render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id -%}
+  {%- if section.blocks.size > 0 -%}
+    <ca-marquee-component
+      class="ca-ticker__marquee"
+      style="--marquee-gap: {{ section.settings.gap }}px; --marquee-direction: normal;"
+      data-speed-factor="{{ section.settings.speed }}"
+      data-movement-direction="normal"
+    >
+      <div class="ca-ticker__wrapper" ref="wrapper">
+        <div class="ca-ticker__content" ref="content">
+          <div class="ca-ticker__row" ref="marqueeItems[]">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign url = block.settings.url
+                assign external = false
+                if url contains '//' and url contains shop.domain
+                  assign external = false
+                elsif url contains '//'
+                  assign external = true
+                endif
+              -%}
+              {%- if url != blank -%}
+                <a class="ca-ticker__pill" href="{{ url }}"{% if external %} target="_blank" rel="noopener"{% endif %} {{ block.shopify_attributes }}>
+              {%- else -%}
+                <span class="ca-ticker__pill" {{ block.shopify_attributes }}>
+              {%- endif -%}
+                {%- if block.settings.is_new -%}<span class="ca-ticker__new">New</span>{%- endif -%}
+                {{ block.settings.label | escape }}
+              {%- if url != blank -%}</a>{%- else -%}</span>{%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </ca-marquee-component>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .ca-ticker {
+    background-color: var(--color-background);
+    border-block: 1px solid var(--ca-hairline, rgb(var(--color-foreground-rgb) / 0.1));
+    padding-block: 12px;
+  }
+  .ca-ticker__marquee {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+  .ca-ticker__wrapper { display: flex; gap: var(--marquee-gap); width: fit-content; }
+  .ca-ticker__content { min-width: max-content; display: flex; gap: var(--marquee-gap); }
+  .ca-ticker__row { min-width: max-content; display: flex; gap: var(--marquee-gap); align-items: center; }
+  @media (prefers-reduced-motion: no-preference) {
+    ca-marquee-component.ca-ticker__marquee:not([data-disabled]) .ca-ticker__wrapper {
+      animation: ca-ticker-marquee var(--marquee-speed) linear infinite var(--marquee-direction);
+    }
+  }
+  @keyframes ca-ticker-marquee {
+    to { transform: translate3d(calc(-50% - (var(--marquee-gap) / 2)), 0, 0); }
+  }
+  .ca-ticker__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--ca-hairline-strong, rgb(var(--color-foreground-rgb) / 0.2));
+    background: rgb(var(--color-background-rgb, 255 255 255));
+    color: rgb(var(--color-foreground-rgb));
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+  a.ca-ticker__pill:hover { border-color: rgb(var(--color-foreground-rgb)); }
+  .ca-ticker__new {
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgb(var(--color-foreground-rgb));
+    color: rgb(var(--color-background-rgb, 255 255 255));
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ca-ticker__pill { transition: none; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "App: feature ticker",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Accessible label", "default": "Feature highlights" },
+    { "type": "range", "id": "speed", "label": "t:settings.speed", "min": 10, "max": 120, "step": 5, "unit": "s", "default": 50 },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 4, "max": 40, "step": 2, "unit": "px", "default": 12 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" }
+  ],
+  "blocks": [
+    {
+      "type": "pill",
+      "name": "Pill",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Feature" },
+        { "type": "text", "id": "url", "label": "Link (URL or #anchor)" },
+        { "type": "checkbox", "id": "is_new", "label": "Show \"New\" badge", "default": false }
+      ]
+    }
+  ],
+  "presets": [{ "name": "App: feature ticker", "category": "Conspire", "blocks": [{ "type": "pill" }, { "type": "pill" }, { "type": "pill" }] }]
+}
+{% endschema %}

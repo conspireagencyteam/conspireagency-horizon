@@ -18,7 +18,9 @@
     {%- if section.settings.lede != blank -%}
       <div class="ca-grid ca-drmock__lede"><div class="ca-drmock__lede-text">{{ section.settings.lede }}</div></div>
     {%- endif -%}
-    <ul class="ca-drmock__grid" role="list">
+    <ca-app-scroller class="ca-drmock__scroller" data-item-label="Example" tabindex="0" aria-label="How it looks">
+      <div class="ca-drmock__viewport" ref="viewport">
+    <ul class="ca-drmock__grid" role="list" ref="track">
       <li class="ca-drmock__item">
         <div class="ca-drmock__card" aria-hidden="true">
           <p class="ca-drmock__title">Open Invoices</p>
@@ -61,8 +63,12 @@
         <p class="ca-drmock__caption">Automated follow-ups on unpaid invoices</p>
       </li>
     </ul>
+      </div>
+      {%- render 'ca-app-scroller-controls', label: 'example' -%}
+    </ca-app-scroller>
   </div>
 </div>
+<script src="{{ 'ca-app-scroller.js' | asset_url }}" type="module" fetchpriority="low"></script>
 {% stylesheet %}
   .ca-drmock { background-color: var(--color-background); }
   .ca-drmock__intro { margin-block-end: 32px; }
@@ -79,7 +85,11 @@
     border: 1px solid rgb(13 17 13 / 0.1);
     box-shadow: 0 12px 32px rgb(13 17 13 / 0.06);
     font-size: 0.875rem; line-height: 1.3;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.4s ease;
   }
+  .ca-drmock__item:hover .ca-drmock__card { border-color: rgb(13 17 13 / 0.5); box-shadow: 0 16px 40px rgb(13 17 13 / 0.1); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) { .ca-drmock__card { transition: none; } .ca-drmock__item:hover .ca-drmock__card { transform: none; } }
+  .ca-drmock__scroller { --ca-app-scroller-item: 78vw; }
   .ca-drmock__card p { margin: 0; }
   .ca-drmock__title { font-weight: 600; letter-spacing: -0.01em; }
   .ca-drmock__table { width: 100%; border-collapse: collapse; }

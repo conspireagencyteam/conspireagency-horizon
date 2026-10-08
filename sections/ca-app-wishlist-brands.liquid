@@ -9,7 +9,9 @@
   {%- render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id -%}
   <div class="ca-inner">
     {%- render 'ca-intro', eyebrow: section.settings.eyebrow, heading: section.settings.heading, start: 5, class: 'ca-wlbrands__intro' -%}
-    <ul class="ca-wlbrands__row" role="list">
+    <ca-app-scroller class="ca-wlbrands__scroller" data-item-label="Store" tabindex="0" aria-label="{{ section.settings.heading | strip_html | escape }}">
+      <div class="ca-wlbrands__viewport" ref="viewport">
+    <ul class="ca-wlbrands__row" role="list" ref="track">
       {%- for block in section.blocks -%}
         <li class="ca-wlbrands__card" {{ block.shopify_attributes }}>
           {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}" target="_blank" rel="noopener" class="ca-wlbrands__link">{%- endif -%}
@@ -22,16 +24,26 @@
         </li>
       {%- endfor -%}
     </ul>
+      </div>
+      {%- render 'ca-app-scroller-controls', label: 'store' -%}
+    </ca-app-scroller>
     {%- if section.settings.footnote != blank -%}<p class="ca-wlbrands__note">{{ section.settings.footnote }}</p>{%- endif -%}
   </div>
 </div>
 
+<script src="{{ 'ca-app-scroller.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
 {% stylesheet %}
   .ca-wlbrands__intro { margin-bottom: 40px; }
+  .ca-wlbrands__scroller { --ca-app-scroller-item: 62vw; }
   .ca-wlbrands__row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
   @media (min-width: 990px) { .ca-wlbrands__row { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; } }
   .ca-wlbrands__link { display: block; color: inherit; text-decoration: none; }
-  .ca-wlbrands__img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
+  .ca-wlbrands__img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 10px; margin-bottom: 12px; transition: transform 0.4s ease; }
+  .ca-wlbrands__link { overflow: hidden; }
+  .ca-wlbrands__link:hover .ca-wlbrands__img { transform: scale(1.03); }
+  .ca-wlbrands__link:hover .ca-wlbrands__name { text-decoration: underline; text-underline-offset: 4px; }
+  @media (prefers-reduced-motion: reduce) { .ca-wlbrands__img { transition: none; } .ca-wlbrands__link:hover .ca-wlbrands__img { transform: none; } }
   .ca-wlbrands__name { display: block; font-weight: 600; line-height: 1.3; }
   .ca-wlbrands__cat { display: block; color: var(--ca-soft); font-size: 0.9rem; }
   .ca-wlbrands__note { margin: 32px 0 0; color: var(--ca-soft); font-size: 0.95rem; }

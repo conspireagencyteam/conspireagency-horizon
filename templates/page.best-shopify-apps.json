@@ -1,22 +1,96 @@
 {
   "sections": {
     "hero": {
-      "type": "ca-page-intro",
+      "type": "ca-app-hero",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-via-motif.jpg",
+            "tall": true
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-zellige.jpg",
+            "tall": false
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg",
+            "tall": true
+          }
+        },
+        "card_4": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-corin-lamp.jpg",
+            "tall": false
+          }
+        },
+        "card_5": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-replica-decor.jpg",
+            "tall": true
+          }
+        },
+        "card_6": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-mineral-sage.jpg",
+            "tall": false
+          }
+        },
+        "card_7": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg",
+            "tall": true
+          }
+        },
+        "card_8": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-kael-pendant.jpg",
+            "tall": false
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3",
+        "card_4",
+        "card_5",
+        "card_6",
+        "card_7",
+        "card_8"
+      ],
       "settings": {
+        "layout": "statement",
         "eyebrow": "Our Shopify apps",
         "heading": "<p>The best B2B & wholesale apps for Shopify stores.</p>",
         "heading_tag": "h1",
-        "column_start": "5",
-        "size": "display",
-        "button_label": "",
-        "button_link": "",
-        "style_class": "button",
-        "rule": false,
-        "allow_transparent_header": false,
+        "lede": "<p>Three focused Shopify apps from a team that specializes in trade and wholesale businesses. Streamline onboarding and document management for your B2B customers, plan large orders and projects with purpose-built wishlists, and supercharge invoicing in Shopify. Built and supported by Conspire, a Shopify Premier Partner.</p>",
+        "proof": "",
+        "rating_value": "",
+        "rating_count": 0,
+        "store_label": "",
+        "store_url": "",
+        "docs_label": "",
+        "docs_url": "",
+        "youtube_id": "",
+        "tour_duration": "",
+        "tour_title": "",
         "background_color": "#0d110d",
         "text_color": "#ffffff",
-        "padding-block-start": 120,
-        "padding-block-end": 120
+        "allow_transparent_header": true,
+        "padding-block-start": 112,
+        "padding-block-end": 80
       }
     },
     "apps": {

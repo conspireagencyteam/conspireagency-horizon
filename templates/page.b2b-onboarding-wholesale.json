@@ -1,24 +1,29 @@
 {
   "sections": {
     "hero": {
-      "type": "ca-app-wholesale-hero",
+      "type": "ca-app-hero",
       "settings": {
-        "eyebrow": "Wholesale & B2B for your existing Shopify store",
+        "layout": "app",
+        "eyebrow": "",
         "heading": "<p>Grow your B2B program. From onboarding to pricing.</p>",
         "heading_tag": "h1",
         "lede": "<p>Sign-up forms, one-click approvals, and tailored wholesale pricing for the Shopify store you already run. Works on every plan, alongside Shopify's native B2B.</p>",
-        "store_label": "Install on Shopify",
-        "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
-        "docs_label": "Documentation",
-        "docs_link": "https://apps.conspireagency.com/wholesale/docs",
-        "tour_label": "Watch the tour · 1:32",
-        "tour_link": "https://www.youtube.com/watch?v=PEF3yQ564Uo",
         "proof": "Free plan available · 21-day free trial · Built by a Shopify Premier Partner",
+        "rating_value": "5.0",
+        "rating_count": 3,
+        "store_label": "Install on Shopify",
+        "store_url": "https://apps.shopify.com/wholesale-b2b-trade-program",
+        "docs_label": "Documentation",
+        "docs_url": "https://apps.conspireagency.com/wholesale/docs",
+        "youtube_id": "PEF3yQ564Uo",
+        "tour_duration": "1:32",
+        "tour_title": "B2B Onboarding & Wholesale app tour",
+        "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
         "background_color": "#0d110d",
         "text_color": "#ffffff",
-        "padding-block-start": 120,
-        "padding-block-end": 120,
-        "size": "display"
+        "allow_transparent_header": true,
+        "padding-block-start": 64,
+        "padding-block-end": 80
       }
     },
     "pricing": {
@@ -353,24 +358,28 @@
       }
     },
     "cta": {
-      "type": "ca-app-wholesale-hero",
+      "type": "ca-app-hero",
       "settings": {
+        "layout": "cta",
         "eyebrow": "Get started",
         "heading": "<p>Launch your wholesale program</p>",
         "heading_tag": "h2",
         "lede": "<p>Install B2B Onboarding & Wholesale and give your B2B buyers the pricing they expect, on the store you already run.</p>",
-        "store_label": "Install on Shopify",
-        "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
-        "docs_label": "Documentation",
-        "docs_link": "https://apps.conspireagency.com/wholesale/docs",
-        "tour_label": "",
-        "tour_link": "",
         "proof": "Free plan available · 21-day free trial",
+        "rating_value": "",
+        "rating_count": 0,
+        "store_label": "Install on Shopify",
+        "store_url": "https://apps.shopify.com/wholesale-b2b-trade-program",
+        "docs_label": "Documentation",
+        "docs_url": "https://apps.conspireagency.com/wholesale/docs",
+        "youtube_id": "",
+        "tour_duration": "",
+        "tour_title": "",
         "background_color": "#0d110d",
         "text_color": "#ffffff",
+        "allow_transparent_header": false,
         "padding-block-start": 96,
-        "padding-block-end": 96,
-        "size": "lg"
+        "padding-block-end": 96
       }
     },
     "more": {

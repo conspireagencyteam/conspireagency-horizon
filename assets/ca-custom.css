@@ -844,3 +844,76 @@ button.ca-button::before {
     gap: 24px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   <ca-app-scroller> — card strips on the app pages (assets/ca-app-scroller.js).
+   Desktop: the section's own grid. <= 989px: native scroll-snap scroller with
+   dots + arrows, same construction/tokens as ca-testimonials / ca-process.
+   --------------------------------------------------------------------------- */
+ca-app-scroller { display: block; }
+.ca-app-scroller__controls {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-start: 24px;
+}
+ca-app-scroller.is-scroll .ca-app-scroller__controls { display: flex; }
+.ca-app-scroller__dots { display: flex; gap: 8px; }
+.ca-app-scroller__dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 100px;
+  background-color: rgb(var(--color-foreground-rgb) / 0.3);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.ca-app-scroller__dot.is-active { background-color: rgb(var(--color-foreground-rgb)); }
+.ca-app-scroller__arrows { display: flex; gap: 4px; }
+.ca-app-scroller__arrow {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: 0;
+  border-radius: 100px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.ca-app-scroller__arrow svg { display: block; width: 24px; height: 24px; }
+.ca-app-scroller__arrow:hover { opacity: 0.7; }
+.ca-app-scroller__arrow:disabled { opacity: 0.3; cursor: default; }
+ca-app-scroller.is-scroll [ref="viewport"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  /* bleed to the page edge so cards peek, like the process steps */
+  margin-inline: calc(-1 * var(--page-margin, 24px));
+  padding-inline: var(--page-margin, 24px);
+  scroll-padding-inline: var(--page-margin, 24px);
+}
+ca-app-scroller.is-scroll [ref="viewport"]::-webkit-scrollbar { display: none; }
+ca-app-scroller.is-scroll [ref="track"] {
+  display: flex;
+  width: max-content;
+  gap: 16px;
+  padding-inline-end: var(--page-margin, 24px);
+}
+ca-app-scroller.is-scroll [ref="track"] > * {
+  flex: 0 0 var(--ca-app-scroller-item, 80vw);
+  min-width: 0;
+  max-width: 420px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ca-app-scroller__dot, .ca-app-scroller__arrow { transition: none; }
+}

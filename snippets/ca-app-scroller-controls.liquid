@@ -1,0 +1,16 @@
+{%- comment -%}
+  ca-app-scroller-controls.liquid — dots + prev/next arrows for <ca-app-scroller>
+  (assets/ca-app-scroller.js). Hidden above 989px by ca-custom.css. Same arrow
+  glyphs as ca-process / ca-testimonials. Accepts `label` (singular item name).
+{%- endcomment -%}
+<div class="ca-app-scroller__controls">
+  <div class="ca-app-scroller__dots" ref="dots"></div>
+  <div class="ca-app-scroller__arrows">
+    <button class="ca-app-scroller__arrow" ref="prev" type="button" aria-label="Previous {{ label | default: 'item' | escape }}">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M18.3666 12.0003H5.63871M12.0027 5.63633L5.63871 12.0003L12.0027 18.3643" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="ca-app-scroller__arrow" ref="next" type="button" aria-label="Next {{ label | default: 'item' | escape }}">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5.63677 11.9997H18.3647M12.0007 18.3637L18.3647 11.9997L12.0007 5.63574" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>

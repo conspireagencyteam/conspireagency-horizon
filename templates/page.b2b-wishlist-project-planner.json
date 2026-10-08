@@ -1,26 +1,29 @@
 {
   "sections": {
     "hero": {
-      "type": "ca-app-wishlist-hero",
+      "type": "ca-app-hero",
       "settings": {
-        "eyebrow": "For tile, paint, fixture & furniture stores on Shopify",
-        "heading": "Help customers plan projects. Meet the Shopify B2B wishlist app built for the job.",
-        "text": "<p>Project wishlists for tile, paint, fixture and furniture stores. Customers plan by room and share with clients; you turn their plans into carts, quotes and draft orders.</p>",
-        "primary_label": "Install on Shopify",
-        "primary_link": "https://apps.shopify.com/wishlist-project-planner",
-        "secondary_label": "Documentation",
-        "secondary_link": "https://apps.conspireagency.com/wishlist/docs",
-        "tour_label": "Watch the tour · 1:28",
-        "tour_link": "https://www.youtube.com/watch?v=EjvqM4SR11Q",
-        "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+        "layout": "app",
+        "eyebrow": "",
+        "heading": "<p>Help customers plan projects. Meet the Shopify B2B wishlist app built for the job.</p>",
+        "heading_tag": "h1",
+        "lede": "<p>Project wishlists for tile, paint, fixture and furniture stores. Customers plan by room and share with clients; you turn their plans into carts, quotes and draft orders.</p>",
         "proof": "Free for 14 days · No theme edits required · Built by a Shopify Premier Partner",
-        "rating_label": "5.0 on the Shopify App Store",
-        "rating_link": "https://apps.shopify.com/wishlist-project-planner#adp-reviews",
-        "background_image": "shopify://shop_images/ca-apps-brand-hero-window.jpg",
+        "rating_value": "5.0",
+        "rating_count": 1,
+        "store_label": "Install on Shopify",
+        "store_url": "https://apps.shopify.com/wishlist-project-planner",
+        "docs_label": "Documentation",
+        "docs_url": "https://apps.conspireagency.com/wishlist/docs",
+        "youtube_id": "EjvqM4SR11Q",
+        "tour_duration": "1:28",
+        "tour_title": "B2B Wishlist & Project Planner app tour",
+        "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
         "background_color": "#0d110d",
         "text_color": "#ffffff",
-        "padding-block-start": 120,
-        "padding-block-end": 96
+        "allow_transparent_header": true,
+        "padding-block-start": 64,
+        "padding-block-end": 80
       }
     },
     "mock": {

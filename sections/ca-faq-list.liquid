@@ -23,6 +23,7 @@
 
 <div
   class="ca-faql spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   style="{% render 'spacing-style', settings: section.settings %} --ca-faql-start: {{ start }};"
 >
   {%- render 'contrast-override',
@@ -157,6 +158,7 @@
   "class": "ca-faql-section",
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor id", "info": "Optional. Lets links jump here, as #faq." },
     { "type": "header", "content": "Left column" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The honest answers, before the call." },
