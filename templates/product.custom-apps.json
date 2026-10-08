@@ -274,7 +274,7 @@
           "type": "plan",
           "settings": {
             "name": "Starter Sprint",
-            "price": "$7.4k",
+            "price": "$7.5k",
             "values": "1 week\nA single integration or storefront tool\nHighly focused, tight orchestration\nno\nyes",
             "highlight": false,
             "button_label": "Get Started",
