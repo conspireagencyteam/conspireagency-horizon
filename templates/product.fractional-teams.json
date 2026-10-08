@@ -585,16 +585,6 @@
         "padding-block-start": 80,
         "padding-block-end": 80
       }
-    },
-    "structured_data": {
-      "type": "custom-liquid",
-      "settings": {
-        "custom_liquid": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"Service\",\n  \"name\": \"Fractional Web Teams & Ongoing CRO\",\n  \"description\": \"Hire a full CRO-focused web team  -  strategist, designer, and developers  -  for less than the cost of one in-house hire. Conspire offers ongoing Shopify support and optimization under flexible monthly plans.\",\n  \"serviceType\": \"Shopify website support, design, CRO, and development\",\n  \"provider\": {\n    \"@type\": \"Organization\",\n    \"name\": \"Conspire\",\n    \"url\": \"https://www.conspireagency.com\",\n    \"logo\": {\n      \"@type\": \"ImageObject\",\n      \"url\": \"https://www.conspireagency.com/cdn/shop/files/conspire-logo.svg\"\n    },\n    \"address\": {\n      \"@type\": \"PostalAddress\",\n      \"streetAddress\": \"5670 Wilshire Blvd #1800\",\n      \"addressLocality\": \"Los Angeles\",\n      \"addressRegion\": \"CA\",\n      \"postalCode\": \"90036\",\n      \"addressCountry\": \"US\"\n    },\n    \"contactPoint\": {\n      \"@type\": \"ContactPoint\",\n      \"telephone\": \"+1-310-424-5853\",\n      \"contactType\": \"Sales\",\n      \"areaServed\": \"US\"\n    }\n  },\n  \"areaServed\": {\n    \"@type\": \"Country\",\n    \"name\": \"United States\"\n  },\n  \"hasOfferCatalog\": {\n    \"@type\": \"OfferCatalog\",\n    \"name\": \"Fractional Web Team Plans\",\n    \"itemListElement\": [\n      {\n        \"@type\": \"Offer\",\n        \"name\": \"Optimization Partner\",\n        \"price\": 6000,\n        \"priceCurrency\": \"USD\",\n        \"description\": \"High priority queue and triage support with deep senior involvement and ongoing minor updates. Fits $3M-$8M ecommerce brands.\",\n        \"availability\": \"https://schema.org/InStock\"\n      },\n      {\n        \"@type\": \"Offer\",\n        \"name\": \"Growth Partner\",\n        \"price\": 10000,\n        \"priceCurrency\": \"USD\",\n        \"description\": \"Higher priority queue and triage support with deep senior involvement, custom app and checkout infrastructure work, and deeper experimentation. Fits $8M-$20M ecommerce brands.\",\n        \"availability\": \"https://schema.org/InStock\"\n      },\n      {\n        \"@type\": \"Offer\",\n        \"name\": \"Dedicated Partner\",\n        \"price\": 18000,\n        \"priceCurrency\": \"USD\",\n        \"description\": \"Highest priority access and triage support with continuous execution, deep senior involvement, custom app and checkout infrastructure work, and quarterly growth planning. Fits $20M+ ecommerce brands.\",\n        \"availability\": \"https://schema.org/InStock\"\n      }\n    ]\n  },\n  \"url\": \"https://www.conspireagency.com/products/fractional-web-teams\",\n  \"mainEntityOfPage\": {\n    \"@type\": \"WebPage\",\n    \"@id\": \"https://www.conspireagency.com/products/fractional-web-teams\"\n  },\n  \"keywords\": [\n    \"fractional web team\",\n    \"shopify cro support\",\n    \"shopify retainer plans\",\n    \"ongoing shopify support\",\n    \"conversion rate optimization agency\",\n    \"shopify website management\",\n    \"hire shopify developers monthly\"\n  ]\n}\n</script>",
-        "background_color": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
     }
   },
   "order": [
@@ -607,7 +597,6 @@
     "testimonials",
     "call",
     "booking",
-    "fit",
-    "structured_data"
+    "fit"
   ]
 }

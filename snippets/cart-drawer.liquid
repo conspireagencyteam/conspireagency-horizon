@@ -27,12 +27,13 @@
       class="cart-drawer__content"
       aria-label="{{ 'accessibility.cart' | t }}"
     >
-      <h2
+      {%- comment -%} Conspire Agency: not a heading, so drawer text does not pollute the page heading outline {%- endcomment -%}
+      <p
         class="theme-drawer__title h4"
         id="cart-drawer-heading"
       >
         {{ 'content.your_cart_is_empty' | t }}
-      </h2>
+      </p>
 
       <div class="cart-drawer__items">
         {% render 'cart-products', force_empty: true, context: 'drawer' %}

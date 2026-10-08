@@ -196,23 +196,12 @@
         "padding-block-start": 80,
         "padding-block-end": 80
       }
-    },
-    "structured_data": {
-      "type": "custom-liquid",
-      "settings": {
-        "custom_liquid": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"CollectionPage\",\n  \"name\": \"Shopify Case Studies | Conspire\",\n  \"description\": \"Explore real Shopify projects by Conspire. Each case study showcases a client we've helped with strategy, design, development, or CRO.\",\n  \"url\": \"https://www.conspireagency.com/blogs/work\",\n  \"hasPart\": [\n    {% for article in blog.articles %}\n    {\n      \"@type\": \"BlogPosting\",\n      \"headline\": {{ article.title | json }},\n      \"description\": {{ article.excerpt | strip_html | truncate: 200 | json }},\n      \"url\": {{ article.url | prepend: shop.url | json }},\n      \"image\": {{ article.image | img_url: '1200x630' | json }},\n      \"datePublished\": \"{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S' }}-07:00\",\n      \"author\": {\n        \"@type\": \"Organization\",\n        \"name\": \"Conspire\",\n        \"url\": \"https://www.conspireagency.com\"\n      },\n      \"publisher\": {\n        \"@type\": \"Organization\",\n        \"name\": \"Conspire\",\n        \"logo\": {\n          \"@type\": \"ImageObject\",\n          \"url\": \"https://www.conspireagency.com/cdn/shop/files/conspire-logo.svg\"\n        }\n      }\n      {% if article.tags.size > 0 %},\n      \"about\": {\n        \"@type\": \"Organization\",\n        \"name\": {{ article.tags.first | json }}\n      }\n      {% endif %}\n    }{% unless forloop.last %},{% endunless %}\n    {% endfor %}\n  ]\n}\n</script>",
-        "background_color": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
     }
   },
   "order": [
     "hero",
     "grid",
     "more",
-    "booking",
-    "structured_data"
+    "booking"
   ]
 }

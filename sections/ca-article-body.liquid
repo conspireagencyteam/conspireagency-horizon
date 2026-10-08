@@ -25,7 +25,18 @@
 
 {%- liquid
   assign source = article.content | default: page.content | default: product.description | default: collection.description
+  comment
+    The page title is the only H1. Editors sometimes write H1s in the body
+    (and some bodies mix H1 and H2, where the H1s would otherwise pass
+    through untouched), so demote every H1 to H2 before anything else looks
+    at the content ("<h1" also catches "<h1 class=..."). The "Heading 1"
+    setting therefore means the same as "Heading 2".
+  endcomment
+  assign source = source | replace: '<h1', '<h2' | replace: '</h1>', '</h2>'
   assign level = section.settings.heading_level | default: 'auto'
+  if level == 'h1'
+    assign level = 'h2'
+  endif
   comment
     Auto: editors are not consistent about heading levels (one career post uses
     H2, the other H1), so take the highest level the content actually has.
@@ -33,8 +44,6 @@
   if level == 'auto'
     if source contains '<h2'
       assign level = 'h2'
-    elsif source contains '<h1'
-      assign level = 'h1'
     else
       assign level = 'h3'
     endif

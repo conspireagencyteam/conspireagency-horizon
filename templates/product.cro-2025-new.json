@@ -232,14 +232,59 @@
         "padding-block-end": 80
       }
     },
-    "structured_data": {
-      "type": "custom-liquid",
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "Is the first test really free?",
+            "answer": "<p>Yes. Your first A/B test is completely free, no strings attached. It's our way of showing the value of optimization before you commit to anything. The only cost is a monthly subscription to the A/B testing Shopify tool we use.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "How much traffic does my store need to run A/B tests?",
+            "answer": "<p>We typically recommend at least 30,000 monthly visitors to ensure results reach statistical significance. If you're under that, we can still help with other CRO strategies like heatmaps, user testing, or a design audit.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "question": "Do I need to sign a long-term contract?",
+            "answer": "<p>A/B testing is an ongoing process. It requires consistent iteration to drive meaningful results. That said, not everything needs a long-term commitment. We offer flat-rate pricing for one-time services like landing page design or a CRO audit if you just need a starting point.</p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "question": "How long do tests take?",
+            "answer": "<p>Test duration depends on your traffic. Higher-traffic stores can reach meaningful results in as little as 1–2 weeks, while lower-traffic stores may take longer. We'll help you prioritize what to test and when.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
       "settings": {
-        "custom_liquid": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"Service\",\n  \"name\": \"Shopify Conversion Rate Optimization (CRO) Agency\",\n  \"description\": \"Conspire is a Shopify CRO agency that helps brands turn traffic into revenue. Our team identifies conversion leaks and executes CRO-focused design, UX improvements, and strategic changes tailored to your business goals.\",\n  \"serviceType\": \"Conversion rate optimization for Shopify websites\",\n  \"provider\": {\n    \"@type\": \"Organization\",\n    \"name\": \"Conspire\",\n    \"url\": \"https://www.conspireagency.com\",\n    \"logo\": \"https://www.conspireagency.com/cdn/shop/files/conspire-logo.svg\",\n    \"address\": {\n      \"@type\": \"PostalAddress\",\n      \"streetAddress\": \"5670 Wilshire Blvd #1800\",\n      \"addressLocality\": \"Los Angeles\",\n      \"addressRegion\": \"CA\",\n      \"postalCode\": \"90036\",\n      \"addressCountry\": \"US\"\n    },\n    \"contactPoint\": {\n      \"@type\": \"ContactPoint\",\n      \"telephone\": \"+1-310-424-5853\",\n      \"contactType\": \"Sales\",\n      \"areaServed\": \"US\"\n    }\n  },\n  \"areaServed\": {\n    \"@type\": \"Country\",\n    \"name\": \"United States\"\n  },\n  \"hasOfferCatalog\": {\n    \"@type\": \"OfferCatalog\",\n    \"name\": \"Shopify CRO Services\",\n    \"itemListElement\": [\n      {\n        \"@type\": \"Offer\",\n        \"itemOffered\": {\n          \"@type\": \"Service\",\n          \"name\": \"CRO Website Audit\",\n          \"description\": \"Full CRO audit of your Shopify storefront with prioritized recommendations based on analytics, UX, and behavior insights.\"\n        }\n      },\n      {\n        \"@type\": \"Offer\",\n        \"itemOffered\": {\n          \"@type\": \"Service\",\n          \"name\": \"CRO-Focused Shopify Design\",\n          \"description\": \"Our designers and developers implement high-impact conversion improvements based on CRO strategy  -  not just aesthetics.\"\n        }\n      },\n      {\n        \"@type\": \"Offer\",\n        \"itemOffered\": {\n          \"@type\": \"Service\",\n          \"name\": \"Ongoing CRO Support\",\n          \"description\": \"We monitor, test, and evolve your Shopify storefront over time to keep lifting conversion rate and AOV.\"\n        }\n      }\n    ]\n  },\n  \"keywords\": [\n    \"shopify cro agency\",\n    \"shopify conversion optimization\",\n    \"ecommerce cro services\",\n    \"increase shopify conversion rate\",\n    \"cro website design shopify\",\n    \"shopify ux optimization\",\n    \"conversion rate agency for shopify\"\n  ],\n  \"mainEntityOfPage\": {\n    \"@type\": \"WebPage\",\n    \"@id\": \"https://www.conspireagency.com/products/shopify-cro-agency\"\n  }\n}\n</script>",
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
         "background_color": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
       }
     }
   },
@@ -249,7 +294,7 @@
     "grid",
     "services",
     "testimonials",
-    "booking",
-    "structured_data"
+    "faq",
+    "booking"
   ]
 }

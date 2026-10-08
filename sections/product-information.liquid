@@ -1,6 +1,4 @@
-<script type="application/ld+json">
-  {{ closest.product | structured_data }}
-</script>
+{%- comment -%} Conspire Agency: removed stock Product JSON-LD. Every product here is a service/app listing; snippets/ca-schema.liquid renders the Service schema (ca-service-schema) instead, so the stock Product entity (OutOfStock, myshopify image host) would conflict. {%- endcomment -%}
 
 {% capture media_gallery %}
   {%- content_for 'block',

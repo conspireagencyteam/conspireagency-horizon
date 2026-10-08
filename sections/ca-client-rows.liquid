@@ -43,7 +43,7 @@
             assign name = block.settings.name | default: client.name.value
             assign years = block.settings.years | default: client.years.value
             assign summary = block.settings.summary | default: client.work_summary.value
-            assign url = block.settings.link | default: client.case_study_reference.value
+            assign url = block.settings.link | default: client.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', ''
 
             assign pills = block.settings.pills | newline_to_br | split: '<br />'
             if block.settings.pills == blank

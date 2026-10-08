@@ -32,12 +32,13 @@
     scroll-lock
     aria-labelledby="search-modal-heading"
   >
-    <h2
+    {%- comment -%} Conspire Agency: <p> not <h2>, keeps modal label out of the heading outline {%- endcomment -%}
+    <p
       id="search-modal-heading"
       class="visually-hidden"
     >
       {{ 'content.search' | t }}
-    </h2>
+    </p>
     <predictive-search-component
       class="predictive-search color-custom-popover{% if class != blank %} {{ class | strip }}{% endif %}"
       style="--product-corner-radius: {{ settings.product_corner_radius | default: 8 | append: 'px' }}; --card-corner-radius: {{ settings.card_corner_radius | default: 8 | append: 'px' }};{% if settings.card_title_case == 'uppercase' %} --title-case: uppercase;{% endif %}"

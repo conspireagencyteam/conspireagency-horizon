@@ -21,18 +21,20 @@
   style="{% render 'spacing-style', settings: block_settings %}"
   {{ block.shopify_attributes }}
 >
-  <h1 class="{{ block_settings.type_preset | default: 'h2' }}">
+  {%- comment -%} Conspire Agency: the force_empty copy lives in a <template>; render it as <p> so /cart has a single H1 {%- endcomment -%}
+  <{% if force_empty %}p{% else %}h1{% endif %} class="{{ block_settings.type_preset | default: 'h2' }}">
     {%- if cart.empty? or force_empty -%}
       {{ 'content.your_cart_is_empty' | t }}
     {%- else -%}
       {{ block_settings.title }}
       {%- if block_settings.show_count -%}{% render 'cart-bubble' %}{%- endif -%}
     {%- endif -%}
-  </h1>
+  </{% if force_empty %}p{% else %}h1{% endif %}>
 </div>
 
 {% stylesheet %}
-  .cart-title h1 {
+  .cart-title h1,
+  .cart-title > p {
     margin-block-end: 0;
     display: inline-flex;
     align-items: center;

@@ -18,7 +18,8 @@
 {% enddoc %}
 
 <div class="theme-drawer__header">
-  <h2
+  {%- comment -%} Conspire Agency: <p> not <h2>, keeps drawer titles out of the heading outline {%- endcomment -%}
+  <p
     class="theme-drawer__title h4"
     {% if heading_id %}
       id="{{ heading_id }}"
@@ -26,7 +27,7 @@
   >
     {{ title }}
     {{ title_append }}
-  </h2>
+  </p>
 
   <button
     class="theme-drawer__close-button"

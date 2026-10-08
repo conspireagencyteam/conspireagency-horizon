@@ -50,6 +50,7 @@
                     assign years = current_year | minus: py
                   endif
                   assign logo = quote.logo.value
+                  assign logo_alt = quote.client_name.value | default: quote.company.value | default: quote.system.display_name | default: 'Client'
                   if logo.image
                     assign logo = logo.image
                   endif
@@ -62,7 +63,7 @@
                         <span class="ca-quote__years"><span class="ca-quote__years-num">+{{ years }}</span> years partnered</span>
                       {%- endif -%}
                       {%- if logo != blank -%}
-                        <span class="ca-quote__logo">{% render 'image', image: logo, class: 'ca-quote__logo-img', alt_text_fallback: 'Client logo' %}</span>
+                        <span class="ca-quote__logo">{% render 'image', image: logo, class: 'ca-quote__logo-img', alt_text_fallback: logo_alt %}</span>
                       {%- endif -%}
                     </div>
                   {%- endif -%}

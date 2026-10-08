@@ -1,0 +1,107 @@
+{%- comment -%}
+  ca-article-schema.liquid — JSON-LD for blog articles (every article template
+  except the case study one, so also careers and markets posts). Rendered from
+  ca-schema.liquid.
+
+  Emits a BlogPosting and a BreadcrumbList. Publisher points at the site-wide
+  Organization in ca-schema (https://www.conspireagency.com/#organization).
+  Author is the Shopify author as a Person; careers posts and articles with no
+  author fall back to the Organization.
+
+  URLs are built on the canonical host: `request.origin` is 127.0.0.1 on the
+  dev server and `article.handle` can come back as "blog/article".
+
+  Usage: {% render 'ca-article-schema', article: article, blog: blog %}
+
+  @param {object} article
+  @param {object} blog
+{%- endcomment -%}
+
+{%- liquid
+  assign ca_site = 'https://www.conspireagency.com'
+  assign ca_org_id = ca_site | append: '/#organization'
+  assign ca_article_url = ca_site | append: article.url
+  assign ca_blog_url = ca_site | append: blog.url
+
+  assign ca_description = article.excerpt | strip_html | strip
+  if ca_description == blank
+    assign ca_description = article.content | strip_html | strip | truncate: 160
+  endif
+  comment
+    strip_html leaves entities behind; json re-escapes what needs it.
+  endcomment
+  assign ca_description = ca_description | replace: '&amp;', '&' | replace: '&nbsp;', ' '
+
+  if article.image != blank
+    assign ca_image_url = article.image | image_url: width: 1200
+    if ca_image_url contains '/cdn/'
+      assign ca_image_url = ca_image_url | split: '/cdn/' | last | prepend: 'https://www.conspireagency.com/cdn/'
+    else
+      assign ca_image_url = ca_image_url | prepend: 'https:'
+    endif
+    assign ca_image_height = 630
+    if article.image.aspect_ratio > 0
+      assign ca_image_height = 1200 | divided_by: article.image.aspect_ratio | round
+    endif
+  endif
+
+  assign ca_author = article.author | strip
+  if blog.handle == 'careers'
+    assign ca_author = ''
+  endif
+
+  assign ca_keywords = ''
+  if article.tags.size > 0
+    assign ca_keywords = article.tags | join: ', '
+  endif
+-%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ article.title | json }},
+  "description": {{ ca_description | json }},
+  "articleSection": {{ blog.title | json }},
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ ca_article_url | json }}
+  },
+  {%- if ca_image_url != blank %}
+  "image": {
+    "@type": "ImageObject",
+    "url": {{ ca_image_url | json }},
+    "width": 1200,
+    "height": {{ ca_image_height }}
+  },
+  {%- endif %}
+  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  {%- if ca_author != blank %}
+  "author": { "@type": "Person", "name": {{ ca_author | json }} },
+  {%- else %}
+  "author": { "@id": {{ ca_org_id | json }} },
+  {%- endif %}
+  "publisher": { "@id": {{ ca_org_id | json }} },
+  {%- if ca_keywords != blank %}
+  "keywords": {{ ca_keywords | json }},
+  {%- endif %}
+  "isPartOf": {
+    "@type": "Blog",
+    "name": {{ blog.title | json }},
+    "url": {{ ca_blog_url | json }}
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Conspire", "item": {{ ca_site | append: '/' | json }} },
+    { "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": {{ ca_blog_url | json }} },
+    { "@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": {{ ca_article_url | json }} }
+  ]
+}
+</script>

@@ -456,14 +456,59 @@
         "padding-block-end": 80
       }
     },
-    "structured_data": {
-      "type": "custom-liquid",
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "What makes Conspire different from other Shopify agencies?",
+            "answer": "<p>As a Shopify agency with 15+ years of platform experience since 2011, we've completed hundreds of projects with a 98% satisfaction rate. Unlike many Shopify development agencies, we offer both strategic guidance and technical execution from our Los Angeles-based office, treating your website as a living product that drives real business results. Our boutique approach means you work directly with seasoned experts, not junior developers.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "Do you only work with Shopify, or do you build on other platforms?",
+            "answer": "<p>While we're experienced with multiple platforms, Shopify is our specialty and where we deliver the most value. As dedicated Shopify Plus developers, we believe Shopify offers the best combination of scalability, reliability, and ecosystem support for growing DTC brands. Our deep platform expertise allows us to leverage Shopify's full potential in ways generalist agencies cannot.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "question": "What's the difference between Conspire Builds and Signature Builds?",
+            "answer": "<p>Conspire Builds ($15K to $75K, 8 to 14 weeks) are built for funded early-growth brands and established eCommerce teams that need a fast, conversion-focused launch on a structured timeline. Most land between $25K and $45K. We combine proven Shopify architecture with our CRO and DTC experience to ship a store that's ready to scale with paid traffic.</p><p>Signature Builds ($100K+, 12+ weeks) are designed for established brands requiring custom design, advanced functionality, or complex integrations. These involve deep strategy work, custom development, and ongoing partnership for high-growth businesses.</p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "question": "Can you migrate my existing website to Shopify?",
+            "answer": "<p>Absolutely. As experienced Shopify developers, we handle migrations from various platforms including WooCommerce, Magento, BigCommerce, and custom solutions. Our migration process includes SEO preservation strategies, data migration (products, customers, orders), URL redirect planning, design improvement opportunities, and performance optimization.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
       "settings": {
-        "custom_liquid": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"ProfessionalService\",\n  \"name\": \"Conspire - Shopify eCommerce Website Agency\",\n  \"description\": \"Conspire is a top Shopify eCommerce agency that builds high-performing websites for established brands. We offer Conspire Builds for fast, structured launches and fully custom Shopify Plus sites for complex business needs.\",\n  \"url\": \"https://www.conspireagency.com/products/shopify-websites\",\n  \"image\": \"https://www.conspireagency.com/cdn/shop/files/shopify-websites-banner.jpg\",\n  \"serviceType\": \"Shopify website design, Shopify Plus development, eCommerce CRO\",\n  \"areaServed\": {\n    \"@type\": \"Country\",\n    \"name\": \"United States\"\n  },\n  \"address\": {\n    \"@type\": \"PostalAddress\",\n    \"streetAddress\": \"5670 Wilshire Blvd #1800\",\n    \"addressLocality\": \"Los Angeles\",\n    \"addressRegion\": \"CA\",\n    \"postalCode\": \"90036\",\n    \"addressCountry\": \"US\"\n  },\n  \"keywords\": [\n    \"ecommerce website agency\",\n    \"shopify ecommerce agency\",\n    \"shopify web agency\",\n    \"shopify cro agency\",\n    \"shopify website redesign\",\n    \"custom shopify themes\",\n    \"shopify plus agency\"\n  ],\n  \"offers\": {\n    \"@type\": \"OfferCatalog\",\n    \"name\": \"Shopify Website Build Packages\",\n    \"itemListElement\": [\n      {\n        \"@type\": \"Offer\",\n        \"name\": \"Conspire Build\",\n        \"priceSpecification\": {\n          \"@type\": \"PriceSpecification\",\n          \"priceCurrency\": \"USD\",\n          \"minPrice\": 15000,\n          \"maxPrice\": 75000\n        },\n        \"availability\": \"https://schema.org/InStock\",\n        \"url\": \"https://www.conspireagency.com/products/shopify-websites#essential-build\",\n        \"itemOffered\": {\n          \"@type\": \"Service\",\n          \"name\": \"Conspire Shopify Website Build\",\n          \"description\": \"A fast, structured Shopify website launch for growing brands. Delivered in 8 to 14 weeks using proven high-converting components.\"\n        }\n      },\n      {\n        \"@type\": \"Offer\",\n        \"name\": \"Signature Build\",\n        \"priceSpecification\": {\n          \"@type\": \"PriceSpecification\",\n          \"priceCurrency\": \"USD\",\n          \"minPrice\": 100000\n        },\n        \"availability\": \"https://schema.org/InStock\",\n        \"url\": \"https://www.conspireagency.com/products/shopify-websites#enterprise-build\",\n        \"itemOffered\": {\n          \"@type\": \"Service\",\n          \"name\": \"Signature Shopify Plus Website Build\",\n          \"description\": \"Tailored for complex needs: headless builds, integrations, CRO and advanced customizations for enterprise Shopify Plus merchants.\"\n        }\n      }\n    ]\n  },\n  \"brand\": {\n    \"@type\": \"Organization\",\n    \"name\": \"Conspire\",\n    \"url\": \"https://www.conspireagency.com\",\n    \"logo\": \"https://www.conspireagency.com/cdn/shop/files/conspire-logo.svg\"\n  },\n  \"contactPoint\": {\n    \"@type\": \"ContactPoint\",\n    \"telephone\": \"+1-310-424-5853\",\n    \"contactType\": \"Sales\",\n    \"areaServed\": \"US\"\n  },\n  \"mainEntityOfPage\": {\n    \"@type\": \"WebPage\",\n    \"@id\": \"https://www.conspireagency.com/products/shopify-websites\"\n  }\n}\n</script>",
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
         "background_color": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
       }
     }
   },
@@ -478,7 +523,7 @@
     "fit",
     "testimonials",
     "services",
-    "booking",
-    "structured_data"
+    "faq",
+    "booking"
   ]
 }

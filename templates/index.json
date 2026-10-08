@@ -15,7 +15,7 @@
         "heading": "We know Shopify. Your growth partner.",
         "body": "<p>Los Angeles-based Shopify Plus design and development agency. Trusted since 2011 by high-growth eCommerce brands for strategic builds and long-term support. We help teams scale on Shopify with confidence.</p>",
         "button_label": "Get Started",
-        "button_link": "",
+        "button_link": "/pages/contact",
         "style_class": "button",
         "custom_button_background": "{{ settings.color_palette.foreground }}",
         "custom_button_text": "{{ settings.color_palette.background }}",
@@ -129,7 +129,7 @@
         "eyebrow": "Our Shopify Apps",
         "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month. They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.",
         "contact_label": "Contact Us",
-        "contact_link": "",
+        "contact_link": "/pages/contact",
         "apps": [
           "bonde",
           "wholesale-goat"

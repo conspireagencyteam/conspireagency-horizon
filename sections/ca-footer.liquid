@@ -64,7 +64,7 @@
 
     {%- if footer_logo != blank -%}
       <div class="ca-footer__logo">
-        {% render 'image', image: footer_logo, class: 'ca-footer__logo-img' %}
+        {% render 'image', image: footer_logo, class: 'ca-footer__logo-img', alt_text_fallback: 'Conspire' %}
       </div>
     {%- elsif request.design_mode -%}
       <div class="ca-footer__logo ca-footer__logo--empty">

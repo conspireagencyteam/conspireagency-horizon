@@ -17,7 +17,7 @@
   assign form_id = 'ContactModernForm'
   assign client = section.settings.case_client
   assign case_name = section.settings.case_name | default: client.name.value
-  assign case_url = section.settings.case_link | default: client.case_study_reference.value
+  assign case_url = section.settings.case_link | default: client.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', ''
   assign case_image = section.settings.case_image
   if case_image == blank
     assign case_image = client.work_preview.value

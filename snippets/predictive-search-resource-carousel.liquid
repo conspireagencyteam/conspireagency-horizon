@@ -19,12 +19,13 @@
 
 {% capture header %}
   <div class="predictive-search-results__resource-header">
-    <h4
+    {%- comment -%} Conspire Agency: <p> not <h4>, keeps search drawer out of the heading outline {%- endcomment -%}
+    <p
       id="predictive-search-{{ resource_type }}"
       class="predictive-search-results__title"
     >
       {{ title }}
-    </h4>
+    </p>
 
     {% if resources.size >= 4 %}
       {%- render 'slideshow-controls',

@@ -47,7 +47,7 @@
       assign blog = section.settings.blog
       assign skip_urls = ''
       for skipped in section.settings.exclude_clients
-        assign skip_urls = skip_urls | append: skipped.case_study_reference.value | append: '|'
+        assign skip_urls = skip_urls | append: skipped.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', '' | append: '|'
       endfor
       assign skip_handles = section.settings.exclude_handles | remove: ' ' | prepend: ',' | append: ','
       assign has_entries = false
@@ -61,7 +61,7 @@
         {%- for client in clients -%}
           {%- liquid
             assign name = client.name.value | default: client.system.handle
-            assign url = client.case_study_reference.value
+            assign url = client.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', ''
             assign image = client[primary].value
             if image == blank
               assign image = client[secondary].value

@@ -22,7 +22,8 @@
       class="recently-viewed-wrapper"
       ref="recentlyViewedWrapper"
     >
-      <h4
+      {%- comment -%} Conspire Agency: <p> not <h4>, keeps search drawer out of the heading outline {%- endcomment -%}
+      <p
         class="predictive-search-results__title"
         ref="recentlyViewedTitle[]"
       >
@@ -34,7 +35,7 @@
         >
           {{ 'actions.clear' | t }}
         </button>
-      </h4>
+      </p>
       <ul
         class="predictive-search-results__list predictive-search-results__wrapper-products list-unstyled"
       >
@@ -83,9 +84,10 @@
       </ul>
     </div>
   {% else %}
-    <h4 class="predictive-search-results__title">
+    {%- comment -%} Conspire Agency: <p> not <h4> {%- endcomment -%}
+    <p class="predictive-search-results__title">
       {{ title }}
-    </h4>
+    </p>
     <ul
       class="predictive-search-results__list predictive-search-results__wrapper-products list-unstyled"
     >

@@ -187,23 +187,12 @@
         "padding-block-start": 80,
         "padding-block-end": 80
       }
-    },
-    "structured_data": {
-      "type": "custom-liquid",
-      "settings": {
-        "custom_liquid": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"CollectionPage\",\n  \"name\": \"Shopify Services | Conspire\",\n  \"description\": \"Explore Conspire’s full suite of Shopify services, including Conspire Builds, CRO, migrations, redesigns, and custom theme development.\",\n  \"url\": \"https://www.conspireagency.com/collections/services\",\n  \"hasPart\": [\n    {% for product in collections.services.products %}\n    {\n      \"@type\": \"Service\",\n      \"name\": {{ product.title | json }},\n      \"description\": {{ product.description | strip_html | truncate: 180 | json }},\n      \"url\": {{ product.url | prepend: shop.url | json }},\n      \"image\": {{ product.featured_image | img_url: '800x' | prepend: shop.url | json }},\n      \"provider\": {\n        \"@type\": \"Organization\",\n        \"name\": \"Conspire\",\n        \"url\": \"https://www.conspireagency.com\"\n      },\n      {% if product.tags.size > 0 %}\n      \"serviceType\": {{ product.tags.first | json }},\n      {% endif %}\n      {% if product.price > 0 %}\n      \"offers\": {\n        \"@type\": \"Offer\",\n        \"priceCurrency\": \"USD\",\n        \"price\": {{ product.price | money_without_currency | remove: \",\" }},\n        \"availability\": \"https://schema.org/InStock\",\n        \"url\": {{ product.url | prepend: shop.url | json }}\n      },\n      {% endif %}\n      \"areaServed\": {\n        \"@type\": \"Country\",\n        \"name\": \"United States\"\n      }\n    }{% unless forloop.last %},{% endunless %}\n    {% endfor %}\n  ]\n}\n</script>",
-        "background_color": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
     }
   },
   "order": [
     "intro",
     "services",
     "testimonials",
-    "booking",
-    "structured_data"
+    "booking"
   ]
 }

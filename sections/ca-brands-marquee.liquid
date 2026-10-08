@@ -66,10 +66,17 @@
         {%- endif -%}
         {%- if section.settings.button_label != blank -%}
           {%- render 'button-custom-styles', block_settings: section.settings, block_id: section.id -%}
-          <a
-            class="{{ section.settings.style_class }} size-style ca-hero__button{% if section.settings.style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}"
-            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
-          >{{ section.settings.button_label }}</a>
+          {%- if section.settings.button_link != blank -%}
+            <a
+              class="{{ section.settings.style_class }} size-style ca-hero__button{% if section.settings.style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}"
+              href="{{ section.settings.button_link }}"
+            >{{ section.settings.button_label }}</a>
+          {%- else -%}
+            <button
+              type="button"
+              class="{{ section.settings.style_class }} size-style ca-hero__button{% if section.settings.style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}"
+            >{{ section.settings.button_label }}</button>
+          {%- endif -%}
         {%- endif -%}
       </div>
     </div>
@@ -100,12 +107,17 @@
                 assign logo = logo.image
               endif
               assign brand_title = client.name.value | default: client.system.handle
-              assign brand_url = client.case_study_reference.value
+              assign brand_url = client.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', ''
             -%}
             {%- capture card_inner -%}
               <div class="ca-brand-card__media">
                 {%- if bg != blank -%}
-                  {% render 'image', image: bg, height: 500, class: 'ca-brand-card__bg', alt_text_fallback: brand_title %}
+                  {%- if forloop.first -%}
+                    {%- assign bg_alt = bg.alt | default: brand_title -%}
+                    {{- bg | image_url: height: 500 | image_tag: class: 'ca-brand-card__bg', alt: bg_alt, loading: 'eager', fetchpriority: 'high', widths: '' -}}
+                  {%- else -%}
+                    {% render 'image', image: bg, height: 500, class: 'ca-brand-card__bg', alt_text_fallback: brand_title %}
+                  {%- endif -%}
                 {%- endif -%}
                 {%- if logo != blank -%}
                   {% render 'image', image: logo, height: 48, class: 'ca-brand-card__logo', alt_text_fallback: brand_title %}

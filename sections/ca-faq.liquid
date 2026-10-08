@@ -78,6 +78,41 @@
   </div>
 </div>
 
+{%- comment -%}
+  FAQPage JSON-LD: one entity covering every question across all categories.
+  Answers are rich text (metafield_tag) flattened to plain text.
+{%- endcomment -%}
+{%- if section.settings.structured_data and categories.count > 0 -%}
+  {%- liquid
+    assign faq_count = 0
+    for category in categories
+      assign faq_count = faq_count | plus: category.faqs.value.size
+    endfor
+  -%}
+  {%- if faq_count > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- assign faq_index = 0 -%}
+        {%- for category in categories -%}
+          {%- for item in category.faqs.value -%}
+            {%- assign faq_index = faq_index | plus: 1 -%}
+            {%- if faq_index > 1 %},{% endif -%}
+            {
+              "@type": "Question",
+              "name": {{ item.question.value | strip_html | strip | json }},
+              "acceptedAnswer": { "@type": "Answer", "text": {{ item.answer | metafield_tag | strip_html | strip | json }} }
+            }
+          {%- endfor -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+  {%- endif -%}
+{%- endif -%}
+
 {% stylesheet %}
   .ca-faq {
     background-color: var(--color-background);
@@ -302,6 +337,13 @@
       "label": "Categories",
       "metaobject_type": "faq_category",
       "limit": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "structured_data",
+      "label": "Add FAQ structured data (JSON-LD)",
+      "info": "Emits a schema.org FAQPage covering every question in every category.",
+      "default": true
     },
     {
       "type": "header",

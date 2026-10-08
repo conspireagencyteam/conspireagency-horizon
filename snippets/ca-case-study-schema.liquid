@@ -1,0 +1,132 @@
+{%- comment -%}
+  ca-case-study-schema.liquid — JSON-LD for case studies
+  (article.case-study-template). Rendered from ca-schema.liquid.
+
+  Emits an Article (with the client's site as `about`) and a BreadcrumbList.
+  Author and publisher point at the site-wide Organization in ca-schema
+  (https://www.conspireagency.com/#organization), so no org data lives here.
+
+  URLs are built on the canonical host: `request.origin` is 127.0.0.1 on the
+  dev server and `article.handle` can come back as "blog/article".
+
+  Usage: {% render 'ca-case-study-schema', article: article, blog: blog %}
+
+  @param {object} article
+  @param {object} blog
+{%- endcomment -%}
+
+{%- liquid
+  assign ca_site = 'https://www.conspireagency.com'
+  assign ca_org_id = ca_site | append: '/#organization'
+  assign ca_article_url = ca_site | append: article.url
+  assign ca_blog_url = ca_site | append: blog.url
+
+  comment
+    Client record, the same way ca-case-hero finds it: the `client` metaobject
+    whose case_study_reference points at this article.
+  endcomment
+  capture ca_client_handle
+    render 'ca-article-client', article: article
+  endcapture
+  assign ca_client_handle = ca_client_handle | strip
+  if ca_client_handle != blank
+    assign ca_client = metaobjects.client[ca_client_handle]
+  endif
+
+  assign ca_title_parts = article.title | split: ':'
+  assign ca_short_title = ca_title_parts | first | strip
+  assign ca_client_name = ca_client.name.value | default: ca_short_title
+
+  assign ca_description = article.metafields.custom.blog_short_description.value | strip_html | strip
+  if ca_description == blank
+    assign ca_description = article.excerpt | strip_html | strip
+  endif
+  if ca_description == blank
+    assign ca_description = article.content | strip_html | strip | truncate: 160
+  endif
+  comment
+    strip_html leaves entities behind; json re-escapes what needs it.
+  endcomment
+  assign ca_description = ca_description | replace: '&amp;', '&' | replace: '&nbsp;', ' '
+
+  assign ca_image = article.metafields.custom.case_study_banner_one.value
+  if ca_image == blank
+    assign ca_image = article.image
+  endif
+  if ca_image != blank
+    assign ca_image_url = ca_image | image_url: width: 1200
+    if ca_image_url contains '/cdn/'
+      assign ca_image_url = ca_image_url | split: '/cdn/' | last | prepend: 'https://www.conspireagency.com/cdn/'
+    else
+      assign ca_image_url = ca_image_url | prepend: 'https:'
+    endif
+    assign ca_image_height = 630
+    if ca_image.aspect_ratio > 0
+      assign ca_image_height = 1200 | divided_by: ca_image.aspect_ratio | round
+    endif
+  endif
+
+  assign ca_keywords = ''
+  if ca_client.services.value != blank
+    assign ca_keywords = ca_client.services.value | join: ', '
+  endif
+  if ca_keywords == blank
+    assign ca_keywords = article.metafields.custom.technologies | strip_html | strip
+  endif
+
+  assign ca_website = article.metafields.custom.website_url.value | default: article.metafields.custom.case_study_web_site.value
+-%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ article.title | json }},
+  "name": {{ article.title | json }},
+  "description": {{ ca_description | json }},
+  "articleSection": "Case Studies",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ ca_article_url | json }}
+  },
+  {%- if ca_image_url != blank %}
+  "image": {
+    "@type": "ImageObject",
+    "url": {{ ca_image_url | json }},
+    "width": 1200,
+    "height": {{ ca_image_height }}
+  },
+  {%- endif %}
+  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  "author": { "@id": {{ ca_org_id | json }} },
+  "publisher": { "@id": {{ ca_org_id | json }} },
+  {%- if ca_keywords != blank %}
+  "keywords": {{ ca_keywords | json }},
+  {%- endif %}
+  {%- if ca_website != blank %}
+  "about": {
+    "@type": "WebSite",
+    "name": {{ ca_client_name | strip_html | json }},
+    "url": {{ ca_website | json }}
+  },
+  {%- endif %}
+  "isPartOf": {
+    "@type": "Blog",
+    "name": {{ blog.title | json }},
+    "url": {{ ca_blog_url | json }}
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Conspire", "item": {{ ca_site | append: '/' | json }} },
+    { "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": {{ ca_blog_url | json }} },
+    { "@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": {{ ca_article_url | json }} }
+  ]
+}
+</script>

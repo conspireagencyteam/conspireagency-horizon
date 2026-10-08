@@ -1,0 +1,111 @@
+{%- comment -%}
+  ca-service-schema.liquid — Service JSON-LD for product (service / app listing) pages.
+
+  Params:
+    product — the product object (ca-schema.liquid passes the page's product).
+
+  Rendered by snippets/ca-schema.liquid when request.page_type == 'product'.
+  Emits exactly one Service entity. Every product in this store is a service or
+  an app listing, so this replaces the stock Product JSON-LD (removed from
+  sections/product-information.liquid) and the per-template pasted blocks.
+
+  Field sources, in priority order:
+    description — product.metafields.custom.seo_description
+                  → product.metafields.product_details.excerpt (rich text, stripped)
+                  → page_description (the product's SEO meta description)
+                  → product.description (stripped)
+                  Entities decoded, whitespace collapsed, 300 chars; omitted when blank.
+    serviceType — product.metafields.custom.service_type
+                  → handle case statement (strings carried over from the old pasted blocks)
+                  → "Shopify development agency services"
+    offers      — only when product.price > 0 (single price, no ranges)
+    image       — featured image at 1200w. image_url returns "//<host>/cdn/shop/..."
+                  on live and "/cdn/shop/..." under theme dev, so the path from
+                  "/cdn/" is re-hosted on the canonical domain.
+
+  The provider is a reference to the site-wide Organization (@id), never inlined.
+  FAQPage is NOT emitted here: sections/ca-faq-list.liquid owns that.
+{%- endcomment -%}
+{%- if product != blank -%}
+  {%- liquid
+    assign ca_site = 'https://www.conspireagency.com'
+    assign ca_org_id = ca_site | append: '/#organization'
+
+    assign ca_svc_url = canonical_url | split: '?' | first
+    if ca_svc_url == blank
+      assign ca_svc_url = ca_site | append: product.url
+    endif
+    assign ca_svc_id = ca_svc_url | append: '#service'
+
+    assign ca_svc_description = product.metafields.custom.seo_description | strip
+    if ca_svc_description == blank and product.metafields.product_details.excerpt != blank
+      assign ca_svc_description = product.metafields.product_details.excerpt | metafield_tag | replace: '</p>', '</p> ' | replace: '<br>', ' ' | strip_html | strip_newlines | strip
+    endif
+    if ca_svc_description == blank
+      assign ca_svc_description = page_description | strip
+    endif
+    if ca_svc_description == blank
+      assign ca_svc_description = product.description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | strip_html | strip_newlines | strip
+    endif
+    assign ca_svc_description = ca_svc_description | replace: '&nbsp;', ' ' | replace: '&#39;', "'" | replace: '&quot;', '"' | replace: '&amp;', '&' | replace: '  ', ' ' | replace: '  ', ' ' | truncate: 300
+
+    assign ca_svc_type = product.metafields.custom.service_type | strip
+    if ca_svc_type == blank
+      case product.handle
+        when 'shopify-fractional-teams'
+          assign ca_svc_type = 'Shopify Plus development, ongoing Shopify support, ERP and NetSuite integrations, accessibility and privacy compliance, attribution setup'
+        when 'shopify-websites'
+          assign ca_svc_type = 'Shopify website design, Shopify Plus development, eCommerce CRO'
+        when 'shopify-website-development-agency'
+          assign ca_svc_type = 'Shopify store design, development, and migration'
+        when 'shopify-cro-agency'
+          assign ca_svc_type = 'Conversion rate optimization for Shopify websites'
+        when 'shopify-migration'
+          assign ca_svc_type = 'Shopify migration and replatforming'
+        else
+          assign ca_svc_type = 'Shopify development agency services'
+      endcase
+    endif
+
+    assign ca_svc_image = ''
+    if product.featured_image != blank
+      assign ca_svc_image = product.featured_image | image_url: width: 1200
+      if ca_svc_image contains '/cdn/'
+        assign ca_svc_image_path = ca_svc_image | split: '/cdn/' | last
+        assign ca_svc_image = ca_site | append: '/cdn/' | append: ca_svc_image_path
+      else
+        assign ca_svc_image_prefix = ca_svc_image | slice: 0, 2
+        if ca_svc_image_prefix == '//'
+          assign ca_svc_image = ca_svc_image | prepend: 'https:'
+        endif
+      endif
+    endif
+  -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": {{ ca_svc_id | json }},
+  "name": {{ product.title | json }},
+  "url": {{ ca_svc_url | json }},
+  {%- if ca_svc_description != blank %}
+  "description": {{ ca_svc_description | json }},
+  {%- endif %}
+  "serviceType": {{ ca_svc_type | json }},
+  "provider": { "@id": {{ ca_org_id | json }} },
+  "areaServed": { "@type": "Country", "name": "United States" }
+  {%- if ca_svc_image != blank -%},
+  "image": {{ ca_svc_image | json }}
+  {%- endif -%}
+  {%- if product.price > 0 -%},
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "USD",
+    "price": {{ product.price | divided_by: 100.0 | json }},
+    "url": {{ ca_svc_url | json }},
+    "availability": "https://schema.org/InStock"
+  }
+  {%- endif %}
+}
+</script>
+{%- endif -%}

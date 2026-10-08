@@ -1,0 +1,309 @@
+{%- comment -%}
+  ca-schema.liquid — site-wide JSON-LD, rendered once from ca-head.liquid.
+
+  Emits, each as its own <script type="application/ld+json">:
+    - Organization (ProfessionalService + LocalBusiness)   every page
+    - WebSite (+ SearchAction)                              every page
+    - ItemList of SiteNavigationElement (from header menu)  every page
+    - WebPage + speakable                                   home only
+    - CollectionPage                                        collections
+    - CollectionPage + hasPart BlogPosting list             blog listings
+    - Dispatch to ca-service-schema (products) and
+      ca-article-schema / ca-case-study-schema (articles)
+
+  All URLs are absolute on the canonical host. Never use request.origin
+  (it is 127.0.0.1 under `shopify theme dev`).
+{%- endcomment -%}
+
+{%- liquid
+  assign site = 'https://www.conspireagency.com'
+  assign org_id = site | append: '/#organization'
+  assign website_id = site | append: '/#website'
+  assign og_image = site | append: '/cdn/shop/files/conspire-shopify-developers-site-image.png'
+  assign search_term = '{search_term_string}'
+  assign search_target = site | append: '/search?q=' | append: search_term
+
+  comment
+    image_url returns "//www.conspireagency.com/cdn/shop/..." on live and
+    "/cdn/shop/..." under theme dev. Re-host every image on the canonical
+    domain by keeping only the path from "/cdn/" onwards.
+  endcomment
+  assign cdn_prefix = site | append: '/cdn/'
+  assign logo_url = og_image
+  if settings.logo != blank
+    assign logo_src = settings.logo | image_url: width: 600
+    if logo_src contains '/cdn/'
+      assign logo_url = logo_src | split: '/cdn/' | last | prepend: cdn_prefix
+    endif
+  endif
+
+  assign nav_menu = linklists['2025-header-nav']
+-%}
+
+{%- comment -%} 1. Organization {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["ProfessionalService", "LocalBusiness"],
+  "@id": {{ org_id | json }},
+  "name": "Conspire Agency",
+  "alternateName": "Conspire",
+  "description": "Leading Shopify agency specializing in ecommerce website design, development, and conversion rate optimization since 2011.",
+  "url": {{ site | append: '/' | json }},
+  "logo": {{ logo_url | json }},
+  "image": {{ og_image | json }},
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "5670 Wilshire Blvd #1800",
+    "postalCode": "90036",
+    "addressLocality": "Los Angeles",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Los Angeles" },
+    { "@type": "City", "name": "San Diego" },
+    { "@type": "Country", "name": "United States" }
+  ],
+  "serviceType": [
+    "Shopify Development",
+    "Shopify Plus Development",
+    "Ecommerce Website Design",
+    "Conversion Rate Optimization",
+    "Shopify CRO Agency",
+    "BigCommerce to Shopify Migration",
+    "WooCommerce to Shopify Migration",
+    "Shopify Migration"
+  ],
+  "telephone": "+1-310-424-5853",
+  "priceRange": "$$$$",
+  "foundingDate": "2011",
+  "sameAs": [
+    "https://www.linkedin.com/company/conspire-shopify-experts",
+    "https://instagram.com/conspire.agency",
+    "https://www.shopify.com/partners/directory/partner/conspire-agency",
+    "https://www.google.com/maps?cid=2374033707805512880"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+1-310-424-5853",
+    "contactType": "Customer Service",
+    "areaServed": ["US", "CA"],
+    "availableLanguage": "English"
+  },
+  "hasCredential": {
+    "@type": "EducationalOccupationalCredential",
+    "name": "Shopify Plus Partner",
+    "credentialCategory": "certification",
+    "recognizedBy": { "@type": "Organization", "name": "Shopify" }
+  },
+  "knowsAbout": [
+    "Shopify Plus development",
+    "eCommerce conversion rate optimization",
+    "Shopify migration",
+    "custom Shopify theme development",
+    "Shopify website design",
+    "Shopify website development"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Shopify Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Shopify Website Development",
+          "description": "Custom Shopify store development and design"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Shopify Plus Development",
+          "description": "Enterprise Shopify Plus solutions"
+        }
+      }
+    ]
+  }
+}
+</script>
+
+{%- comment -%} 2. WebSite {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": {{ website_id | json }},
+  "name": "Conspire",
+  "url": {{ site | append: '/' | json }},
+  "publisher": { "@id": {{ org_id | json }} },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {{ search_target | json }},
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+{%- comment -%}
+  3. Site navigation. Top-level header menu links first (so the list never
+  drifts from the real nav), then the two service products surfaced in the
+  Services mega menu, then the header CTA (Contact).
+{%- endcomment -%}
+{%- liquid
+  assign nav_names = ''
+  assign nav_urls = ''
+  for link in nav_menu.links
+    assign link_url = link.url
+    unless link_url contains '://'
+      assign link_url = site | append: link_url
+    endunless
+    assign nav_names = nav_names | append: link.title | append: '|||'
+    assign nav_urls = nav_urls | append: link_url | append: '|||'
+  endfor
+  comment
+    Services mega menu product links. Labels mirror the ca-header block
+    settings (s1_title / s2_title in sections/header-group.json), which a
+    snippet cannot read; URLs come from the live product so they stay valid.
+  endcomment
+  assign nav_products = 'Shopify Website Builds=shopify-websites,Fractional Shopify Teams=shopify-fractional-teams' | split: ','
+  for pair in nav_products
+    assign parts = pair | split: '='
+    assign p = all_products[parts[1]]
+    if p != blank and p.url != blank
+      assign nav_names = nav_names | append: parts[0] | append: '|||'
+      assign nav_urls = nav_urls | append: site | append: p.url | append: '|||'
+    endif
+  endfor
+  assign nav_names = nav_names | append: 'Contact|||'
+  assign nav_urls = nav_urls | append: site | append: '/pages/contact|||'
+  assign nav_name_list = nav_names | split: '|||'
+  assign nav_url_list = nav_urls | split: '|||'
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": [
+    {%- for name in nav_name_list -%}
+      {
+        "@type": "SiteNavigationElement",
+        "position": {{ forloop.index }},
+        "name": {{ name | strip | json }},
+        "url": {{ nav_url_list[forloop.index0] | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+
+{%- comment -%} 4. Home WebPage + speakable {%- endcomment -%}
+{%- if request.page_type == 'index' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": {{ site | append: '/#webpage' | json }},
+  "url": {{ site | append: '/' | json }},
+  "name": {{ page_title | replace: '&amp;', '&' | replace: '&#39;', "'" | replace: '&quot;', '"' | strip | json }},
+  "isPartOf": { "@id": {{ website_id | json }} },
+  "about": { "@id": {{ org_id | json }} },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".ca-hero__heading", ".ca-hero__body", ".ca-services__title"]
+  }
+}
+</script>
+{%- endif -%}
+
+{%- comment -%} 5. CollectionPage {%- endcomment -%}
+{%- if request.page_type == 'collection' and collection != blank -%}
+  {%- liquid
+    assign coll_image = og_image
+    if collection.image != blank
+      assign coll_src = collection.image | image_url: width: 1200
+      if coll_src contains '/cdn/'
+        assign coll_image = coll_src | split: '/cdn/' | last | prepend: cdn_prefix
+      endif
+    endif
+    assign coll_desc = collection.description | strip_html | strip | truncate: 300
+  -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": {{ site | append: collection.url | append: '#webpage' | json }},
+  "name": {{ collection.title | json }},
+  "url": {{ site | append: collection.url | json }},
+  {%- if coll_desc != blank %}
+  "description": {{ coll_desc | json }},
+  {%- endif %}
+  "image": {{ coll_image | json }},
+  "isPartOf": { "@id": {{ website_id | json }} }
+}
+</script>
+{%- endif -%}
+
+{%- comment -%} 6. Blog listing: CollectionPage with hasPart BlogPosting list {%- endcomment -%}
+{%- if request.page_type == 'blog' and blog != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": {{ site | append: blog.url | append: '#webpage' | json }},
+  "name": {{ blog.title | json }},
+  "url": {{ site | append: blog.url | json }},
+  "isPartOf": { "@id": {{ website_id | json }} },
+  "hasPart": [
+    {%- for article in blog.articles limit: 50 -%}
+      {%- liquid
+        assign art_desc = article.excerpt | strip_html | strip
+        if art_desc == blank
+          assign art_desc = article.metafields.custom.blog_short_description.value | strip_html | strip
+        endif
+        if art_desc == blank
+          assign art_desc = article.content | strip_html | strip
+        endif
+        comment
+          Flatten line breaks left by stripped block tags into single spaces.
+        endcomment
+        assign art_desc = art_desc | newline_to_br | strip_newlines | replace: '<br />', ' ' | replace: '<br>', ' ' | replace: '  ', ' ' | truncate: 200
+        assign art_image = ''
+        if article.image != blank
+          assign art_src = article.image | image_url: width: 1200
+          if art_src contains '/cdn/'
+            assign art_image = art_src | split: '/cdn/' | last | prepend: cdn_prefix
+          endif
+        endif
+      -%}
+      {
+        "@type": "BlogPosting",
+        "headline": {{ article.title | json }},
+        "url": {{ site | append: article.url | json }},
+        "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }}
+        {%- if art_image != blank -%},
+        "image": {{ art_image | json }}
+        {%- endif -%}
+        {%- if art_desc != blank -%},
+        "description": {{ art_desc | json }}
+        {%- endif %}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+{%- comment -%} 7. Per-template dispatch {%- endcomment -%}
+{%- if request.page_type == 'product' -%}
+  {%- render 'ca-service-schema', product: product -%}
+{%- endif -%}
+{%- if request.page_type == 'article' -%}
+  {%- if template.suffix == 'case-study-template' -%}
+    {%- render 'ca-case-study-schema', article: article, blog: blog -%}
+  {%- else -%}
+    {%- render 'ca-article-schema', article: article, blog: blog -%}
+  {%- endif -%}
+{%- endif -%}

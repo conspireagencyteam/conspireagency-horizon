@@ -1,7 +1,5 @@
 {% doc %}
   Renders all meta tags for the page including Open Graph, Twitter Cards, and SEO tags.
-
-  @param {object} [product] - The product object, available on product pages for price meta tags.
 {% enddoc %}
 
 <meta charset="utf-8">
@@ -13,10 +11,7 @@
   name="viewport"
   content="width=device-width,initial-scale=1"
 >
-<meta
-  name="theme-color"
-  content=""
->
+{%- comment -%} Conspire Agency: removed empty theme-color meta {%- endcomment -%}
 
 {%- liquid
   assign og_title = page_title | default: shop.name
@@ -54,14 +49,24 @@
   content="{{ og_description | escape }}"
 >
 
+{%- comment -%} Conspire Agency: absolute https og:image at 1200px, no og:price (services store) {%- endcomment -%}
 {%- if page_image -%}
+  {%- liquid
+    # image_url host varies (primary domain, myshopify, or bare /cdn/ under theme dev); pin it to the canonical host
+    assign ca_og_image = page_image | image_url: width: 1200
+    if ca_og_image contains '/cdn/'
+      assign ca_og_image = ca_og_image | split: '/cdn/' | last | prepend: 'https://www.conspireagency.com/cdn/'
+    else
+      assign ca_og_image = ca_og_image | prepend: 'https:'
+    endif
+  -%}
   <meta
     property="og:image"
-    content="http:{{ page_image | image_url }}"
+    content="{{ ca_og_image }}"
   >
   <meta
     property="og:image:secure_url"
-    content="https:{{ page_image | image_url }}"
+    content="{{ ca_og_image }}"
   >
   <meta
     property="og:image:width"
@@ -71,16 +76,9 @@
     property="og:image:height"
     content="{{ page_image.height }}"
   >
-{%- endif -%}
-
-{%- if request.page_type == 'product' -%}
   <meta
-    property="og:price:amount"
-    content="{{ product.price | money_without_currency | strip_html }}"
-  >
-  <meta
-    property="og:price:currency"
-    content="{{ cart.currency.iso_code }}"
+    name="twitter:image"
+    content="{{ ca_og_image }}"
   >
 {%- endif -%}
 
@@ -103,21 +101,48 @@
   content="{{ og_description | escape }}"
 >
 
-<title>
-  {{ page_title }}
-  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-  {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
-</title>
+{%- comment -%} Conspire Agency: one-line title, " | Conspire" separator, Page N only where the template paginates, search canonical without ?q= + noindex {%- endcomment -%}
+{%- liquid
+  assign ca_page = current_page
+  assign ca_canonical = canonical_url
+  if request.page_type == 'blog' and blog.handle == 'work'
+    assign ca_page = 1
+    assign ca_canonical = canonical_url | split: '?' | first
+  elsif request.page_type == 'search'
+    assign ca_canonical = canonical_url | split: '?' | first
+  endif
+  assign ca_title = page_title
+  if current_tags
+    assign ca_tags = current_tags | join: ', '
+    assign ca_title = ca_title | append: ' – tagged "' | append: ca_tags | append: '"'
+  endif
+  if ca_page != 1
+    assign ca_title = ca_title | append: ' – Page ' | append: ca_page
+  endif
+  unless page_title contains shop.name
+    assign ca_title = ca_title | append: ' | ' | append: shop.name
+  endunless
+-%}
+<title>{{ ca_title | strip }}</title>
 
 <link
   rel="canonical"
-  href="{{ canonical_url }}"
+  href="{{ ca_canonical }}"
 >
 
-{% if page_description %}
+{%- if request.page_type == 'search' -%}
   <meta
-    name="description"
-    content="{{ page_description | escape }}"
+    name="robots"
+    content="noindex,follow"
   >
-{% endif %}
+{%- endif -%}
+
+{%- unless request.page_type == 'search' or request.page_type == '404' -%}
+  {%- assign ca_meta_description = page_description | default: shop.description -%}
+  {%- if ca_meta_description != blank -%}
+    <meta
+      name="description"
+      content="{{ ca_meta_description | escape }}"
+    >
+  {%- endif -%}
+{%- endunless -%}

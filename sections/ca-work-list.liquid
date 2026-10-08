@@ -82,7 +82,7 @@
               assign reveal_img = fsi
             endif
 
-            assign case_url = client.case_study_reference.value
+            assign case_url = client.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', ''
           -%}
           <div class="ca-work__row">
             <h3 class="ca-work__name">{{ client.name.value | default: client.system.handle }}</h3>

@@ -307,6 +307,61 @@
         "padding-block-start": 80,
         "padding-block-end": 80
       }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "What makes Conspire different from other Los Angeles Shopify agencies?",
+            "answer": "<p>We're boutique by design, offering personalized attention and strategic partnership rather than just service delivery. Our 14+ years with Shopify and long-term client relationships prove our commitment to your success.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "Do you work with businesses outside of Los Angeles?",
+            "answer": "<p>Absolutely. While we're proud of our LA roots, we serve clients nationwide and internationally. Our local presence gives us deep market understanding and access to local creative talent, while our expertise travels globally.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "question": "What's your experience with Shopify Plus?",
+            "answer": "<p>We're official Shopify Plus partners with extensive experience in enterprise-level implementations. From B2B functionality to high-volume stores, we've mastered the platform's advanced capabilities.</p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "question": "How do you approach Conversion Rate Optimization?",
+            "answer": "<p>Our CRO methodology combines data analysis, user experience optimization, and strategic testing. Most clients see minimum 10% improvements in conversion rates and average order value.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
     }
   },
   "order": [
@@ -317,6 +372,7 @@
     "services",
     "grid",
     "testimonials",
+    "faq",
     "booking"
   ]
 }

@@ -117,9 +117,15 @@
               <p class="ca-booking__overlay-text">{{ section.settings.panel_text }}</p>
             {%- endif -%}
             {%- if section.settings.panel_button_label != blank -%}
-              <a class="button size-style ca-booking__overlay-button" {% if section.settings.panel_button_link != blank %}href="{{ section.settings.panel_button_link }}"{% endif %}>
-                {{- section.settings.panel_button_label -}}
-              </a>
+              {%- if section.settings.panel_button_link != blank -%}
+                <a class="button size-style ca-booking__overlay-button" href="{{ section.settings.panel_button_link }}">
+                  {{- section.settings.panel_button_label -}}
+                </a>
+              {%- else -%}
+                <button type="button" class="button size-style ca-booking__overlay-button">
+                  {{- section.settings.panel_button_label -}}
+                </button>
+              {%- endif -%}
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -131,8 +137,9 @@
           <div
             class="calendly-inline-widget"
             data-url="{{ section.settings.calendly_url }}"
-            style="min-width:320px;height:600px;"
+            style="min-width:320px;height:{{ section.settings.calendly_height | default: 700 }}px;"
           ></div>
+          {%- comment -%} The iframe is created by Calendly's widget.js, so a title attribute can't be set here. {%- endcomment -%}
           <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
         {%- elsif request.design_mode -%}
           <p class="ca-booking__empty">Add a <strong>Calendly URL</strong> in this section's settings.</p>

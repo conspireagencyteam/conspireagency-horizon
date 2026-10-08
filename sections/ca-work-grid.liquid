@@ -39,7 +39,7 @@
         {%- for client in clients -%}
           {%- liquid
             assign name = client.name.value | default: client.system.handle
-            assign url = client.case_study_reference.value
+            assign url = client.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', ''
             assign services = client.services.value
           -%}
           <article class="ca-wcard">
