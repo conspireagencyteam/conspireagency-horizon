@@ -99,11 +99,13 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   hysteresis (stick >120, release <60).
 - **Work grid on touch.** `.ca-wcard__reveal` is shown from the start on non-hover
   devices (BodyBio/TCS top images were blank on phones). Featured list on
-  `/blogs/work` is now Zia, BodyBio, Cousins Maine Lobster, Cousins Fried Seafood,
-  TCS, Nature's Answer, Kinto, Portola, Simms, Omre. New `client` metaobject
-  `cousins-fried-seafood` (logo `cfs-logo.png`, illustration as `work_preview`, home
-  screenshot + walkthrough video as the reveal, years "6+", links to the
-  `cousins-fried-seafood` article). Simms' `work_preview` is `simms-banner-1.png`; it
+  `/blogs/work` is now Zia, BodyBio, Cousins Maine Lobster, TCS, Nature's Answer,
+  Kinto, Portola, Simms, Cousins Fried Seafood, Omre. New `client` metaobject
+  `cousins-fried-seafood` (logo `cfs-logo.png`; `work_preview` is
+  `cfs-work-preview.jpg`, a collage of the brand's own illustrations — Jim and Sabin,
+  the truck, the lighthouse badge — on the site cream, no food; home screenshot +
+  walkthrough video as the reveal; years "6+"; links to the `cousins-fried-seafood`
+  article). Simms' `work_preview` is `simms-banner-1.png`; it
   still has no `featured_site_image`.
 - **Brands marquee.** Hover slow-down only for `pointerType === 'mouse'` and
   `touch-action: pan-y` on the strip — a thumb landing on it no longer freezes it.
