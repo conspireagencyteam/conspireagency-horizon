@@ -24,7 +24,7 @@
     {%- render 'ca-intro',
       eyebrow: section.settings.eyebrow,
       heading: section.settings.heading,
-      tag: 'div',
+      tag: section.settings.heading_tag,
       class: 'ca-process__intro'
     -%}
   </div>
@@ -248,6 +248,7 @@
       "label": "Statement",
       "info": "Bold the words to emphasise. The rest is shown muted."
     },
+    { "type": "select", "id": "heading_tag", "label": "Heading tag", "options": [ { "value": "div", "label": "None (div)" }, { "value": "h2", "label": "H2" } ], "default": "div" },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
     { "type": "color", "id": "text_color", "label": "t:settings.text" },

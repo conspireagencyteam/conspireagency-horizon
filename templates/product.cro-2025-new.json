@@ -1,39 +1,233 @@
 {
   "sections": {
-    "intro": {
+    "hero": {
+      "type": "ca-brands-marquee",
+      "settings": {
+        "heading": "The Shopify CRO agency for more conversions, more revenue, more growth.",
+        "body": "<p>Powerful data-backed strategies to maximize your Shopify store’s growth. We find where your store leaks revenue, test what actually converts, and ship the fixes. Your first A/B test is on us.</p>",
+        "button_label": "Book a Strategy Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "clients": [
+          "simms-fishing",
+          "omre",
+          "body-bio",
+          "portola-paints",
+          "zia-tile",
+          "cousins-maine-lobster",
+          "tillamook-country-smoker-jerky",
+          "kinto",
+          "natures-answer"
+        ],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "allow_transparent_header": false,
+        "transparent_header_text_color": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 40
+      }
+    },
+    "results": {
       "type": "ca-page-intro",
       "settings": {
-        "eyebrow": "Shopify services",
-        "heading": "",
-        "heading_tag": "h1",
+        "eyebrow": "Results, not smoke and mirrors",
+        "heading": "<p><strong>Conversion rate lifts of 11% to 15%</strong> and <strong>average order value lifts of 12% to 35%</strong> on the Shopify stores we optimize.</p><p>Most stores waste the traffic they pay for because they never test what actually converts. We analyze your site, find your #1 conversion opportunity, and send you a test blueprint you can implement immediately.</p>",
+        "heading_tag": "h2",
         "column_start": "5",
-        "size": "display",
-        "button_label": "Book a Strategy Call",
+        "size": "lg",
+        "button_label": "Get Your Free A/B Test",
         "button_link": "#book-a-call",
         "style_class": "button",
         "rule": false,
         "allow_transparent_header": false,
-        "background_color": "#ffffff",
-        "text_color": "",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
         "padding-block-start": 80,
         "padding-block-end": 80
       }
     },
-    "body": {
-      "type": "ca-article-body",
+    "process": {
+      "type": "ca-process",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "label": "Initial Audit",
+            "text": "We start by assessing your current website, analyzing key metrics, and identifying opportunities for improvement. This deep dive shows what’s working, what’s not, and where we can unlock more profit."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "label": "Strategize",
+            "text": "With insights from the audit, we develop a data-driven strategy tailored to your business: hypotheses to test, user experience to optimize, and a clear roadmap to higher conversions."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "label": "Design / Develop",
+            "text": "Our team brings the strategy to life through high-converting design and seamless development, so the site looks great, works flawlessly, and is built to drive results."
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "label": "Test",
+            "text": "A/B tests, heatmaps, and user behavior analysis validate each change before it goes site-wide, refining the experience for maximum impact."
+          }
+        },
+        "step_5": {
+          "type": "step",
+          "settings": {
+            "label": "Analyze",
+            "text": "Data doesn’t lie. We track conversions, read the results, and surface the insights that fine-tune your store’s effectiveness for consistent growth."
+          }
+        },
+        "step_6": {
+          "type": "step",
+          "settings": {
+            "label": "Implement",
+            "text": "Once a change proves out, we roll it out at scale. From speed to UX, we ship the final steps for long-term success."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4",
+        "step_5",
+        "step_6"
+      ],
       "settings": {
-        "heading_level": "auto",
-        "show_headings": true,
-        "toc_label": "On this page",
-        "lead": true,
-        "bullets": "dot",
-        "intro_label": "",
-        "intro_display": false,
-        "extra_label": "",
-        "extra_link": "",
-        "back_label": "",
-        "back_link": "",
+        "eyebrow": "We handle everything from start to finish",
+        "heading": "<p><strong>Our steps to unlocking more profit.</strong> A six-step conversion rate optimization process, from the initial audit through testing, analysis, and implementation, <strong>run end to end by our senior team.</strong></p>",
         "background_color": "#f2f2f2",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "heading_tag": "h2"
+      }
+    },
+    "plans": {
+      "type": "ca-value-cards",
+      "blocks": {
+        "plan_1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Start here",
+            "title": "CRO Website Audit",
+            "text": "<p>A full CRO audit of your Shopify storefront with prioritized recommendations based on analytics, UX, and behavior insights. Lower traffic means you need bigger, immediate wins, and the audit finds them.</p><ul><li>In-depth site and data analysis</li><li>Prioritized conversion roadmap</li><li>Flat-rate, one-time engagement</li></ul>"
+          }
+        },
+        "plan_2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Conversion optimized pages",
+            "title": "CRO-Focused Shopify Design",
+            "text": "<p>Our designers and developers implement high-impact conversion improvements based on CRO strategy, not just aesthetics: landing pages, product pages, or a full redesign.</p><ul><li>2–3 week delivery for landing pages</li><li>Custom designed and developed in house</li><li>Unlimited design revisions</li></ul>"
+          }
+        },
+        "plan_3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Over 50,000 visitors / month",
+            "title": "Ongoing CRO Support",
+            "text": "<p>We monitor, test, and evolve your Shopify storefront over time to keep lifting conversion rate and AOV. Higher traffic allows nuanced, data-driven refinements through formulated A/B tests.</p><ul><li>A/B testing</li><li>Fully managed and ongoing CRO</li><li>In-depth site and data analysis</li><li>Free first test</li></ul>"
+          }
+        }
+      },
+      "block_order": [
+        "plan_1",
+        "plan_2",
+        "plan_3"
+      ],
+      "settings": {
+        "eyebrow": "Shopify CRO services",
+        "heading": "Select a plan that best fits your business",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "background_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "approach": {
+      "type": "ca-feature-highlights",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/cro-1.png",
+            "media_background": "#0d110d",
+            "image_ratio": "4 / 3",
+            "eyebrow": "A/B testing and site optimization",
+            "title": "Stop guessing, start knowing",
+            "body": "<p>Without A/B testing, every design change or marketing decision is a gamble. Testing replaces guesswork with data-backed insights, so every change you ship is one you can prove.</p>",
+            "link": "#book-a-call"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/cro-card-2.png",
+            "media_background": "#0d110d",
+            "image_ratio": "4 / 3",
+            "eyebrow": "AOV, LTV and engagement",
+            "title": "Data-driven growth that goes beyond conversions",
+            "body": "<p>Our approach goes beyond conversion rate. We focus on the KPIs that drive sustainable growth: average order value, lifetime value, and engagement metrics like bounce rate, pages per session, and session duration. The best CRO strategies don’t just increase sales, they create experiences that keep customers coming back.</p>",
+            "link": "#book-a-call"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/cro-card-3.png",
+            "media_background": "#0d110d",
+            "image_ratio": "4 / 3",
+            "eyebrow": "CRO through design",
+            "title": "Engage customers with strategic Shopify design",
+            "body": "<p>A well-designed store does more than look good. It keeps visitors engaged longer and raises conversion potential. We craft designs that present information clearly while reinforcing your brand, using design as a conversion tool that lays the foundation for growth and retention.</p>",
+            "link": "#book-a-call"
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3"
+      ],
+      "settings": {
+        "eyebrow": "How we approach Shopify conversion rate optimization",
+        "heading": "Testing, the metrics beyond conversion rate, and design that sells.",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
+    },
+    "calculator": {
+      "type": "ca-cro-calculator",
+      "settings": {
+        "eyebrow": "Results, not smoke and mirrors",
+        "heading": "Calculate your last month averages to see what Conspire can do for you",
+        "form_label": "Input your store numbers for the past month",
+        "default_visitors": 50000,
+        "default_rate": "1.5",
+        "default_aov": 85,
+        "lift": 15,
+        "text": "<p>We’ll set your first A/B test up for free. Share your Shopify store URL and monthly traffic on the call, and our CRO experts will identify your #1 conversion opportunity and send you a test blueprint you can implement immediately.</p>",
+        "button_label": "Get Your Free A/B Test",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 80
@@ -42,20 +236,16 @@
     "grid": {
       "type": "ca-work-grid",
       "settings": {
-        "eyebrow": "Top projects",
+        "eyebrow": "CRO case studies",
         "clients": [
-          "zia-tile",
+          "simms-fishing",
+          "omre",
           "body-bio",
-          "cousins-maine-lobster",
-          "tillamook-country-smoker-jerky",
-          "natures-answer",
-          "kinto",
-          "portola-paints",
-          "omre"
+          "portola-paints"
         ],
         "default_image_field": "work_preview",
         "stagger": true,
-        "button_label": "Learn More",
+        "button_label": "Read the Case Study",
         "style_class": "button",
         "background_color": "#f2f2f2",
         "text_color": "",
@@ -63,23 +253,16 @@
         "padding-block-end": 80
       }
     },
-    "services": {
-      "type": "ca-services",
+    "fit": {
+      "type": "ca-fit-check",
       "settings": {
-        "eyebrow": "Our Services",
-        "products": [
-          "shopify-websites",
-          "shopify-fractional-teams",
-          "custom-shopify-applications",
-          "shopify-cro-agency"
-        ],
-        "show_numbers": true,
-        "button_label": "Learn More",
-        "style_class": "button-secondary",
-        "custom_button_background": "{{ settings.color_palette.foreground }}",
-        "custom_button_text": "{{ settings.color_palette.background }}",
-        "custom_button_border": "{{ settings.color_palette.background }}",
-        "background_color": "",
+        "eyebrow": "Is this right for you?",
+        "heading": "Built for stores with traffic to optimize.",
+        "fit_label": "A Fit If",
+        "fit_items": "You already have traffic and revenue, and want more from both\nYou do 30,000+ monthly visitors, or want an audit to prepare for testing\nYou want decisions backed by data, not opinions\nYou can commit to ongoing iteration, not a one-time fix\nYou care about AOV and lifetime value, not just conversion rate",
+        "not_label": "Not a Fit If",
+        "not_items": "You’re still validating the product or just getting started\nYou want one quick change and no follow-through\nYou expect results without testing\nYou value lowest cost over best outcome\nYou want implementation only, with no strategy",
+        "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 80
@@ -98,6 +281,61 @@
         "autoplay_interval": 6,
         "background_color": "#0d110d",
         "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "Is the first test really free?",
+            "answer": "<p>Yes. Your first A/B test is completely free, no strings attached. It's our way of showing the value of optimization before you commit to anything. The only cost is a monthly subscription to the A/B testing Shopify tool we use.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "How much traffic does my store need to run A/B tests?",
+            "answer": "<p>We typically recommend at least 30,000 monthly visitors to ensure results reach statistical significance. If you're under that, we can still help with other CRO strategies like heatmaps, user testing, or a design audit.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "question": "Do I need to sign a long-term contract?",
+            "answer": "<p>A/B testing is an ongoing process. It requires consistent iteration to drive meaningful results. That said, not everything needs a long-term commitment. We offer flat-rate pricing for one-time services like landing page design or a CRO audit if you just need a starting point.</p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "question": "How long do tests take?",
+            "answer": "<p>Test duration depends on your traffic. Higher-traffic stores can reach meaningful results in as little as 1–2 weeks, while lower-traffic stores may take longer. We'll help you prioritize what to test and when.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
+      "settings": {
+        "eyebrow": "The honest answers",
+        "heading": "Frequently asked questions",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 80
       }
@@ -221,8 +459,8 @@
         "photo_ir8P8n"
       ],
       "settings": {
-        "eyebrow": "",
-        "heading": "",
+        "eyebrow": "Book a strategy call",
+        "heading": "Let’s talk about your Shopify store",
         "background_color": "#f2f2f2",
         "text_color": "",
         "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
@@ -232,55 +470,22 @@
         "padding-block-end": 80
       }
     },
-    "faq": {
-      "type": "ca-faq-list",
-      "blocks": {
-        "item_1": {
-          "type": "item",
-          "settings": {
-            "question": "Is the first test really free?",
-            "answer": "<p>Yes. Your first A/B test is completely free, no strings attached. It's our way of showing the value of optimization before you commit to anything. The only cost is a monthly subscription to the A/B testing Shopify tool we use.</p>"
-          }
-        },
-        "item_2": {
-          "type": "item",
-          "settings": {
-            "question": "How much traffic does my store need to run A/B tests?",
-            "answer": "<p>We typically recommend at least 30,000 monthly visitors to ensure results reach statistical significance. If you're under that, we can still help with other CRO strategies like heatmaps, user testing, or a design audit.</p>"
-          }
-        },
-        "item_3": {
-          "type": "item",
-          "settings": {
-            "question": "Do I need to sign a long-term contract?",
-            "answer": "<p>A/B testing is an ongoing process. It requires consistent iteration to drive meaningful results. That said, not everything needs a long-term commitment. We offer flat-rate pricing for one-time services like landing page design or a CRO audit if you just need a starting point.</p>"
-          }
-        },
-        "item_4": {
-          "type": "item",
-          "settings": {
-            "question": "How long do tests take?",
-            "answer": "<p>Test duration depends on your traffic. Higher-traffic stores can reach meaningful results in as little as 1–2 weeks, while lower-traffic stores may take longer. We'll help you prioritize what to test and when.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "item_1",
-        "item_2",
-        "item_3",
-        "item_4"
-      ],
+    "services": {
+      "type": "ca-services",
       "settings": {
-        "eyebrow": "",
-        "heading": "Frequently asked questions",
-        "button_label": "Book a Call",
-        "button_link": "#book-a-call",
-        "style_class": "button",
-        "statement": "",
-        "column_start": "5",
-        "answer_size": "large",
-        "open_first": true,
-        "structured_data": true,
+        "eyebrow": "Our Services",
+        "products": [
+          "shopify-websites",
+          "shopify-fractional-teams",
+          "custom-shopify-applications",
+          "shopify-cro-agency"
+        ],
+        "show_numbers": true,
+        "button_label": "Learn More",
+        "style_class": "button-secondary",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
         "background_color": "",
         "text_color": "",
         "padding-block-start": 80,
@@ -289,11 +494,16 @@
     }
   },
   "order": [
-    "intro",
-    "body",
+    "hero",
+    "results",
+    "process",
+    "plans",
+    "approach",
+    "calculator",
     "grid",
-    "services",
+    "fit",
     "testimonials",
+    "services",
     "faq",
     "booking"
   ]

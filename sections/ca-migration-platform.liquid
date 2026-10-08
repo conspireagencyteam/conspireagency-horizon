@@ -1,0 +1,208 @@
+{%- comment -%}
+  ca-migration-platform.liquid — one platform block on the Shopify migration hub
+  (WooCommerce, BigCommerce, Magento, Squarespace).
+
+  Eyebrow left, H2 statement right (ca-intro, 32px size), then a two column
+  body: short paragraphs on the left, a "What we handle" checklist on the
+  right (same hairline list as ca-fit-check). The wrapper takes an optional
+  anchor id so redirects from the old per-platform pages can deep-link
+  (/products/shopify-migration#woocommerce).
+{%- endcomment -%}
+
+{%- liquid
+  assign anchor = section.settings.anchor_id | strip | handleize
+  assign items = section.settings.items | newline_to_br | split: '<br />'
+-%}
+
+<div
+  class="ca-mig spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  {% if anchor != blank %}id="{{ anchor }}"{% endif %}
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      start: 5,
+      size: 'xl',
+      class: 'ca-mig__intro'
+    -%}
+
+    <div class="ca-mig__cols">
+      <div class="ca-mig__text">
+        {{ section.settings.text }}
+        {%- if section.settings.button_label != blank -%}
+          <a class="{{ section.settings.style_class | default: 'button-secondary' }} size-style ca-mig__button" {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}>
+            {{- section.settings.button_label -}}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.items != blank -%}
+        <div class="ca-mig__col">
+          {%- if section.settings.items_label != blank -%}
+            <h3 class="ca-mig__label">{{ section.settings.items_label }}</h3>
+          {%- endif -%}
+          <ul class="ca-mig__list">
+            {%- for item in items -%}
+              {%- assign text = item | strip -%}
+              {%- if text != blank -%}
+                <li class="ca-mig__item">
+                  <span class="ca-mig__icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" focusable="false"><path d="M2.5 7.5 5.6 10.5 11.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                  <span>{{ text }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-mig {
+    background-color: var(--color-background);
+    scroll-margin-top: 96px;
+  }
+
+  .ca-mig__cols {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 48px;
+    margin-block-start: 48px;
+  }
+
+  .ca-mig__text {
+    grid-column: 5 / span 4;
+    font-size: var(--ca-fs-20);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-mig__text > p {
+    margin: 0 0 20px;
+  }
+
+  .ca-mig__text > p:last-child {
+    margin-block-end: 0;
+  }
+
+  .ca-mig__text a:not(.button):not(.button-secondary) {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .ca-mig__button {
+    margin-block-start: 32px;
+  }
+
+  .ca-mig__col {
+    grid-column: 9 / -1;
+  }
+
+  .ca-mig__label {
+    margin: 0;
+    padding-block-end: 24px;
+    font-size: var(--ca-fs-20);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-mig__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-mig__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding-block: 20px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+    font-size: var(--ca-fs-18);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  .ca-mig__icon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin-block-start: -2px;
+    border-radius: 50%;
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-mig__text {
+      grid-column: 1 / span 8;
+    }
+
+    .ca-mig__col {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-mig__cols {
+      margin-block-start: 32px;
+      row-gap: 32px;
+    }
+
+    .ca-mig__text,
+    .ca-mig__col {
+      grid-column: 1 / -1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Migration platform",
+  "tag": "section",
+  "class": "ca-migration-platform-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor id", "info": "Optional. Lets links jump to this block, as #woocommerce." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Migrate from" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "info": "Rendered as an H2. Bold the words to emphasise; the rest is shown muted.", "default": "<strong>WooCommerce to Shopify</strong>" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "Primary" },
+        { "value": "button-secondary", "label": "Secondary" }
+      ],
+      "default": "button-secondary"
+    },
+    { "type": "header", "content": "Checklist" },
+    { "type": "text", "id": "items_label", "label": "Label", "default": "What we handle" },
+    { "type": "textarea", "id": "items", "label": "Items", "info": "One per line" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Migration platform", "category": "Conspire" }]
+}
+{% endschema %}

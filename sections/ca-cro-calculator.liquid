@@ -1,0 +1,276 @@
+{%- comment -%}
+  ca-cro-calculator.liquid — intro + a small ROI calculator (Shopify CRO page).
+
+  Left: three underlined inputs (monthly visitors, conversion rate, average
+  order value) plus the lift we model. Right: the monthly revenue those
+  numbers produce today and with the lift applied. The defaults are computed
+  in Liquid so the figures render without JavaScript; the inline script only
+  recomputes them as the visitor edits the inputs.
+{%- endcomment -%}
+
+{%- liquid
+  assign visitors = section.settings.default_visitors | default: 50000
+  assign rate = section.settings.default_rate | default: '1.5' | plus: 0.0
+  assign aov = section.settings.default_aov | default: 85
+  assign lift = section.settings.lift | default: 15
+
+  assign orders = visitors | times: rate | divided_by: 100.0
+  assign current = orders | times: aov
+  assign lift_factor = lift | divided_by: 100.0 | plus: 1
+  assign projected = current | times: lift_factor
+  assign added = projected | minus: current
+  assign added_year = added | times: 12
+
+  assign current_fmt = current | round | times: 100 | money_without_trailing_zeros
+  assign projected_fmt = projected | round | times: 100 | money_without_trailing_zeros
+  assign added_fmt = added | round | times: 100 | money_without_trailing_zeros
+  assign added_year_fmt = added_year | round | times: 100 | money_without_trailing_zeros
+-%}
+
+<div
+  class="ca-calc spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      start: 5,
+      class: 'ca-calc__intro'
+    -%}
+
+    <div class="ca-calc__grid">
+      <form class="ca-calc__form ca-form" data-ca-calc action="#" onsubmit="return false">
+        {%- if section.settings.form_label != blank -%}
+          <p class="ca-eyebrow ca-calc__label ca-field--full">{{ section.settings.form_label }}</p>
+        {%- endif -%}
+        <div class="ca-field">
+          <label class="ca-field__label" for="ca-calc-visitors-{{ section.id }}">Monthly visitors</label>
+          <input class="ca-field__input" id="ca-calc-visitors-{{ section.id }}" name="visitors" type="number" inputmode="numeric" min="0" step="1000" value="{{ visitors }}">
+        </div>
+        <div class="ca-field">
+          <label class="ca-field__label" for="ca-calc-rate-{{ section.id }}">Conversion rate (%)</label>
+          <input class="ca-field__input" id="ca-calc-rate-{{ section.id }}" name="rate" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="{{ rate }}">
+        </div>
+        <div class="ca-field">
+          <label class="ca-field__label" for="ca-calc-aov-{{ section.id }}">Average order value ($)</label>
+          <input class="ca-field__input" id="ca-calc-aov-{{ section.id }}" name="aov" type="number" inputmode="decimal" min="0" step="1" value="{{ aov }}">
+        </div>
+        <div class="ca-field">
+          <label class="ca-field__label" for="ca-calc-lift-{{ section.id }}">Conversion lift we model (%)</label>
+          <input class="ca-field__input" id="ca-calc-lift-{{ section.id }}" name="lift" type="number" inputmode="decimal" min="0" max="200" step="1" value="{{ lift }}">
+        </div>
+      </form>
+
+      <dl class="ca-calc__results" aria-live="polite">
+        <div class="ca-calc__result">
+          <dt class="ca-eyebrow">Revenue today</dt>
+          <dd data-ca-calc-out="current">{{ current_fmt }}<span class="ca-calc__cycle"> / month</span></dd>
+        </div>
+        <div class="ca-calc__result">
+          <dt class="ca-eyebrow">With a {{ lift }}% lift</dt>
+          <dd data-ca-calc-out="projected">{{ projected_fmt }}<span class="ca-calc__cycle"> / month</span></dd>
+        </div>
+        <div class="ca-calc__result ca-calc__result--accent">
+          <dt class="ca-eyebrow">Added revenue</dt>
+          <dd data-ca-calc-out="added">{{ added_fmt }}<span class="ca-calc__cycle"> / month</span></dd>
+          <p class="ca-calc__note"><span data-ca-calc-out="added_year">{{ added_year_fmt }}</span> a year, from the traffic you already pay for.</p>
+        </div>
+      </dl>
+    </div>
+
+    {%- if section.settings.text != blank or section.settings.button_label != blank -%}
+      <div class="ca-calc__foot">
+        <div class="ca-calc__text">{{ section.settings.text }}</div>
+        {%- if section.settings.button_label != blank -%}
+          <a class="{{ section.settings.style_class }}" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.currentScript.previousElementSibling;
+    var form = root.querySelector('[data-ca-calc]');
+    if (!form) return;
+    var out = {};
+    root.querySelectorAll('[data-ca-calc-out]').forEach(function (el) {
+      out[el.getAttribute('data-ca-calc-out')] = el;
+    });
+    var money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    function set(key, value, cycle) {
+      var el = out[key];
+      if (!el) return;
+      el.textContent = money.format(Math.round(value));
+      if (cycle) {
+        var span = document.createElement('span');
+        span.className = 'ca-calc__cycle';
+        span.textContent = ' / month';
+        el.appendChild(span);
+      }
+    }
+    function update() {
+      var v = parseFloat(form.visitors.value) || 0;
+      var r = parseFloat(form.rate.value) || 0;
+      var a = parseFloat(form.aov.value) || 0;
+      var l = parseFloat(form.lift.value) || 0;
+      var current = v * (r / 100) * a;
+      var projected = current * (1 + l / 100);
+      set('current', current, true);
+      set('projected', projected, true);
+      set('added', projected - current, true);
+      set('added_year', (projected - current) * 12, false);
+      var dt = out.projected && out.projected.previousElementSibling;
+      if (dt) dt.textContent = 'With a ' + l + '% lift';
+    }
+    form.addEventListener('input', update);
+  })();
+</script>
+
+{% stylesheet %}
+  .ca-calc {
+    background-color: var(--color-background);
+  }
+
+  .ca-calc__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-calc__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 24px;
+    align-items: start;
+  }
+
+  .ca-calc__label {
+    margin: 0 0 8px;
+  }
+
+  .ca-calc__results {
+    display: grid;
+    gap: 32px;
+    margin: 0;
+    padding-inline-start: clamp(0px, 4vw, 48px);
+  }
+
+  .ca-calc__result {
+    padding-block-end: 24px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-calc__result dt {
+    margin-block-end: 12px;
+  }
+
+  .ca-calc__result dd {
+    margin: 0;
+    font-size: var(--ca-fs-48);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ca-calc__result--accent {
+    border-block-end: 0;
+  }
+
+  .ca-calc__result--accent dd {
+    color: var(--ca-calc-accent, #ff4d00);
+  }
+
+  .ca-calc__cycle {
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  .ca-calc__note {
+    margin: 12px 0 0;
+    color: var(--ca-soft);
+  }
+
+  .ca-calc__foot {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+    margin-block-start: 80px;
+    padding-block-start: 32px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-calc__text {
+    color: var(--ca-soft);
+  }
+
+  .ca-calc__text p + p {
+    margin-block-start: 1em;
+  }
+
+  .ca-calc__foot .button,
+  .ca-calc__foot .button-secondary {
+    justify-self: start;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-calc__intro {
+      margin-block-end: 48px;
+    }
+
+    .ca-calc__grid,
+    .ca-calc__foot {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ca-calc__results {
+      padding-inline-start: 0;
+    }
+
+    .ca-calc__foot {
+      margin-block-start: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CA CRO calculator",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Results, not smoke and mirrors" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Calculate your last month averages to see what Conspire can do for you" },
+    { "type": "text", "id": "form_label", "label": "Form label", "default": "Input your store numbers for the past month" },
+    { "type": "number", "id": "default_visitors", "label": "Default monthly visitors", "default": 50000 },
+    { "type": "text", "id": "default_rate", "label": "Default conversion rate (%)", "default": "1.5" },
+    { "type": "number", "id": "default_aov", "label": "Default average order value ($)", "default": 85 },
+    { "type": "number", "id": "lift", "label": "Modelled conversion lift (%)", "default": 15 },
+    { "type": "richtext", "id": "text", "label": "Text under the calculator" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "Primary" },
+        { "value": "button-secondary", "label": "Secondary" }
+      ],
+      "default": "button"
+    },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "CA CRO calculator" }]
+}
+{% endschema %}
