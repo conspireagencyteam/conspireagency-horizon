@@ -132,7 +132,8 @@
                   <span class="ca-work__tag">{{ svc }}</span>
                 {%- endfor -%}
                 {%- if case_url != blank -%}
-                  <a class="{{ style_class }} size-style ca-work__more{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ case_url }}">{{ button_label }}</a>
+                  {%- comment -%} Visually-hidden client name so every "Learn More" is distinct link text (SEO link-text audit + screen readers). {%- endcomment -%}
+                  <a class="{{ style_class }} size-style ca-work__more{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ case_url }}">{{ button_label }}<span class="visually-hidden"> about {{ client.name.value | default: client.system.handle | escape }}</span></a>
                 {%- endif -%}
               </div>
             </div>

@@ -36,14 +36,16 @@
             assign excerpt = product.metafields.product_details.excerpt
             assign svc_title = product.metafields.product_details.display_title.value | default: product.title
             comment
-              Every row's button reads "Learn More"; give each a distinct accessible name
-              without changing the visible label.
+              Every row's button reads "Learn More"; give each a distinct name without
+              changing the visible label. A visually-hidden suffix (not aria-label) so the
+              link TEXT is descriptive too — Lighthouse's SEO link-text audit and search
+              engines read text content, not aria-label.
             endcomment
             assign label_down = button_label | downcase | strip
             if label_down == 'learn more'
-              assign cta_name = 'Learn more about ' | append: svc_title
+              assign cta_suffix = 'about ' | append: svc_title
             else
-              assign cta_name = button_label | append: ': ' | append: svc_title
+              assign cta_suffix = svc_title
             endif
           -%}
           <div class="ca-services__row">
@@ -58,7 +60,7 @@
               {%- elsif product.description != blank -%}
                 <div class="ca-services__body">{{ product.description }}</div>
               {%- endif -%}
-              <a class="{{ style_class }} size-style ca-services__cta{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ product.url }}" aria-label="{{ cta_name | escape }}">{{ button_label }}</a>
+              <a class="{{ style_class }} size-style ca-services__cta{% if style_class == 'button-custom' %} button-custom--{{ section.id }}{% endif %}" href="{{ product.url }}">{{ button_label }}<span class="visually-hidden"> {{ cta_suffix | escape }}</span></a>
             </div>
           </div>
         {%- endfor -%}
