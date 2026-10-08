@@ -5,6 +5,23 @@
   Date on the left, the title at display size on the right, optional job pills
   under the title (career posts), and optional full-width featured media below:
   the article's custom.banner_video when it has one, otherwise its image.
+
+  Article video: the video pipeline writes article metafields on every publish
+  (namespace custom: video_youtube_id, video_url, video_thumbnail_url,
+  video_title, video_description, video_upload_date, video_duration). The
+  header reads video_youtube_id, video_thumbnail_url and video_title and shows
+  the video under the title (people would rather watch than scroll, and the
+  video is the SEO asset) as a click-to-play poster (<ca-lite-video>): the
+  YouTube iframe only exists after a click, so the header costs one image.
+  Older posts without the metafield fall back to the first YouTube embed in
+  the body (snippets/ca-article-video.liquid). Either way the body section
+  drops the first body embed ("hoist_video") so the video is not shown twice;
+  once the pipeline stops inserting the iframe that is a no-op. With a video
+  up here, the featured image shrinks to a band so the article starts sooner.
+
+  Runs under a transparent site header (allow_transparent_header), like the
+  case study hero: the section is first on the page, so the header turns
+  solid once scrolled.
 {%- endcomment -%}
 
 {%- liquid
@@ -13,17 +30,58 @@
   if section.settings.date_prefix != blank
     assign date_text = section.settings.date_prefix | append: ' ' | append: date_text
   endif
+  assign transparent = section.settings.allow_transparent_header
+
+  assign yt_embed = ''
+  assign yt_id = ''
+  assign yt_title = article.title
+  assign yt_poster = ''
+  if section.settings.show_video
+    assign yt_id = article.metafields.custom.video_youtube_id.value | strip
+    if yt_id != blank
+      if article.metafields.custom.video_title != blank
+        assign yt_title = article.metafields.custom.video_title.value
+      endif
+      if article.metafields.custom.video_thumbnail_url != blank
+        assign yt_poster = article.metafields.custom.video_thumbnail_url.value
+      endif
+    else
+      capture yt_embed
+        render 'ca-article-video', article: article
+      endcapture
+      if yt_embed != blank
+        assign yt_id = yt_embed | split: 'embed/' | slice: 1, 1 | first | split: '"' | first | split: "'" | first | split: '?' | first | split: '&' | first | split: '/' | first | strip
+        if yt_embed contains 'title="'
+          assign yt_title = yt_embed | split: 'title="' | slice: 1, 1 | first | split: '"' | first
+        endif
+      endif
+    endif
+  endif
+  if yt_id != blank and yt_poster == blank
+    assign yt_poster = 'https://i.ytimg.com/vi/' | append: yt_id | append: '/maxresdefault.jpg'
+  endif
+  assign media_strip = false
+  if yt_id != blank and section.settings.image_strip
+    assign media_strip = true
+  endif
 -%}
 
+{%- if transparent and section.settings.text_color != blank -%}
+  {%- style -%}
+    .ca-header { --ca-header-transparent-text: {{ section.settings.text_color }}; }
+    .ca-header { --ca-header-transparent-bg: {{ section.settings.background_color | default: '#ffffff' }}; }
+  {%- endstyle -%}
+{%- endif -%}
+
 <div
-  class="ca-ahead color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  class="ca-ahead color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header{% endif %}"
 >
   {%- render 'contrast-override',
     background_color: section.settings.background_color,
     text_color: section.settings.text_color,
     section_id: section.id
   -%}
-  <div class="ca-ahead__top spacing-style" style="{% render 'spacing-style', settings: section.settings %}">
+  <div class="ca-ahead__top spacing-style{% if transparent %} ca-under-header{% endif %}" style="{% render 'spacing-style', settings: section.settings %}">
     <div class="ca-inner ca-ahead__grid">
       {%- if section.settings.show_date -%}
         <p class="ca-eyebrow ca-ahead__date">
@@ -35,18 +93,36 @@
         {%- if section.settings.show_job_details -%}
           {%- render 'ca-job-pills', article: article, country_suffix: section.settings.country_suffix, class: 'ca-ahead__pills' -%}
         {%- endif -%}
+        {%- if yt_id != blank -%}
+          <ca-lite-video class="ca-ahead__yt" data-video-id="{{ yt_id | escape }}" data-title="{{ yt_title | escape }}">
+            <button type="button" class="ca-ahead__yt-poster" aria-label="Play video: {{ yt_title | escape }}" data-yt-play>
+              {%- comment -%} maxresdefault is missing for some uploads; fall back to the always-present hqdefault. {%- endcomment -%}
+              <img
+                src="{{ yt_poster | escape }}"
+                width="1280" height="720" alt="" loading="eager" fetchpriority="high"
+                onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/{{ yt_id | escape }}/hqdefault.jpg'"
+              >
+              <span class="ca-ahead__yt-play" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3.5v17l14-8.5z"/></svg></span>
+              <span class="ca-ahead__yt-label" aria-hidden="true">Watch the video</span>
+            </button>
+          </ca-lite-video>
+        {%- endif -%}
       </div>
     </div>
   </div>
 
   {%- if section.settings.show_media -%}
     {%- if video != blank -%}
-      <div class="ca-ahead__media">
+      <div class="ca-ahead__media{% if media_strip %} ca-ahead__media--strip{% endif %}">
         {{ video | video_tag: image_size: '2000x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'ca-ahead__video' }}
       </div>
     {%- elsif article.image != blank -%}
-      <div class="ca-ahead__media">
-        {{ article.image | image_url: width: 2880 | image_tag: class: 'ca-ahead__img', alt: article.image.alt | default: article.title, widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'eager', fetchpriority: 'high' }}
+      <div class="ca-ahead__media{% if media_strip %} ca-ahead__media--strip{% endif %}">
+        {%- if media_strip -%}
+          {{ article.image | image_url: width: 2880 | image_tag: class: 'ca-ahead__img', alt: '', widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'lazy' }}
+        {%- else -%}
+          {{ article.image | image_url: width: 2880 | image_tag: class: 'ca-ahead__img', alt: article.image.alt | default: article.title, widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'eager', fetchpriority: 'high' }}
+        {%- endif -%}
       </div>
     {%- endif -%}
   {%- endif -%}
@@ -85,11 +161,98 @@
     justify-content: flex-end;
   }
 
+  /* Article video: click-to-play poster in the title column */
+  .ca-ahead__yt {
+    display: block;
+    width: 100%;
+    margin-block-start: 28px;
+  }
+
+  .ca-ahead__yt-poster {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.14);
+    border-radius: 12px;
+    background: #000;
+    color: inherit;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
+  }
+
+  .ca-ahead__yt-poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+  }
+
+  .ca-ahead__yt-poster:hover img {
+    opacity: 1;
+  }
+
+  .ca-ahead__yt-play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fff;
+    color: #0d110d;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.35), 0 0 0 4px rgb(255 255 255 / 0.4);
+    transition: transform 0.2s;
+  }
+
+  .ca-ahead__yt-play svg {
+    margin-inline-start: 3px;
+  }
+
+  .ca-ahead__yt-poster:hover .ca-ahead__yt-play {
+    transform: scale(1.05);
+  }
+
+  .ca-ahead__yt-label {
+    position: absolute;
+    inset-inline-start: 16px;
+    inset-block-end: 16px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(13, 17, 13, 0.82);
+    color: #fff;
+    font-size: 0.875rem;
+    letter-spacing: -0.02em;
+    backdrop-filter: blur(6px);
+  }
+
+  .ca-ahead__yt iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 12px;
+    background: #000;
+  }
+
   /* Full bleed at the design's 1440:808 ratio, capped so it never outgrows the screen. */
   .ca-ahead__media {
     width: 100%;
     height: min(56.1vw, 90vh);
     overflow: hidden;
+  }
+
+  /* With the video in the title column the image is a divider, not the hero. */
+  .ca-ahead__media--strip {
+    height: min(24vw, 320px);
   }
 
   .ca-ahead__img,
@@ -115,8 +278,54 @@
     .ca-ahead__media {
       height: 75vw;
     }
+
+    .ca-ahead__media--strip {
+      height: 40vw;
+    }
+
+    .ca-ahead__yt {
+      margin-block-start: 24px;
+    }
+
+    .ca-ahead__yt-play {
+      width: 52px;
+      height: 52px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-ahead__yt-poster img,
+    .ca-ahead__yt-play {
+      transition: none;
+    }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  // Click-to-play YouTube poster: the iframe is created on demand so the page
+  // never loads the player until someone asks for it.
+  if (!customElements.get('ca-lite-video')) {
+    customElements.define(
+      'ca-lite-video',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.querySelectorAll('[data-yt-play]').forEach((b) => b.addEventListener('click', () => this.play()));
+        }
+        play() {
+          const id = this.dataset.videoId;
+          if (!id) return;
+          const iframe = document.createElement('iframe');
+          iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+          iframe.title = this.dataset.title || 'Video';
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.allowFullscreen = true;
+          this.replaceChildren(iframe);
+          iframe.focus();
+        }
+      }
+    );
+  }
+{% endjavascript %}
 
 {% schema %}
 {
@@ -138,6 +347,11 @@
       "default": "%b %d, %Y"
     },
     { "type": "checkbox", "id": "show_media", "label": "Show featured video or image", "info": "Uses the article's Banner Video metafield when set, otherwise the article image.", "default": true },
+    { "type": "header", "content": "Article video" },
+    { "type": "checkbox", "id": "show_video", "label": "Show the article video under the title", "info": "Click-to-play. Reads the Video YouTube ID metafield, or the first YouTube embed in the body. Keep \"Leave out the first YouTube embed\" on in the Article body section so it is not shown twice.", "default": true },
+    { "type": "checkbox", "id": "image_strip", "label": "Shrink the featured image to a band when a video is shown", "default": true },
+    { "type": "header", "content": "Site header" },
+    { "type": "checkbox", "id": "allow_transparent_header", "label": "Run under a transparent header", "info": "The site header takes this section's colors until the page scrolls.", "default": false },
     { "type": "checkbox", "id": "show_job_details", "label": "Show job detail pills (career posts)", "default": false },
     { "type": "text", "id": "country_suffix", "label": "Text after the country pill", "default": "Applicants Only" },
     { "type": "header", "content": "Colors" },

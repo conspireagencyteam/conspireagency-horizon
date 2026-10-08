@@ -1,0 +1,29 @@
+{%- comment -%}
+  ca-article-video.liquid — echoes the FIRST YouTube embed in the article body,
+  byte for byte (the full <iframe …>…</iframe>), or nothing.
+
+  ca-article-header shows the article video under the title (from the
+  custom.video_youtube_id metafield, or this embed when the metafield is
+  missing) and ca-article-body removes this exact string from the content so
+  the video is not shown twice. ca-article-schema reads article.content and
+  the metafields directly, so the VideoObject markup is unaffected.
+
+  @param {object} article
+{%- endcomment -%}
+{%- liquid
+  assign out = ''
+  if article.content contains '<iframe'
+    assign chunks = article.content | split: '<iframe'
+    for chunk in chunks offset: 1
+      assign tag = chunk | split: '>' | first
+      if chunk contains '</iframe>'
+        if tag contains 'youtube.com/embed/' or tag contains 'youtube-nocookie.com/embed/'
+          assign inner = chunk | split: '</iframe>' | first
+          assign out = '<iframe' | append: inner | append: '</iframe>'
+          break
+        endif
+      endif
+    endfor
+  endif
+  echo out
+-%}

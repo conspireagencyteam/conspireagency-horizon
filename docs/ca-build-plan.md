@@ -174,6 +174,25 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   never see it. Not Bonde, and no fourth "services" card: the articles already end
   on the booking CTA. In the editor an untagged article shows a "hidden" notice.
 
+- **Article template to the mockup (443:147)** (Danny, 2026-10-08). Header is
+  `#0d110d` / white and runs under a transparent site header like the case hero;
+  body is white (was the `#f2f2f2` default); related articles is dark with the
+  three `blog-fallback-N.jpg` images like the home blog section; the B2B apps band
+  sits on `#f2f2f2` between them.
+  - **Article video.** The video pipeline writes `custom.video_youtube_id`,
+    `video_url`, `video_thumbnail_url`, `video_title`, `video_description`,
+    `video_upload_date`, `video_duration` on every publish. `ca-article-header`
+    reads the id/thumbnail/title and shows the video under the title as a
+    click-to-play poster (`<ca-lite-video>`, iframe created on click), falling
+    back to the first YouTube embed in the body for older posts
+    (`snippets/ca-article-video.liquid`). `ca-article-body` (`hoist_video`) drops
+    that first body embed so it is not shown twice; a no-op once the pipeline
+    stops inserting the iframe. With a video up top the featured image is a
+    320px band (`image_strip`), since the full-bleed image mostly pushed the
+    article down. `ca-article-schema` seeds the VideoObject list with the
+    metafield id and uses `video_thumbnail_url` for the first video.
+  - Still plain: the blog index grid (`ca-blog-grid`) has no fallback images.
+
 ### Open (decide, then do)
 
 - **Market pages** (`/blogs/markets/*`, 24 articles): keep. GSC Jul–Oct 2026: ~14k

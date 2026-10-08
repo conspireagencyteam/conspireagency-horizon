@@ -34,6 +34,18 @@
   endcomment
   assign source = source | replace: '<h1', '<h2' | replace: '</h1>', '</h2>'
   comment
+    The first YouTube embed is shown in the Article header (click-to-play
+    poster under the title), so leave it out here. Same snippet both sides.
+  endcomment
+  if section.settings.hoist_video and article != blank
+    capture hoisted_video
+      render 'ca-article-video', article: article
+    endcapture
+    if hoisted_video != blank
+      assign source = source | remove_first: hoisted_video | remove: '<p></p>' | remove: '<p>&nbsp;</p>'
+    endif
+  endif
+  comment
     The heading split below assumes headings are top-level siblings. Bodies
     pasted from the old page builder (data-instant-type containers), the
     market pages (<div class="market-landing-page">) and a few posts wrap
@@ -394,6 +406,7 @@
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
     { "type": "paragraph", "content": "Shows the article (or page) content. The list on the left is built from the headings inside that content." },
+    { "type": "checkbox", "id": "hoist_video", "label": "Leave out the first YouTube embed", "info": "The Article header section shows it under the title instead.", "default": false },
     {
       "type": "select",
       "id": "heading_level",

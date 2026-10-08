@@ -11,9 +11,12 @@
   author fall back to the Organization. dateModified is Shopify's updated_at,
   so any save in the editor bumps it: avoid cosmetic re-saves of old posts.
 
-  Optional article metafields (namespace `custom`) refine the FIRST video:
-    video_title (text), video_description (text), video_upload_date (date),
-    video_duration (text, ISO 8601 such as PT4M12S).
+  The video pipeline writes article metafields (namespace `custom`) on every
+  publish. video_youtube_id names the article video and comes first (it gets
+  a VideoObject even when the body has no iframe); the rest refine that FIRST
+  video: video_title (text), video_description (text), video_thumbnail_url
+  (url), video_upload_date (date), video_duration (text, ISO 8601 such as
+  PT4M12S).
 
   URLs are built on the canonical host: `request.origin` is 127.0.0.1 on the
   dev server and `article.handle` can come back as "blog/article".
@@ -70,6 +73,10 @@
     that follows each "youtube.com/embed/" up to the next quote, ?, & or /.
   endcomment
   assign ca_video_ids = ''
+  assign ca_meta_vid = article.metafields.custom.video_youtube_id.value | strip
+  if ca_meta_vid.size >= 8 and ca_meta_vid.size <= 16
+    assign ca_video_ids = ca_meta_vid | append: ','
+  endif
   assign ca_video_src = article.content | replace: 'youtube-nocookie.com/embed/', 'youtube.com/embed/' | replace: 'www.youtube.com/embed/', 'youtube.com/embed/'
   if ca_video_src contains 'youtube.com/embed/'
     assign ca_video_parts = ca_video_src | split: 'youtube.com/embed/'
@@ -145,7 +152,11 @@
     assign ca_video_description = ca_description
     assign ca_video_upload = ca_published
     assign ca_video_duration = ''
+    assign ca_video_thumb = 'https://i.ytimg.com/vi/' | append: ca_vid | append: '/hqdefault.jpg'
     if forloop.first
+      if article.metafields.custom.video_thumbnail_url != blank
+        assign ca_video_thumb = article.metafields.custom.video_thumbnail_url.value
+      endif
       if article.metafields.custom.video_title != blank
         assign ca_video_name = article.metafields.custom.video_title.value | replace: '&amp;', '&'
       endif
@@ -167,7 +178,7 @@
   "@id": {{ ca_article_url | append: '#video-' | append: ca_vid | json }},
   "name": {{ ca_video_name | json }},
   "description": {{ ca_video_description | json }},
-  "thumbnailUrl": {{ 'https://i.ytimg.com/vi/' | append: ca_vid | append: '/hqdefault.jpg' | json }},
+  "thumbnailUrl": {{ ca_video_thumb | json }},
   "uploadDate": {{ ca_video_upload | json }},
   {%- if ca_video_duration != blank %}
   "duration": {{ ca_video_duration | json }},
