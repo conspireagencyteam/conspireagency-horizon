@@ -8,7 +8,7 @@ Status key: ✅ built · 🔨 to build from Figma · 🧩 no design, assemble fr
 
 ---
 
-## 1. Where things stand (updated 2026-10-07, late)
+## 1. Where things stand (updated 2026-10-08)
 
 **The theme is live.** Danny published it on 2026-10-07; `main` now syncs straight to the
 published theme (a push is a production deploy, ~1–2 min). `shopify theme dev` still
@@ -78,10 +78,35 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   four marketing routes to these pages (pushed 2026-10-07). Inventory of the subsite
   lived in the session scratchpad; the subsite source is
   `~/dev/internal/apps/conspire/shopifyapps/goat-apps-site`.
-- **Still to do for the apps:** update the three App Store listings' website URLs
-  to the Shopify pages; the wishlist page's 4th brand card is a placeholder; the
-  drafts hero's first "New" pill wraps on phones; populate the home apps rows'
+- **Still to do for the apps:** the wishlist page's 4th brand card is a placeholder;
+  the drafts hero's first "New" pill wraps on phones; populate the home apps rows'
   optional hover-preview screenshots.
+
+### Done 2026-10-08 (apps sweep, listings, mobile fixes, work page)
+
+- **App pages sweep.** `ca-app-hero` shared across the three apps: rating above the
+  headline, full-bleed, playable tour in a `<dialog>`, mobile-tuned; lost animations
+  restored (`hero-drift`, drafts `ca-app-ticker`); sliders use `ca-app-scroller.js` +
+  `ca-app-scroller-controls` like the rest of the site.
+- **App Store listings.** Website URLs on all three listings now point at the Shopify
+  pages (driven via Claude in Chrome). Privacy/docs links checked: all resolve.
+  Awaiting Danny: Wholesale "Support URL" → `apps.conspireagency.com/wholesale/docs`
+  (it currently chains help.conspireagency.com → apps hub → Shopify hub), and the Drafts
+  FAQ URL → `/pages/draft-order-invoices#faq` (anchor exists via `ca-faq-list.anchor_id`).
+- **Header on phones.** Lost its solid background on work/case-study pages because
+  `.page-wrapper` is only the scroll container at ≥990px. `ca-header.js` now listens on
+  `document` (capture) and reads `max(pageWrapper.scrollTop, window.scrollY)`, with
+  hysteresis (stick >120, release <60).
+- **Work grid on touch.** `.ca-wcard__reveal` is shown from the start on non-hover
+  devices (BodyBio/TCS top images were blank on phones). Featured list on
+  `/blogs/work` is now Zia, BodyBio, Cousins Maine Lobster, Cousins Fried Seafood,
+  TCS, Nature's Answer, Kinto, Portola, Simms, Omre. New `client` metaobject
+  `cousins-fried-seafood` (logo `cfs-logo.png`, illustration as `work_preview`, home
+  screenshot + walkthrough video as the reveal, years "6+", links to the
+  `cousins-fried-seafood` article). Simms' `work_preview` is `simms-banner-1.png`; it
+  still has no `featured_site_image`.
+- **Brands marquee.** Hover slow-down only for `pointerType === 'mouse'` and
+  `touch-action: pan-y` on the strip — a thumb landing on it no longer freezes it.
 
 ### Open (decide, then do)
 
