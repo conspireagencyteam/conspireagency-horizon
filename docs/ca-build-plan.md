@@ -27,6 +27,11 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   BreadcrumbList) and `ca-article-schema` (BlogPosting + BreadcrumbList). `ca-faq` and
   `ca-faq-list` emit FAQPage. All hand-pasted JSON-LD was removed from the templates, as
   was the stock Product schema in `product-information.liquid`.
+  2026-10-08: `ca-article-schema` also emits `@id`, `url`, `inLanguage`, `wordCount`,
+  `thumbnailUrl` and one VideoObject per YouTube embed in the body (linked from
+  BlogPosting.video; optional `custom.video_title/description/upload_date/duration`
+  article metafields refine the first one). The one article-body JSON-LD block left
+  (draft-order invoices post) now carries only its FAQPage.
 - **Head.** `meta-tags.liquid`: one-line title with ` | Conspire`, absolute og/twitter
   image, no og:price, description fallback, search pages noindex with a query-free
   canonical, `/blogs/work?page=N` no longer self-canonicalises. Favicon = Figma node

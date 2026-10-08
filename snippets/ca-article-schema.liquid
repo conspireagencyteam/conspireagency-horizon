@@ -3,10 +3,17 @@
   except the case study one, so also careers and markets posts). Rendered from
   ca-schema.liquid.
 
-  Emits a BlogPosting and a BreadcrumbList. Publisher points at the site-wide
+  Emits a BlogPosting, a BreadcrumbList, and one VideoObject per YouTube embed
+  found in the article body (youtube.com/embed/… or youtube-nocookie.com/embed/…),
+  linked from the BlogPosting's `video`. Publisher points at the site-wide
   Organization in ca-schema (https://www.conspireagency.com/#organization).
   Author is the Shopify author as a Person; careers posts and articles with no
-  author fall back to the Organization.
+  author fall back to the Organization. dateModified is Shopify's updated_at,
+  so any save in the editor bumps it: avoid cosmetic re-saves of old posts.
+
+  Optional article metafields (namespace `custom`) refine the FIRST video:
+    video_title (text), video_description (text), video_upload_date (date),
+    video_duration (text, ISO 8601 such as PT4M12S).
 
   URLs are built on the canonical host: `request.origin` is 127.0.0.1 on the
   dev server and `article.handle` can come back as "blog/article".
@@ -21,6 +28,7 @@
   assign ca_site = 'https://www.conspireagency.com'
   assign ca_org_id = ca_site | append: '/#organization'
   assign ca_article_url = ca_site | append: article.url
+  assign ca_article_id = ca_article_url | append: '#article'
   assign ca_blog_url = ca_site | append: blog.url
 
   assign ca_description = article.excerpt | strip_html | strip
@@ -54,14 +62,43 @@
   if article.tags.size > 0
     assign ca_keywords = article.tags | join: ', '
   endif
+
+  assign ca_word_count = article.content | strip_html | strip | split: ' ' | size
+
+  comment
+    YouTube embeds in the body. Normalise the host variants, then take the id
+    that follows each "youtube.com/embed/" up to the next quote, ?, & or /.
+  endcomment
+  assign ca_video_ids = ''
+  assign ca_video_src = article.content | replace: 'youtube-nocookie.com/embed/', 'youtube.com/embed/' | replace: 'www.youtube.com/embed/', 'youtube.com/embed/'
+  if ca_video_src contains 'youtube.com/embed/'
+    assign ca_video_parts = ca_video_src | split: 'youtube.com/embed/'
+    for ca_part in ca_video_parts offset: 1
+      assign ca_vid = ca_part | split: '"' | first | split: "'" | first | split: '?' | first | split: '&' | first | split: '/' | first | split: '<' | first | strip
+      if ca_vid.size >= 8 and ca_vid.size <= 16
+        assign ca_vid_key = ca_vid | append: ','
+        unless ca_video_ids contains ca_vid_key
+          assign ca_video_ids = ca_video_ids | append: ca_vid_key
+        endunless
+      endif
+    endfor
+  endif
+  assign ca_videos = ca_video_ids | split: ','
+
+  assign ca_published = article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z'
+  assign ca_modified = article.updated_at | date: '%Y-%m-%dT%H:%M:%S%:z'
 -%}
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
+  "@id": {{ ca_article_id | json }},
   "headline": {{ article.title | json }},
   "description": {{ ca_description | json }},
+  "url": {{ ca_article_url | json }},
+  "inLanguage": "en-US",
+  "wordCount": {{ ca_word_count }},
   "articleSection": {{ blog.title | json }},
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -74,9 +111,17 @@
     "width": 1200,
     "height": {{ ca_image_height }}
   },
+  "thumbnailUrl": {{ ca_image_url | json }},
   {%- endif %}
-  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
-  "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  {%- if ca_videos.size > 0 %}
+  "video": [
+    {%- for ca_vid in ca_videos %}
+    { "@id": {{ ca_article_url | append: '#video-' | append: ca_vid | json }} }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ],
+  {%- endif %}
+  "datePublished": {{ ca_published | json }},
+  "dateModified": {{ ca_modified | json }},
   {%- if ca_author != blank %}
   "author": { "@type": "Person", "name": {{ ca_author | json }} },
   {%- else %}
@@ -93,6 +138,46 @@
   }
 }
 </script>
+
+{%- for ca_vid in ca_videos -%}
+  {%- liquid
+    assign ca_video_name = article.title
+    assign ca_video_description = ca_description
+    assign ca_video_upload = ca_published
+    assign ca_video_duration = ''
+    if forloop.first
+      if article.metafields.custom.video_title != blank
+        assign ca_video_name = article.metafields.custom.video_title.value | replace: '&amp;', '&'
+      endif
+      if article.metafields.custom.video_description != blank
+        assign ca_video_description = article.metafields.custom.video_description.value | replace: '&amp;', '&'
+      endif
+      if article.metafields.custom.video_upload_date != blank
+        assign ca_video_upload = article.metafields.custom.video_upload_date.value | date: '%Y-%m-%d'
+      endif
+      if article.metafields.custom.video_duration != blank
+        assign ca_video_duration = article.metafields.custom.video_duration.value
+      endif
+    endif
+  -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "@id": {{ ca_article_url | append: '#video-' | append: ca_vid | json }},
+  "name": {{ ca_video_name | json }},
+  "description": {{ ca_video_description | json }},
+  "thumbnailUrl": {{ 'https://i.ytimg.com/vi/' | append: ca_vid | append: '/hqdefault.jpg' | json }},
+  "uploadDate": {{ ca_video_upload | json }},
+  {%- if ca_video_duration != blank %}
+  "duration": {{ ca_video_duration | json }},
+  {%- endif %}
+  "embedUrl": {{ 'https://www.youtube.com/embed/' | append: ca_vid | json }},
+  "contentUrl": {{ 'https://www.youtube.com/watch?v=' | append: ca_vid | json }},
+  "publisher": { "@id": {{ ca_org_id | json }} }
+}
+</script>
+{%- endfor -%}
 
 <script type="application/ld+json">
 {
