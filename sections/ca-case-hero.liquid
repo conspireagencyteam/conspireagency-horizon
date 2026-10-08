@@ -73,7 +73,8 @@
       {%- if video != blank or article.image != blank -%}
         <div class="ca-chero__media">
           {%- if video != blank -%}
-            {{ video | video_tag: image_size: '1400x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'ca-chero__video' }}
+            {%- comment -%} video_tag emits a poster <img> fallback with no alt; it is decorative (the H1 names the client) {%- endcomment -%}
+            {{ video | video_tag: image_size: '1400x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'ca-chero__video' | replace: '<img ', '<img alt="" ' }}
           {%- else -%}
             {{ article.image | image_url: width: 1400 | image_tag: class: 'ca-chero__img', alt: article.image.alt | default: short_title, widths: '700, 1000, 1400', sizes: '(min-width: 990px) 48vw, 100vw', loading: 'eager', fetchpriority: 'high' }}
           {%- endif -%}
