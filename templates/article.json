@@ -35,6 +35,64 @@
         "padding-block-end": 80
       }
     },
+    "apps": {
+      "type": "ca-article-apps",
+      "blocks": {
+        "app_wholesale": {
+          "type": "app",
+          "settings": {
+            "eyebrow": "Wholesale",
+            "name": "B2B Onboarding & Wholesale",
+            "text": "Wholesale registration with approval, buyer documents, and B2B pricing on any Shopify plan.",
+            "page_link": "shopify://pages/b2b-onboarding-wholesale",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+            "store_label": "Install on Shopify"
+          }
+        },
+        "app_wishlist": {
+          "type": "app",
+          "settings": {
+            "eyebrow": "Wishlists",
+            "name": "B2B Wishlist Project Planner",
+            "text": "Multiple wishlists with quantities, sharing, PDF quotes, and draft orders for project buyers.",
+            "page_link": "shopify://pages/b2b-wishlist-project-planner",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wishlist-project-planner",
+            "store_label": "Install on Shopify"
+          }
+        },
+        "app_drafts": {
+          "type": "app",
+          "settings": {
+            "eyebrow": "Invoices",
+            "name": "B2B Draft Order Invoices",
+            "text": "Customers view and pay draft order invoices from their account, with reminders and POS support.",
+            "page_link": "shopify://pages/draft-order-invoices",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/draft-order-invoices",
+            "store_label": "Install on Shopify"
+          }
+        }
+      },
+      "block_order": [
+        "app_wholesale",
+        "app_wishlist",
+        "app_drafts"
+      ],
+      "settings": {
+        "trigger_tag": "b2b",
+        "eyebrow": "Our B2B apps",
+        "heading": "<strong>Built for wholesale on Shopify.</strong> Three apps from the team behind this article.",
+        "services_text": "Need something the apps don't cover? We build custom B2B features for Shopify stores.",
+        "services_label": "Talk to us about custom development",
+        "services_link": "shopify://collections/services",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
     "related": {
       "type": "ca-blog",
       "settings": {
@@ -194,6 +252,7 @@
   "order": [
     "header",
     "body",
+    "apps",
     "related",
     "booking"
   ]

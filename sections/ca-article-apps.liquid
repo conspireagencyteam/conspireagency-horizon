@@ -1,0 +1,267 @@
+{%- comment -%}
+  ca-article-apps.liquid — B2B app cards under articles tagged "b2b".
+
+  Renders only when the article carries the trigger tag (default `b2b`, case
+  insensitive), so the pipeline turns it on by tagging and a post opts out by
+  dropping the tag. Copy lives here, not in article bodies: one place to edit
+  pricing and feature lines, and nothing for the fact checker, voice pass or
+  wordCount to trip over.
+
+  Layout: intro row, then a grid of "app" cards (one column per block, up to
+  four), then one "services" line under the cards that points at custom
+  development. Each card: eyebrow over a hairline, app name (links to the app
+  page), one-line pitch, and App page / App Store links.
+{%- endcomment -%}
+
+{%- liquid
+  assign ca_tag = section.settings.trigger_tag | default: 'b2b' | strip | downcase
+  assign ca_tags = article.tags | join: ',' | downcase | split: ','
+  assign ca_show = false
+  if ca_tag == blank
+    assign ca_show = true
+  elsif ca_tags contains ca_tag
+    assign ca_show = true
+  endif
+-%}
+
+{%- if ca_show -%}
+  <div
+    class="ca-article-apps spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+    style="{% render 'spacing-style', settings: section.settings %}"
+  >
+    {%- render 'contrast-override',
+      background_color: section.settings.background_color,
+      text_color: section.settings.text_color,
+      section_id: section.id
+    -%}
+    <div class="ca-inner">
+      {%- render 'ca-intro',
+        eyebrow: section.settings.eyebrow,
+        heading: section.settings.heading,
+        start: 6,
+        class: 'ca-article-apps__intro'
+      -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="ca-article-apps__grid" role="list" style="--ca-article-apps-count: {{ section.blocks.size | at_most: 4 }};">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign name = block.settings.name
+              assign page_link = block.settings.page_link
+              assign store_link = block.settings.store_link
+            -%}
+            <li class="ca-article-apps__card" {{ block.shopify_attributes }}>
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="ca-eyebrow ca-article-apps__eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if name != blank -%}
+                <h3 class="ca-article-apps__name">
+                  {%- if page_link != blank -%}
+                    <a href="{{ page_link }}">{{ name }}</a>
+                  {%- else -%}
+                    {{ name }}
+                  {%- endif -%}
+                </h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="ca-article-apps__text">{{ block.settings.text }}</p>
+              {%- endif -%}
+              {%- if page_link != blank or store_link != blank -%}
+                <div class="ca-article-apps__links">
+                  {%- if page_link != blank -%}
+                    <a class="ca-article-apps__link" href="{{ page_link }}">{{ block.settings.page_label | default: 'Learn more' }}</a>
+                  {%- endif -%}
+                  {%- if store_link != blank -%}
+                    <a class="ca-article-apps__link" href="{{ store_link }}" target="_blank" rel="noopener">{{ block.settings.store_label | default: 'Install on Shopify' }}</a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- elsif request.design_mode -%}
+        <p class="ca-article-apps__empty">Add <strong>App</strong> blocks to this section to populate the cards.</p>
+      {%- endif -%}
+
+      {%- if section.settings.services_text != blank or section.settings.services_label != blank -%}
+        <p class="ca-article-apps__services">
+          {%- if section.settings.services_text != blank -%}
+            <span>{{ section.settings.services_text }}</span>
+          {%- endif -%}
+          {%- if section.settings.services_label != blank -%}
+            <a class="ca-article-apps__services-link" {% if section.settings.services_link != blank %}href="{{ section.settings.services_link }}"{% endif %}>{{ section.settings.services_label }}</a>
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+{%- elsif request.design_mode -%}
+  <div class="ca-inner">
+    <p class="ca-article-apps__empty">
+      Hidden on this article: it is not tagged <strong>{{ ca_tag }}</strong>. Tag the article to show the B2B app cards.
+    </p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .ca-article-apps {
+    background-color: var(--color-background);
+  }
+
+  .ca-article-apps__intro {
+    margin-block-end: 64px;
+  }
+
+  .ca-article-apps__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--ca-article-apps-count, 3), minmax(0, 1fr));
+    gap: 48px 24px;
+  }
+
+  .ca-article-apps__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ca-article-apps__eyebrow {
+    width: 100%;
+    margin: 0 0 24px;
+    padding-block-end: 16px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-article-apps__name {
+    margin: 0 0 12px;
+    font-size: var(--ca-fs-24, 1.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-article-apps__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ca-article-apps__name a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  .ca-article-apps__text {
+    margin: 0;
+    color: var(--ca-soft);
+  }
+
+  .ca-article-apps__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-block-start: auto;
+    padding-block-start: 24px;
+  }
+
+  .ca-article-apps__link {
+    color: inherit;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+    text-underline-offset: 0.15em;
+  }
+
+  .ca-article-apps__services {
+    margin: 48px 0 0;
+    padding-block-start: 24px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+    color: var(--ca-soft);
+  }
+
+  .ca-article-apps__services span {
+    margin-inline-end: 0.35em;
+  }
+
+  .ca-article-apps__services-link {
+    color: rgb(var(--color-foreground-rgb));
+    text-underline-offset: 0.15em;
+    white-space: nowrap;
+  }
+
+  .ca-article-apps__empty {
+    margin: 0;
+    padding: 24px 0;
+    color: var(--ca-soft);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-article-apps__intro {
+      margin-block-end: 48px;
+    }
+
+    .ca-article-apps__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-article-apps__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .ca-article-apps__services {
+      margin-block-start: 40px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article: B2B apps",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": { "templates": ["article"] },
+  "settings": [
+    { "type": "text", "id": "trigger_tag", "label": "Show on articles tagged", "default": "b2b", "info": "Case insensitive. Leave empty to show on every article using this template." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our B2B apps" },
+    { "type": "inline_richtext", "id": "heading", "label": "Statement", "default": "<strong>Built for wholesale on Shopify.</strong> Three apps from the team behind this article." },
+    { "type": "header", "content": "Custom development line" },
+    { "type": "text", "id": "services_text", "label": "Text", "default": "Need something the apps don't cover? We build custom B2B features for Shopify stores." },
+    { "type": "text", "id": "services_label", "label": "Link label", "default": "Talk to us about custom development" },
+    { "type": "url", "id": "services_link", "label": "Link" },
+    { "type": "header", "content": "Style" },
+    { "type": "color", "id": "background_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text color" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 80 }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "app",
+      "name": "App",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "name", "label": "App name" },
+        { "type": "text", "id": "text", "label": "One-line pitch" },
+        { "type": "url", "id": "page_link", "label": "App page" },
+        { "type": "text", "id": "page_label", "label": "App page label", "default": "Learn more" },
+        { "type": "url", "id": "store_link", "label": "App Store listing" },
+        { "type": "text", "id": "store_label", "label": "App Store label", "default": "Install on Shopify" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Article: B2B apps",
+      "category": "Conspire",
+      "blocks": [
+        { "type": "app", "settings": { "eyebrow": "Wholesale", "name": "B2B Onboarding & Wholesale", "text": "Wholesale registration with approval, buyer documents, and B2B pricing on any Shopify plan." } },
+        { "type": "app", "settings": { "eyebrow": "Wishlists", "name": "B2B Wishlist Project Planner", "text": "Multiple wishlists with quantities, sharing, PDF quotes, and draft orders for project buyers." } },
+        { "type": "app", "settings": { "eyebrow": "Invoices", "name": "B2B Draft Order Invoices", "text": "Customers view and pay draft order invoices from their account, with reminders and POS support." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

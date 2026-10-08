@@ -141,6 +141,16 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     WebP at 1600px) — re-upload as JPG; the Shop Pay / checkout preloads and
     third-party cookies are Shopify's.
 
+- **B2B app cards under articles** (`ca-article-apps`, in `article.json` between body
+  and related). Renders only when the article is tagged `b2b` (case insensitive;
+  tag is a section setting), so the pipeline turns it on by tagging and a post opts
+  out by removing the tag. Three `app` blocks (Wholesale, Wishlist, Drafts: eyebrow,
+  name, one-line pitch, app page + App Store links) in a grid of up to four columns,
+  then a single custom-development line to `/collections/services`. Copy lives in the
+  theme editor, not article bodies, so the fact checker, voice pass and wordCount
+  never see it. Not Bonde, and no fourth "services" card: the articles already end
+  on the booking CTA. In the editor an untagged article shows a "hidden" notice.
+
 ### Open (decide, then do)
 
 - **Market pages** (`/blogs/markets/*`, 24 articles): keep. GSC Jul–Oct 2026: ~14k
