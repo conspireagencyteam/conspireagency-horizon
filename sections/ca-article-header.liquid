@@ -7,8 +7,11 @@
 
   Hero media (right column, visible without scrolling): the article video when
   there is one, otherwise the featured image. With media the layout becomes
-  two columns, date and a smaller title on the left, media on the right, like
-  the case study hero. Without media it is the Figma layout.
+  two columns, date, a smaller title and the article summary on the left,
+  media on the right, like the case study hero. The summary is the article
+  excerpt, the same text as the meta description and the BlogPosting
+  description, so the page says on screen what the search snippet promised.
+  Without media it is the Figma layout.
     - Video: the video pipeline writes article metafields on every publish
       (namespace custom: video_youtube_id, video_url, video_thumbnail_url,
       video_title, video_description, video_upload_date, video_duration). The
@@ -81,6 +84,11 @@
     assign has_media = true
   endif
 
+  assign summary = ''
+  if has_media and section.settings.show_summary
+    assign summary = article.excerpt | strip_html | strip
+  endif
+
   assign band = section.settings.band_image
 -%}
 
@@ -108,6 +116,9 @@
       {%- endif -%}
       <div class="ca-ahead__main">
         <h1 class="ca-statement ca-statement--display ca-ahead__title">{{ article.title }}</h1>
+        {%- if summary != blank -%}
+          <p class="ca-ahead__summary">{{ summary }}</p>
+        {%- endif -%}
         {%- if section.settings.show_job_details -%}
           {%- render 'ca-job-pills', article: article, country_suffix: section.settings.country_suffix, class: 'ca-ahead__pills' -%}
         {%- endif -%}
@@ -213,6 +224,16 @@
     justify-content: flex-start;
   }
 
+  .ca-ahead__summary {
+    margin: 4px 0 0;
+    max-width: 48ch;
+    font-size: var(--ca-fs-20);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+    text-wrap: pretty;
+  }
+
   .ca-ahead__media {
     grid-column: 7 / -1;
     grid-row: 1 / span 2;
@@ -309,7 +330,7 @@
   /* Decorative band between the header and the article. */
   .ca-ahead__band {
     width: 100%;
-    height: min(24vw, 320px);
+    height: min(12vw, 160px);
     overflow: hidden;
   }
 
@@ -345,7 +366,7 @@
 
   @media screen and (max-width: 749px) {
     .ca-ahead__band {
-      height: 40vw;
+      height: 20vw;
     }
 
     .ca-ahead__play {
@@ -412,6 +433,7 @@
     { "type": "header", "content": "Hero media" },
     { "type": "checkbox", "id": "show_video", "label": "Show the article video", "info": "Click-to-play, beside the title. Reads the Video YouTube ID metafield, or the first YouTube embed in the body. Keep \"Leave out the first YouTube embed\" on in the Article body section so it is not shown twice.", "default": true },
     { "type": "checkbox", "id": "show_media", "label": "Show the featured image when there is no video", "info": "Uses the article's Banner Video metafield when set, otherwise the article image.", "default": true },
+    { "type": "checkbox", "id": "show_summary", "label": "Show the article summary under the title", "info": "The article's excerpt, beside the hero media. Same text as the meta description.", "default": true },
     { "type": "image_picker", "id": "band_image", "label": "Decorative band", "info": "Full-width image strip under the header. Decoration only; leave empty for none." },
     { "type": "header", "content": "Site header" },
     { "type": "checkbox", "id": "allow_transparent_header", "label": "Run under a transparent header", "info": "The site header takes this section's colors until the page scrolls.", "default": false },

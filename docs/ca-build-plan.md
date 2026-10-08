@@ -190,7 +190,9 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     stops inserting the iframe. With hero media the header is two columns
     (date + smaller title left, media right) so the video is in view without
     scrolling; the featured image is the fallback when there is no video, in
-    the same slot. Under the header a decorative band (`band_image`, the
+    the same slot; the article excerpt sits under the title as a subheadline
+    (`show_summary`), the same text as the meta description. Under the header
+    a 160px decorative band (`band_image`, the
     design's stock shot = `blog-fallback-3.jpg`) separates the dark header
     from the white article. `ca-article-schema` seeds the VideoObject list
     with the metafield id and uses `video_thumbnail_url` for the first video.
