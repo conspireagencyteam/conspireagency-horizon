@@ -3,6 +3,7 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
+        "seo_heading": "Shopify Website Design & Development",
         "heading": "Your store is the flagship. We build it like one.",
         "body": "<p>Every marketing dollar you spend lands there first. We design Shopify stores that earn trust, guide the customer journey, and convert the traffic you're already paying for.</p>",
         "button_label": "Schedule a Call",

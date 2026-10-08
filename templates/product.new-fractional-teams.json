@@ -3,6 +3,7 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
+        "seo_heading": "Shopify Plus Premier Development Agency",
         "heading": "A team to solve your complex problems.",
         "body": "<p>Your team can't do it all. You need a senior team, that knows your business, sits in your Slack alongside your people, and has the senior experience to transform business problems into solutions.</p>",
         "button_label": "Book a Strategy Call",

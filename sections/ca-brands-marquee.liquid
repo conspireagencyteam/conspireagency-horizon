@@ -56,7 +56,19 @@
   {%- if has_intro -%}
     <div class="ca-hero__top">
       <div class="ca-hero__intro">
-        {%- if hero_heading != blank -%}
+        {%- comment -%}
+          SEO heading: when set, the keyword line is the page H1, styled as a small
+          eyebrow above the tagline, and the display tagline demotes to a <p class="h1">
+          with identical typography. Used on service pages whose tagline is not the
+          target keyword (e.g. shopify-websites, shopify-fractional-teams); the old
+          site did the same with class tags. Leave blank to keep the tagline as H1.
+        {%- endcomment -%}
+        {%- if section.settings.seo_heading != blank -%}
+          <h1 class="ca-eyebrow ca-hero__seo-heading">{{ section.settings.seo_heading | escape }}</h1>
+          {%- if hero_heading != blank -%}
+            <p class="h1 ca-hero__heading">{{ hero_heading }}</p>
+          {%- endif -%}
+        {%- elsif hero_heading != blank -%}
           <h1 class="ca-hero__heading">{{ hero_heading }}</h1>
         {%- endif -%}
       </div>
@@ -177,6 +189,11 @@
 
   .ca-hero__heading {
     margin: 0;
+  }
+
+  /* Keyword H1 sits as an eyebrow directly above the tagline (tighter than the intro gap). */
+  .ca-hero__seo-heading + .ca-hero__heading {
+    margin-block-start: -12px;
   }
 
   .ca-hero__aside {
@@ -338,6 +355,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "We know Shopify. Your growth partner."
+    },
+    {
+      "type": "text",
+      "id": "seo_heading",
+      "label": "SEO heading (optional)",
+      "info": "When set, this keyword line becomes the page H1, shown as a small eyebrow above the heading; the heading keeps its size but is no longer the H1."
     },
     {
       "type": "richtext",

@@ -137,9 +137,17 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     of the Wholesale container: `gtag("config","AW-852658178")` anywhere still
     leaks. The theme therefore loads and configs **GT-PLVXZJKV** (conversions keep
     `send_to: "AW-852658178/<label>"`, routed by gtag; verified in headless Chrome).
-    Still open: `zia-tile-work-preview.png` is a 2.2 MB PNG source (324 KB as
-    WebP at 1600px) — re-upload as JPG; the Shop Pay / checkout preloads and
-    third-party cookies are Shopify's.
+    Image source format is irrelevant on Shopify's CDN (tested: JPG vs PNG source
+    gives byte-identical WebP at every requested size) — ignore Lighthouse's
+    "compression" line; only the requested rendition size matters. The Shop Pay /
+    checkout preloads and third-party cookies are Shopify's.
+  - **Keyword H1 vs tagline.** `ca-brands-marquee` has an optional `seo_heading`
+    setting: when set, it renders as the H1 styled as an eyebrow above the tagline
+    and the tagline becomes `<p class="h1">` (same type). Set on
+    `product.shopify-website-2025` ("Shopify Website Design & Development") and
+    `product.new-fractional-teams` ("Shopify Plus Premier Development Agency") —
+    the old site's H1s, which the Horizon taglines had replaced (Ahrefs flagged the
+    H1 change 2026-10-08). Home still uses the tagline as H1 (watch item above).
 
 - **B2B app cards under articles** (`ca-article-apps`, in `article.json` between body
   and related). Renders only when the article is tagged `b2b` (case insensitive;
