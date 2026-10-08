@@ -132,8 +132,9 @@
       "settings": {
         "eyebrow": "Our Services",
         "products": [
-          "shopify-websites",
           "shopify-fractional-teams",
+          "shopify-websites",
+          "shopify-migration",
           "custom-shopify-applications",
           "shopify-cro-agency"
         ],

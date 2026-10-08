@@ -24,11 +24,11 @@
       "settings": {
         "eyebrow": "",
         "products": [
+          "shopify-fractional-teams",
+          "shopify-websites",
           "shopify-migration",
-          "migration-from-magento-to-shopify",
-          "migration-from-bigcommerce-to-shopify",
-          "migration-from-wordpress-woocommerce-to-shopify",
-          "migration-from-squarespace-to-shopify"
+          "custom-shopify-applications",
+          "shopify-cro-agency"
         ],
         "show_numbers": true,
         "button_label": "Learn More",

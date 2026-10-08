@@ -24,9 +24,9 @@
       "settings": {
         "eyebrow": "",
         "products": [
+          "shopify-fractional-teams",
           "shopify-websites",
           "shopify-migration",
-          "shopify-fractional-teams",
           "custom-shopify-applications",
           "shopify-cro-agency"
         ],
