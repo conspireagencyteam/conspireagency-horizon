@@ -156,6 +156,14 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     colour `tcs-logo.png`. Still off: `omre.logo` is `White.png` (77×16, renders grey,
     near-invisible) and `omre-logo.png` has a baked tan background — needs a white
     knockout from Danny. Nature's Answer, Sto N Sho and Portola are colour and fine.
+  - **Hanging navigations (2026-10-08).** Danny's tabs on the site would sit with the
+    document request `pending` (0 B, no protocol) while other sites worked; `chrome://
+    net-internals/#sockets` → Flush socket pools unstuck it, i.e. a dead h3/QUIC
+    connection Chrome kept reusing. Cause on our side: `caWarmVideos` in `ca-custom.js`
+    did `preload="auto"` + muted `play()` for every mega-menu video on first header
+    hover, and Chrome then downloads the whole file — 3.5–8 MB each, 30–40 MB per page —
+    saturating the connection. Warm-up is now `preload="metadata"` only (container header
+    + first chunk). If it recurs, check the Network panel's media rows first.
   - **Keyword H1 vs tagline.** `ca-brands-marquee` has an optional `seo_heading`
     setting: when set, it renders as the H1 styled as an eyebrow above the tagline
     and the tagline becomes `<p class="h1">` (same type). Set on

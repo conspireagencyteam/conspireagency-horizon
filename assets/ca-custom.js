@@ -23,12 +23,14 @@
     window.addEventListener('load', setHeaderHeight);
   }
 
-  // Warm up hover/menu videos so the first play is instant. Videos ship with
-  // preload="none"; this buffers their opening seconds one at a time (a muted
-  // play() that is paused again as soon as the video can play through: Chrome
-  // honours that even for a hidden element, where preload="auto" alone is
-  // deferred). Only on devices that will actually show hover previews, and
-  // never with Save-Data on. Returns true when it ran.
+  // Warm hover/menu videos so the first play starts quickly. Videos ship with
+  // preload="none"; this switches them to preload="metadata" one at a time,
+  // which fetches the container header plus the first chunk (a few hundred KB)
+  // and nothing more. It deliberately does NOT play() with preload="auto":
+  // Chrome keeps downloading a media element once it has started, so that
+  // approach pulled every menu video in full (30-40 MB per page view) and
+  // saturated the connection. Only on devices that will actually show hover
+  // previews, and never with Save-Data on. Returns true when it ran.
   window.caWarmVideos = function (videos) {
     var list = Array.prototype.slice.call(videos || []);
     if (!list.length) return false;
@@ -37,8 +39,9 @@
 
     var next = function (i) {
       var video = list[i];
-      if (!video || video.dataset.warmed) {
-        if (video) next(i + 1);
+      if (!video) return;
+      if (video.dataset.warmed || video.dataset.playing) {
+        next(i + 1);
         return;
       }
       video.dataset.warmed = '1';
@@ -46,20 +49,13 @@
       var proceed = function () {
         if (done) return;
         done = true;
-        // Park it at the start unless something is already showing it.
-        if (!video.dataset.playing) {
-          video.pause();
-          try { video.currentTime = 0; } catch (e) { /* not seekable yet */ }
-        }
         next(i + 1);
       };
-      video.addEventListener('canplaythrough', proceed, { once: true });
+      video.addEventListener('loadedmetadata', proceed, { once: true });
       video.addEventListener('error', proceed, { once: true });
-      video.preload = 'auto';
+      video.preload = 'metadata';
       video.dataset.loaded = '1';
       video.load();
-      var attempt = video.play();
-      if (attempt && attempt.catch) attempt.catch(function () {});
       // Don't let one stalled file block the rest.
       setTimeout(proceed, 4000);
     };
