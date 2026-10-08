@@ -49,28 +49,28 @@
           "type": "feature",
           "settings": {
             "image": "shopify://shop_images/shopify-website-design-development.gif",
+            "video": "shopify://files/videos/Conspire-showreel.mp4",
+            "poster": "shopify://shop_images/conspire-showreel-poster.jpg",
             "media_background": "#0d110d",
             "image_ratio": "11 / 10",
             "eyebrow": "Builds & Migrations",
             "title": "Shopify Website Design & Development",
             "body": "<p>Whether you need a fast, strategic Shopify launch or a fully custom tailored shopping experience.</p>",
-            "link": "shopify://products/shopify-websites",
-            "video": "shopify://files/videos/Conspire-showreel.mp4",
-            "poster": "shopify://shop_images/conspire-showreel-poster.jpg"
+            "link": "shopify://products/shopify-websites"
           }
         },
         "feature_2": {
           "type": "feature",
           "settings": {
             "image": "shopify://shop_images/fractional-shopify-website-teams.gif",
+            "video": "shopify://files/videos/website-reveal.mp4",
+            "poster": "shopify://shop_images/website-reveal-poster.jpg",
             "media_background": "#000005",
             "image_ratio": "3 / 2",
             "eyebrow": "Grow Your Team With Top Talent Fast",
             "title": "Fractional Shopify Website Teams",
             "body": "<p>Our Los Angeles-based team provides senior strategy, design, and development to own your website end-to-end.</p>",
-            "link": "shopify://products/shopify-fractional-teams",
-            "video": "shopify://files/videos/website-reveal.mp4",
-            "poster": "shopify://shop_images/website-reveal-poster.jpg"
+            "link": "shopify://products/shopify-fractional-teams"
           }
         }
       },
@@ -123,6 +123,28 @@
         "autoplay_interval": 6,
         "background_color": "#0d110d",
         "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "ca_services": {
+      "type": "ca-services",
+      "settings": {
+        "eyebrow": "Our Services",
+        "products": [
+          "shopify-websites",
+          "shopify-fractional-teams",
+          "custom-shopify-applications",
+          "shopify-cro-agency"
+        ],
+        "show_numbers": true,
+        "button_label": "Learn More",
+        "style_class": "button-secondary",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "",
+        "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 80
       }
@@ -191,28 +213,6 @@
         "padding-block-end": 80
       }
     },
-    "ca_services": {
-      "type": "ca-services",
-      "settings": {
-        "eyebrow": "Our Services",
-        "products": [
-          "shopify-websites",
-          "shopify-fractional-teams",
-          "custom-shopify-applications",
-          "shopify-cro-agency"
-        ],
-        "show_numbers": true,
-        "button_label": "Learn More",
-        "style_class": "button-secondary",
-        "custom_button_background": "{{ settings.color_palette.foreground }}",
-        "custom_button_text": "{{ settings.color_palette.background }}",
-        "custom_button_border": "{{ settings.color_palette.background }}",
-        "background_color": "",
-        "text_color": "",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
     "ca_blog": {
       "type": "ca-blog",
       "settings": {
@@ -239,22 +239,6 @@
         "text_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 80,
         "padding-block-end": 80
-      }
-    },
-    "ca_faq": {
-      "type": "ca-faq",
-      "settings": {
-        "eyebrow": "Frequently asked questions",
-        "heading": "Get answers to common questions about our Los Angeles-based Shopify development, migration, and CRO services",
-        "categories": [
-          "shopify-development-migration",
-          "ongoing-support-maintenance",
-          "pricing-project-scope"
-        ],
-        "background_color": "",
-        "text_color": "",
-        "padding-block-start": 72,
-        "padding-block-end": 72
       }
     },
     "ca_booking": {
@@ -383,8 +367,29 @@
         "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
         "calendly_height": 700,
         "montage_background": "#0d110d",
+        "panel_heading": "Ready to grow your business?",
+        "panel_text": "To discuss your project please select a convenient date & time for you and we will contact you!",
+        "panel_button_label": "Contact Us",
+        "panel_button_link": "",
         "padding-block-start": 80,
         "padding-block-end": 80
+      }
+    },
+    "ca_faq": {
+      "type": "ca-faq",
+      "settings": {
+        "eyebrow": "Frequently asked questions",
+        "heading": "Get answers to common questions about our Los Angeles-based Shopify development, migration, and CRO services",
+        "categories": [
+          "shopify-development-migration",
+          "ongoing-support-maintenance",
+          "pricing-project-scope"
+        ],
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 72,
+        "padding-block-end": 72
       }
     }
   },
@@ -393,8 +398,8 @@
     "ca_feature_highlights",
     "ca_work_list",
     "ca_testimonials",
-    "ca_apps",
     "ca_services",
+    "ca_apps",
     "ca_blog",
     "ca_booking",
     "ca_faq"
