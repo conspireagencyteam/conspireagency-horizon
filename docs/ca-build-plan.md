@@ -47,10 +47,10 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   consent through Shopify's Customer Privacy API, which `ca-lead-tracking` listens to.
   Mode is "regions set in Settings > Customer privacy" (US visitors are tracked by
   default, legally; the banner is for consent regions). The footer legal row carries the
-  CCPA "Do not sell or share" link, which reopens the banner. **Still needed in admin:**
-  Settings > Customer privacy > Privacy settings > Data collection consent > collect in
-  Europe (EU/EEA, UK, Switzerland), or run the `consentPolicyUpdate` mutation with the
-  `write_privacy_settings` scope.
+  CCPA "Do not sell or share" link, which reopens the banner. Consent policy set via
+  `consentPolicyUpdate` on 2026-10-07: consent required in the 27 EU states + IS LI NO GB
+  CH; nowhere else; no data-sale opt-out regions (California gets the footer link, not a
+  banner, on purpose — LA is the main market).
 
 ### Open (decide, then do)
 
