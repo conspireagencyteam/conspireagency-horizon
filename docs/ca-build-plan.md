@@ -172,10 +172,13 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     removed from the Online Store channel) → `/collections/services`. All had 0 GSC clicks in
     90 days. `/collections/services` now lists Shopify Migrations second (product
     `shopify-migration` added to the collection, with `product_details.display_title` /
-    `excerpt` set). Left alone: `bonde-demo-subscription-product` (ACTIVE, 7 channels,
-    nothing links to it — decide whether Bonde's demo needs it on the Online Store), the
-    five DRAFT products (four replaced by the migration hub, plus the Conspire Build draft
-    still attached to the services collection), `/pages/reviews` (unpublished), market pages plan.
+    `excerpt` set). Then deleted (Danny, 2026-10-08): the Bonde demo product and all seven DRAFT
+    products (four old migrations, Conspire Build, invoice-app and wholesale-app drafts).
+    `/pages/reviews` is now published on `page.reviews.json` (intro, all seven `quote`
+    metaobjects, client rows, booking); five `quote` entries were created from the clients'
+    own `testimonial` fields — note metaobjects created via the API start as publishable
+    DRAFT and must be set ACTIVE or the storefront skips them. Services order everywhere:
+    Growth & Support Teams, Websites, Migrations, Applications, CRO (CRO last on purpose).
   - **Keyword H1 vs tagline.** `ca-brands-marquee` has an optional `seo_heading`
     setting: when set, it renders as the H1 styled as an eyebrow above the tagline
     and the tagline becomes `<p class="h1">` (same type). Set on
@@ -237,7 +240,7 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   keyword is in the title). The homepage ranked #6 for "shopify web design agency" under
   the old markup (H1 = paragraph); if that slips, flip it in `ca-brands-marquee.liquid`.
 - The five draft products still exist in admin; delete whenever.
-- `/pages/reviews` is unpublished but has a description now; publish or delete.
+- `/pages/reviews` published 2026-10-08 on `page.reviews.json`.
 - `custom-shopify-applications` is a bare stock product page with a $5,000 price in its
   Service schema; needs content or a draft.
 
