@@ -1,0 +1,654 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-app-wishlist-hero",
+      "settings": {
+        "eyebrow": "For tile, paint, fixture & furniture stores on Shopify",
+        "heading": "Help customers plan projects. Meet the Shopify B2B wishlist app built for the job.",
+        "text": "<p>Project wishlists for tile, paint, fixture and furniture stores. Customers plan by room and share with clients; you turn their plans into carts, quotes and draft orders.</p>",
+        "primary_label": "Install on Shopify",
+        "primary_link": "https://apps.shopify.com/wishlist-project-planner",
+        "secondary_label": "Documentation",
+        "secondary_link": "https://apps.conspireagency.com/wishlist/docs",
+        "tour_label": "Watch the tour · 1:28",
+        "tour_link": "https://www.youtube.com/watch?v=EjvqM4SR11Q",
+        "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+        "proof": "Free for 14 days · No theme edits required · Built by a Shopify Premier Partner",
+        "rating_label": "5.0 on the Shopify App Store",
+        "rating_link": "https://apps.shopify.com/wishlist-project-planner#adp-reviews",
+        "background_image": "shopify://shop_images/ca-apps-brand-hero-window.jpg",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 120,
+        "padding-block-end": 96
+      }
+    },
+    "mock": {
+      "type": "ca-app-wishlist-mock",
+      "blocks": {
+        "p_1": {
+          "type": "product",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-zellige.jpg",
+            "vendor": "Gable & Oak",
+            "title": "Pale Calcite Zellige - Hex",
+            "variant": "Glazed / Hex",
+            "room": "Primary bath",
+            "price": "$191.10 / box",
+            "qty": "18"
+          }
+        },
+        "p_2": {
+          "type": "product",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-corin-lamp.jpg",
+            "vendor": "Gable & Oak",
+            "title": "Corin Wall Lamp",
+            "variant": "Satin Nickel",
+            "room": "Primary bath",
+            "price": "$258.00",
+            "qty": "2"
+          }
+        },
+        "p_3": {
+          "type": "product",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-mineral-sage.jpg",
+            "vendor": "Gable & Oak",
+            "title": "Mineral Sage",
+            "variant": "Lime Wash / 1 gal",
+            "room": "Kitchen",
+            "price": "$84.00",
+            "qty": "6"
+          }
+        },
+        "p_4": {
+          "type": "product",
+          "settings": {
+            "image": "shopify://shop_images/ca-app-wishlist-demo-kael-pendant.jpg",
+            "vendor": "Gable & Oak",
+            "title": "Kael Pendant",
+            "variant": "Brushed Brass",
+            "room": "Kitchen",
+            "price": "$312.00",
+            "qty": "1"
+          }
+        }
+      },
+      "block_order": [
+        "p_1",
+        "p_2",
+        "p_3",
+        "p_4"
+      ],
+      "settings": {
+        "eyebrow": "New Projects page",
+        "heading": "Plan the whole job, room by room, on your store.",
+        "text": "<p>Give homeowners and trade pros a place to plan the whole job on your store. They organize tile, paint, fixtures, and furniture by room, set quantities, and share lists with clients. You turn finished plans into carts, quotes, and draft orders.</p>",
+        "caption": "The new full-page Projects experience. It lives at its own URL on your storefront with zero setup, with room-by-room filtering, sharing with or without prices, and PDF downloads. Prefer the classic widget? It lives on the account page as a theme app block.",
+        "url_label": "yourstore.com/apps/wishlist/projects",
+        "project_name": "142 Maple Street",
+        "rooms": "All\nPrimary bath\nKitchen",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "features": {
+      "type": "ca-app-features",
+      "blocks": {
+        "f_1": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-lists.svg",
+            "icon_svg": "",
+            "title": "Multiple wishlists & projects",
+            "text": "Customers create as many wishlists as they need, one per project, room, client, or season, and manage them all from their account page."
+          }
+        },
+        "f_2": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-groups.svg",
+            "icon_svg": "",
+            "title": "Product groups & subgroups",
+            "text": "The only Shopify wishlist app with true grouping. Organize saved products into groups within a list by room, phase, or category, and filter instantly."
+          }
+        },
+        "f_3": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-quantities.svg",
+            "icon_svg": "",
+            "title": "Quantities built in",
+            "text": "Buyers set the exact quantity of every variant right on the wishlist. Perfect for wholesale orders, bulk buying, and project takeoffs."
+          }
+        },
+        "f_4": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-cart.svg",
+            "icon_svg": "",
+            "title": "One-click add all to cart",
+            "text": "Move an entire wishlist to the cart in one click. Out-of-stock and low-inventory items are handled gracefully so the rest of the order still goes through."
+          }
+        },
+        "f_5": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-share.svg",
+            "icon_svg": "",
+            "title": "Shareable wishlist links",
+            "text": "Customers share wishlists with clients, teams, and family via a public link. Merchants can optionally hide pricing on shared lists."
+          }
+        },
+        "f_6": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-pdf.svg",
+            "icon_svg": "",
+            "title": "PDF quote export",
+            "text": "Export any wishlist as a clean PDF with line items, quantities, and pricing, ready to send as a quote or project proposal."
+          }
+        },
+        "f_7": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-draft-order.svg",
+            "icon_svg": "",
+            "title": "Wishlist to draft order",
+            "text": "Convert any customer wishlist into a Shopify draft order in seconds. Apply wholesale pricing or bulk discounts and send the invoice. It's a full B2B quote workflow."
+          }
+        },
+        "f_8": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-dashboard.svg",
+            "icon_svg": "",
+            "title": "Merchant dashboard",
+            "text": "See every customer wishlist from the Shopify admin. Know what buyers are planning before they order, and follow up with the right offer."
+          }
+        },
+        "f_9": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-terminology.svg",
+            "icon_svg": "",
+            "title": "Custom terminology",
+            "text": "Rename \"Wishlist\" to anything you like: Projects, Boards, Quotes, Favorites. The new term applies across every widget to match how your customers actually talk."
+          }
+        },
+        "f_10": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-theme.svg",
+            "icon_svg": "",
+            "title": "Matches your theme",
+            "text": "Theme app blocks with customizable colors, text, and styles for every widget. No code required, and it looks native to your storefront."
+          }
+        },
+        "f_11": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-buttons.svg",
+            "icon_svg": "",
+            "title": "Wishlist buttons everywhere",
+            "text": "Add-to-wishlist buttons on product pages and wishlist icons on collection pages, so customers can save products wherever they browse."
+          }
+        },
+        "f_12": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-sku.svg",
+            "icon_svg": "",
+            "title": "SKUs & metafields",
+            "text": "Surface SKUs and product or variant metafields directly on the wishlist. It's the detail B2B buyers and spec-driven shoppers expect."
+          }
+        }
+      },
+      "block_order": [
+        "f_1",
+        "f_2",
+        "f_3",
+        "f_4",
+        "f_5",
+        "f_6",
+        "f_7",
+        "f_8",
+        "f_9",
+        "f_10",
+        "f_11",
+        "f_12"
+      ],
+      "settings": {
+        "eyebrow": "Features",
+        "heading": "Everything customers need to plan, save, and buy",
+        "intro": "From simple save-for-later wishlists to full B2B project planning with quantities, groups, and quotes.",
+        "columns": "4",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "brands": {
+      "type": "ca-app-wishlist-brands",
+      "blocks": {
+        "s_1": {
+          "type": "store",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-replica-decor.jpg",
+            "name": "Replica Plants & Decor",
+            "category": "Artificial plants & containers",
+            "link": "https://shop.replicadecor.com"
+          }
+        },
+        "s_2": {
+          "type": "store",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-via-motif.jpg",
+            "name": "Via Motif",
+            "category": "Hotel & spa accessories",
+            "link": "https://viamotif.com"
+          }
+        },
+        "s_3": {
+          "type": "store",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg",
+            "name": "Lights Canada",
+            "category": "Lighting",
+            "link": "https://lightscanada.ca"
+          }
+        },
+        "s_4": {
+          "type": "store",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg",
+            "name": "Project retail",
+            "category": "Tile, paint, fixtures & furniture",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "s_1",
+        "s_2",
+        "s_3",
+        "s_4"
+      ],
+      "settings": {
+        "eyebrow": "Trusted by merchants",
+        "heading": "Powering projects in beautiful stores",
+        "footnote": "A few of the stores running B2B Wishlist Project Planner today.",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "pdp": {
+      "type": "ca-app-wishlist-split",
+      "blocks": {
+        "c_1": {
+          "type": "check",
+          "settings": {
+            "text": "Save to one or several projects from a single click"
+          }
+        },
+        "c_2": {
+          "type": "check",
+          "settings": {
+            "text": "Create a new project without leaving the page"
+          }
+        },
+        "c_3": {
+          "type": "check",
+          "settings": {
+            "text": "Variant-aware: the exact finish and size gets saved"
+          }
+        },
+        "c_4": {
+          "type": "check",
+          "settings": {
+            "text": "Buttons and text match your theme automatically"
+          }
+        }
+      },
+      "settings": {
+        "eyebrow": "On every product page",
+        "heading": "One click from browsing to planning",
+        "text": "<p>A wishlist button sits on every product page and collection card. Shoppers file each tile, faucet, and paint color straight into the right project while they browse, and a contractor quoting three jobs at once keeps every one of them separate.</p>",
+        "subheading": "",
+        "chips": "",
+        "visual": "product",
+        "visual_side": "left",
+        "product_image": "shopify://shop_images/ca-app-wishlist-demo-zellige.jpg",
+        "product_title": "Calcite Gloss Zellige - 4x4",
+        "product_variant": "Glazed / 4x4 / Sold per box",
+        "product_price": "$213.59 / box",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96,
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "steps": {
+      "type": "ca-process",
+      "blocks": {
+        "st_1": {
+          "type": "step",
+          "settings": {
+            "label": "01 · Install",
+            "text": "<p><strong>Install from the Shopify App Store.</strong> One-click install with a free plan available. No code and no theme edits. The app works through Shopify theme app blocks.</p>"
+          }
+        },
+        "st_2": {
+          "type": "step",
+          "settings": {
+            "label": "02 · Customize",
+            "text": "<p><strong>Add the blocks & make them yours.</strong> Drop the wishlist button on product pages and the wishlist manager on the account page. Customize colors, text, and terminology in the theme editor.</p>"
+          }
+        },
+        "st_3": {
+          "type": "step",
+          "settings": {
+            "label": "03 · Sell",
+            "text": "<p><strong>Customers plan, share, and buy.</strong> Shoppers build wishlists and projects, share them, and check out in one click while you watch demand build in the merchant dashboard.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "st_1",
+        "st_2",
+        "st_3"
+      ],
+      "settings": {
+        "eyebrow": "Setup",
+        "heading": "<p>Live on your storefront in minutes</p>",
+        "heading_tag": "h2",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "b2b": {
+      "type": "ca-app-wishlist-split",
+      "blocks": {
+        "c_1": {
+          "type": "check",
+          "settings": {
+            "text": "Buyers group large orders by room, phase, or location"
+          }
+        },
+        "c_2": {
+          "type": "check",
+          "settings": {
+            "text": "Per-variant quantities and bulk-discount friendly draft orders"
+          }
+        },
+        "c_3": {
+          "type": "check",
+          "settings": {
+            "text": "PDF exports double as quotes and project proposals"
+          }
+        },
+        "c_4": {
+          "type": "check",
+          "settings": {
+            "text": "Merchant dashboard shows demand before the order is placed"
+          }
+        }
+      },
+      "settings": {
+        "eyebrow": "B2B & Wholesale",
+        "heading": "More than a wishlist: a complete B2B quote workflow",
+        "text": "<p>Your trade partners buy by the job, not by the item. Contractors, designers, and property managers build a list per project with exact quantities and export it as a PDF quote, and you convert it into a draft order with their pricing. No spreadsheets, no back-and-forth email threads.</p>",
+        "subheading": "Built for stores where buying takes planning",
+        "chips": "Tile & stone\nPaint & finishes\nLighting & fixtures\nFurniture & decor\nKitchen & bath\nBuilding materials",
+        "visual": "image",
+        "visual_side": "right",
+        "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96,
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "team": {
+      "type": "ca-split-feature",
+      "settings": {
+        "eyebrow": "Built by Conspire",
+        "heading": "<strong>Crafted by a Shopify Premier Partner</strong>",
+        "text": "<p>B2B Wishlist Project Planner is built by <a href=\"/\">Conspire</a>, a Shopify Premier Partner founded in Los Angeles. Premier is Shopify's most exclusive partner tier, a step above Shopify Plus Partners, placing Conspire among the top Shopify agencies in the United States. The same senior team that builds high-performing storefronts for leading brands builds and supports this app.</p><p>Premier Shopify Partner tier · Founded and headquartered in Los Angeles · Agency-grade support and engineering.</p>",
+        "button_label": "Shopify services",
+        "button_link": "/pages/pricing",
+        "image_small": "shopify://shop_images/ca-apps-brand-via-motif.jpg",
+        "image_large": "shopify://shop_images/ca-apps-brand-replica-decor.jpg",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "q_1": {
+          "type": "item",
+          "settings": {
+            "question": "What makes this different from other Shopify wishlist apps?",
+            "answer": "<p>Most wishlist apps are simple save-for-later lists. B2B Wishlist Project Planner adds the tools serious buyers need: multiple wishlists, product groups and subgroups within each list, per-item quantities, PDF quote exports, and wishlist-to-draft-order conversion for B2B sales. It's a wishlist and a project planner in one app.</p>"
+          }
+        },
+        "q_2": {
+          "type": "item",
+          "settings": {
+            "question": "Does it work for B2B and wholesale stores?",
+            "answer": "<p>Yes. B2B is what it's built for. Buyers set quantities on every item, organize large orders into groups, and export PDF quotes. Merchants convert any wishlist into a Shopify draft order, apply wholesale or bulk pricing, and send an invoice.</p>"
+          }
+        },
+        "q_3": {
+          "type": "item",
+          "settings": {
+            "question": "Can customers share their wishlists?",
+            "answer": "<p>Yes. Customers generate a public share link for any wishlist, which is great for sharing project plans with clients or gift lists with family. Merchants can choose to hide pricing on shared wishlists.</p>"
+          }
+        },
+        "q_4": {
+          "type": "item",
+          "settings": {
+            "question": "What are the two interfaces?",
+            "answer": "<p>You can offer either customer experience, or both. The classic widget lives on the account page as a theme app block. The new full-page Projects experience is a dedicated, beautifully designed page served at its own URL on your storefront with zero setup: customers get a visual overview of every project, filter items by room or phase, share lists with or without prices (by link or email), and download PDF quotes.</p>"
+          }
+        },
+        "q_5": {
+          "type": "item",
+          "settings": {
+            "question": "Will it match my store's theme?",
+            "answer": "<p>Yes. The widgets are Shopify theme app blocks with customizable colors, styles, and text, so they inherit your store's look. You can even rename \"Wishlist\" to \"Project\", \"Board\", or any term that fits your brand.</p>"
+          }
+        },
+        "q_6": {
+          "type": "item",
+          "settings": {
+            "question": "How much does it cost?",
+            "answer": "<p>There's a free plan with unlimited wishlists, subgroups, quantities, and sharing. The Project planner plan is $29/month with a 14-day free trial and adds PDF quote export and draft order conversion. See current pricing on the <a href=\"https://apps.shopify.com/wishlist-project-planner\" target=\"_blank\" rel=\"noopener\">Shopify App Store listing</a>.</p>"
+          }
+        },
+        "q_7": {
+          "type": "item",
+          "settings": {
+            "question": "Who builds and supports the app?",
+            "answer": "<p>The app is built and supported by Conspire, a Shopify Premier Partner agency founded in Los Angeles. You get support from the same senior team that builds Shopify stores for leading brands. Have a question or feature request? <a href=\"/pages/contact\">Send us a message</a> and we'll get back to you.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q_1",
+        "q_2",
+        "q_3",
+        "q_4",
+        "q_5",
+        "q_6",
+        "q_7"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Frequently asked questions",
+        "button_label": "Install on Shopify",
+        "button_link": "https://apps.shopify.com/wishlist-project-planner",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "cta": {
+      "type": "ca-app-wishlist-split",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "eyebrow": "Get started",
+        "heading": "Turn wishlists into orders",
+        "text": "<p>Install B2B Wishlist Project Planner and give your customers a reason to come back, with their next order already planned.</p>",
+        "subheading": "",
+        "chips": "",
+        "button_label": "Install on Shopify",
+        "button_link": "https://apps.shopify.com/wishlist-project-planner",
+        "visual": "image",
+        "visual_side": "right",
+        "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "more": {
+      "type": "ca-apps-cards",
+      "blocks": {
+        "wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Onboarding & Wholesale",
+            "tagline": "Wholesale onboarding forms, document management & B2B pricing",
+            "description": "<p>Wholesale registration forms with approval, buyer document management, and B2B pricing on any Shopify plan. Unlimited price groups, net terms, and quick order.</p>",
+            "page_link": "/pages/b2b-onboarding-wholesale",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wholesale-b2b-trade-program#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=PEF3yQ564Uo",
+            "tour_label": "Watch the tour · 1:32"
+          }
+        },
+        "drafts": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Draft Order Invoices",
+            "tagline": "Draft order invoices & quote requests customers can pay",
+            "description": "<p>Customers view & pay draft order invoices from their account page, with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
+            "page_link": "/pages/draft-order-invoices",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/draft-order-invoices",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/drafts/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/draft-order-invoices#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=6YJXBUOeImo",
+            "tour_label": "Watch the tour · 1:31"
+          }
+        }
+      },
+      "block_order": [
+        "wholesale",
+        "drafts"
+      ],
+      "settings": {
+        "eyebrow": "More B2B apps",
+        "heading": "From the same Conspire team",
+        "intro": "<p>Three focused Shopify apps for stores that sell to trade and wholesale buyers. <a href=\"/pages/best-shopify-apps\">See all B2B apps</a>.</p>",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg"
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-replica-decor.jpg"
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-via-motif.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_3",
+        "photo_4"
+      ],
+      "settings": {
+        "eyebrow": "Need a custom B2B build?",
+        "heading": "Talk to the team behind the apps",
+        "background_color": "#f2f2f2",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "mock",
+    "features",
+    "brands",
+    "pdp",
+    "steps",
+    "b2b",
+    "team",
+    "faq",
+    "cta",
+    "more",
+    "booking"
+  ]
+}

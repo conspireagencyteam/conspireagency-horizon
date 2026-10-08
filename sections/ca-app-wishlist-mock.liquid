@@ -1,0 +1,123 @@
+{%- comment -%}
+  ca-app-wishlist-mock.liquid — "Plan the whole job, room by room" section for the
+  B2B Wishlist Project Planner page. Real copy in the text column; an HTML/CSS
+  rebuild of the full-page Projects UI (decorative, aria-hidden) on the right.
+  Product rows are blocks: image, vendor, title, variant, room tag, price, qty.
+{%- endcomment -%}
+<div
+  class="ca-wlmock spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id -%}
+  <div class="ca-inner ca-wlmock__grid">
+    <div class="ca-wlmock__copy">
+      {%- if section.settings.eyebrow != blank -%}<p class="ca-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="ca-wlmock__heading">{{ section.settings.heading }}</h2>
+      <div class="ca-wlmock__text">{{ section.settings.text }}</div>
+      {%- if section.settings.caption != blank -%}<p class="ca-wlmock__caption">{{ section.settings.caption }}</p>{%- endif -%}
+    </div>
+    <div class="ca-wlmock__frame" aria-hidden="true">
+      <div class="ca-wlmock__bar"><span></span><span></span><span></span><em>{{ section.settings.url_label }}</em></div>
+      <div class="ca-wlmock__app">
+        <p class="ca-wlmock__crumb">Home <i>/</i> Projects <i>/</i> <b>{{ section.settings.project_name }}</b></p>
+        <div class="ca-wlmock__head">
+          <p class="ca-wlmock__title">{{ section.settings.project_name }} <small>{{ section.blocks.size }} items</small></p>
+          <p class="ca-wlmock__tools"><span>Download</span><span>Share</span><span class="ca-wlmock__dark">Add all to cart</span></p>
+        </div>
+        <p class="ca-wlmock__rooms">
+          {%- assign rooms = section.settings.rooms | newline_to_br | split: '<br />' -%}
+          {%- for room in rooms -%}<span{% if forloop.first %} class="is-on"{% endif %}>{{ room | strip }}</span>{%- endfor -%}
+          <span class="ca-wlmock__new">+ New room</span>
+        </p>
+        <ul class="ca-wlmock__list">
+          {%- for block in section.blocks -%}
+            <li class="ca-wlmock__row" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 240 | image_tag: widths: '120, 240', sizes: '60px', alt: '', loading: 'lazy', class: 'ca-wlmock__img' }}
+              {%- else -%}<span class="ca-wlmock__img"></span>{%- endif -%}
+              <span class="ca-wlmock__meta">
+                <small>{{ block.settings.vendor }}</small>
+                <strong>{{ block.settings.title }}</strong>
+                <em>{{ block.settings.variant }}</em>
+                <span class="ca-wlmock__tag">{{ block.settings.room }}</span>
+              </span>
+              <span class="ca-wlmock__price">{{ block.settings.price }}</span>
+              <span class="ca-wlmock__qty"><span>&minus;</span><b>{{ block.settings.qty }}</b><span>+</span></span>
+              <span class="ca-wlmock__add">Add to Cart</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-wlmock__grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 990px) { .ca-wlmock__grid { grid-template-columns: 5fr 7fr; gap: 64px; } }
+  .ca-wlmock__heading { font-size: var(--ca-fs-36); line-height: 1.1; margin: 12px 0 20px; letter-spacing: -0.02em; }
+  .ca-wlmock__text { font-size: var(--ca-fs-20, 1.25rem); line-height: 1.5; color: var(--ca-soft); }
+  .ca-wlmock__caption { margin-top: 20px; font-size: 0.95rem; line-height: 1.5; padding-left: 14px; border-left: 2px solid var(--ca-hairline-strong); }
+  .ca-wlmock__frame { border-radius: 14px; overflow: hidden; border: 1px solid var(--ca-hairline-strong); background: #fff; color: #0d110d; box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35); font-size: 12px; line-height: 1.3; }
+  .ca-wlmock__bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #f2f2f2; border-bottom: 1px solid #e3e3e3; }
+  .ca-wlmock__bar span { width: 9px; height: 9px; border-radius: 50%; background: #d4d4d4; }
+  .ca-wlmock__bar em { font-style: normal; margin-left: auto; margin-right: auto; background: #fff; border-radius: 6px; padding: 3px 12px; color: #6b6b6b; font-size: 11px; }
+  .ca-wlmock__app { padding: 18px 20px 20px; }
+  .ca-wlmock__crumb { color: #6b6b6b; margin: 0 0 10px; } .ca-wlmock__crumb i { font-style: normal; margin: 0 5px; } .ca-wlmock__crumb b { color: #0d110d; font-weight: 500; }
+  .ca-wlmock__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+  .ca-wlmock__title { font-size: 20px; font-weight: 600; margin: 0; letter-spacing: -0.01em; } .ca-wlmock__title small { font-size: 11px; font-weight: 500; color: #6b6b6b; margin-left: 6px; }
+  .ca-wlmock__tools { display: flex; gap: 6px; margin: 0; } .ca-wlmock__tools span { border: 1px solid #d9d9d9; border-radius: 999px; padding: 5px 11px; font-weight: 500; }
+  .ca-wlmock__dark { background: #0d110d; color: #fff; border-color: #0d110d !important; }
+  .ca-wlmock__rooms { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; padding-bottom: 12px; border-bottom: 1px solid #ececec; }
+  .ca-wlmock__rooms span { border-radius: 999px; padding: 4px 10px; background: #f2f2f2; color: #444; } .ca-wlmock__rooms .is-on { background: #0d110d; color: #fff; } .ca-wlmock__new { background: transparent !important; border: 1px dashed #c9c9c9; }
+  .ca-wlmock__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .ca-wlmock__row { display: grid; grid-template-columns: 52px 1fr auto; gap: 10px 12px; align-items: center; padding: 8px; border: 1px solid #ececec; border-radius: 10px; }
+  .ca-wlmock__img { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: #eee; display: block; }
+  .ca-wlmock__meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; } .ca-wlmock__meta small { color: #6b6b6b; font-size: 10px; } .ca-wlmock__meta strong { font-weight: 600; font-size: 13px; } .ca-wlmock__meta em { font-style: normal; color: #6b6b6b; }
+  .ca-wlmock__tag { align-self: flex-start; margin-top: 3px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: #eef2ee; color: #3a5a3a; }
+  .ca-wlmock__price { font-weight: 600; white-space: nowrap; grid-column: 3; }
+  .ca-wlmock__qty { display: inline-flex; align-items: center; border: 1px solid #d9d9d9; border-radius: 999px; padding: 2px 4px; gap: 8px; } .ca-wlmock__qty span { width: 18px; text-align: center; color: #6b6b6b; }
+  .ca-wlmock__add { background: #0d110d; color: #fff; border-radius: 999px; padding: 6px 12px; font-weight: 500; white-space: nowrap; text-align: center; }
+  @media (min-width: 560px) { .ca-wlmock__row { grid-template-columns: 52px 1fr auto auto auto; } .ca-wlmock__price { grid-column: auto; } }
+  @media (max-width: 559px) { .ca-wlmock__qty, .ca-wlmock__add { grid-column: 2 / -1; justify-self: start; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "App: wishlist mock",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "For tile, paint, fixture & furniture stores on Shopify" },
+    { "type": "text", "id": "heading", "label": "Heading (h2)", "default": "Plan the whole job, room by room, on your store." },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "textarea", "id": "caption", "label": "Caption under text" },
+    { "type": "header", "content": "Mock" },
+    { "type": "text", "id": "url_label", "label": "Browser URL", "default": "yourstore.com/apps/wishlist/projects" },
+    { "type": "text", "id": "project_name", "label": "Project name", "default": "142 Maple Street" },
+    { "type": "textarea", "id": "rooms", "label": "Room filters (one per line)", "default": "All\nPrimary bath\nKitchen" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product row",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "vendor", "label": "Vendor", "default": "Gable & Oak" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Pale Calcite Zellige - Hex" },
+        { "type": "text", "id": "variant", "label": "Variant", "default": "Glazed / Hex" },
+        { "type": "text", "id": "room", "label": "Room tag", "default": "Primary bath" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$191.10 / box" },
+        { "type": "text", "id": "qty", "label": "Quantity", "default": "18" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "App: wishlist mock", "category": "Conspire", "blocks": [{ "type": "product" }, { "type": "product" }, { "type": "product" }] }]
+}
+{% endschema %}

@@ -146,7 +146,7 @@
             "name": "Onboarding & Wholesale",
             "tagline": "B2B for your Shopify store",
             "description": "<p>Wholesale registration forms with approval, buyer document management, and B2B pricing on any Shopify plan. Unlimited price groups, net terms, and quick order.</p>",
-            "link": "https://apps.conspireagency.com/wholesale",
+            "link": "/pages/b2b-onboarding-wholesale",
             "store_url": "https://apps.shopify.com/wholesale-b2b-trade-program"
           }
         },
@@ -156,7 +156,7 @@
             "name": "Wishlist Project Planner",
             "tagline": "B2B for your Shopify store",
             "description": "<p>Shopify wishlist app for B2B &amp; project planning: multiple wishlists, subgroups, quantities, sharing, PDF quotes, draft orders &amp; add to cart.</p>",
-            "link": "https://apps.conspireagency.com/wishlist",
+            "link": "/pages/b2b-wishlist-project-planner",
             "store_url": "https://apps.shopify.com/wishlist-project-planner"
           }
         },
@@ -166,7 +166,7 @@
             "name": "Draft Order Invoices",
             "tagline": "B2B for your Shopify store",
             "description": "<p>Customers view &amp; pay draft order invoices from their account page - with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
-            "link": "https://apps.conspireagency.com/drafts",
+            "link": "/pages/draft-order-invoices",
             "store_url": "https://apps.shopify.com/draft-order-invoices"
           }
         }
@@ -396,7 +396,7 @@
     "ca_apps",
     "ca_services",
     "ca_blog",
-    "ca_faq",
-    "ca_booking"
+    "ca_booking",
+    "ca_faq"
   ]
 }

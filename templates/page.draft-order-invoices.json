@@ -1,0 +1,241 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-app-drafts-hero",
+      "blocks": {
+        "pill_1": {
+          "type": "pill",
+          "settings": {
+            "badge": "New",
+            "label": "Edit drafts in-app: line items, prices & properties",
+            "link": "#features"
+          }
+        },
+        "pill_2": {
+          "type": "pill",
+          "settings": {
+            "badge": "New",
+            "label": "Line-item property templates",
+            "link": "#features"
+          }
+        }
+      },
+      "block_order": ["pill_1", "pill_2"],
+      "settings": {
+        "eyebrow": "B2B Draft Order Invoices",
+        "heading": "Draft orders, paid. Invoices your customers can see and settle.",
+        "lede": "<p>Every open draft order invoice on your customers' account page, paid in one click at Shopify checkout, with automatic reminders until it's settled.</p>",
+        "primary_label": "Install on Shopify",
+        "primary_link": "https://apps.shopify.com/draft-order-invoices",
+        "secondary_label": "Documentation",
+        "secondary_link": "https://apps.conspireagency.com/drafts/docs",
+        "tour_label": "Watch the tour · 1:31",
+        "tour_link": "https://www.youtube.com/watch?v=6YJXBUOeImo",
+        "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
+        "tour_alt": "B2B Draft Order Invoices app tour: open invoices listed on a Shopify customer account page",
+        "proof": "From $5/month · Free trial · Built by a Shopify Premier Partner",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "mocks": {
+      "type": "ca-app-drafts-mock",
+      "settings": {
+        "eyebrow": "Draft order invoicing for your Shopify store",
+        "heading": "Stop chasing draft order payments over email.",
+        "lede": "<p>Customers log in to your store, see every open invoice, download a PDF, and pay through Shopify's secure checkout, while automated reminders follow up on anything unpaid.</p>",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "features": {
+      "type": "ca-app-features",
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-receipt-text.svg", "title": "Invoices on the account page", "text": "A theme app block lists every open draft order invoice on the customer account page, with a Pay Now button that opens Shopify's secure invoice checkout.", "link": "https://apps.conspireagency.com/drafts/docs/guides/customer-accounts", "link_label": "Customer accounts guide" } },
+        "f2": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-bell-ring.svg", "title": "Automated payment reminders", "text": "Schedule reminder emails for sent invoices that are still unpaid. Pick the follow-up days, and reminders stop on their own once the invoice is paid.", "link": "", "link_label": "" } },
+        "f3": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-file-down.svg", "title": "Invoice PDF downloads", "text": "Generate a clean PDF for any draft order invoice, with line items, addresses, tax, shipping, and totals. Download from the admin or let customers save their own copy.", "link": "https://apps.conspireagency.com/drafts/docs/guides/invoice-pdfs", "link_label": "Invoice PDFs guide" } },
+        "f4": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-message-square-quote.svg", "title": "Quote requests from the cart", "text": "Add a Request a Quote button to your cart page. Customers submit their cart with contact details, and you review and convert requests into draft orders.", "link": "https://apps.conspireagency.com/drafts/docs/guides/quote-requests", "link_label": "Quote requests guide" } },
+        "f5": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-store.svg", "title": "New customer accounts", "text": "Extensions for Shopify's new customer accounts show open invoices as a dedicated page and on the order index, so both account experiences are covered.", "link": "https://apps.conspireagency.com/drafts/docs/guides/customer-accounts", "link_label": "Customer accounts guide" } },
+        "f6": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-smartphone.svg", "title": "Shopify POS", "text": "A POS tile lists open draft orders in store. Pull a draft's line items straight into the POS cart and take payment in person.", "link": "https://apps.conspireagency.com/drafts/docs/guides/pos", "link_label": "POS guide" } },
+        "f7": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-mail-check.svg", "title": "Email history and tracking", "text": "Every invoice and reminder email is logged per draft order with delivery, open, and click tracking, so you always know what a customer received.", "link": "", "link_label": "" } },
+        "f8": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-list-checks.svg", "title": "Property templates", "text": "Save reusable line item properties and order attributes as templates, then apply them with one click when editing a draft order.", "link": "", "link_label": "" } },
+        "f9": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-send.svg", "title": "Klaviyo integration", "text": "Send invoice sent, viewed, paid, reminder, and quote request events to Klaviyo, so you can trigger your own flows and keep invoiced customers out of abandoned checkout emails.", "link": "https://apps.conspireagency.com/drafts/docs/guides/klaviyo", "link_label": "Klaviyo guide" } },
+        "f10": { "type": "feature", "settings": { "icon_asset": "ca-app-icon-layout-dashboard.svg", "title": "Dashboard and analytics", "text": "See open invoices, invoice views, and conversions at a glance. Draft orders sync automatically from Shopify, no manual imports.", "link": "", "link_label": "" } }
+      },
+      "block_order": ["f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10"],
+      "settings": {
+        "anchor": "features",
+        "eyebrow": "Features",
+        "heading": "The whole draft order invoice workflow",
+        "intro": "From the moment you send an invoice to the moment it's paid, the app keeps invoices visible, trackable, and easy to settle.",
+        "columns": "4",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "process": {
+      "type": "ca-process",
+      "blocks": {
+        "step_1": { "type": "step", "settings": { "label": "Install and enable the widget", "text": "One-click install from the Shopify App Store, then enable the app embed and add the invoice table block in your theme editor. Your draft orders sync automatically." } },
+        "step_2": { "type": "step", "settings": { "label": "Send invoices from draft orders", "text": "Create draft orders the way you already do and send the invoice. The app tracks each invoice, shows it on the customer's account, and schedules reminders." } },
+        "step_3": { "type": "step", "settings": { "label": "Get paid without chasing", "text": "Customers log in, see their open invoices, and pay through Shopify's secure checkout. Reminder emails follow up automatically until the invoice is paid." } }
+      },
+      "block_order": ["step_1", "step_2", "step_3"],
+      "settings": {
+        "eyebrow": "How it works",
+        "heading": "<p>Collecting invoices in an afternoon</p>",
+        "heading_tag": "h2",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "team": {
+      "type": "ca-split-feature",
+      "settings": {
+        "eyebrow": "Built by Conspire",
+        "heading": "Crafted by a <strong>Los Angeles Shopify development company</strong>",
+        "text": "<p>B2B Draft Order Invoices is built by Conspire, a Shopify development company and Shopify Premier Partner founded in Los Angeles. The same senior Shopify developers and designers who build high-performing storefronts for leading brands design, develop, and support this app, and answer your support messages.</p><p>Need more than an app? Conspire also offers full Shopify development services, from storefront design to custom B2B builds.</p>",
+        "button_label": "Shopify services",
+        "button_link": "/pages/pricing",
+        "image_small": "shopify://shop_images/ca-apps-brand-replica-decor.jpg",
+        "image_large": "shopify://shop_images/ca-apps-brand-lights-canada.jpg",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "q1": { "type": "item", "settings": { "question": "What does B2B Draft Order Invoices actually do?", "answer": "<p>It makes Shopify draft order invoices visible and payable. Draft orders sync from your store automatically, customers see their open invoices on the account page (classic or new customer accounts), pay through Shopify's secure invoice checkout, and the app follows up on unpaid invoices with automated email reminders.</p>" } },
+        "q2": { "type": "item", "settings": { "question": "Do customers pay through Shopify checkout?", "answer": "<p>Yes. The Pay Now button opens the same secure Shopify invoice checkout link that Shopify generates when you send a draft order invoice. The app never processes payments itself, so your existing payment providers, taxes, and order flow all work unchanged.</p>" } },
+        "q3": { "type": "item", "settings": { "question": "How do payment reminders work?", "answer": "<p>When you send a draft order invoice and it stays unpaid, the app sends reminder emails on the follow-up schedule you choose in the dashboard. Reminders stop automatically once the invoice is paid, and every email is logged with delivery and open tracking.</p>" } },
+        "q4": { "type": "item", "settings": { "question": "Does it work with Shopify's new customer accounts?", "answer": "<p>Yes. Alongside the theme widget for classic accounts, the app includes customer account UI extensions: a dedicated Open Invoices page and an order index block, both added from Shopify's customer account editor.</p>" } },
+        "q5": { "type": "item", "settings": { "question": "Can customers request a quote instead of checking out?", "answer": "<p>Yes. An optional cart page block adds a Request a Quote button. The customer submits their cart with contact details, you review the request in the app, convert it to a draft order, and send the invoice.</p>" } },
+        "q6": { "type": "item", "settings": { "question": "Does it work with Shopify POS?", "answer": "<p>Yes. The POS extension adds a Draft Orders tile to the smart grid. Staff can browse open drafts, load a draft's line items into the POS cart, and take payment in person.</p>" } },
+        "q7": { "type": "item", "settings": { "question": "How much does it cost?", "answer": "<p>Pricing scales with your Shopify plan, starting at $5/month for Basic Shopify stores, with a free trial on every plan. See the Shopify App Store listing for current pricing.</p>" } },
+        "q8": { "type": "item", "settings": { "question": "Who builds and supports the app?", "answer": "<p>The app is built and supported by Conspire, a Shopify development company and Premier Partner founded in Los Angeles. The same senior team that builds Shopify stores for leading brands answers your support messages.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Read the documentation",
+        "button_link": "https://apps.conspireagency.com/drafts/docs",
+        "style_class": "button-secondary",
+        "statement": "<p>New to draft orders? Read our guide to <a href=\"/blogs/shopify/shopify-draft-order-invoices-for-b2b\">Shopify draft order invoices for B2B</a>. Still have a question? Browse the <a href=\"https://apps.conspireagency.com/drafts/docs\">documentation</a> or message us from any docs page.</p>",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "cta": {
+      "type": "ca-page-intro",
+      "settings": {
+        "eyebrow": "Ready when you are",
+        "heading": "<p><strong>Get your draft orders paid.</strong> Install B2B Draft Order Invoices and give customers a clear place to see, download, and pay every open invoice.</p>",
+        "heading_tag": "h2",
+        "column_start": "5",
+        "size": "",
+        "button_label": "Install on Shopify",
+        "button_link": "https://apps.shopify.com/draft-order-invoices",
+        "style_class": "button",
+        "rule": false,
+        "allow_transparent_header": false,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "more_apps": {
+      "type": "ca-apps-cards",
+      "blocks": {
+        "wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Onboarding & Wholesale",
+            "tagline": "Wholesale onboarding forms, document management & B2B pricing",
+            "description": "<p>Wholesale registration forms with approval, buyer document management, and B2B pricing on any Shopify plan. Unlimited price groups, net terms, and quick order.</p>",
+            "page_link": "/pages/b2b-onboarding-wholesale",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+            "store_label": "App Store",
+            "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wholesale-b2b-trade-program#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=PEF3yQ564Uo",
+            "tour_label": "Watch the tour · 1:32"
+          }
+        },
+        "wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Wishlist Project Planner",
+            "tagline": "B2B wishlists with quote requests, PDF exports & draft orders",
+            "description": "<p>Shopify wishlist app for B2B & project planning: multiple wishlists, subgroups, quantities, sharing, PDF quotes, draft orders & add to cart.</p>",
+            "page_link": "/pages/b2b-wishlist-project-planner",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wishlist-project-planner",
+            "store_label": "App Store",
+            "docs_link": "https://apps.conspireagency.com/wishlist/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wishlist-project-planner#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=EjvqM4SR11Q",
+            "tour_label": "Watch the tour · 1:28"
+          }
+        }
+      },
+      "block_order": ["wholesale", "wishlist"],
+      "settings": {
+        "eyebrow": "More B2B apps",
+        "heading": "From the same Conspire team",
+        "intro": "<p>Three focused Shopify apps for stores that sell to serious buyers. <a href=\"/pages/best-shopify-apps\">See all B2B apps</a>.</p>",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_1": { "type": "photo", "settings": { "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg" } },
+        "photo_2": { "type": "photo", "settings": { "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg" } },
+        "photo_3": { "type": "photo", "settings": { "image": "shopify://shop_images/ca-apps-brand-replica-decor.jpg" } },
+        "photo_4": { "type": "photo", "settings": { "image": "shopify://shop_images/ca-apps-brand-via-motif.jpg" } }
+      },
+      "block_order": ["photo_1", "photo_2", "photo_3", "photo_4"],
+      "settings": {
+        "eyebrow": "Need a custom B2B build?",
+        "heading": "Talk to the team behind the apps",
+        "background_color": "",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    }
+  },
+  "order": ["hero", "mocks", "features", "process", "team", "faq", "cta", "more_apps", "booking"]
+}

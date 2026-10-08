@@ -1,0 +1,250 @@
+{%- comment -%}
+  ca-app-wholesale-mock.liquid — copy column (eyebrow, H2, text, optional
+  bullet list, optional caption) beside a static, decorative UI mock of the
+  app. Two mock variants: "pricing" (a logged-in buyer's price list) and
+  "approval" (an application being approved into a tier). The mock is
+  aria-hidden; all meaningful text lives in the copy column.
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = section.settings.variant | default: 'pricing'
+  assign side = section.settings.mock_side | default: 'right'
+-%}
+
+<div
+  class="ca-appmock spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %} ca-appmock--{{ side }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner ca-appmock__row">
+    <div class="ca-appmock__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ca-eyebrow ca-appmock__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ca-appmock__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="ca-appmock__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="ca-appmock__list list-unstyled" role="list">
+          {%- for block in section.blocks -%}
+            <li class="ca-appmock__li" {{ block.shopify_attributes }}>{{ block.settings.label }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if section.settings.caption != blank -%}
+        <p class="ca-appmock__caption">{{ section.settings.caption }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="ca-appmock__media">
+      <div class="ca-mock ca-mock--{{ variant }}" aria-hidden="true">
+        {%- if variant == 'approval' -%}
+          <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">Apps · B2B Onboarding &amp; Wholesale · Applications</span></div>
+          <div class="ca-mock__body">
+            <div class="ca-mock__head">
+              <div><div class="ca-mock__kicker">Trade program application</div><div class="ca-mock__title">Retail Co.</div><div class="ca-mock__sub">marcus@retailco.com · Portland, OR</div></div>
+              <span class="ca-mock__pill ca-mock__pill--warn">Pending review</span>
+            </div>
+            <dl class="ca-mock__dl">
+              <div><dt>Your name</dt><dd>Marcus Reed</dd></div>
+              <div><dt>Expected monthly volume</dt><dd>$5,000 - $10,000 / month</dd></div>
+              <div><dt>Resale certificate</dt><dd><span class="ca-mock__file">resale-certificate.pdf</span></dd></div>
+              <div><dt>Ship-to address</dt><dd>1420 SE Division St, Portland, OR 97202</dd></div>
+            </dl>
+            <div class="ca-mock__actions"><span class="ca-mock__btn ca-mock__btn--ghost">Reject</span><span class="ca-mock__btn">Approve → Gold tier</span></div>
+            <div class="ca-mock__result"><span class="ca-mock__check">✓</span><div><strong>Approved → Gold tier</strong><span>Shopify company, contact and location created · Net 30</span></div></div>
+          </div>
+        {%- else -%}
+          <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/collections/tile</span></div>
+          <div class="ca-mock__body">
+            <div class="ca-mock__head">
+              <div><div class="ca-mock__kicker">Signed in</div><div class="ca-mock__title">Marcus Reed · Retail Co.</div></div>
+              <span class="ca-mock__pill">Gold tier · Net 30</span>
+            </div>
+            <table class="ca-mock__table">
+              <thead><tr><th>Product</th><th>Retail</th><th>Your price</th></tr></thead>
+              <tbody>
+                <tr><td>Pale Calcite Zellige Hex</td><td><s>$24.00</s></td><td>$14.40</td></tr>
+                <tr><td>Mineral Sage 4×4</td><td><s>$18.00</s></td><td>$11.70</td></tr>
+                <tr><td>Kael Pendant</td><td><s>$420.00</s></td><td>$294.00</td></tr>
+                <tr><td>Corin Wall Lamp</td><td><s>$310.00</s></td><td>$217.00</td></tr>
+              </tbody>
+            </table>
+            <div class="ca-mock__note"><span>Volume break</span> 50+ sq ft · an extra 10% off</div>
+            <div class="ca-mock__actions"><span class="ca-mock__btn">Add to cart · Net 30 at checkout</span></div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-appmock { background-color: var(--color-background); }
+
+  .ca-appmock__row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 48px 24px;
+    align-items: center;
+  }
+
+  .ca-appmock__copy { grid-column: 1 / span 5; }
+  .ca-appmock__media { grid-column: 7 / span 6; }
+  .ca-appmock--left .ca-appmock__copy { grid-column: 8 / span 5; order: 2; }
+  .ca-appmock--left .ca-appmock__media { grid-column: 1 / span 6; order: 1; }
+
+  .ca-appmock__eyebrow { margin-block-end: 24px; }
+
+  .ca-appmock__heading {
+    margin: 0 0 24px;
+    font-size: var(--ca-fs-48);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .ca-appmock__text { color: var(--ca-soft); font-size: var(--ca-fs-18); line-height: 1.5; }
+  .ca-appmock__text > :first-child { margin-block-start: 0; }
+  .ca-appmock__text > :last-child { margin-block-end: 0; }
+
+  .ca-appmock__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 24px;
+    margin: 28px 0 0;
+    padding: 0;
+  }
+
+  .ca-appmock__li {
+    position: relative;
+    padding-inline-start: 22px;
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+  }
+
+  .ca-appmock__li::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.55em;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .ca-appmock__caption { margin: 28px 0 0; font-size: 0.9375rem; color: var(--ca-muted); }
+
+  /* Decorative mock */
+  .ca-mock {
+    --mock-bg: #ffffff;
+    --mock-ink: #0d110d;
+    --mock-soft: rgb(13 17 13 / 0.62);
+    --mock-line: rgb(13 17 13 / 0.12);
+    --mock-tint: #f2f2f2;
+    border: 1px solid var(--mock-line);
+    border-radius: 14px;
+    background: var(--mock-bg);
+    color: var(--mock-ink);
+    font-size: 14px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    box-shadow: 0 30px 60px -30px rgb(13 17 13 / 0.35);
+    overflow: hidden;
+  }
+
+  .ca-mock__bar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; background: var(--mock-tint); border-bottom: 1px solid var(--mock-line); }
+  .ca-mock__dot { width: 9px; height: 9px; border-radius: 999px; background: var(--mock-line); }
+  .ca-mock__url { margin-inline-start: 10px; font-size: 12px; color: var(--mock-soft); }
+  .ca-mock__body { padding: 22px 24px 24px; display: grid; gap: 18px; }
+  .ca-mock__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .ca-mock__kicker { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mock-soft); }
+  .ca-mock__title { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin-top: 4px; }
+  .ca-mock__sub { font-size: 12px; color: var(--mock-soft); margin-top: 2px; }
+  .ca-mock__pill { flex: none; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--mock-ink); color: #fff; white-space: nowrap; }
+  .ca-mock__pill--warn { background: #fbe9c4; color: #6b4a00; }
+  .ca-mock__table { width: 100%; border-collapse: collapse; }
+  .ca-mock__table th { text-align: left; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mock-soft); padding: 0 0 8px; border-bottom: 1px solid var(--mock-line); }
+  .ca-mock__table td { padding: 10px 0; border-bottom: 1px solid var(--mock-line); }
+  .ca-mock__table td:nth-child(2) { color: var(--mock-soft); }
+  .ca-mock__table td:last-child { font-weight: 600; }
+  .ca-mock__table th:not(:first-child), .ca-mock__table td:not(:first-child) { text-align: right; width: 22%; }
+  .ca-mock__note { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--mock-soft); }
+  .ca-mock__note span { padding: 3px 8px; border-radius: 6px; background: var(--mock-tint); color: var(--mock-ink); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ca-mock__dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; margin: 0; }
+  .ca-mock__dl dt { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mock-soft); }
+  .ca-mock__dl dd { margin: 3px 0 0; font-weight: 500; }
+  .ca-mock__file { display: inline-block; padding: 3px 8px; border: 1px solid var(--mock-line); border-radius: 6px; font-size: 12px; }
+  .ca-mock__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .ca-mock__btn { display: inline-block; padding: 9px 14px; border-radius: 999px; background: var(--mock-ink); color: #fff; font-size: 13px; font-weight: 600; }
+  .ca-mock__btn--ghost { background: transparent; color: var(--mock-ink); border: 1px solid var(--mock-line); }
+  .ca-mock__result { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 10px; background: #e6f4ea; color: #0f5132; }
+  .ca-mock__result div { display: grid; }
+  .ca-mock__result span { font-size: 12px; opacity: 0.85; }
+  .ca-mock__check { flex: none; width: 28px; height: 28px; border-radius: 999px; background: #0f5132; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  @media screen and (max-width: 989px) {
+    .ca-appmock__row { gap: 40px 24px; }
+    .ca-appmock__copy, .ca-appmock__media,
+    .ca-appmock--left .ca-appmock__copy, .ca-appmock--left .ca-appmock__media { grid-column: 1 / -1; order: initial; }
+    .ca-appmock__heading { font-size: var(--ca-fs-36); }
+    .ca-appmock__list { grid-template-columns: minmax(0, 1fr); }
+    .ca-mock__body { padding: 18px 16px 20px; }
+    .ca-mock__dl { grid-template-columns: minmax(0, 1fr); }
+    .ca-mock { font-size: 13px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CA App UI mock",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Mock",
+      "options": [
+        { "value": "pricing", "label": "Buyer price list" },
+        { "value": "approval", "label": "Application approval" }
+      ],
+      "default": "pricing"
+    },
+    {
+      "type": "select",
+      "id": "mock_side",
+      "label": "Mock position",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "caption", "label": "Caption" },
+    { "type": "color", "id": "background_color", "label": "Background" },
+    { "type": "color", "id": "text_color", "label": "Text colour" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Bullet",
+      "settings": [{ "type": "text", "id": "label", "label": "Label" }]
+    }
+  ],
+  "presets": [{ "name": "CA App UI mock", "category": "Conspire" }]
+}
+{% endschema %}

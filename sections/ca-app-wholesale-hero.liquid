@@ -1,0 +1,175 @@
+{%- comment -%}
+  ca-app-wholesale-hero.liquid — app page hero: eyebrow, H1 statement, lede,
+  three calls to action (App Store / Documentation / Watch the tour) and a
+  proof line. Same rhythm as ca-page-intro (eyebrow left, statement from
+  column 5) but with the extra links an app page needs.
+{%- endcomment -%}
+
+{%- liquid
+  assign tag = section.settings.heading_tag | default: 'h1'
+  assign heading = section.settings.heading
+  if heading == blank
+    assign heading = page.title
+  endif
+-%}
+
+<div
+  class="ca-apphero spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: heading,
+      tag: tag,
+      start: 5,
+      size: section.settings.size
+    -%}
+    <div class="ca-apphero__body">
+      {%- if section.settings.lede != blank -%}
+        <div class="ca-apphero__lede rte">{{ section.settings.lede }}</div>
+      {%- endif -%}
+      <div class="ca-apphero__actions">
+        {%- if section.settings.store_label != blank and section.settings.store_link != blank -%}
+          <a class="button size-style" href="{{ section.settings.store_link }}" target="_blank" rel="noopener">{{ section.settings.store_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.docs_label != blank and section.settings.docs_link != blank -%}
+          <a class="button-secondary size-style" href="{{ section.settings.docs_link }}" target="_blank" rel="noopener">{{ section.settings.docs_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.tour_label != blank and section.settings.tour_link != blank -%}
+          <a class="ca-apphero__tour" href="{{ section.settings.tour_link }}" target="_blank" rel="noopener">
+            <span class="ca-apphero__play" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 1.5v9l8-4.5z"/></svg></span>
+            {{ section.settings.tour_label }}
+          </a>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.proof != blank -%}
+        <p class="ca-apphero__proof">{{ section.settings.proof }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-apphero {
+    background-color: var(--color-background);
+  }
+
+  .ca-apphero__body {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 24px;
+    margin-block-start: 40px;
+  }
+
+  .ca-apphero__lede,
+  .ca-apphero__actions,
+  .ca-apphero__proof {
+    grid-column: 5 / span 7;
+  }
+
+  .ca-apphero__lede {
+    max-width: 58ch;
+    font-size: var(--ca-fs-20);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  .ca-apphero__lede > :first-child { margin-block-start: 0; }
+  .ca-apphero__lede > :last-child { margin-block-end: 0; }
+
+  .ca-apphero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 20px;
+    margin-block-start: 8px;
+  }
+
+  .ca-apphero__tour {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ca-apphero__tour:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .ca-apphero__play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--ca-hairline-strong);
+    border-radius: 999px;
+  }
+
+  .ca-apphero__proof {
+    margin: 8px 0 0;
+    font-size: 0.9375rem;
+    color: var(--ca-muted);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-apphero__body { margin-block-start: 28px; }
+    .ca-apphero__lede,
+    .ca-apphero__actions,
+    .ca-apphero__proof { grid-column: 1 / -1; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CA App hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "info": "Left empty, shows the page title." },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Statement size",
+      "options": [
+        { "value": "display", "label": "Display (page title)" },
+        { "value": "lg", "label": "Large (section)" },
+        { "value": "xl", "label": "Small" }
+      ],
+      "default": "display"
+    },
+    { "type": "richtext", "id": "lede", "label": "Lede" },
+    { "type": "text", "id": "store_label", "label": "App Store label", "default": "Install on Shopify" },
+    { "type": "url", "id": "store_link", "label": "App Store link" },
+    { "type": "text", "id": "docs_label", "label": "Documentation label", "default": "Documentation" },
+    { "type": "url", "id": "docs_link", "label": "Documentation link" },
+    { "type": "text", "id": "tour_label", "label": "Tour label", "default": "Watch the tour" },
+    { "type": "url", "id": "tour_link", "label": "Tour link (YouTube)" },
+    { "type": "text", "id": "proof", "label": "Proof line" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0d110d" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 120 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 120 }
+  ],
+  "presets": [{ "name": "CA App hero", "category": "Conspire" }]
+}
+{% endschema %}

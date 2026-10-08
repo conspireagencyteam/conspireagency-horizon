@@ -1,0 +1,122 @@
+{%- comment -%}
+  ca-app-wishlist-split.liquid — two-column copy + visual for app pages.
+  Copy column: eyebrow, h2, text, checklist (blocks), optional h3 + chips.
+  Visual: "product" (product-card mock with Add-to-Projects popover, aria-hidden)
+  or "image" (image picker). Visual side can be left or right.
+{%- endcomment -%}
+<div
+  class="ca-wlsplit spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if section.settings.visual_side == 'right' %} ca-wlsplit--right{% endif %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override', background_color: section.settings.background_color, text_color: section.settings.text_color, section_id: section.id -%}
+  <div class="ca-inner ca-wlsplit__grid">
+    <div class="ca-wlsplit__visual">
+      {%- if section.settings.visual == 'product' -%}
+        <div class="ca-wlsplit__pcard" aria-hidden="true">
+          <div class="ca-wlsplit__pimg">
+            {%- if section.settings.product_image != blank -%}{{ section.settings.product_image | image_url: width: 800 | image_tag: widths: '400, 800', sizes: '(min-width: 990px) 40vw, 90vw', alt: '', loading: 'lazy' }}{%- endif -%}
+          </div>
+          <p class="ca-wlsplit__pname">{{ section.settings.product_title }}</p>
+          <p class="ca-wlsplit__pvariant">{{ section.settings.product_variant }}</p>
+          <p class="ca-wlsplit__pprice">{{ section.settings.product_price }}</p>
+          <p class="ca-wlsplit__pbtns"><span class="ca-wlsplit__b1">Add to cart</span><span class="ca-wlsplit__b2">&#9825; Add To Wishlist</span></p>
+          <div class="ca-wlsplit__pop">
+            <p class="ca-wlsplit__pophead">Add to Projects <span>&#10005;</span></p>
+            <p class="ca-wlsplit__poprow"><b>142 Maple Street</b> <em>Added &#10003;</em></p>
+            <p class="ca-wlsplit__poprow"><b>9 Alder Court</b> <em>Add</em></p>
+            <p class="ca-wlsplit__popnew">+ Create New Project</p>
+            <p class="ca-wlsplit__popgo">Continue</p>
+          </div>
+        </div>
+      {%- elsif section.settings.image != blank -%}
+        {%- assign split_alt = section.settings.image.alt | default: section.settings.heading | strip_html | strip | default: 'Store built with the B2B Wishlist Project Planner' -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: widths: '600, 1000, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: split_alt, loading: 'lazy', class: 'ca-wlsplit__img' }}
+      {%- endif -%}
+    </div>
+    <div class="ca-wlsplit__copy">
+      {%- if section.settings.eyebrow != blank -%}<p class="ca-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="ca-wlsplit__heading">{{ section.settings.heading }}</h2>
+      <div class="ca-wlsplit__text">{{ section.settings.text }}</div>
+      {%- if section.blocks.size > 0 -%}
+        <ul class="ca-wlsplit__list" role="list">
+          {%- for block in section.blocks -%}<li {{ block.shopify_attributes }}><span aria-hidden="true">&#10003;</span>{{ block.settings.text }}</li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <p class="ca-wlsplit__cta"><a class="button size-style" href="{{ section.settings.button_link }}"{% if section.settings.button_link contains '://' %} target="_blank" rel="noopener"{% endif %}>{{ section.settings.button_label }}</a></p>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <h3 class="ca-wlsplit__sub">{{ section.settings.subheading }}</h3>
+        {%- if section.settings.chips != blank -%}
+          <p class="ca-wlsplit__chips">
+            {%- assign chips = section.settings.chips | newline_to_br | split: '<br />' -%}
+            {%- for chip in chips -%}<span>{{ chip | strip }}</span>{%- endfor -%}
+          </p>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-wlsplit__grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 990px) {
+    .ca-wlsplit__grid { grid-template-columns: 5fr 6fr; gap: 80px; }
+    .ca-wlsplit--right .ca-wlsplit__visual { order: 2; }
+  }
+  .ca-wlsplit__heading { font-size: var(--ca-fs-36); line-height: 1.1; margin: 12px 0 20px; letter-spacing: -0.02em; }
+  .ca-wlsplit__text { font-size: var(--ca-fs-20, 1.25rem); line-height: 1.5; color: var(--ca-soft); }
+  .ca-wlsplit__list { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 10px; }
+  .ca-wlsplit__list li { display: flex; gap: 10px; line-height: 1.45; } .ca-wlsplit__list span { flex: none; color: var(--ca-accent, #3a5a3a); }
+  .ca-wlsplit__cta { margin: 28px 0 0; }
+  .ca-wlsplit__sub { margin: 32px 0 12px; font-size: var(--ca-fs-20, 1.25rem); }
+  .ca-wlsplit__chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+  .ca-wlsplit__chips span { border: 1px solid var(--ca-hairline-strong); border-radius: 999px; padding: 6px 12px; font-size: 0.9rem; }
+  .ca-wlsplit__img { width: 100%; height: auto; border-radius: 14px; display: block; }
+  .ca-wlsplit__pcard { position: relative; max-width: 380px; margin: 0 auto; background: #fff; color: #0d110d; border: 1px solid var(--ca-hairline-strong); border-radius: 14px; padding: 16px; box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35); font-size: 13px; }
+  .ca-wlsplit__pimg { aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: #eee; margin-bottom: 14px; } .ca-wlsplit__pimg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ca-wlsplit__pname { margin: 0; font-weight: 600; font-size: 16px; } .ca-wlsplit__pvariant { margin: 2px 0 6px; color: #6b6b6b; } .ca-wlsplit__pprice { margin: 0 0 12px; font-weight: 600; font-size: 15px; }
+  .ca-wlsplit__pbtns { display: grid; gap: 8px; margin: 0; } .ca-wlsplit__pbtns span { text-align: center; border-radius: 999px; padding: 10px; font-weight: 500; }
+  .ca-wlsplit__b1 { background: #0d110d; color: #fff; } .ca-wlsplit__b2 { border: 1px solid #0d110d; }
+  .ca-wlsplit__pop { position: absolute; right: -8%; bottom: 10%; width: 72%; background: #fff; border: 1px solid #e3e3e3; border-radius: 12px; padding: 12px 14px; box-shadow: 0 20px 40px -20px rgb(0 0 0 / 0.4); }
+  @media (max-width: 749px) { .ca-wlsplit__pop { right: 8px; width: 70%; } }
+  .ca-wlsplit__pophead { display: flex; justify-content: space-between; font-weight: 600; margin: 0 0 8px; } .ca-wlsplit__pophead span { color: #999; }
+  .ca-wlsplit__poprow { display: flex; justify-content: space-between; margin: 0; padding: 7px 0; border-top: 1px solid #ececec; } .ca-wlsplit__poprow b { font-weight: 500; } .ca-wlsplit__poprow em { font-style: normal; color: #3a5a3a; font-size: 12px; }
+  .ca-wlsplit__popnew { margin: 0; padding: 8px 0; border-top: 1px solid #ececec; color: #6b6b6b; font-size: 12px; }
+  .ca-wlsplit__popgo { margin: 4px 0 0; background: #0d110d; color: #fff; border-radius: 999px; text-align: center; padding: 8px; font-weight: 500; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "App: split visual",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading (h2)", "default": "One click from browsing to planning" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "subheading", "label": "Subheading (h3)" },
+    { "type": "textarea", "id": "chips", "label": "Chips under subheading (one per line)" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Visual" },
+    { "type": "select", "id": "visual", "label": "Visual", "options": [ { "value": "product", "label": "Product card mock" }, { "value": "image", "label": "Image" } ], "default": "product" },
+    { "type": "select", "id": "visual_side", "label": "Visual side", "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ], "default": "left" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "image_picker", "id": "product_image", "label": "Mock product image" },
+    { "type": "text", "id": "product_title", "label": "Mock product title", "default": "Calcite Gloss Zellige - 4x4" },
+    { "type": "text", "id": "product_variant", "label": "Mock variant", "default": "Glazed / 4x4 / Sold per box" },
+    { "type": "text", "id": "product_price", "label": "Mock price", "default": "$213.59 / box" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    { "type": "check", "name": "Checklist item", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Benefit" } ] }
+  ],
+  "presets": [{ "name": "App: split visual", "category": "Conspire", "blocks": [{ "type": "check" }, { "type": "check" }, { "type": "check" }] }]
+}
+{% endschema %}

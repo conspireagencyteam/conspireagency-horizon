@@ -283,10 +283,11 @@
       margin-block-start: 8px;
     }
 
-    .ca-blog__foot .ca-blog__more {
+    /* Specificity must beat `a.button-custom.size-style` in ca-custom.css, which
+       centres the content; full-width needs the chip flush-right so the circle
+       sits under the absolutely-positioned arrow (else a bare dark dot shows). */
+    .ca-blog__foot a.ca-blog__more.size-style {
       width: 100%;
-      /* full-width: keep the text left and the chip flush-right so the circle
-         stays under the absolutely-positioned arrow (else they separate). */
       justify-content: space-between;
     }
   }

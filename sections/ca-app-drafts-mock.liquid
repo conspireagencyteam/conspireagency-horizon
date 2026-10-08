@@ -1,0 +1,127 @@
+{%- comment -%}
+  ca-app-drafts-mock.liquid — "How it looks" for the Draft Order Invoices page.
+  Intro (eyebrow + h2 + lede) and four decorative HTML/CSS UI mocks ported from
+  apps.conspireagency.com/drafts: open-invoice list, invoice PDF, quote request,
+  payment reminder. The mocks are aria-hidden; each one's real caption is a <p>.
+{%- endcomment -%}
+<div
+  class="ca-drmock spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro', eyebrow: section.settings.eyebrow, heading: section.settings.heading, start: 5, class: 'ca-drmock__intro' -%}
+    {%- if section.settings.lede != blank -%}
+      <div class="ca-grid ca-drmock__lede"><div class="ca-drmock__lede-text">{{ section.settings.lede }}</div></div>
+    {%- endif -%}
+    <ul class="ca-drmock__grid" role="list">
+      <li class="ca-drmock__item">
+        <div class="ca-drmock__card" aria-hidden="true">
+          <p class="ca-drmock__title">Open Invoices</p>
+          <table class="ca-drmock__table">
+            <thead><tr><th>Invoice</th><th>Amount</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>#D125 <span class="ca-drmock__date">Aug 4</span></td><td>$1,840.00</td><td><span class="ca-drmock__btn">Pay Now</span></td></tr>
+              <tr><td>#D124 <span class="ca-drmock__date">Jul 29</span></td><td>$612.50</td><td><span class="ca-drmock__btn">Pay Now</span></td></tr>
+              <tr><td>#D121 <span class="ca-drmock__date">Jul 18</span></td><td>$3,275.00</td><td><span class="ca-drmock__btn">Pay Now</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ca-drmock__caption">Shown on your customer account page</p>
+      </li>
+      <li class="ca-drmock__item">
+        <div class="ca-drmock__card ca-drmock__card--pdf" aria-hidden="true">
+          <p class="ca-drmock__title">Invoice PDF · #D125</p>
+          <div class="ca-drmock__lines"><span></span><span></span><span class="is-short"></span></div>
+          <p class="ca-drmock__total"><span>Total due</span><strong>$1,840.00</strong></p>
+          <span class="ca-drmock__btn ca-drmock__btn--ghost">Download PDF</span>
+        </div>
+        <p class="ca-drmock__caption">A branded PDF for every invoice</p>
+      </li>
+      <li class="ca-drmock__item">
+        <div class="ca-drmock__card" aria-hidden="true">
+          <p class="ca-drmock__title">Quote Request</p>
+          <p class="ca-drmock__row"><span>Cart · 14 items</span><strong>$4,120.00</strong></p>
+          <p class="ca-drmock__row ca-drmock__row--muted">hannah@retailco.com</p>
+          <div class="ca-drmock__chips"><span>Review</span><span>Convert to draft order</span><span>Send invoice</span></div>
+        </div>
+        <p class="ca-drmock__caption">Request a Quote button on your cart page</p>
+      </li>
+      <li class="ca-drmock__item">
+        <div class="ca-drmock__card" aria-hidden="true">
+          <p class="ca-drmock__title">Payment Reminders</p>
+          <p class="ca-drmock__row"><span>#D124 · unpaid, day 7</span><strong>Reminder sent</strong></p>
+          <p class="ca-drmock__row ca-drmock__row--muted">Delivered ✓ · Opened ✓ 2:14 PM</p>
+          <p class="ca-drmock__row ca-drmock__row--muted">Stops automatically when paid</p>
+        </div>
+        <p class="ca-drmock__caption">Automated follow-ups on unpaid invoices</p>
+      </li>
+    </ul>
+  </div>
+</div>
+{% stylesheet %}
+  .ca-drmock { background-color: var(--color-background); }
+  .ca-drmock__intro { margin-block-end: 32px; }
+  .ca-drmock__lede { margin-block-end: 56px; }
+  .ca-drmock__lede-text { grid-column: 1 / -1; font-size: var(--ca-fs-20, 1.25rem); line-height: 1.4; letter-spacing: -0.02em; color: var(--ca-soft); }
+  .ca-drmock__lede-text > :first-child { margin-block-start: 0; }
+  .ca-drmock__lede-text > :last-child { margin-block-end: 0; }
+  .ca-drmock__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 24px; }
+  .ca-drmock__item { display: flex; flex-direction: column; gap: 14px; }
+  .ca-drmock__card {
+    flex: 1; display: flex; flex-direction: column; gap: 14px;
+    padding: 20px; border-radius: 12px;
+    background: #fff; color: #0d110d;
+    border: 1px solid rgb(13 17 13 / 0.1);
+    box-shadow: 0 12px 32px rgb(13 17 13 / 0.06);
+    font-size: 0.875rem; line-height: 1.3;
+  }
+  .ca-drmock__card p { margin: 0; }
+  .ca-drmock__title { font-weight: 600; letter-spacing: -0.01em; }
+  .ca-drmock__table { width: 100%; border-collapse: collapse; }
+  .ca-drmock__table th { text-align: start; font-weight: 500; font-size: 0.75rem; color: rgb(13 17 13 / 0.55); padding-block: 0 8px; border-block-end: 1px solid rgb(13 17 13 / 0.1); }
+  .ca-drmock__table td { padding-block: 10px; border-block-end: 1px solid rgb(13 17 13 / 0.06); vertical-align: middle; }
+  .ca-drmock__date { display: block; font-size: 0.75rem; color: rgb(13 17 13 / 0.55); }
+  .ca-drmock__table td:last-child { text-align: end; }
+  .ca-drmock__btn { display: inline-block; padding: 6px 12px; border-radius: 999px; background: #0d110d; color: #fff; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+  .ca-drmock__btn--ghost { align-self: flex-start; background: transparent; color: #0d110d; border: 1px solid rgb(13 17 13 / 0.3); }
+  .ca-drmock__lines { display: flex; flex-direction: column; gap: 8px; }
+  .ca-drmock__lines span { display: block; height: 8px; border-radius: 4px; background: rgb(13 17 13 / 0.08); }
+  .ca-drmock__lines .is-short { width: 55%; }
+  .ca-drmock__total { display: flex; justify-content: space-between; align-items: baseline; padding-block-start: 10px; border-block-start: 1px solid rgb(13 17 13 / 0.1); }
+  .ca-drmock__total strong { font-size: 1.25rem; letter-spacing: -0.02em; }
+  .ca-drmock__row { display: flex; justify-content: space-between; gap: 12px; }
+  .ca-drmock__row--muted { color: rgb(13 17 13 / 0.55); font-size: 0.8125rem; }
+  .ca-drmock__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ca-drmock__chips span { padding: 5px 10px; border-radius: 999px; border: 1px solid rgb(13 17 13 / 0.15); font-size: 0.75rem; }
+  .ca-drmock__chips span:last-child { background: #0d110d; color: #fff; border-color: #0d110d; }
+  .ca-drmock__caption { margin: 0; font-size: 0.9375rem; color: var(--ca-soft); }
+  @media (min-width: 640px) { .ca-drmock__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 990px) {
+    .ca-drmock__lede-text { grid-column: 5 / -1; }
+    .ca-drmock__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "App mocks (Drafts)",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Draft order invoicing for your Shopify store" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Stop chasing draft order payments over email." },
+    { "type": "richtext", "id": "lede", "label": "Lede" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 96 }
+  ],
+  "presets": [{ "name": "App mocks (Drafts)", "category": "Conspire" }]
+}
+{% endschema %}

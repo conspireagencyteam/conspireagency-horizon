@@ -1,0 +1,491 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-app-wholesale-hero",
+      "settings": {
+        "eyebrow": "Wholesale & B2B for your existing Shopify store",
+        "heading": "<p>Grow your B2B program. From onboarding to pricing.</p>",
+        "heading_tag": "h1",
+        "lede": "<p>Sign-up forms, one-click approvals, and tailored wholesale pricing for the Shopify store you already run. Works on every plan, alongside Shopify's native B2B.</p>",
+        "store_label": "Install on Shopify",
+        "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+        "docs_label": "Documentation",
+        "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+        "tour_label": "Watch the tour · 1:32",
+        "tour_link": "https://www.youtube.com/watch?v=PEF3yQ564Uo",
+        "proof": "Free plan available · 21-day free trial · Built by a Shopify Premier Partner",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 120,
+        "padding-block-end": 120,
+        "size": "display"
+      }
+    },
+    "pricing": {
+      "type": "ca-app-wholesale-mock",
+      "settings": {
+        "variant": "pricing",
+        "mock_side": "right",
+        "eyebrow": "How it looks",
+        "heading": "Your buyers log in. Their prices are already there.",
+        "text": "<p>Add wholesale pricing to the store you already have. Your B2B customers simply log in and shop with their tailored prices: percentage discounts, variant-level price lists, and volume breaks, all through the standard Shopify checkout. And now that Shopify's native B2B is on every plan, Conspire adds what it's missing: sign-up forms, application approvals, and customer onboarding.</p>",
+        "caption": "",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "approval": {
+      "type": "ca-app-wholesale-mock",
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "label": "Sign-up form builder"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "label": "Approval dashboard"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "label": "Files & documents"
+          }
+        },
+        "b4": {
+          "type": "point",
+          "settings": {
+            "label": "Shopify B2B company import"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ],
+      "settings": {
+        "variant": "approval",
+        "mock_side": "left",
+        "eyebrow": "Works with Shopify B2B - on every plan",
+        "heading": "Shopify gave every store B2B. This app gives it an onboarding flow.",
+        "text": "<p>Shopify's native B2B now ships company profiles, catalogs, and payment terms on every plan, with only a generic request form to get buyers in. Publish your own sign-up form, collect the business details and documents you need, approve in one click, and the app creates the Shopify company, contact and location for you and keeps them in sync.</p>",
+        "caption": "A buyer applies on your storefront. You review the documents, approve in one click, and the company lands in Shopify B2B with its locations, catalog and payment terms.",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "features": {
+      "type": "ca-app-features",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-user-plus.svg",
+            "title": "Custom sign-up forms",
+            "text": "Onboard new wholesale customers with a drag-and-drop form builder. Collect exactly the business details you need to approve applications."
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-clipboard-check.svg",
+            "title": "Approval dashboard",
+            "text": "Review applications, approve or reject them in one click, and get email notifications the moment a new application arrives."
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-building.svg",
+            "title": "Companies & customer groups",
+            "text": "Group buyers by company, assign discount tiers, manage files and documents, and set expirations on wholesale access."
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-tags.svg",
+            "title": "Custom price lists",
+            "text": "Set exact wholesale prices per product variant, per customer group. Import price lists via CSV and keep every tier's pricing under control."
+          }
+        },
+        "f5": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-badge-percent.svg",
+            "title": "Percentage discounts",
+            "text": "Apply a simple storewide percentage discount per customer group, then layer product-specific price rules on top where you need them."
+          }
+        },
+        "f6": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-layers.svg",
+            "title": "Volume discounts",
+            "text": "Quantity breaks for wholesale and retail customers. Discounts can apply per variant or across a product's combined cart quantity."
+          }
+        },
+        "f7": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-store.svg",
+            "title": "Your existing store",
+            "text": "No separate wholesale storefront. Customers log in and see their pricing on your normal store, through the standard Shopify checkout."
+          }
+        },
+        "f8": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-list-checks.svg",
+            "title": "Order rules",
+            "text": "Set minimum and maximum order values so wholesale discounts only activate when carts meet your thresholds."
+          }
+        },
+        "f9": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-timer.svg",
+            "title": "Discount expiration",
+            "text": "Automatically disable a customer's discount after a set time. Perfect for trade programs that require requalification."
+          }
+        },
+        "f10": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-receipt.svg",
+            "title": "Draft order invoices",
+            "text": "Show draft order invoices on the customer account page and send automated payment reminders until the order is paid."
+          }
+        },
+        "f11": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-file-spreadsheet.svg",
+            "title": "Quick order forms",
+            "text": "Let repeat buyers order in bulk from a single spreadsheet-style form instead of paging through your catalog product by product."
+          }
+        },
+        "f12": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-mail.svg",
+            "title": "Klaviyo integration",
+            "text": "Sync tiers, companies, net terms and application events to Klaviyo, so you can segment B2B buyers and automate approval, quote and renewal emails."
+          }
+        },
+        "f13": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-lock.svg",
+            "title": "Net terms & POS",
+            "text": "Offer net payment terms to trusted accounts and honor wholesale pricing in person through Shopify POS."
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6",
+        "f7",
+        "f8",
+        "f9",
+        "f10",
+        "f11",
+        "f12",
+        "f13"
+      ],
+      "settings": {
+        "eyebrow": "Features",
+        "heading": "Everything a B2B program needs",
+        "intro": "From your first sign-up form to variant-level price lists, B2B Onboarding & Wholesale covers the whole wholesale workflow.",
+        "columns": "4",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "process": {
+      "type": "ca-process",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "label": "01 · Install from the Shopify App Store",
+            "text": "One-click install with a free development plan and a 21-day free trial on paid plans. No theme rebuild and no separate wholesale store."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "label": "02 · Create your tiers and pricing",
+            "text": "Set up customer discount groups with percentage discounts, custom price lists, and volume breaks. Publish a sign-up form to start taking applications."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "label": "03 · Approve buyers and start selling",
+            "text": "Approve applications from the dashboard. Customers log in, see their pricing, and check out through the standard Shopify checkout."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "eyebrow": "How it works",
+        "heading": "<p>Selling wholesale in an afternoon</p>",
+        "heading_tag": "h2",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "team": {
+      "type": "ca-split-feature",
+      "settings": {
+        "eyebrow": "Built by Conspire",
+        "heading": "<strong>Crafted by a Los Angeles</strong> Shopify development company",
+        "text": "<p>B2B Onboarding & Wholesale is built by Conspire, a Shopify development company and Shopify Premier Partner founded in Los Angeles. The same senior Shopify developers and designers who build high-performing storefronts for leading brands design, develop, and support this app, and answer your support messages.</p><p>Need more than an app? Conspire also offers full Shopify development services, from storefront design to custom B2B builds.</p>",
+        "button_label": "Shopify development services",
+        "button_link": "/pages/pricing",
+        "image_small": "shopify://shop_images/ca-apps-brand-replica-decor.jpg",
+        "image_large": "shopify://shop_images/ca-apps-brand-lights-canada.jpg",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "Does it work with Shopify's native B2B?",
+            "answer": "<p>Yes. Shopify's native B2B (company profiles, catalogs, payment terms) is now included on every plan. Its built-in company request form is a single generic form with one file attachment and no review queue. B2B Onboarding & Wholesale adds the onboarding layer on top: custom application forms, an approval dashboard, buyer documents with expiration tracking, and approvals that create the Shopify company, contact, location, tax and payment terms in one step. It also keeps records in sync with Shopify company updates and can import your existing Shopify B2B companies.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "Do I need Shopify Plus?",
+            "answer": "<p>No. The app works on any Shopify plan. Wholesale customers log in to your existing store, see their tailored pricing, and check out through the standard Shopify checkout, no Plus features required.</p>"
+          }
+        },
+        "q3": {
+          "type": "item",
+          "settings": {
+            "question": "How does wholesale onboarding work?",
+            "answer": "<p>Publish a sign-up form built with the drag-and-drop form builder, collecting the business details and documents you need. Applications land in the approval dashboard, where you approve or reject in one click and get email notifications when new applications arrive. Approved buyers are assigned to a discount tier and can start ordering immediately.</p>"
+          }
+        },
+        "q4": {
+          "type": "item",
+          "settings": {
+            "question": "How do customers get their wholesale pricing?",
+            "answer": "<p>Customers simply log in to your store. Their customer group determines what they see: percentage discounts, variant-level price lists, and volume breaks, applied on your normal storefront and through the standard Shopify checkout. There is no separate wholesale storefront to maintain.</p>"
+          }
+        },
+        "q5": {
+          "type": "item",
+          "settings": {
+            "question": "Can I migrate existing wholesale customers?",
+            "answer": "<p>Yes. You can bulk-assign existing customers to discount tiers, and there are guided migrations for stores coming from Shopify's native B2B or from other wholesale apps like Wholesale Gorilla. See the <a href=\"https://apps.conspireagency.com/wholesale/docs\" target=\"_blank\" rel=\"noopener\">migration guides in the documentation</a>.</p>"
+          }
+        },
+        "q6": {
+          "type": "item",
+          "settings": {
+            "question": "How much does it cost?",
+            "answer": "<p>There's a free plan for up to 10 wholesale companies. Grow is $29/month for up to 250 companies and adds buyer document uploads; Pro is $99/month with unlimited companies, document expirations and renewal alerts, and priority support. Paid plans have a 21-day free trial. See the <a href=\"https://apps.shopify.com/wholesale-b2b-trade-program\" target=\"_blank\" rel=\"noopener\">Shopify App Store listing</a> for current pricing.</p>"
+          }
+        },
+        "q7": {
+          "type": "item",
+          "settings": {
+            "question": "Who builds and supports the app?",
+            "answer": "<p>The app is built and supported by Conspire, a Shopify development company and Premier Partner founded in Los Angeles. The same senior team that builds Shopify stores for leading brands answers your support messages.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Browse the documentation",
+        "button_link": "https://apps.conspireagency.com/wholesale/docs",
+        "style_class": "button-secondary",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "cta": {
+      "type": "ca-app-wholesale-hero",
+      "settings": {
+        "eyebrow": "Get started",
+        "heading": "<p>Launch your wholesale program</p>",
+        "heading_tag": "h2",
+        "lede": "<p>Install B2B Onboarding & Wholesale and give your B2B buyers the pricing they expect, on the store you already run.</p>",
+        "store_label": "Install on Shopify",
+        "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+        "docs_label": "Documentation",
+        "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+        "tour_label": "",
+        "tour_link": "",
+        "proof": "Free plan available · 21-day free trial",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96,
+        "size": "lg"
+      }
+    },
+    "more": {
+      "type": "ca-apps-cards",
+      "blocks": {
+        "wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Wishlist Project Planner",
+            "tagline": "B2B wishlists with quote requests, PDF exports & draft orders",
+            "description": "<p>Shopify wishlist app for B2B & project planning: multiple wishlists, subgroups, quantities, sharing, PDF quotes, draft orders & add to cart.</p>",
+            "page_link": "/pages/b2b-wishlist-project-planner",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wishlist-project-planner",
+            "store_label": "App Store",
+            "docs_link": "https://apps.conspireagency.com/wishlist/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wishlist-project-planner#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=EjvqM4SR11Q",
+            "tour_label": "Watch the tour · 1:28"
+          }
+        },
+        "drafts": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Draft Order Invoices",
+            "tagline": "Draft order invoices & quote requests customers can pay",
+            "description": "<p>Customers view & pay draft order invoices from their account page, with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
+            "page_link": "/pages/draft-order-invoices",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/draft-order-invoices",
+            "store_label": "App Store",
+            "docs_link": "https://apps.conspireagency.com/drafts/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/draft-order-invoices#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=6YJXBUOeImo",
+            "tour_label": "Watch the tour · 1:31"
+          }
+        }
+      },
+      "block_order": [
+        "wishlist",
+        "drafts"
+      ],
+      "settings": {
+        "eyebrow": "More B2B apps",
+        "heading": "From the same Conspire team",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96,
+        "intro": "<p>Three focused Shopify apps that share one goal: make selling to serious buyers on Shopify feel first class. <a href=\"/pages/best-shopify-apps\">See all B2B apps</a>.</p>"
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg"
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-replica-decor.jpg"
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-via-motif.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_3",
+        "photo_4"
+      ],
+      "settings": {
+        "eyebrow": "Need a custom B2B build?",
+        "heading": "Talk to the team behind the app",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "pricing",
+    "approval",
+    "features",
+    "process",
+    "team",
+    "faq",
+    "cta",
+    "more",
+    "booking"
+  ]
+}
