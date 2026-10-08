@@ -141,6 +141,14 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     gives byte-identical WebP at every requested size) — ignore Lighthouse's
     "compression" line; only the requested rendition size matters. The Shop Pay /
     checkout preloads and third-party cookies are Shopify's.
+  - **Custom Shopify Applications page (2026-10-08).** `/products/custom-shopify-applications`
+    now uses `product.custom-apps.json` (price $7,400 = one Starter Sprint; the pricing
+    page still says $7.5k — reconcile). Sections: hero (seo_heading), `ca-apps` cloned from
+    home, `ca-client-rows` with app/integration summaries for zia-tile, simms-fishing,
+    sto-n-sho (block image `sto-n-sho-banner-2.png`, the client entry has no preview),
+    cousins-maine-lobster; `ca-value-cards` what-we-build; `ca-process` sprint; `ca-sprints-table`;
+    fit, testimonials, FAQ, services, booking. SEO title/description set as metafields.
+    Migration hub `ca-migration-platform` body text now spans columns 1–7.
   - **Keyword H1 vs tagline.** `ca-brands-marquee` has an optional `seo_heading`
     setting: when set, it renders as the H1 styled as an eyebrow above the tagline
     and the tagline becomes `<p class="h1">` (same type). Set on
