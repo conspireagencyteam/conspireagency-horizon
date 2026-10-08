@@ -32,7 +32,7 @@
     "ca_cookie_banner": {
       "type": "ca-cookie-banner",
       "settings": {
-        "show_mode": "everyone",
+        "show_mode": "shopify",
         "delay": 2,
         "position": "left",
         "eyebrow": "Privacy",

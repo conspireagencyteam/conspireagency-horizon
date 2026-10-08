@@ -162,6 +162,14 @@
       this.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') this.hide();
       });
+      // Footer "Do not sell or share" link reopens the banner regardless of prior choice
+      document.addEventListener('click', (event) => {
+        const link = event.target.closest('[data-ca-cookie-settings]');
+        if (!link) return;
+        event.preventDefault();
+        this.show(0);
+        window.setTimeout(() => this.querySelector('[data-consent="decline"]')?.focus(), 100);
+      });
 
       if (window.Shopify && window.Shopify.designMode) {
         // Let the theme editor style it: show when the section is selected

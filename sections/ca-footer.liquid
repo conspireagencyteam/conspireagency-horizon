@@ -71,6 +71,13 @@
         <p class="ca-footer__logo-hint">Upload a logo in <strong>Theme settings &rarr; Logo</strong> to display it here.</p>
       </div>
     {%- endif -%}
+
+    {%- comment -%} Legal row: privacy policy and the CCPA opt-out link (opens the cookie banner) {%- endcomment -%}
+    <div class="ca-footer__legal">
+      <span class="ca-footer__legal-item">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+      <a class="ca-footer__legal-item ca-footer__link" href="/policies/privacy-policy">Privacy policy</a>
+      <a class="ca-footer__legal-item ca-footer__link" href="#ca-cookie-settings" data-ca-cookie-settings>Do not sell or share my personal information</a>
+    </div>
   </div>
 </div>
 
@@ -143,6 +150,22 @@
   .ca-footer__logo-hint {
     margin: 0;
     color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .ca-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    font-size: var(--font-size--xs, 0.75rem);
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .ca-footer__legal .ca-footer__link {
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .ca-footer__legal .ca-footer__link:hover {
+    color: rgb(var(--color-foreground-rgb));
   }
 
   @media screen and (max-width: 749px) {

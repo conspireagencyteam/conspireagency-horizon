@@ -45,8 +45,12 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   titles/descriptions written; 14 articles relinked to the surviving URLs.
 - **Cookie banner.** `sections/ca-cookie-banner.liquid` in the footer group; writes
   consent through Shopify's Customer Privacy API, which `ca-lead-tracking` listens to.
-  Default shows to everyone until they choose; switch to "regions set in Customer
-  privacy" if it costs conversions (the audience is US).
+  Mode is "regions set in Settings > Customer privacy" (US visitors are tracked by
+  default, legally; the banner is for consent regions). The footer legal row carries the
+  CCPA "Do not sell or share" link, which reopens the banner. **Still needed in admin:**
+  Settings > Customer privacy > Privacy settings > Data collection consent > collect in
+  Europe (EU/EEA, UK, Switzerland), or run the `consentPolicyUpdate` mutation with the
+  `write_privacy_settings` scope.
 
 ### Open (decide, then do)
 
@@ -57,9 +61,9 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   `areaServed: City` schema (not LocalBusiness — no offices). Portland's top query is
   "shopify website developer near me" (5k impressions), so one "near me" page may beat
   the long tail.
-- **About us** (`/pages/about-us`) still duplicates the LA page, by design (Figma
-  `458:100` is the LA frame). Options: redirect about-us to the LA page and let that page
-  carry the About role, or write distinct About copy.
+- **About us**: done 2026-10-07 — `/pages/about-us` unpublished and 301'd to
+  `/pages/los-angeles-shopify-agency`, which carries the About role (Figma `458:100` is
+  that frame).
 - **Home H1 watch item.** The tagline is the H1 (keyword paragraph is the `<p>` under it,
   keyword is in the title). The homepage ranked #6 for "shopify web design agency" under
   the old markup (H1 = paragraph); if that slips, flip it in `ca-brands-marquee.liquid`.
