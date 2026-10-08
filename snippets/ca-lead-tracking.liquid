@@ -28,14 +28,21 @@
       // Google Ads conversion tag (AW-852658178). The Google & YouTube channel reports
       // store events from inside Shopify's pixel sandbox, where page scripts cannot reach,
       // so gtag is loaded here (after consent) to report lead events as Ads conversions.
+      //
+      // Load AND config by the Google tag that owns the Ads destination ("Conspire Ads",
+      // GT-PLVXZJKV, split out 2026-10-08) — never by AW-852658178. That ID is a permanent
+      // alias of the Wholesale app listing's Google tag (Google never drops IDs from a tag),
+      // so config("AW-852658178") fetches that container and sends this site's page views
+      // to the Wholesale GA4 property. Conversions still use send_to "AW-852658178/<label>";
+      // gtag routes them to the Ads destination inside GT-PLVXZJKV (verified 2026-10-08).
       if (!window.gtag) {
         window.dataLayer = window.dataLayer || [];
         window.gtag = function () { window.dataLayer.push(arguments); };
         window.gtag("js", new Date());
-        window.gtag("config", "AW-852658178");
+        window.gtag("config", "GT-PLVXZJKV");
         var gtagScript = document.createElement("script");
         gtagScript.async = true;
-        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=AW-852658178";
+        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=GT-PLVXZJKV";
         document.head.appendChild(gtagScript);
       }
 

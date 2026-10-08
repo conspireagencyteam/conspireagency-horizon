@@ -131,7 +131,12 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     real `poster` downloads at parse time even with `preload="none"`.
     `ca-lead-tracking` configures only G-MS33YR263E (agency) — G-DDS9Q60DBE is
     the Wholesale app listing property; it was getting agency page views because
-    its Google tag has AW-852658178 as a combined destination (GA admin fix).
+    its Google tag had AW-852658178 as a combined destination. Danny split the Ads
+    destination into its own Google tag "Conspire Ads" = **GT-PLVXZJKV**, but
+    Google never removes IDs from a tag, so `AW-852658178` stays a permanent alias
+    of the Wholesale container: `gtag("config","AW-852658178")` anywhere still
+    leaks. The theme therefore loads and configs **GT-PLVXZJKV** (conversions keep
+    `send_to: "AW-852658178/<label>"`, routed by gtag; verified in headless Chrome).
     Still open: `zia-tile-work-preview.png` is a 2.2 MB PNG source (324 KB as
     WebP at 1600px) — re-upload as JPG; the Shop Pay / checkout preloads and
     third-party cookies are Shopify's.
