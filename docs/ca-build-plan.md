@@ -8,10 +8,65 @@ Status key: ✅ built · 🔨 to build from Figma · 🧩 no design, assemble fr
 
 ---
 
-## 1. Where things stand (updated 2026-10-06, end of day)
+## 1. Where things stand (updated 2026-10-07, late)
 
-Every page in §3 now has a template in this theme. All of it is on `main`, which syncs to
-the unpublished theme `conspireagency-horizon/main`; nothing is live.
+**The theme is live.** Danny published it on 2026-10-07; `main` now syncs straight to the
+published theme (a push is a production deploy, ~1–2 min). `shopify theme dev` still
+pushes only to a development theme, so dev-server edits are safe until pushed.
+`conspire-concept` is the rollback.
+
+### Done 2026-10-07 (SEO pass, launch cleanup)
+
+- **Audit.** 39 URLs on the dev theme vs live, four auditors. Findings and the
+  checklist lived in the session; the durable outcome is below.
+- **Structured data.** `snippets/ca-schema.liquid` (rendered from `ca-head`) emits on
+  every page: Organization (`https://www.conspireagency.com/#organization`, no
+  aggregateRating), WebSite + SearchAction, nav ItemList from `2025-header-nav`, home
+  WebPage/speakable, CollectionPage for collections and blog indexes. It dispatches to
+  `ca-service-schema` (Service per product), `ca-case-study-schema` (Article +
+  BreadcrumbList) and `ca-article-schema` (BlogPosting + BreadcrumbList). `ca-faq` and
+  `ca-faq-list` emit FAQPage. All hand-pasted JSON-LD was removed from the templates, as
+  was the stock Product schema in `product-information.liquid`.
+- **Head.** `meta-tags.liquid`: one-line title with ` | Conspire`, absolute og/twitter
+  image, no og:price, description fallback, search pages noindex with a query-free
+  canonical, `/blogs/work?page=N` no longer self-canonicalises. Favicon = Figma node
+  `315:1055`, uploaded as `conspire-favicon.png`.
+- **Headings.** One H1 everywhere (search, cart fixed); cart/search drawer titles are no
+  longer headings; `ca-article-body` demotes any `<h1>` in article HTML.
+- **Pages.** CRO page rebuilt in the library (`ca-cro-calculator` is new); Shopify
+  migration hub at `/products/shopify-migration` with `#woocommerce #bigcommerce
+  #magento #squarespace` blocks (`ca-migration-platform` is new); FAQs restored on the LA
+  page, `shopify-websites` and CRO; Replo template and chunks deleted.
+- **Store.** Kept `/products/shopify-websites` (5k impressions vs 14) and set
+  `shopify-website-development-agency` and the four `migration-from-*` products to
+  draft; unpublished `/collections/shopify-migrations` and `/pages/guided-shopify-website`;
+  nine 301s in place (old URLs → survivors, anchors included; the two pre-existing
+  redirects were retargeted so nothing chains). 55 page/blog/article and 5 product SEO
+  titles/descriptions written; 14 articles relinked to the surviving URLs.
+- **Cookie banner.** `sections/ca-cookie-banner.liquid` in the footer group; writes
+  consent through Shopify's Customer Privacy API, which `ca-lead-tracking` listens to.
+  Default shows to everyone until they choose; switch to "regions set in Customer
+  privacy" if it costs conversions (the audience is US).
+
+### Open (decide, then do)
+
+- **Market pages** (`/blogs/markets/*`, 24 articles): keep. GSC Jul–Oct 2026: ~14k
+  impressions, 8 clicks; Seattle, NYC, Dallas, Portland, SF, San Diego, Columbus,
+  Nashville lead. Plan: unique local copy for those eight, strip "Ecommerce" from every
+  H1 so it reads "Shopify Plus Agency in <City>", add per-market `Service` +
+  `areaServed: City` schema (not LocalBusiness — no offices). Portland's top query is
+  "shopify website developer near me" (5k impressions), so one "near me" page may beat
+  the long tail.
+- **About us** (`/pages/about-us`) still duplicates the LA page, by design (Figma
+  `458:100` is the LA frame). Options: redirect about-us to the LA page and let that page
+  carry the About role, or write distinct About copy.
+- **Home H1 watch item.** The tagline is the H1 (keyword paragraph is the `<p>` under it,
+  keyword is in the title). The homepage ranked #6 for "shopify web design agency" under
+  the old markup (H1 = paragraph); if that slips, flip it in `ca-brands-marquee.liquid`.
+- The five draft products still exist in admin; delete whenever.
+- `/pages/reviews` is unpublished but has a description now; publish or delete.
+- `custom-shopify-applications` is a bare stock product page with a $5,000 price in its
+  Service schema; needs content or a draft.
 
 **Built from Figma and checked in the browser at desktop and mobile widths:**
 Fractional Teams, Conspire Build, Our Work (with hover), case study, blog article, careers
@@ -48,16 +103,14 @@ contact and careers form field names, JSON-LD structured data, Calendly URLs, pa
    product template, which stays the stock commerce layout because the Bonde demo product
    and two app listings need a buy form. Assign it the new **service** template in admin
    (`product.service`); the live theme ignores an unknown suffix, so this is safe today.
-5. **Pages parked for later** (they work, on the generic layouts): CRO, the migration
-   products, landing pages, the two industry landers in the Work blog (`health-brand`,
+5. **Pages parked for later** (they work, on the generic layouts): landing pages, the two industry landers in the Work blog (`health-brand`,
    `tile-paint` suffixes fall back to the blog article layout), `guided-shopify-website`,
    `shopify-services`. Say which should be hidden or redesigned.
 6. **Copy calls.** Build pricing follows the mockups ($15k / $25-45k / $100k+). Figma copy
    still says "Shopify websites" in places where the brand voice doc says "Shopify stores";
    left as designed. The about page currently reuses the LA page copy.
-7. **Before publishing:** confirm the cookie/consent banner (the old theme had its own
-   section; lead tracking waits for Shopify's consent API either way), submit one test
-   contact form and one test application, and check Calendly loads on each page.
+7. **Post-publish checks still owed:** submit one test contact form and one test
+   application, and check Calendly loads on each page. (Cookie banner: done 2026-10-07.)
 
 ### How the templates are generated
 
@@ -281,7 +334,7 @@ Each step ends with a commit, so the unpublished theme always shows current prog
   sitemap against a preview of this theme and check for 404s and missing content.
 - Template content entered for every JSON template (theme JSON does not carry over from
   the old theme).
-- SEO: titles, meta descriptions, structured data, canonical tags, one H1 per page.
+- SEO: titles, meta descriptions, structured data, canonical tags, one H1 per page. Done 2026-10-07 (see §1).
 - Accessibility pass per the `.cursor/rules/*accessibility*` standards, performance pass.
 - Navigation menus, redirects, announcement and consent banner checked.
 - Publish, smoke test, keep Conspire Concept as the rollback.
