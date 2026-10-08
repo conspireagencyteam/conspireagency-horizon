@@ -1,0 +1,275 @@
+{%- comment -%}
+  ca-cookie-banner.liquid — Conspire Agency cookie / privacy consent banner.
+
+  Writes consent through Shopify's Customer Privacy API (consent-tracking-api), so
+  snippets/ca-lead-tracking.liquid (which listens for visitorConsentCollected) and
+  Shopify's own pixels respect the choice. Nothing is stored by the theme itself.
+
+  "Who sees it" setting:
+    everyone — show to every visitor who has not yet accepted or declined
+    shopify  — defer to the regions configured in Settings > Customer privacy
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign privacy_url = s.privacy_link | default: '/policies/privacy-policy'
+-%}
+
+<ca-cookie-banner
+  id="CaCookieBanner-{{ section.id }}"
+  class="ca-cookie ca-cookie--{{ s.position }}"
+  data-delay="{{ s.delay }}"
+  data-mode="{{ s.show_mode }}"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="CaCookieBanner-{{ section.id }}-heading"
+  aria-describedby="CaCookieBanner-{{ section.id }}-text"
+  style="--ca-cookie-bg: {{ s.background_color }}; --ca-cookie-fg: {{ s.text_color }};"
+  hidden
+>
+  <div class="ca-cookie__card">
+    {%- if s.eyebrow != blank -%}
+      <p class="ca-eyebrow ca-cookie__eyebrow">{{ s.eyebrow | escape }}</p>
+    {%- endif -%}
+    <p id="CaCookieBanner-{{ section.id }}-heading" class="ca-cookie__heading">{{ s.heading | escape }}</p>
+    <div id="CaCookieBanner-{{ section.id }}-text" class="ca-cookie__text">
+      {{ s.text }}
+      {%- if s.privacy_label != blank -%}
+        <p><a class="ca-cookie__link" href="{{ privacy_url }}">{{ s.privacy_label | escape }}</a></p>
+      {%- endif -%}
+    </div>
+    <div class="ca-cookie__actions">
+      <button type="button" class="button size-style ca-cookie__button" data-consent="accept">{{ s.accept_label | default: 'Accept' | escape }}</button>
+      <button type="button" class="button-secondary size-style ca-cookie__button" data-consent="decline">{{ s.decline_label | default: 'Decline' | escape }}</button>
+    </div>
+  </div>
+</ca-cookie-banner>
+
+{% stylesheet %}
+  .ca-cookie {
+    position: fixed;
+    inset-block-end: 16px;
+    inset-inline-start: 16px;
+    z-index: 60;
+    width: min(420px, calc(100vw - 32px));
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+  }
+  .ca-cookie--right {
+    inset-inline-start: auto;
+    inset-inline-end: 16px;
+  }
+  .ca-cookie.is-visible {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .ca-cookie[hidden] {
+    display: none;
+  }
+  .ca-cookie__card {
+    --color-foreground: var(--ca-cookie-fg);
+    --color-background: var(--ca-cookie-bg);
+    --color-primary-button-text: var(--ca-cookie-bg);
+    --color-primary-button-background: var(--ca-cookie-fg);
+    --color-primary-button-border: var(--ca-cookie-fg);
+    --color-primary-button-hover-text: var(--ca-cookie-bg);
+    --color-primary-button-hover-background: color-mix(in srgb, var(--ca-cookie-fg) 80%, var(--ca-cookie-bg));
+    --color-primary-button-hover-border: color-mix(in srgb, var(--ca-cookie-fg) 80%, var(--ca-cookie-bg));
+    --color-secondary-button-text: var(--ca-cookie-fg);
+    --color-secondary-button-background: transparent;
+    --color-secondary-button-border: color-mix(in srgb, var(--ca-cookie-fg) 40%, transparent);
+    --color-secondary-button-hover-text: var(--ca-cookie-fg);
+    --color-secondary-button-hover-background: color-mix(in srgb, var(--ca-cookie-fg) 8%, transparent);
+    --color-secondary-button-hover-border: var(--ca-cookie-fg);
+    background: var(--ca-cookie-bg);
+    color: var(--ca-cookie-fg);
+    padding: 24px;
+    border-radius: 4px;
+    border: 1px solid color-mix(in srgb, var(--ca-cookie-fg) 14%, transparent);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ca-cookie__eyebrow {
+    color: var(--ca-cookie-fg);
+    opacity: 0.6;
+  }
+  .ca-cookie__heading {
+    margin: 0;
+    font-family: var(--font-h4--family);
+    font-size: var(--font-h5--size);
+    font-weight: var(--font-h4--weight);
+    line-height: 1.15;
+    letter-spacing: var(--font-h4--letter-spacing);
+  }
+  .ca-cookie__text {
+    font-size: var(--font-size--sm, 0.875rem);
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+  .ca-cookie__text p {
+    margin: 0;
+  }
+  .ca-cookie__text p + p {
+    margin-block-start: 6px;
+  }
+  .ca-cookie__link {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ca-cookie__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-block-start: 4px;
+  }
+  .ca-cookie__button {
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding-inline: 18px;
+  }
+  @media (max-width: 749px) {
+    .ca-cookie {
+      inset-block-end: 12px;
+      inset-inline-start: 12px;
+      width: calc(100vw - 24px);
+    }
+    .ca-cookie__card {
+      padding: 20px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ca-cookie {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class CaCookieBanner extends HTMLElement {
+    connectedCallback() {
+      this.delay = parseInt(this.dataset.delay, 10) || 0;
+      this.mode = this.dataset.mode || 'everyone';
+      this.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-consent]');
+        if (button) this.decide(button.dataset.consent === 'accept');
+      });
+      this.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') this.hide();
+      });
+
+      if (window.Shopify && window.Shopify.designMode) {
+        // Let the theme editor style it: show when the section is selected
+        document.addEventListener('shopify:section:select', (e) => {
+          if (e.target.contains(this)) this.show(0);
+        });
+        document.addEventListener('shopify:section:deselect', (e) => {
+          if (e.target.contains(this)) this.hide();
+        });
+        return;
+      }
+
+      const boot = () => {
+        if (!window.Shopify || typeof window.Shopify.loadFeatures !== 'function') return;
+        window.Shopify.loadFeatures([{
+          name: 'consent-tracking-api',
+          version: '0.1',
+          onLoad: () => this.evaluate(),
+        }]);
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
+    }
+
+    evaluate() {
+      const cp = window.Shopify.customerPrivacy;
+      if (!cp) return;
+      const consent = typeof cp.getTrackingConsent === 'function' ? cp.getTrackingConsent() : 'no_interaction';
+      if (consent !== 'no_interaction') return;
+      if (this.mode === 'shopify' && typeof cp.shouldShowBanner === 'function' && !cp.shouldShowBanner()) return;
+      if (sessionStorage.getItem('ca-cookie-dismissed') === '1') return;
+      this.show(this.delay);
+    }
+
+    show(delay) {
+      window.setTimeout(() => {
+        this.hidden = false;
+        // not requestAnimationFrame: it never fires in a background tab
+        window.setTimeout(() => this.classList.add('is-visible'), 30);
+      }, delay * 1000);
+    }
+
+    hide() {
+      this.classList.remove('is-visible');
+      try { sessionStorage.setItem('ca-cookie-dismissed', '1'); } catch (e) {}
+      window.setTimeout(() => { this.hidden = true; }, 400);
+    }
+
+    decide(accepted) {
+      const cp = window.Shopify && window.Shopify.customerPrivacy;
+      if (cp && typeof cp.setTrackingConsent === 'function') {
+        // Object form sets every category; Shopify fires visitorConsentCollected itself
+        cp.setTrackingConsent(
+          { marketing: accepted, analytics: accepted, preferences: accepted, sale_of_data: accepted },
+          () => {}
+        );
+      }
+      this.hide();
+    }
+  }
+  if (!customElements.get('ca-cookie-banner')) customElements.define('ca-cookie-banner', CaCookieBanner);
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "CA Cookie banner",
+  "tag": "aside",
+  "class": "ca-cookie-section",
+  "limit": 1,
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    { "type": "paragraph", "content": "Consent is saved through Shopify's Customer Privacy API. Lead tracking (GA4, Meta, Google Ads) loads only after Accept." },
+    {
+      "type": "select",
+      "id": "show_mode",
+      "label": "Who sees it",
+      "options": [
+        { "value": "everyone", "label": "Every visitor until they choose" },
+        { "value": "shopify", "label": "Only regions set in Settings > Customer privacy" }
+      ],
+      "default": "everyone"
+    },
+    { "type": "range", "id": "delay", "label": "Delay before showing", "min": 0, "max": 30, "step": 1, "unit": "s", "default": 2 },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        { "value": "left", "label": "Bottom left" },
+        { "value": "right", "label": "Bottom right" }
+      ],
+      "default": "left"
+    },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Privacy" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "We use cookies" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Cookies help us understand how the site is used and measure our marketing. Decline and only the essentials run.</p>" },
+    { "type": "text", "id": "privacy_label", "label": "Policy link label", "default": "Privacy policy" },
+    { "type": "url", "id": "privacy_link", "label": "Policy link", "info": "Defaults to /policies/privacy-policy" },
+    { "type": "text", "id": "accept_label", "label": "Accept label", "default": "Accept" },
+    { "type": "text", "id": "decline_label", "label": "Decline label", "default": "Decline" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#0d110d" }
+  ],
+  "presets": [{ "name": "CA Cookie banner" }]
+}
+{% endschema %}
