@@ -116,11 +116,20 @@
                     {%- assign bg_alt = bg.alt | default: brand_title -%}
                     {{- bg | image_url: height: 500 | image_tag: class: 'ca-brand-card__bg', alt: bg_alt, loading: 'eager', fetchpriority: 'high', widths: '' -}}
                   {%- else -%}
-                    {% render 'image', image: bg, height: 500, class: 'ca-brand-card__bg', alt_text_fallback: brand_title %}
+                    {%- comment -%} The first few cards are in the hero viewport; the rest (and the marquee clones) can lazy-load. {%- endcomment -%}
+                    {%- if forloop.index <= 4 -%}
+                      {% render 'image', image: bg, height: 500, class: 'ca-brand-card__bg', alt_text_fallback: brand_title, loading: 'eager' %}
+                    {%- else -%}
+                      {% render 'image', image: bg, height: 500, class: 'ca-brand-card__bg', alt_text_fallback: brand_title %}
+                    {%- endif -%}
                   {%- endif -%}
                 {%- endif -%}
                 {%- if logo != blank -%}
-                  {% render 'image', image: logo, height: 48, class: 'ca-brand-card__logo', alt_text_fallback: brand_title %}
+                  {%- if forloop.index <= 4 -%}
+                    {% render 'image', image: logo, height: 48, class: 'ca-brand-card__logo', alt_text_fallback: brand_title, loading: 'eager' %}
+                  {%- else -%}
+                    {% render 'image', image: logo, height: 48, class: 'ca-brand-card__logo', alt_text_fallback: brand_title %}
+                  {%- endif -%}
                 {%- endif -%}
               </div>
             {%- endcapture -%}

@@ -24,6 +24,9 @@
   @param {string} [poster_width] - poster image width, default 800
   @param {string} [preload] - preload attribute, default 'none'
   @param {object} [poster] - image to use as the poster instead of the video's preview image
+  @param {boolean} [lazy_poster] - emit the poster as data-poster instead of poster. Browsers
+    fetch a poster at parse time even with preload="none", so hidden players (mega menus)
+    pass this and the opener promotes it to poster (see ca-header.js _primePoster).
   @param {string} [attrs] - extra attributes for the <video> (e.g. data-* hooks)
 {%- endcomment -%}
 
@@ -66,7 +69,7 @@
     preload="{{ preload_mode }}"
     aria-hidden="true"
     tabindex="-1"
-    {% if poster_img %}poster="{{ poster_img | image_url: width: poster_w }}"{% endif %}
+    {% if poster_img %}{% if lazy_poster %}data-poster{% else %}poster{% endif %}="{{ poster_img | image_url: width: poster_w }}"{% endif %}
     {{ attrs }}
   >
     {%- if guess_a != blank -%}

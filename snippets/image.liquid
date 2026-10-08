@@ -3,24 +3,41 @@
 
   @param {object} image - image object
   @param {number} [height] - custom image height
+  @param {number} [width] - custom image width; when given it drives the src/srcset instead of height
   @param {string} [class] - additional classes
   @param {string} [text_fallback] - text to display if image is blank
   @param {boolean} [unset_image_tag] - if true, ignores the image focal point
   @param {string} [style] - additional styles
   @param {string} [alt_text_fallback] - Optional text to display if image alt text is blank
+  @param {string} [loading] - 'lazy' (default) or 'eager'. Pass 'eager' for images in the first viewport.
+  @param {string} [fetchpriority] - 'high' for the LCP image; otherwise omitted
 
   @example
   {% render 'image', image: product.featured_image, height: 300, class: 'product-image' %}
 {%- enddoc -%}
 {% if image != blank %}
-  {% assign image_height = height | default: image.height %}
-  {% assign image_height_2x = height | default: image_height | times: 2 %}
-  {% assign image_height_3x = height | default: image_height | times: 3 %}
   {% assign image_alt_text = image.alt | default: alt_text_fallback | default: '' %}
+  {% assign loading_value = loading | default: 'lazy' %}
 
-  {% capture image_srcset -%}
-    {{ image | image_url: height: image_height }} 1x, {{ image | image_url: height: image_height_2x }} 2x, {{ image | image_url: height: image_height_3x }} 3x
-  {%- endcapture %}
+  {% if width %}
+    {% assign image_width = width %}
+    {% assign image_width_2x = width | times: 2 %}
+    {% assign image_width_3x = width | times: 3 %}
+
+    {% capture image_srcset -%}
+      {{ image | image_url: width: image_width }} 1x, {{ image | image_url: width: image_width_2x }} 2x, {{ image | image_url: width: image_width_3x }} 3x
+    {%- endcapture %}
+    {% assign image_src = image | image_url: width: image_width %}
+  {% else %}
+    {% assign image_height = height | default: image.height %}
+    {% assign image_height_2x = height | default: image_height | times: 2 %}
+    {% assign image_height_3x = height | default: image_height | times: 3 %}
+
+    {% capture image_srcset -%}
+      {{ image | image_url: height: image_height }} 1x, {{ image | image_url: height: image_height_2x }} 2x, {{ image | image_url: height: image_height_3x }} 3x
+    {%- endcapture %}
+    {% assign image_src = image | image_url: height: image_height %}
+  {% endif %}
 
   {% assign style_value = style | default: '' %}
 
@@ -28,11 +45,17 @@
     {% assign style_value = style_value | append: 'object-position: inherit;' %}
   {% endif %}
 
-  {{
-    image
-    | image_url: height: image_height
-    | image_tag: class: class, srcset: image_srcset, style: style_value, alt: image_alt_text
-  }}
+  {% if fetchpriority %}
+    {{
+      image_src
+      | image_tag: class: class, srcset: image_srcset, style: style_value, alt: image_alt_text, loading: loading_value, fetchpriority: fetchpriority
+    }}
+  {% else %}
+    {{
+      image_src
+      | image_tag: class: class, srcset: image_srcset, style: style_value, alt: image_alt_text, loading: loading_value
+    }}
+  {% endif %}
 {% elsif text_fallback %}
   {{ text_fallback }}
 {% endif %}

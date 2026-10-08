@@ -113,7 +113,11 @@
               {%- elsif reveal_img != blank -%}
                 <div class="ca-work__layer ca-work__reveal ca-work__reveal--image">
                   <div class="ca-work__fg">
-                    {% render 'image', image: reveal_img, height: 1600, class: 'ca-work__img ca-work__reveal-img', alt_text_fallback: client.name.value %}
+                    {%- comment -%}
+                      The foreground box is at most 420px wide (.ca-work__fg), so size
+                      by width; the old height: 1600 pulled 3200px-tall PNGs on retina.
+                    {%- endcomment -%}
+                    {% render 'image', image: reveal_img, width: 420, class: 'ca-work__img ca-work__reveal-img', alt_text_fallback: client.name.value %}
                   </div>
                 </div>
               {%- endif -%}

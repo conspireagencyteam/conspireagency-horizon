@@ -121,6 +121,20 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   pixel) + FB pixel 212 KB. Video warm-up is already pointer-only and sequential;
   browsers pick the first `<source>` so everything streams at 480p. View
   transitions are off. If it recurs, get device/browser/network from Danny.
+  - Lighthouse pass 2026-10-08 (home, mobile 89 / desktop 87 on `www.`; testing the
+    apex URL scores 69 only because of the 301 to `www.`): `snippets/image.liquid`
+    now defaults to `loading="lazy"` (pass `loading: 'eager'` for first-viewport
+    images: header logo, first 4 marquee cards) and honours `width:` (the booking
+    tiles passed `width: 240` and got full-size originals). Work-list reveal images
+    are sized by width (420) instead of `height: 1600`. Mega-menu videos emit
+    `data-poster`; `ca-header.js` promotes it on first header hover/open, since a
+    real `poster` downloads at parse time even with `preload="none"`.
+    `ca-lead-tracking` configures only G-MS33YR263E (agency) — G-DDS9Q60DBE is
+    the Wholesale app listing property; it was getting agency page views because
+    its Google tag has AW-852658178 as a combined destination (GA admin fix).
+    Still open: `zia-tile-work-preview.png` is a 2.2 MB PNG source (324 KB as
+    WebP at 1600px) — re-upload as JPG; the Shop Pay / checkout preloads and
+    third-party cookies are Shopify's.
 
 ### Open (decide, then do)
 

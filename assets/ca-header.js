@@ -96,7 +96,9 @@ class CaHeader extends HTMLElement {
     this._onHeaderEnter = (e) => {
       if (e.pointerType !== 'mouse') return;
       this.removeEventListener('pointerenter', this._onHeaderEnter);
-      if (window.caWarmVideos) window.caWarmVideos(this.querySelectorAll('.ca-mega video'));
+      const videos = this.querySelectorAll('.ca-mega video');
+      videos.forEach((v) => this._primePoster(v));
+      if (window.caWarmVideos) window.caWarmVideos(videos);
     };
     this.addEventListener('pointerenter', this._onHeaderEnter);
 
@@ -206,7 +208,17 @@ class CaHeader extends HTMLElement {
     if (item._showPanel) item._showPanel(item._defaultPanel);
   }
 
+  /** Posters are rendered as data-poster (a real poster downloads at parse time,
+   *  even with preload="none"); promote it the first time the menu is approached. */
+  _primePoster(video) {
+    if (video.dataset.poster) {
+      video.poster = video.dataset.poster;
+      delete video.dataset.poster;
+    }
+  }
+
   _playVideo(video) {
+    this._primePoster(video);
     video.dataset.playing = '1';
     // Chrome stalls play() on preload="none" videos that were hidden at parse
     // until load() runs once.

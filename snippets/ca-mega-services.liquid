@@ -72,7 +72,7 @@
       <a class="ca-mega__feature is-active" data-ca-mega-panel="default" href="{{ block.settings.feat_url | default: '/blogs/work' }}">
         <span class="ca-mega__media">
           {%- if block.settings.feat_video != blank -%}
-            {%- render 'ca-preview-video', video: block.settings.feat_video, quality: 'sd' -%}
+            {%- render 'ca-preview-video', video: block.settings.feat_video, quality: 'sd', lazy_poster: true -%}
           {%- elsif block.settings.feat_video_url != blank -%}
             <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
               <source src="{{ block.settings.feat_video_url }}" type="video/mp4">
@@ -123,7 +123,7 @@
             {%- if f_vid != blank or f_video != blank or f_image != blank -%}
               <span class="ca-mega__media">
                 {%- if f_vid != blank -%}
-                  {%- render 'ca-preview-video', video: f_vid, quality: 'sd' -%}
+                  {%- render 'ca-preview-video', video: f_vid, quality: 'sd', lazy_poster: true -%}
                 {%- elsif f_video != blank -%}
                   <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
                     <source src="{{ f_video }}" type="video/mp4">

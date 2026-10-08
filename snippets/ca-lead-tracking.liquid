@@ -2,8 +2,8 @@
   ca-lead-tracking.liquid — lead conversion tracking, carried over unchanged
   from the previous theme's layout so reporting does not break at launch.
 
-  After marketing consent it loads the OpenAI pixel, gtag (Google Ads + the two
-  GA4 streams) and the Meta pixel, then reports ONE lead per platform when:
+  After marketing consent it loads the OpenAI pixel, gtag (Google Ads + the
+  agency GA4 stream) and the Meta pixel, then reports ONE lead per platform when:
     - a contact form succeeds (Shopify redirects back with ?contact_posted=true;
       skipped on article pages, so job applications do not count as leads), or
     - a Calendly inline widget announces a booking (postMessage).
@@ -39,12 +39,13 @@
         document.head.appendChild(gtagScript);
       }
 
-      // GA4 streams (both IDs the Google & YouTube channel is configured with). The channel
-      // already reports page views and store events from its sandbox, so page_view is
+      // Agency GA4 stream (G-MS33YR263E, property "Conspire Agency"). The Google & YouTube
+      // channel already reports page views and store events from its sandbox, so page_view is
       // disabled here; this config exists only so generate_lead can be sent as a key event
-      // and attributed to the session's campaign.
+      // and attributed to the session's campaign. G-DDS9Q60DBE is the Wholesale app's
+      // app-store-listing property and must NOT be configured here (every config loads
+      // another ~190 KB gtag script and sends this site's events to that property).
       window.gtag("config", "G-MS33YR263E", { send_page_view: false });
-      window.gtag("config", "G-DDS9Q60DBE", { send_page_view: false });
 
       // Meta pixel (same pixel the Facebook & Instagram channel runs from its sandbox).
       // No PageView here — the channel sends it — this instance only reports lead events,
