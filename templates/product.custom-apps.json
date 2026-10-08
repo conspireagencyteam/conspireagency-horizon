@@ -1,0 +1,563 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-brands-marquee",
+      "settings": {
+        "seo_heading": "Custom Shopify App Development",
+        "heading": "Apps that do what Shopify can't out of the box.",
+        "body": "<p>Trade programs, ERP and freight integrations, part finders, the tools your team lives in. We build custom Shopify apps on the same APIs our public apps run on, so they ship in sprints and hold up under real order volume.</p>",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "clients": [
+          "zia-tile",
+          "cousins-maine-lobster",
+          "body-bio",
+          "tillamook-country-smoker-jerky",
+          "kinto",
+          "p-kay-metal",
+          "natures-answer",
+          "hustler-hollywood",
+          "portola-paints"
+        ],
+        "image_field": "work_preview",
+        "speed": 25,
+        "movement_direction": "normal",
+        "gap": 12,
+        "card_radius": 0,
+        "allow_transparent_header": false,
+        "transparent_header_text_color": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 40
+      }
+    },
+    "apps": {
+      "type": "ca-apps",
+      "blocks": {
+        "app_bonde": {
+          "type": "app",
+          "settings": {
+            "name": "Bonde",
+            "tagline": "Shopify Growth Super App",
+            "description": "<p>Bonde is a Shopify super app with an AI strategist built in. Subscriptions, upsells, loyalty, bundles, order tracking pages, and merchandising rules all live in one place, so you aren't stitching together five apps to run a growth program.</p>",
+            "link": "https://getbonde.com",
+            "store_url": "https://apps.shopify.com/bonde-subscription-upsells"
+          }
+        },
+        "app_wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "Onboarding & Wholesale",
+            "tagline": "B2B for your Shopify store",
+            "description": "<p>Wholesale registration forms with approval, buyer document management, and B2B pricing on any Shopify plan. Unlimited price groups, net terms, and quick order.</p>",
+            "link": "/pages/b2b-onboarding-wholesale",
+            "store_url": "https://apps.shopify.com/wholesale-b2b-trade-program"
+          }
+        },
+        "app_wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "Wishlist Project Planner",
+            "tagline": "B2B for your Shopify store",
+            "description": "<p>Shopify wishlist app for B2B &amp; project planning: multiple wishlists, subgroups, quantities, sharing, PDF quotes, draft orders &amp; add to cart.</p>",
+            "link": "/pages/b2b-wishlist-project-planner",
+            "store_url": "https://apps.shopify.com/wishlist-project-planner"
+          }
+        },
+        "app_drafts": {
+          "type": "app",
+          "settings": {
+            "name": "Draft Order Invoices",
+            "tagline": "B2B for your Shopify store",
+            "description": "<p>Customers view &amp; pay draft order invoices from their account page - with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
+            "link": "/pages/draft-order-invoices",
+            "store_url": "https://apps.shopify.com/draft-order-invoices"
+          }
+        }
+      },
+      "block_order": [
+        "app_bonde",
+        "app_wholesale",
+        "app_wishlist",
+        "app_drafts"
+      ],
+      "settings": {
+        "eyebrow": "Our public apps",
+        "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month.",
+        "intro": "<p>The team that builds your custom app also maintains four public apps on the Shopify App Store. That is the bar: production software, used every day by stores that cannot afford downtime.</p>",
+        "contact_label": "Contact Us",
+        "contact_link": "/pages/contact",
+        "store_label_top": "Find it on the",
+        "store_label_bottom": "Shopify App Store",
+        "background_color": "{{ settings.color_palette.color2 }}",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "clients": {
+      "type": "ca-client-rows",
+      "blocks": {
+        "client_1": {
+          "type": "client",
+          "settings": {
+            "client": "zia-tile",
+            "name": "",
+            "years": "",
+            "summary": "A trade program application that lets B2B customers log in to the same store for partner pricing, a box and overage calculator so tile orders arrive complete, sample ordering from the product page, arrival estimates synced with their ERP, and a custom LTL freight carrier integration.",
+            "pills": "Trade program application\nBox & overage calculator\nERP-synced arrival estimates\nLTL freight integration\nSample ordering"
+          }
+        },
+        "client_2": {
+          "type": "client",
+          "settings": {
+            "client": "simms-fishing",
+            "name": "",
+            "years": "",
+            "summary": "As Simms's fractional web team: a store locator app connected directly to distributor inventory systems and updating in real time, and the trade program application rebuilt from the ground up.",
+            "pills": "Store locator app\nDistributor inventory sync\nTrade program application\nShopify Plus"
+          }
+        },
+        "client_3": {
+          "type": "client",
+          "settings": {
+            "client": "sto-n-sho",
+            "name": "",
+            "years": "",
+            "summary": "A vehicle part finder so customers land on the exact bracket that fits their car, plus a wholesale B2B portal for dealers on the same storefront, with bulk-quantity prompts that guide new dealers into the application flow.",
+            "pills": "Vehicle part finder\nWholesale B2B portal\nDealer application flow\nStore locator",
+            "image": "shopify://shop_images/sto-n-sho-banner-2.png"
+          }
+        },
+        "client_4": {
+          "type": "client",
+          "settings": {
+            "client": "cousins-maine-lobster",
+            "name": "",
+            "years": "",
+            "summary": "The franchise portal every Cousins location runs through: ordering and compliance systems, training, and franchise events tooling, alongside the DTC stores we build and manage.",
+            "pills": "Franchise portal\nOrdering & compliance systems\nTraining systems\nFranchise events tooling"
+          }
+        }
+      },
+      "block_order": [
+        "client_1",
+        "client_2",
+        "client_3",
+        "client_4"
+      ],
+      "settings": {
+        "eyebrow": "Built for clients",
+        "heading": "<strong>Software their checkout depends on.</strong> Four of the custom applications and integrations we run for long-term clients.",
+        "link_names": true,
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "build": {
+      "type": "ca-value-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Storefront",
+            "title": "Tools your customers\nuse to buy",
+            "text": "<p>Part finders, quantity and overage calculators, sample ordering, store locators, configurators. Anything that turns a complicated purchase into a simple one, built into your theme so it feels native.</p>"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Integrations",
+            "title": "Shopify talking to\nthe rest of the business",
+            "text": "<p>ERP, 3PL and warehouse systems, freight carriers, distributor inventory, PIM and accounting. Two-way syncs that keep arrival estimates, stock and pricing honest without anyone re-keying data.</p>"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Operations",
+            "title": "Admin tools your\nteam lives in",
+            "text": "<p>Trade and wholesale applications with approvals, franchise and dealer portals, bundle builders, order routing rules. Embedded in the Shopify admin so there is one place to work.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {
+        "eyebrow": "What we build",
+        "heading": "Three kinds of custom app. One team that has shipped all of them.",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "process": {
+      "type": "ca-process",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "label": "Discovery",
+            "text": "A call and a written scope: the problem, the data involved, the Shopify APIs it touches, and what done looks like"
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "label": "Design",
+            "text": "Admin and storefront screens wireframed in Polaris and your theme, so there are no surprises at launch"
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "label": "Build",
+            "text": "A Shopify app on the Admin and Storefront APIs, with webhooks and background jobs sized for your order volume"
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "label": "QA",
+            "text": "Tested against your real catalog and orders on a development store"
+          }
+        },
+        "step_5": {
+          "type": "step",
+          "settings": {
+            "label": "Launch",
+            "text": "Installed, monitored and documented, with your team trained on the admin side"
+          }
+        },
+        "step_6": {
+          "type": "step",
+          "settings": {
+            "label": "Support",
+            "text": "Ongoing through a fractional team retainer, or a sprint when you need the next feature"
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4",
+        "step_5",
+        "step_6"
+      ],
+      "settings": {
+        "eyebrow": "How a sprint works",
+        "heading": "<p><strong>Scoped in a week, shipped in sprints.</strong> You see working software every Friday, on a development store, before anything touches production.</p>",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "pricing": {
+      "type": "ca-sprints-table",
+      "blocks": {
+        "plan_1": {
+          "type": "plan",
+          "settings": {
+            "name": "Starter Sprint",
+            "price": "$7.4k",
+            "values": "1 week\nA single integration or storefront tool\nHighly focused, tight orchestration\nno\nyes",
+            "highlight": false,
+            "button_label": "Get Started",
+            "button_link": "#book-a-call"
+          }
+        },
+        "plan_2": {
+          "type": "plan",
+          "settings": {
+            "name": "Full Sprint",
+            "price": "$14k",
+            "values": "2 weeks\nA complete app with an admin\nBetter weekly rate than a single week\nyes\nyes",
+            "highlight": true,
+            "button_label": "Get Started",
+            "button_link": "#book-a-call"
+          }
+        }
+      },
+      "block_order": [
+        "plan_1",
+        "plan_2"
+      ],
+      "settings": {
+        "eyebrow": "Pricing",
+        "heading": "Custom apps are scoped and billed in sprints. Most integrations ship in one; a full application with its own admin usually takes two or three.",
+        "rows": "Dedicated team focus\nBest suited for\nEngagement style\nWeekly progress updates\nDedicated project manager",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "fit": {
+      "type": "ca-fit-check",
+      "settings": {
+        "eyebrow": "Is this right for you?",
+        "heading": "Built for stores where the workaround has become the bottleneck.",
+        "fit_label": "A Fit If",
+        "fit_items": "An app-store app almost does it, and the gap costs you orders or hours every week\nYou run B2B, trade, dealer or franchise channels on the same store\nYour inventory, pricing or shipping data lives in an ERP, 3PL or distributor system\nYou're on Shopify or Shopify Plus and doing meaningful volume",
+        "not_label": "Not a Fit If",
+        "not_items": "You need a theme tweak, not software\nAn existing app fits and just needs configuring\nYou're pre-revenue and the spec changes weekly\nYou want it built off-platform, outside Shopify's APIs",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "testimonials": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [
+          "bodybio",
+          "danny-mitchell-bsd-haus"
+        ],
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "Do we own the app?",
+            "answer": "<p>Yes. Custom apps are built as your own Shopify app, installed on your store, with the code and the Partner Dashboard app in your name. We host and maintain it under a retainer, or hand it to your team.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "Will it break when Shopify updates?",
+            "answer": "<p>We build on Shopify's versioned Admin and Storefront APIs and keep the app on a supported version. API deprecations are handled as part of support, before they become a problem.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "question": "Can you integrate with our ERP or warehouse?",
+            "answer": "<p>That is most of what we do: ERPs including NetSuite, 3PLs and warehouse systems, freight carriers, distributor inventory feeds. If it has an API or a file export, we can sync it, two ways where it matters.</p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "question": "How is this different from your public apps?",
+            "answer": "<p>Our public apps (Wholesale, Wishlist, Draft Order Invoices, Bonde) solve common problems for hundreds of stores. Custom work is for the problem only your business has. Often the answer is a public app plus a small custom piece, and we will tell you when that is the cheaper route.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "services": {
+      "type": "ca-services",
+      "settings": {
+        "eyebrow": "Our Services",
+        "products": [
+          "shopify-websites",
+          "shopify-fractional-teams",
+          "custom-shopify-applications",
+          "shopify-cro-agency"
+        ],
+        "show_numbers": true,
+        "button_label": "Learn More",
+        "style_class": "button-secondary",
+        "custom_button_background": "{{ settings.color_palette.foreground }}",
+        "custom_button_text": "{{ settings.color_palette.background }}",
+        "custom_button_border": "{{ settings.color_palette.background }}",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "apps",
+    "clients",
+    "build",
+    "process",
+    "pricing",
+    "fit",
+    "testimonials",
+    "faq",
+    "services",
+    "booking"
+  ]
+}
