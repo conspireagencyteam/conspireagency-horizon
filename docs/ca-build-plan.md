@@ -144,10 +144,18 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   - **Custom Shopify Applications page (2026-10-08).** `/products/custom-shopify-applications`
     now uses `product.custom-apps.json` (price $7,500 = one Starter Sprint, matching the pricing page). Sections: hero (seo_heading), `ca-apps` cloned from
     home, `ca-client-rows` with app/integration summaries for zia-tile, simms-fishing,
-    sto-n-sho (block image `sto-n-sho-banner-2.png`, the client entry has no preview),
+    sto-n-sho,
     cousins-maine-lobster; `ca-value-cards` what-we-build; `ca-process` sprint; `ca-sprints-table`;
     fit, testimonials, FAQ, services, booking. SEO title/description set as metafields.
     Migration hub `ca-migration-platform` body text now spans columns 1–7.
+  - **Client records (2026-10-08).** `sto-n-sho.work_preview` = `sto-n-sho-banner-2.png`
+    (was empty, so its hero/marquee card rendered grey). Marquee logos get no CSS
+    treatment: whatever file is on `client.logo` shows as-is, so the rule is "the
+    brand's real logo" — white knockouts where the brand has one, colour otherwise;
+    never a desaturated copy. Tillamook switched from the B&W `tillamook.png` to the
+    colour `tcs-logo.png`. Still off: `omre.logo` is `White.png` (77×16, renders grey,
+    near-invisible) and `omre-logo.png` has a baked tan background — needs a white
+    knockout from Danny. Nature's Answer, Sto N Sho and Portola are colour and fine.
   - **Keyword H1 vs tagline.** `ca-brands-marquee` has an optional `seo_heading`
     setting: when set, it renders as the H1 styled as an eyebrow above the tagline
     and the tagline becomes `<p class="h1">` (same type). Set on
