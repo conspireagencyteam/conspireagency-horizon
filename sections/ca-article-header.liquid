@@ -144,7 +144,8 @@
 
   {%- if band != blank -%}
     <div class="ca-ahead__band" aria-hidden="true">
-      {{ band | image_url: width: 2880 | image_tag: class: 'ca-ahead__band-img', alt: '', widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'lazy' }}
+      {%- comment -%} Eager: the band sits at the fold, and lazy loading flashed the dark background before the image arrived. Same file on every article, so it caches. {%- endcomment -%}
+      {{ band | image_url: width: 2880 | image_tag: class: 'ca-ahead__band-img', alt: '', widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'eager', fetchpriority: 'low' }}
     </div>
   {%- endif -%}
 </div>
@@ -184,6 +185,12 @@
 
   /* Two columns when there is hero media: date over a smaller title on the
      left, the video or image on the right, in view without scrolling. */
+  .ca-ahead--media .ca-ahead__grid {
+    /* Rows size to the date and title, not to the media that spans them,
+       so the title sits under the date instead of drifting to mid-height. */
+    grid-template-rows: auto 1fr;
+  }
+
   .ca-ahead--media .ca-ahead__date {
     grid-column: 1 / span 6;
     grid-row: 1;
