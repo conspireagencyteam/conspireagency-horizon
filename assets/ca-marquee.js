@@ -46,16 +46,29 @@ class MarqueeComponent extends Component {
     this.#setSpeed(speed);
 
     window.addEventListener('resize', this.#handleResize);
-    this.addEventListener('pointerenter', this.#slowDown);
-    this.addEventListener('pointerleave', this.#speedUp);
+    // Hover slow-down is for mice only. On touch, pointerenter fires when a thumb
+    // lands on the strip (people scroll through it) and pointerleave often never
+    // follows, which left the marquee stopped at playbackRate 0.
+    this.addEventListener('pointerenter', this.#onPointerEnter);
+    this.addEventListener('pointerleave', this.#onPointerLeave);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('resize', this.#handleResize);
-    this.removeEventListener('pointerenter', this.#slowDown);
-    this.removeEventListener('pointerleave', this.#speedUp);
+    this.removeEventListener('pointerenter', this.#onPointerEnter);
+    this.removeEventListener('pointerleave', this.#onPointerLeave);
   }
+
+  /** @param {PointerEvent} event */
+  #onPointerEnter = (event) => {
+    if (event.pointerType === 'mouse') this.#slowDown();
+  };
+
+  /** @param {PointerEvent} event */
+  #onPointerLeave = (event) => {
+    if (event.pointerType === 'mouse') this.#speedUp();
+  };
 
   /**
    * @type {{ cancel: () => void, current: number } | null}

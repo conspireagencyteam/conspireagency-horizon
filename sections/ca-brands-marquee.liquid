@@ -211,6 +211,8 @@
     width: 100%;
     overflow: hidden;
     background-color: var(--color-background);
+    /* The strip is not a scroller: a thumb landing on it must pan the page */
+    touch-action: pan-y;
   }
 
   .ca-brands__wrapper {
