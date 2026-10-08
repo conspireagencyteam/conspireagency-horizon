@@ -2,11 +2,12 @@
 // is hovered or focused, and pauses it afterwards. The reveal itself (fade and
 // zoom) is pure CSS, so cards without a video need no script at all.
 //
-// Touch devices (no hover) get an in-view mode instead: a card with a video
-// is marked `is-active` (the CSS reveal) and plays while it is at least half
-// in view, pauses when it leaves, and at most two play at once. Cards without
-// a video are untouched. Reduced motion skips playback entirely, leaving the
-// video's poster frame in the reveal.
+// Touch devices (no hover) show every card's reveal from the start in CSS (a
+// still, or a video's poster), so this script only handles playback there: a
+// card with a video is marked `is-active` (backdrop zoom) and plays while it
+// is at least half in view, pauses when it leaves, and at most two play at
+// once. Cards without a video are untouched. Reduced motion, iOS Low Power
+// Mode or a rejected play() leave the poster frame in the reveal.
 
 const MAX_TOUCH_ACTIVE = 2;
 

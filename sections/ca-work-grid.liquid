@@ -8,6 +8,8 @@
   Hover (pointer devices): the image eases in and the client's site screenshot
   fades up on top of it as a centred window. The reveal is optional; a client
   with a single image just gets the gentle zoom. See snippets/ca-client-media.
+  Touch devices show the reveal from the start (still, or a video's poster);
+  ca-work-grid.js plays the video while the card is in view.
 
   Data: `client` metaobjects (name, years, services, work_preview,
   featured_site_media / featured_site_image, case_study_reference).
@@ -180,9 +182,20 @@
     }
   }
 
-  /* Touch devices have no hover: ca-work-grid.js marks a card with a video
-     `is-active` while it is at least half in view, and the reveal plays
-     there instead. The backdrop image stays underneath, so nothing flashes. */
+  /* Touch devices have no hover, so the site preview is simply shown on top
+     from the start: a still reveal renders as-is and a video reveal shows its
+     poster (no gesture, no script, no autoplay needed — iOS Low Power Mode
+     never autoplays). ca-work-grid.js then marks a card with a video
+     `is-active` while it is at least half in view and plays it there, which
+     also zooms the backdrop as the hover does on desktop. Same device split
+     as the hover block above, negated, so no device falls between them. */
+  @media not all and (hover: hover) and (pointer: fine) {
+    .ca-wcard__reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .ca-wcard.is-active .ca-wcard__backdrop {
     transform: scale(1.06);
   }

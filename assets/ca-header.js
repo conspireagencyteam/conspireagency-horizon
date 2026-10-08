@@ -11,6 +11,10 @@
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
+// Scroll offsets (px) at which the header sticks / releases (hysteresis band).
+const STUCK_AT = 120;
+const UNSTUCK_AT = 60;
+
 class CaHeader extends HTMLElement {
   connectedCallback() {
     this.toggleBtn = this.querySelector('[data-ca-header-toggle]');
@@ -22,14 +26,17 @@ class CaHeader extends HTMLElement {
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
 
-    // Horizon scrolls a `.page-wrapper` element (html/body are overflow:hidden),
-    // so a window scroll listener never fires. Listen on that scroller; fall
-    // back to window for setups where the window itself scrolls.
-    this._scroller = document.querySelector('.page-wrapper') || window;
-    this._scrollTarget = this._scroller === window ? window : this._scroller;
-    this._lastY = this._scrollTop();
+    // Horizon's scroll container depends on viewport width: at >= 990px the
+    // `.page-wrapper` element scrolls (html/body are overflow:hidden); below
+    // that the window scrolls and `.page-wrapper` is a plain block. A listener
+    // bound to one of them is deaf on the other (phones never set data-stuck,
+    // so a transparent-over-hero header stayed transparent mid-page). Scroll
+    // events don't bubble but do capture, so one capturing listener on the
+    // document hears whichever element is scrolling at the current width — and
+    // survives Horizon swapping `.page-wrapper` during view transitions.
+    this._pageWrapper = document.querySelector('.page-wrapper');
     this._onScroll();
-    this._scrollTarget.addEventListener('scroll', this._onScroll, { passive: true });
+    document.addEventListener('scroll', this._onScroll, { capture: true, passive: true });
 
     // Track the last input modality. Programmatic .focus() after a tap can match
     // :focus-visible on mobile browsers (nothing was focused before), which
@@ -58,7 +65,7 @@ class CaHeader extends HTMLElement {
   disconnectedCallback() {
     document.removeEventListener('keydown', this._onModality, true);
     document.removeEventListener('pointerdown', this._onModality, true);
-    this._scrollTarget?.removeEventListener('scroll', this._onScroll);
+    document.removeEventListener('scroll', this._onScroll, { capture: true });
     document.removeEventListener('keydown', this._onKeydown);
     document.removeEventListener('pointerdown', this._onOutsidePointer);
     document.removeEventListener('keydown', this._onMegaKeydown);
@@ -216,7 +223,10 @@ class CaHeader extends HTMLElement {
   }
 
   _scrollTop() {
-    return this._scroller && this._scroller !== window ? this._scroller.scrollTop : window.scrollY;
+    // Whichever container is the scroller at this width reports > 0; the other
+    // stays at 0 (a non-scrolling `.page-wrapper` can't hold a scrollTop).
+    const wrapperY = this._pageWrapper?.isConnected ? this._pageWrapper.scrollTop : 0;
+    return Math.max(wrapperY, window.scrollY || 0);
   }
 
   _onScroll() {
@@ -226,20 +236,19 @@ class CaHeader extends HTMLElement {
     requestAnimationFrame(() => {
       this._rafPending = false;
       const y = this._scrollTop();
-      const delta = y - this._lastY;
-      this._lastY = y;
       const stuck = this.hasAttribute('data-stuck');
 
-      // Direction-based, both gated on the 120px line: shrink when scrolling
-      // DOWN past 120px; expand only when scrolling UP back above 120px (so it
-      // stays compact while scrolling up mid-page). overflow-anchor:none on the
-      // scroll container (see ca-header.liquid) stops the resize from nudging
-      // scrollTop — no feedback, no flicker.
-      if (delta > 2 && !stuck && y > 120) {
+      // Position-based with hysteresis: stick once past 120px, release only
+      // back above 60px. Being position- rather than direction-based means a
+      // page that opens mid-scroll (bfcache / scroll restoration, in-page
+      // anchors, a momentum scroll whose events arrive after the fact) still
+      // lands in the right state, and the 60px dead band dwarfs the few px the
+      // header shrinks when stuck, so scroll anchoring can't bounce it
+      // (overflow-anchor:none on the scroll container helps too; see
+      // ca-header.liquid).
+      if (!stuck && y > STUCK_AT) {
         this.setAttribute('data-stuck', '');
-      } else if (delta < -2 && stuck && y < 120) {
-        this.removeAttribute('data-stuck');
-      } else if (y <= 4 && stuck) {
+      } else if (stuck && y < UNSTUCK_AT) {
         this.removeAttribute('data-stuck');
       }
     });
