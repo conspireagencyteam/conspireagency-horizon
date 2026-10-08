@@ -129,21 +129,66 @@
     },
     "ca_apps": {
       "type": "ca-apps",
+      "blocks": {
+        "app_bonde": {
+          "type": "app",
+          "settings": {
+            "name": "Bonde",
+            "tagline": "Shopify Growth Super App",
+            "description": "<p>Bonde is a Shopify super app with an AI strategist built in. Subscriptions, upsells, loyalty, bundles, order tracking pages, and merchandising rules all live in one place, so you aren't stitching together five apps to run a growth program.</p>",
+            "link": "https://getbonde.com",
+            "store_url": "https://apps.shopify.com/bonde-subscription-upsells"
+          }
+        },
+        "app_wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "Onboarding & Wholesale",
+            "tagline": "B2B for your Shopify store",
+            "description": "<p>Wholesale registration forms with approval, buyer document management, and B2B pricing on any Shopify plan. Unlimited price groups, net terms, and quick order.</p>",
+            "link": "https://apps.conspireagency.com/wholesale",
+            "store_url": "https://apps.shopify.com/wholesale-b2b-trade-program"
+          }
+        },
+        "app_wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "Wishlist Project Planner",
+            "tagline": "B2B for your Shopify store",
+            "description": "<p>Shopify wishlist app for B2B &amp; project planning: multiple wishlists, subgroups, quantities, sharing, PDF quotes, draft orders &amp; add to cart.</p>",
+            "link": "https://apps.conspireagency.com/wishlist",
+            "store_url": "https://apps.shopify.com/wishlist-project-planner"
+          }
+        },
+        "app_drafts": {
+          "type": "app",
+          "settings": {
+            "name": "Draft Order Invoices",
+            "tagline": "B2B for your Shopify store",
+            "description": "<p>Customers view &amp; pay draft order invoices from their account page - with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
+            "link": "https://apps.conspireagency.com/drafts",
+            "store_url": "https://apps.shopify.com/draft-order-invoices"
+          }
+        }
+      },
+      "block_order": [
+        "app_bonde",
+        "app_wholesale",
+        "app_wishlist",
+        "app_drafts"
+      ],
       "settings": {
         "eyebrow": "Our Shopify Apps",
-        "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month. They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.",
+        "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month.",
+        "intro": "<p>They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.</p>",
         "contact_label": "Contact Us",
         "contact_link": "/pages/contact",
-        "apps": [
-          "bonde",
-          "wholesale-goat"
-        ],
         "store_label_top": "Find it on the",
         "store_label_bottom": "Shopify App Store",
         "background_color": "{{ settings.color_palette.color2 }}",
         "text_color": "",
-        "padding-block-start": 72,
-        "padding-block-end": 72
+        "padding-block-start": 80,
+        "padding-block-end": 80
       }
     },
     "ca_services": {
@@ -181,6 +226,9 @@
         "article_4": "",
         "article_5": "",
         "article_6": "",
+        "fallback_image_1": "shopify://shop_images/blog-fallback-1.jpg",
+        "fallback_image_2": "shopify://shop_images/blog-fallback-2.jpg",
+        "fallback_image_3": "shopify://shop_images/blog-fallback-3.jpg",
         "view_all_link": "shopify://blogs/shopify",
         "button_label": "View All",
         "style_class": "button-custom",

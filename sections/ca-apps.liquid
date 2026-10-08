@@ -1,18 +1,21 @@
 {%- comment -%}
-  ca-apps.liquid — Conspire Agency "Our Shopify Apps" (Conspire v2.0, Figma 97-241).
+  ca-apps.liquid — Conspire Agency "Our Shopify Apps" (Conspire v2.0, Figma 390-793).
 
-  Condensed per direction: NO app screenshots — just icon + name + tagline +
-  description + App Store link. Driven by a metaobject_list of the `app` metaobject.
-  Fields used (see docs/ca-metaobjects-setup.md):
-    name (single line), tagline (single line), icon (file/image),
-    description (RICH TEXT), app_store_url (url)
+  Head: h2 statement (indented first line, 920px column) + optional intro copy;
+  right aside = Contact pill (top) and uppercase eyebrow (bottom).
+  List: hairline rows, 40px block padding. Each row = app name (h3, 36px, links
+  to the app page) + uppercase tagline | 480px description | 42px App Store pill.
+  Optional per-app preview image floats beside the name on hover (desktop only),
+  matching the Figma hover annotation.
+
+  Apps are `app` blocks so names, copy and link targets can be repointed when
+  the app pages move onto this site.
 {%- endcomment -%}
 
 {%- liquid
-  assign apps = section.settings.apps
   assign store_label_top = section.settings.store_label_top | default: 'Find it on the'
   assign store_label_bottom = section.settings.store_label_bottom | default: 'Shopify App Store'
-  assign contact_label = section.settings.contact_label
+  assign contact_label = section.settings.contact_label | default: 'Contact Us'
   assign contact_link = section.settings.contact_link
 -%}
 
@@ -23,71 +26,83 @@
     section_id: section.id
   -%}
   <div class="ca-inner">
-    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or contact_link != blank or contact_label != blank -%}
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.intro != blank or contact_link != blank -%}
       <div class="ca-apps__head">
-        {%- if section.settings.heading != blank -%}
-          <h2 class="ca-apps__heading">{{ section.settings.heading }}</h2>
-        {%- endif -%}
-        <div class="ca-apps__head-aside">
-          {%- if contact_link != blank or contact_label != blank -%}
-            {%- if contact_link != blank -%}<a class="ca-apps__contact" href="{{ contact_link }}">{%- else -%}<button type="button" class="ca-apps__contact">{%- endif -%}
-              <span class="ca-apps__contact-label">{{ contact_label | default: 'Contact Us' }}</span>
-              <span class="ca-apps__contact-chip" aria-hidden="true">
-                <svg viewBox="0 0 20 20" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 14L14 6M14 6H7M14 6V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            {%- if contact_link != blank -%}</a>{%- else -%}</button>{%- endif -%}
+        <div class="ca-apps__lede">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="ca-apps__heading">{{ section.settings.heading }}</h2>
           {%- endif -%}
-          {%- if section.settings.eyebrow != blank -%}
-            <p class="ca-eyebrow ca-apps__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- if section.settings.intro != blank -%}
+            <div class="ca-apps__intro">{{ section.settings.intro }}</div>
           {%- endif -%}
         </div>
+        {%- if contact_link != blank or section.settings.eyebrow != blank -%}
+          <div class="ca-apps__aside">
+            {%- if contact_link != blank -%}
+              <a class="ca-apps__contact" href="{{ contact_link }}">
+                <span class="ca-apps__contact-label">{{ contact_label }}</span>
+                <span class="ca-apps__contact-chip" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 15L15 5M15 15V5H5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.eyebrow != blank -%}
+              <p class="ca-eyebrow ca-apps__eyebrow">{{ section.settings.eyebrow }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
       </div>
     {%- endif -%}
 
-    {%- if apps.count > 0 -%}
-      <div class="ca-apps__list">
-        {%- for app in apps -%}
+    {%- if section.blocks.size > 0 -%}
+      <ul class="ca-apps__list" role="list">
+        {%- for block in section.blocks -%}
           {%- liquid
-            assign icon = app.icon.value
-            if icon.image
-              assign icon = icon.image
-            endif
+            assign app_link = block.settings.link
+            assign store_url = block.settings.store_url
+            assign preview = block.settings.preview
           -%}
-          <div class="ca-app">
+          <li class="ca-app" {{ block.shopify_attributes }}>
             <div class="ca-app__id">
-              {%- if icon != blank -%}
-                <span class="ca-app__icon">{% render 'image', image: icon, height: 128, class: 'ca-app__icon-img', alt_text_fallback: app.name.value %}</span>
-              {%- endif -%}
-              <span class="ca-app__titles">
-                <h3 class="ca-app__name">{{ app.name.value }}</h3>
-                {%- if app.tagline.value != blank -%}
-                  <span class="ca-app__tagline">{{ app.tagline.value }}</span>
+              <h3 class="ca-app__name">
+                {%- if app_link != blank -%}
+                  <a class="ca-app__name-link" href="{{ app_link }}">{{ block.settings.name }}</a>
+                {%- else -%}
+                  {{ block.settings.name }}
                 {%- endif -%}
-              </span>
+              </h3>
+              {%- if block.settings.tagline != blank -%}
+                <p class="ca-app__tagline">{{ block.settings.tagline }}</p>
+              {%- endif -%}
+              {%- if preview != blank -%}
+                <span class="ca-app__preview" aria-hidden="true">
+                  {{- preview | image_url: width: 760 | image_tag: loading: 'lazy', widths: '380, 760', sizes: '348px', alt: '' -}}
+                </span>
+              {%- endif -%}
             </div>
-            {%- if app.description != blank -%}
-              <div class="ca-app__body">{{ app.description | metafield_tag }}</div>
+            {%- if block.settings.description != blank -%}
+              <div class="ca-app__body">{{ block.settings.description }}</div>
             {%- endif -%}
-            <div class="ca-app__cta">
-              {%- if app.app_store_url.value != blank -%}
-                <a class="ca-app__store" href="{{ app.app_store_url.value }}" target="_blank" rel="noopener" aria-label="{{ store_label_top }} {{ store_label_bottom }}">
+            {%- if store_url != blank -%}
+              <div class="ca-app__cta">
+                <a class="ca-app__store" href="{{ store_url }}" target="_blank" rel="noopener" aria-label="{{ block.settings.name }}: {{ store_label_top }} {{ store_label_bottom }}">
                   <span class="ca-app__store-icon" aria-hidden="true">
-                    {% render 'ca-icon', name: 'shopify', size: 24 %}
+                    {%- render 'ca-icon', name: 'shopify', size: 24 -%}
                   </span>
                   <span class="ca-app__store-label">
                     <span class="ca-app__store-top">{{ store_label_top }}</span>
                     <span class="ca-app__store-bottom">{{ store_label_bottom }}</span>
                   </span>
                 </a>
-              {%- endif -%}
-            </div>
-          </div>
+              </div>
+            {%- endif -%}
+          </li>
         {%- endfor -%}
-      </div>
+      </ul>
     {%- elsif request.design_mode -%}
-      <p class="ca-apps__empty">Add <strong>App</strong> metaobject entries in this section's settings to populate the list.</p>
+      <p class="ca-apps__empty">Add <strong>App</strong> blocks to this section to populate the list.</p>
     {%- endif -%}
   </div>
 </div>
@@ -99,19 +114,34 @@
 
   .ca-apps__head {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 40px;
-    margin-block-end: 160px;
+    margin-block-end: 120px;
+  }
+
+  .ca-apps__lede {
+    max-width: 920px;
   }
 
   .ca-apps__heading {
     margin: 0;
-    max-width: 802px;
-    text-indent: 8vw;
+    text-indent: 7vw;
   }
 
-  .ca-apps__head-aside {
+  .ca-apps__intro {
+    margin-block-start: 24px;
+    max-width: 640px;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .ca-apps__intro > :first-child { margin-block-start: 0; }
+  .ca-apps__intro > :last-child { margin-block-end: 0; }
+
+  .ca-apps__aside {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
@@ -159,38 +189,32 @@
   }
 
   .ca-apps__eyebrow {
-    text-align: right;
     margin: 0;
+    padding-block-start: 6px;
+    text-align: right;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
   }
 
   .ca-apps__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     border-block-end: 1px solid var(--ca-hairline);
   }
 
   .ca-app {
+    position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 395px) minmax(0, 480px) auto;
+    justify-content: space-between;
     gap: 24px 40px;
     align-items: start;
-    padding-block: 32px;
+    padding-block: 40px;
     border-block-start: 1px solid var(--ca-hairline);
   }
 
   .ca-app__id {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .ca-app__icon-img {
-    display: block;
-    width: 64px;
-    height: 64px;
-    object-fit: cover;
-    border-radius: 12px;
-  }
-
-  .ca-app__titles {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -198,22 +222,66 @@
 
   .ca-app__name {
     margin: 0;
-    font-size: var(--font-h5--size);
-    font-weight: 500;
-    line-height: 1;
+    font-size: var(--font-h3--size);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-transform: capitalize;
+  }
+
+  .ca-app__name-link {
+    color: inherit;
+    text-decoration: none;
+    text-underline-offset: 0.12em;
+    text-decoration-thickness: 0.04em;
+  }
+
+  .ca-app__name-link:hover,
+  .ca-app__name-link:focus-visible {
+    text-decoration: underline;
   }
 
   .ca-app__tagline {
-    font-size: 0.875rem;
-    line-height: 1;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.2;
     letter-spacing: -0.02em;
+    text-transform: uppercase;
+    font-variant-numeric: lining-nums proportional-nums;
     color: rgb(var(--color-foreground-rgb) / 0.6);
   }
 
-  .ca-app__cta {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
+  .ca-app__preview {
+    display: none;
+  }
+
+  @media (hover: hover) and (min-width: 990px) {
+    .ca-app__preview {
+      display: block;
+      position: absolute;
+      inset-inline-start: calc(100% - 48px);
+      inset-block-start: 50%;
+      z-index: 2;
+      width: 348px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 3px 6px 6px rgb(0 0 0 / 0.15);
+      opacity: 0;
+      transform: translateY(-40%) scale(0.98);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .ca-app__preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .ca-app__id:has(.ca-app__name-link:hover) .ca-app__preview,
+    .ca-app__id:has(.ca-app__name-link:focus-visible) .ca-app__preview {
+      opacity: 1;
+      transform: translateY(-40%) scale(1);
+    }
   }
 
   .ca-app__body {
@@ -224,15 +292,23 @@
   .ca-app__body > :first-child { margin-block-start: 0; }
   .ca-app__body > :last-child { margin-block-end: 0; }
 
+  .ca-app__cta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
   .ca-app__store {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 18px;
+    gap: 8px;
+    height: 42px;
+    padding-inline: 14px 18px;
     border-radius: 100px;
     background-color: var(--color-foreground);
     color: var(--color-background);
     text-decoration: none;
+    white-space: nowrap;
     transition: opacity 0.2s ease;
   }
 
@@ -249,19 +325,19 @@
   .ca-app__store-label {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
     line-height: 1;
   }
 
   .ca-app__store-top {
-    font-size: 0.525rem;
+    font-size: 0.5rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
   .ca-app__store-bottom {
-    font-size: 1.0625rem;
+    font-size: 1rem;
     font-weight: 600;
     letter-spacing: -0.01em;
   }
@@ -271,37 +347,51 @@
     color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
   }
 
+  @media screen and (max-width: 989px) {
+    .ca-app {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .ca-app__cta {
+      grid-column: 1 / -1;
+      justify-content: flex-start;
+    }
+  }
+
   @media screen and (max-width: 749px) {
     .ca-apps__head {
       flex-direction: column;
-      gap: 16px;
+      align-items: stretch;
+      gap: 24px;
+      margin-block-end: 56px;
     }
 
-    .ca-apps__head-aside {
-      align-items: flex-start;
-      align-self: auto;
+    .ca-apps__heading {
+      text-indent: 0;
+    }
+
+    .ca-apps__intro {
+      font-size: 1.125rem;
+    }
+
+    .ca-apps__aside {
       order: -1;
-      width: 100%;
-      flex-direction: row;
+      align-self: auto;
+      flex-direction: row-reverse;
+      align-items: center;
       justify-content: space-between;
       gap: 16px;
     }
 
     .ca-apps__eyebrow {
+      padding-block-start: 0;
       text-align: left;
-    }
-
-    .ca-apps__head {
-      margin-block-end: 64px;
     }
 
     .ca-app {
       grid-template-columns: 1fr;
-      gap: 20px;
-    }
-
-    .ca-app__cta {
-      justify-content: flex-start;
+      gap: 16px;
+      padding-block: 28px;
     }
   }
 {% endstylesheet %}
@@ -323,7 +413,13 @@
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "Our apps power hundreds of Shopify stores and reach millions of customers every month. They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores."
+      "default": "Our apps power hundreds of Shopify stores and reach millions of customers every month."
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "<p>They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.</p>"
     },
     {
       "type": "text",
@@ -337,22 +433,19 @@
       "label": "Contact button link"
     },
     {
-      "type": "metaobject_list",
-      "id": "apps",
-      "label": "Apps",
-      "metaobject_type": "app",
-      "limit": 12
+      "type": "header",
+      "content": "App Store button"
     },
     {
       "type": "text",
       "id": "store_label_top",
-      "label": "App Store button — top line",
+      "label": "Top line",
       "default": "Find it on the"
     },
     {
       "type": "text",
       "id": "store_label_bottom",
-      "label": "App Store button — bottom line",
+      "label": "Bottom line",
       "default": "Shopify App Store"
     },
     {
@@ -381,7 +474,7 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 72
+      "default": 80
     },
     {
       "type": "range",
@@ -391,7 +484,50 @@
       "max": 160,
       "step": 2,
       "unit": "px",
-      "default": 72
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "app",
+      "name": "App",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "App name"
+        },
+        {
+          "type": "text",
+          "id": "tagline",
+          "label": "Tagline",
+          "default": "B2B for your Shopify store"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "App page link",
+          "info": "Where the app name links to."
+        },
+        {
+          "type": "url",
+          "id": "store_url",
+          "label": "Shopify App Store link"
+        },
+        {
+          "type": "image_picker",
+          "id": "preview",
+          "label": "Hover preview (optional)",
+          "info": "Shown beside the app name on hover, desktop only."
+        }
+      ]
     }
   ],
   "presets": [
@@ -400,13 +536,18 @@
       "category": "Conspire",
       "settings": {
         "eyebrow": "Our Shopify Apps",
-        "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month. They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.",
+        "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month.",
+        "intro": "<p>They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.</p>",
         "contact_label": "Contact Us",
         "store_label_top": "Find it on the",
-        "store_label_bottom": "Shopify App Store",
-        "padding-block-start": 72,
-        "padding-block-end": 72
-      }
+        "store_label_bottom": "Shopify App Store"
+      },
+      "blocks": [
+        { "type": "app", "settings": { "name": "Bonde", "tagline": "Shopify Growth Super App", "link": "https://getbonde.com" } },
+        { "type": "app", "settings": { "name": "Onboarding & Wholesale", "tagline": "B2B for your Shopify store", "link": "https://apps.conspireagency.com/wholesale" } },
+        { "type": "app", "settings": { "name": "Wishlist Project Planner", "tagline": "B2B for your Shopify store", "link": "https://apps.conspireagency.com/wishlist" } },
+        { "type": "app", "settings": { "name": "Draft Order Invoices", "tagline": "B2B for your Shopify store", "link": "https://apps.conspireagency.com/drafts" } }
+      ]
     }
   ]
 }

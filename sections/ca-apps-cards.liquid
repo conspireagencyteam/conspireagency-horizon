@@ -1,0 +1,275 @@
+{%- comment -%}
+  ca-apps-cards.liquid — numbered list of app cards for the B2B apps hub
+  (/pages/best-shopify-apps), ported from apps.conspireagency.com.
+  Each "app" block: number, h3 name (links to the app page), tagline, description,
+  tour thumbnail (links to the video), App Store rating line, and three links:
+  Learn more / Documentation / Install on Shopify.
+{%- endcomment -%}
+<div
+  class="ca-appcards spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      {%- render 'ca-intro',
+        eyebrow: section.settings.eyebrow,
+        heading: section.settings.heading,
+        start: 6,
+        class: 'ca-appcards__intro'
+      -%}
+    {%- endif -%}
+    {%- if section.settings.intro != blank -%}
+      <div class="ca-grid ca-appcards__lede"><div class="ca-appcards__lede-text">{{ section.settings.intro }}</div></div>
+    {%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      <ol class="ca-appcards__list" role="list">
+        {%- for block in section.blocks -%}
+          <li class="ca-appcards__card" {{ block.shopify_attributes }}>
+            <div class="ca-appcards__copy">
+              <p class="ca-eyebrow ca-appcards__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</p>
+              <h3 class="ca-appcards__name">
+                {%- if block.settings.page_link != blank -%}
+                  <a href="{{ block.settings.page_link }}">{{ block.settings.name }}</a>
+                {%- else -%}
+                  {{ block.settings.name }}
+                {%- endif -%}
+              </h3>
+              {%- if block.settings.tagline != blank -%}
+                <p class="ca-appcards__tagline">{{ block.settings.tagline }}</p>
+              {%- endif -%}
+              {%- if block.settings.description != blank -%}
+                <div class="ca-appcards__desc">{{ block.settings.description }}</div>
+              {%- endif -%}
+              {%- if block.settings.rating_label != blank -%}
+                <p class="ca-appcards__rating">
+                  <span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                  {%- if block.settings.rating_link != blank -%}
+                    <a href="{{ block.settings.rating_link }}" target="_blank" rel="noopener">{{ block.settings.rating_label }}</a>
+                  {%- else -%}
+                    {{ block.settings.rating_label }}
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+              <div class="ca-appcards__actions">
+                {%- if block.settings.page_link != blank -%}
+                  <a class="button size-style" href="{{ block.settings.page_link }}">{{ block.settings.page_label | default: 'Learn more' }}</a>
+                {%- endif -%}
+                {%- if block.settings.store_link != blank -%}
+                  <a class="button-secondary size-style" href="{{ block.settings.store_link }}" target="_blank" rel="noopener">{{ block.settings.store_label | default: 'Install on Shopify' }}</a>
+                {%- endif -%}
+                {%- if block.settings.docs_link != blank -%}
+                  <a class="ca-appcards__docs" href="{{ block.settings.docs_link }}">{{ block.settings.docs_label | default: 'Documentation' }}</a>
+                {%- endif -%}
+              </div>
+            </div>
+            {%- if block.settings.tour_image != blank -%}
+              <div class="ca-appcards__media">
+                {%- if block.settings.tour_link != blank -%}
+                  <a class="ca-appcards__tour" href="{{ block.settings.tour_link }}" target="_blank" rel="noopener" aria-label="{{ block.settings.name | escape }}: {{ block.settings.tour_label | default: 'Watch the tour' | escape }}">
+                {%- else -%}
+                  <div class="ca-appcards__tour">
+                {%- endif -%}
+                  {{- block.settings.tour_image | image_url: width: 1280 | image_tag: loading: 'lazy', widths: '480, 760, 1280', sizes: '(min-width: 990px) 560px, 100vw', alt: '' -}}
+                  {%- if block.settings.tour_label != blank -%}
+                    <span class="ca-appcards__tour-label"><span class="ca-appcards__play" aria-hidden="true"></span>{{ block.settings.tour_label }}</span>
+                  {%- endif -%}
+                {%- if block.settings.tour_link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+  </div>
+</div>
+{% stylesheet %}
+  .ca-appcards {
+    background-color: var(--color-background);
+  }
+  .ca-appcards__intro {
+    margin-block-end: 64px;
+  }
+  .ca-appcards__lede {
+    margin-block-end: 64px;
+  }
+  .ca-appcards__lede-text {
+    grid-column: 1 / span 12;
+    font-size: var(--ca-fs-20, 1.25rem);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+  .ca-appcards__lede-text > :first-child { margin-block-start: 0; }
+  .ca-appcards__lede-text > :last-child { margin-block-end: 0; }
+  @media (min-width: 990px) {
+    .ca-appcards__lede-text { grid-column: 6 / span 7; }
+  }
+  .ca-appcards__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+  .ca-appcards__card {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 32px;
+    padding-block: 56px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+  .ca-appcards__card:last-child {
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+  .ca-appcards__copy {
+    grid-column: 1 / span 12;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ca-appcards__media {
+    grid-column: 1 / span 12;
+  }
+  @media (min-width: 990px) {
+    .ca-appcards__copy { grid-column: 1 / span 6; }
+    .ca-appcards__media { grid-column: 8 / span 5; align-self: center; }
+  }
+  .ca-appcards__num {
+    margin: 0 0 20px;
+  }
+  .ca-appcards__name {
+    margin: 0 0 12px;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  .ca-appcards__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .ca-appcards__name a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+  .ca-appcards__tagline {
+    margin: 0 0 16px;
+    font-size: var(--ca-fs-20, 1.25rem);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  .ca-appcards__desc {
+    color: var(--ca-soft);
+    max-width: 52ch;
+  }
+  .ca-appcards__desc > :first-child { margin-block-start: 0; }
+  .ca-appcards__desc > :last-child { margin-block-end: 0; }
+  .ca-appcards__rating {
+    margin: 20px 0 0;
+    font-size: 0.875rem;
+    letter-spacing: -0.02em;
+  }
+  .ca-appcards__rating span {
+    letter-spacing: 0.08em;
+    margin-inline-end: 8px;
+  }
+  .ca-appcards__rating a {
+    color: inherit;
+  }
+  .ca-appcards__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    margin-block-start: 28px;
+  }
+  .ca-appcards__docs {
+    color: inherit;
+    text-underline-offset: 0.15em;
+  }
+  .ca-appcards__tour {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--ca-ink, #0d110d);
+    aspect-ratio: 16 / 9;
+  }
+  .ca-appcards__tour img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ca-appcards__tour-label {
+    position: absolute;
+    inset-inline-start: 16px;
+    inset-block-end: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px 8px 10px;
+    border-radius: 999px;
+    background: rgba(13, 17, 13, 0.82);
+    color: #fff;
+    font-size: 0.875rem;
+    letter-spacing: -0.02em;
+    backdrop-filter: blur(6px);
+  }
+  .ca-appcards__play {
+    width: 0;
+    height: 0;
+    border-block: 6px solid transparent;
+    border-inline-start: 10px solid currentColor;
+  }
+  a.ca-appcards__tour:hover img {
+    transform: scale(1.02);
+    transition: transform 0.4s ease;
+  }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "App cards",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "intro", "label": "Intro text" },
+    { "type": "color", "id": "background_color", "label": "Background color" },
+    { "type": "color", "id": "text_color", "label": "Text color" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "app",
+      "name": "App",
+      "settings": [
+        { "type": "text", "id": "name", "label": "App name" },
+        { "type": "text", "id": "tagline", "label": "Tagline" },
+        { "type": "richtext", "id": "description", "label": "Description" },
+        { "type": "url", "id": "page_link", "label": "App page" },
+        { "type": "text", "id": "page_label", "label": "App page label", "default": "Learn more" },
+        { "type": "url", "id": "store_link", "label": "App Store listing" },
+        { "type": "text", "id": "store_label", "label": "App Store label", "default": "Install on Shopify" },
+        { "type": "url", "id": "docs_link", "label": "Documentation link" },
+        { "type": "text", "id": "docs_label", "label": "Documentation label", "default": "Documentation" },
+        { "type": "text", "id": "rating_label", "label": "Rating line", "default": "5.0 on the Shopify App Store" },
+        { "type": "url", "id": "rating_link", "label": "Rating link" },
+        { "type": "image_picker", "id": "tour_image", "label": "Tour thumbnail" },
+        { "type": "url", "id": "tour_link", "label": "Tour video link" },
+        { "type": "text", "id": "tour_label", "label": "Tour label", "default": "Watch the tour" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "App cards", "category": "Conspire", "blocks": [{ "type": "app" }, { "type": "app" }, { "type": "app" }] }
+  ]
+}
+{% endschema %}

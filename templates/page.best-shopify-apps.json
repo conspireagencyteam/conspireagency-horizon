@@ -1,0 +1,269 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-page-intro",
+      "settings": {
+        "eyebrow": "Our Shopify apps",
+        "heading": "<p>The best B2B & wholesale apps for Shopify stores.</p>",
+        "heading_tag": "h1",
+        "column_start": "5",
+        "size": "display",
+        "button_label": "",
+        "button_link": "",
+        "style_class": "button",
+        "rule": false,
+        "allow_transparent_header": false,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "apps": {
+      "type": "ca-apps-cards",
+      "blocks": {
+        "wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Onboarding & Wholesale",
+            "tagline": "Wholesale onboarding forms, document management & B2B pricing",
+            "description": "<p>Wholesale registration forms with approval, buyer document management, and B2B pricing on any Shopify plan. Unlimited price groups, net terms, and quick order.</p>",
+            "page_link": "/pages/wholesale-goat",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wholesale-b2b-trade-program#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=PEF3yQ564Uo",
+            "tour_label": "Watch the tour · 1:32"
+          }
+        },
+        "wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Wishlist Project Planner",
+            "tagline": "B2B wishlists with quote requests, PDF exports & draft orders",
+            "description": "<p>Shopify wishlist app for B2B & project planning: multiple wishlists, subgroups, quantities, sharing, PDF quotes, draft orders & add to cart.</p>",
+            "page_link": "/pages/b2b-wishlist-project-planner",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wishlist-project-planner",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/wishlist/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wishlist-project-planner#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=EjvqM4SR11Q",
+            "tour_label": "Watch the tour · 1:28"
+          }
+        },
+        "drafts": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Draft Order Invoices",
+            "tagline": "Draft order invoices & quote requests customers can pay",
+            "description": "<p>Customers view & pay draft order invoices from their account page, with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
+            "page_link": "/pages/draft-order-invoices",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/draft-order-invoices",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/drafts/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/draft-order-invoices#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=6YJXBUOeImo",
+            "tour_label": "Watch the tour · 1:31"
+          }
+        }
+      },
+      "block_order": [
+        "wholesale",
+        "wishlist",
+        "drafts"
+      ],
+      "settings": {
+        "eyebrow": "Three apps",
+        "heading": "Built for stores that sell to serious buyers",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96,
+        "intro": "<p>Three focused Shopify apps from a team that specializes in trade and wholesale businesses. Streamline onboarding and document management for your B2B customers, plan large orders and projects with purpose-built wishlists, and supercharge invoicing in Shopify. Built and supported by Conspire, a Shopify Premier Partner.</p>"
+      }
+    },
+    "team": {
+      "type": "ca-split-feature",
+      "settings": {
+        "eyebrow": "Built by Conspire",
+        "heading": "<strong>One senior Shopify team</strong> behind every app",
+        "text": "<p>Every app here is designed, developed, and supported by Conspire, a Shopify development company and Shopify Premier Partner founded in Los Angeles. The same senior developers and designers who build high-performing storefronts for leading brands answer your support messages.</p><p>Need more than an app? Conspire also offers full Shopify development services, from storefront design to custom B2B builds.</p>",
+        "button_label": "Shopify services",
+        "button_link": "/pages/pricing",
+        "image_small": "shopify://shop_images/ca-apps-brand-via-motif.jpg",
+        "image_large": "shopify://shop_images/ca-apps-brand-hero-window.jpg",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "workflow": {
+      "type": "ca-value-cards",
+      "blocks": {
+        "step_1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "01 · Onboard & price",
+            "title": "Run wholesale pricing",
+            "text": "<p>Buyers apply through a sign-up form, get approved into a tier, and log in to see their prices already applied on your existing Shopify store.</p>"
+          }
+        },
+        "step_2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "02 · Plan",
+            "title": "Let buyers plan with wishlists",
+            "text": "<p>Trade customers organize products by room or job, set quantities, share lists with their team, and export PDF quotes.</p>"
+          }
+        },
+        "step_3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "03 · Settle",
+            "title": "Settle it with payable invoices",
+            "text": "<p>Wishlists and quote requests become draft orders. Customers view and pay the invoices from their account page, with automated reminders.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ],
+      "settings": {
+        "eyebrow": "Better together",
+        "heading": "Three apps, one B2B workflow",
+        "button_label": "",
+        "button_link": "",
+        "style_class": "button",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "question": "Do the apps work on any Shopify plan?",
+            "answer": "<p>Yes. All three apps run on any Shopify plan, including Basic, with no Shopify Plus requirement. The wholesale app adds B2B pricing, sign-up forms and approvals to your existing store.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "question": "How much do the apps cost?",
+            "answer": "<p>B2B Onboarding & Wholesale has a free plan for up to 10 wholesale companies, with Grow at $29/month and Pro at $99/month. B2B Wishlist Project Planner has a free plan, and the Project planner plan is $29/month with a 14-day trial. B2B Draft Order Invoices starts at $5/month with a free trial on every plan. Current pricing is always on each Shopify App Store listing.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "question": "Do the apps work together?",
+            "answer": "<p>Yes. Wishlists convert to draft orders, draft orders become payable invoices on the customer account page, and wholesale buyers see their approved pricing throughout. Each app also works on its own.</p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "question": "Who builds and supports them?",
+            "answer": "<p>Conspire, a Shopify development agency and Premier Partner in Los Angeles. The senior developers who build the apps answer support messages, and documentation for each app is at apps.conspireagency.com.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Book a call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg"
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-replica-decor.jpg"
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-via-motif.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_3",
+        "photo_4"
+      ],
+      "settings": {
+        "eyebrow": "Need a custom B2B build?",
+        "heading": "Talk to the team behind the apps",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "apps",
+    "team",
+    "workflow",
+    "faq",
+    "booking"
+  ]
+}
