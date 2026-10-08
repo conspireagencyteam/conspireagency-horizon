@@ -109,6 +109,18 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
   still has no `featured_site_image`.
 - **Brands marquee.** Hover slow-down only for `pointerType === 'mouse'` and
   `touch-action: pan-y` on the strip — a thumb landing on it no longer freezes it.
+- **Performance pass (Danny: "takes a long time to load / refuses to go between
+  pages").** Measured on desktop Chrome: TTFB 30–200 ms, load 1.0–1.5 s, ~1.7–2.5 MB,
+  350+ requests. Not reproducible on desktop; the big phone costs were: (1) the
+  Calendly inline embed, ~3 MB (1.7 MB JS + 1.2 MB CSS) in an iframe on every page,
+  now lazy via `<ca-calendly>` in `ca-booking.liquid` (loads within 600px of the
+  viewport; lead tracking still hears the iframe's postMessage); (2) Shopify's own
+  checkout preloader from `content_for_header` (~177 low-priority prefetches, ~190 KB,
+  Chrome only, after `load`) — not controllable from the theme; (3) ~25 monorail
+  beacons + 5 `gtag/js` loads (ours is AW only; the rest are the Google channel
+  pixel) + FB pixel 212 KB. Video warm-up is already pointer-only and sequential;
+  browsers pick the first `<source>` so everything streams at 480p. View
+  transitions are off. If it recurs, get device/browser/network from Danny.
 
 ### Open (decide, then do)
 
