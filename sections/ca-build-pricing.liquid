@@ -252,22 +252,22 @@
   }
 
   .ca-bprice.is-alive .ca-bprice__bars--lines span {
-    animation: ca-bprice-breathe 6s ease-in-out infinite;
-    animation-delay: calc(var(--i) * -170ms);
+    animation: ca-bprice-breathe 4.5s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -125ms);
   }
 
   .ca-bprice.is-alive .ca-bprice__bars--glow {
-    animation: ca-bprice-pulse 7s ease-in-out infinite;
+    animation: ca-bprice-pulse 5s ease-in-out infinite;
   }
 
   @keyframes ca-bprice-breathe {
-    0%, 100% { scale: 1 0.96; }
-    50% { scale: 1 1.05; }
+    0%, 100% { scale: 1 0.86; }
+    50% { scale: 1 1.16; }
   }
 
   @keyframes ca-bprice-pulse {
-    0%, 100% { opacity: 0.82; scale: 1 0.985; }
-    50% { opacity: 1; scale: 1 1.015; }
+    0%, 100% { opacity: 0.7; scale: 1 0.95; }
+    50% { opacity: 1; scale: 1 1.06; }
   }
 
   .ca-bprice__bars--glow {
