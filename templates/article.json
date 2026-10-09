@@ -24,9 +24,9 @@
       "settings": {
         "hoist_video": true,
         "heading_level": "auto",
-        "show_headings": false,
+        "show_headings": true,
         "toc_label": "On this page",
-        "lead": true,
+        "lead": false,
         "bullets": "dot",
         "intro_label": "",
         "intro_display": false,
