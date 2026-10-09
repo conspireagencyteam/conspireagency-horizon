@@ -1089,3 +1089,96 @@ ca-app-scroller.is-scroll [ref="track"] > * {
 @media (prefers-reduced-motion: reduce) {
   .ca-app-scroller__dot, .ca-app-scroller__arrow { transition: none; }
 }
+
+/* =========================================================================
+   Work media box (snippets/ca-work-media.liquid, assets/ca-work.js)
+   Backdrop + reveal layer; `.ca-work__row.is-active` shows the reveal and the
+   video plays. Shared by ca-work-list and ca-client-rows.
+   ========================================================================= */
+/* Media box */
+.ca-work__media {
+  grid-area: media;
+  position: relative;
+  aspect-ratio: var(--ca-work-ratio, 8 / 7);
+  overflow: hidden;
+  background-color: rgb(var(--color-foreground-rgb) / 0.04);
+}
+
+.ca-work__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.ca-work__img,
+.ca-work__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ca-work__video {
+  pointer-events: none;
+}
+
+.ca-work__default {
+  z-index: 1;
+}
+
+/* Reveal layer: the foreground media sits centered on the background work
+   image at a clamped (responsive) width — not full width. */
+.ca-work__reveal {
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ca-work__fg {
+  width: clamp(200px, 54%, 420px);
+  height: 80%;
+  overflow: hidden;
+}
+
+/* Foreground video shows in full; foreground image stays cover (and scrolls). */
+.ca-work__fg .ca-work__video {
+  object-fit: contain;
+}
+
+/* Video foreground is landscape — give it a wider window. */
+.ca-work__reveal--video .ca-work__fg {
+  width: clamp(280px, 80%, 640px);
+}
+
+.ca-work__reveal-img {
+  object-position: center top;
+}
+
+/* Active row (JS: hovered on desktop / in-view on mobile) — reveal + yoyo scroll. */
+.ca-work__row.is-active .ca-work__reveal {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.ca-work__row.is-active .ca-work__reveal-img {
+  animation: ca-work-scroll 7s ease-in-out infinite alternate;
+}
+
+@keyframes ca-work-scroll {
+  from { object-position: center top; }
+  to { object-position: center bottom; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ca-work__reveal {
+    transition: none;
+  }
+
+  .ca-work__row.is-active .ca-work__reveal-img {
+    animation: none;
+  }
+}
+
+

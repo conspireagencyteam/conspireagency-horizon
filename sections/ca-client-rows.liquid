@@ -13,6 +13,7 @@
   work_preview, case_study_reference.
 {%- endcomment -%}
 
+<script src="{{ 'ca-work.js' | asset_url }}" type="module" fetchpriority="low"></script>
 <div
   class="ca-clients spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
   style="{% render 'spacing-style', settings: section.settings %}"
@@ -36,7 +37,7 @@
     -%}
 
     {%- if section.blocks.size > 0 -%}
-      <div class="ca-clients__list">
+      <ca-work-list class="ca-clients__list">
         {%- for block in section.blocks -%}
           {%- liquid
             assign client = block.settings.client
@@ -58,7 +59,7 @@
               endif
             endif
           -%}
-          <article class="ca-clients__row" {{ block.shopify_attributes }}>
+          <article class="ca-clients__row ca-work__row" {{ block.shopify_attributes }}>
             <div class="ca-clients__who">
               {%- if name != blank -%}
                 <h3 class="ca-clients__name">
@@ -89,13 +90,12 @@
             </div>
 
             <div class="ca-clients__media">
-              {%- if image != blank -%}
-                {% render 'image', image: image, height: 600, class: 'ca-clients__img', alt_text_fallback: name %}
-              {%- endif -%}
+              {%- comment -%} Same media box as the homepage work list: backdrop + hover/in-view reveal of the site video. {%- endcomment -%}
+              {%- render 'ca-work-media', client: client, default_image: block.settings.image, ratio: '8 / 7' -%}
             </div>
           </article>
         {%- endfor -%}
-      </div>
+      </ca-work-list>
     {%- elsif request.design_mode -%}
       <p class="ca-clients__empty">Add <strong>Client</strong> blocks to build the list.</p>
     {%- endif -%}
@@ -155,7 +155,7 @@
   }
 
   .ca-clients__detail {
-    grid-column: 4 / span 5;
+    grid-column: 4 / span 4;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -167,16 +167,13 @@
     color: var(--ca-soft);
   }
 
-  .ca-clients__media {
-    grid-column: 9 / -1;
-    padding-inline-start: 28px;
+  .ca-clients__list {
+    display: block;
   }
 
-  .ca-clients__img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 7 / 5;
-    object-fit: cover;
+  .ca-clients__media {
+    grid-column: 8 / -1;
+    padding-inline-start: 28px;
   }
 
   .ca-clients__empty {

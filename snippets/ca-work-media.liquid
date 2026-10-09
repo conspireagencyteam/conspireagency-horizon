@@ -1,0 +1,92 @@
+{%- comment -%}
+  ca-work-media.liquid — the work media box: a backdrop image with a reveal layer
+  (the client's featured_site_media video or image, falling back to
+  featured_site_image) that shows when the enclosing `.ca-work__row` is active.
+  Activation (hover on desktop, in-view on touch/mobile) is done by the
+  <ca-work-list> element in assets/ca-work.js; styles live in ca-custom.css
+  ("Work media box"). Used by ca-work-list and ca-client-rows.
+
+  @param {object} client - client metaobject
+  @param {string} [default_field] - client field for the backdrop, default work_preview
+  @param {object} [default_image] - explicit backdrop image (overrides the field)
+  @param {string} [ratio] - CSS aspect ratio, default 8 / 7
+{%- endcomment -%}
+{%- liquid
+  assign default_field = default_field | default: 'work_preview'
+  assign ratio = ratio | default: '8 / 7'
+  assign default_img = default_image
+  if default_img == blank
+    assign default_img = client[default_field].value
+  endif
+  if default_img.image
+    assign default_img = default_img.image
+  endif
+
+  assign fmv = client.featured_site_media.value
+  assign reveal_img = blank
+  assign reveal_video = blank
+  assign reveal_vtype = 'video/mp4'
+  if fmv.image
+    assign reveal_img = fmv.image
+  elsif fmv.sources
+    assign fm_src = fmv.sources | last
+    assign reveal_video = fm_src.url
+    assign reveal_vtype = fm_src.mime_type | default: 'video/mp4'
+  elsif fmv.url
+    assign fm_ext = fmv.url | split: '?' | first | split: '.' | last | downcase
+    if fm_ext == 'mp4' or fm_ext == 'webm' or fm_ext == 'mov' or fm_ext == 'm4v'
+      assign reveal_video = fmv.url
+      if fm_ext == 'webm'
+        assign reveal_vtype = 'video/webm'
+      endif
+    else
+      assign reveal_img = fmv
+    endif
+  elsif fmv != blank
+    assign reveal_img = fmv
+  endif
+
+  if reveal_img == blank and reveal_video == blank
+    assign fsi = client.featured_site_image.value
+    if fsi.image
+      assign fsi = fsi.image
+    endif
+    assign reveal_img = fsi
+  endif
+
+-%}
+<div class="ca-work__media" style="--ca-work-ratio: {{ ratio }};">
+  {%- if default_img != blank -%}
+    <div class="ca-work__layer ca-work__default">
+      {% render 'image', image: default_img, height: 800, class: 'ca-work__img', alt_text_fallback: client.name.value %}
+    </div>
+  {%- endif -%}
+  {%- if reveal_video != blank -%}
+    <div class="ca-work__layer ca-work__reveal ca-work__reveal--video">
+      <div class="ca-work__fg">
+        {%- if fmv.sources -%}
+          {%- comment -%}
+            Shopify-hosted video: lightest rendition first (480p on
+            touch devices, 720p on pointer devices, 1080p last).
+            See snippets/ca-preview-video.
+          {%- endcomment -%}
+          {%- render 'ca-preview-video', video: fmv, quality: 'hd', class: 'ca-work__video', preload: 'metadata', poster_width: 900 -%}
+        {%- else -%}
+          <video class="ca-work__video" muted loop playsinline preload="metadata">
+            <source src="{{ reveal_video }}" type="{{ reveal_vtype }}">
+          </video>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- elsif reveal_img != blank -%}
+    <div class="ca-work__layer ca-work__reveal ca-work__reveal--image">
+      <div class="ca-work__fg">
+        {%- comment -%}
+          The foreground box is at most 420px wide (.ca-work__fg), so size
+          by width; the old height: 1600 pulled 3200px-tall PNGs on retina.
+        {%- endcomment -%}
+        {% render 'image', image: reveal_img, width: 420, class: 'ca-work__img ca-work__reveal-img', alt_text_fallback: client.name.value %}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
