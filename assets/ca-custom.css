@@ -166,6 +166,39 @@ a.button-custom.size-style.ca-btn--roll::after {
   --ca-btn-arrow-ms: 600ms;
 }
 
+/* The roll IS the hover state: keep the resting colours, no hover swap. Horizon
+   swaps --button-* to the *-hover-* palette on :hover (base.css); pin them back
+   to the resting values, including the chip/arrow colours derived from them. */
+a.button.ca-btn--roll:hover {
+  --button-color: var(--color-primary-button-text);
+  --button-background-color: var(--color-primary-button-background);
+  --button-border-color: var(--color-primary-button-border);
+}
+
+a.button-secondary.ca-btn--roll:hover {
+  --button-color: var(--color-secondary-button-text);
+  --button-background-color: var(--color-secondary-button-background);
+  --button-border-color: var(--color-secondary-button-border);
+}
+
+a.button-custom.ca-btn--roll:hover {
+  --button-color: var(--color-primary-button-text);
+  --button-background-color: var(--color-primary-button-background);
+  --button-border-color: var(--color-primary-button-border);
+}
+
+.ca-invert a.button.ca-btn--roll:hover {
+  --button-color: var(--color-background);
+  --button-background-color: var(--color-foreground);
+  --button-border-color: var(--color-foreground);
+}
+
+.ca-invert a.button-secondary.ca-btn--roll:hover {
+  --button-color: var(--color-foreground);
+  --button-background-color: transparent;
+  --button-border-color: var(--color-foreground);
+}
+
 .ca-btn__text {
   position: relative;
   display: block;

@@ -80,22 +80,32 @@
     btn.appendChild(chip);
     btn.classList.add('ca-btn--roll');
 
+    // The roll loops for as long as the pointer stays on the button (or it has
+    // focus); leaving lets the current cycle finish, so the label and arrow
+    // always land in their resting position.
     var timer = 0;
+    var hovering = false;
     var play = function () {
       if (reduceMotion.matches || btn.classList.contains('ca-btn--rolling')) return;
       btn.classList.add('ca-btn--rolling');
       clearTimeout(timer);
       // Longest leg is the arrow (600ms); the fallback timer covers a missed animationend.
-      timer = setTimeout(stop, 700);
+      timer = setTimeout(cycleEnd, 700);
     };
-    var stop = function () {
+    var cycleEnd = function () {
       clearTimeout(timer);
       btn.classList.remove('ca-btn--rolling');
+      if (hovering) {
+        // Force a style flush so re-adding the class restarts the animation.
+        void btn.offsetWidth;
+        play();
+      }
     };
-    chip.lastElementChild.addEventListener('animationend', stop);
-    btn.addEventListener('mouseenter', play);
-    btn.addEventListener('mouseleave', play);
-    btn.addEventListener('focus', play);
+    chip.lastElementChild.addEventListener('animationend', cycleEnd);
+    btn.addEventListener('mouseenter', function () { hovering = true; play(); });
+    btn.addEventListener('mouseleave', function () { hovering = false; });
+    btn.addEventListener('focus', function () { hovering = true; play(); });
+    btn.addEventListener('blur', function () { hovering = false; });
   };
 
   var upgradeButtons = function (root) {
