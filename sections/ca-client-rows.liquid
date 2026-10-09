@@ -120,10 +120,15 @@
     border-block-end: 1px solid var(--ca-hairline-strong);
   }
 
-  .ca-clients__row {
+  /* Rows also carry .ca-work__row (so <ca-work-list> can activate their media
+     box); the work list's own .ca-work__row grid is in the same compiled
+     bundle, so this layout is declared with higher specificity to win. */
+  .ca-clients__list .ca-clients__row {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 24px;
+    grid-template-rows: none;
+    grid-template-areas: none;
+    gap: 0 24px;
     padding-block: 40px;
     border-block-start: 1px solid var(--ca-hairline-strong);
   }
@@ -186,7 +191,7 @@
       margin-block-end: 48px;
     }
 
-    .ca-clients__row {
+    .ca-clients__list .ca-clients__row {
       row-gap: 24px;
       padding-block: 32px;
     }
