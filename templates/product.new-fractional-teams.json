@@ -275,7 +275,7 @@
           "type": "tier",
           "settings": {
             "name": "Growth Partner",
-            "fit": "For brands doing $8M to $20M",
+            "fit": "For brands doing $8M to $15M",
             "price": "$10k",
             "cycle": "/ month"
           }
@@ -284,7 +284,7 @@
           "type": "tier",
           "settings": {
             "name": "Dedicated Partner",
-            "fit": "For brands doing $20M+",
+            "fit": "For brands doing $15M+",
             "price": "$18k",
             "cycle": "/ month"
           }
