@@ -24,6 +24,7 @@
 <div
   class="ca-sprints spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
   style="{% render 'spacing-style', settings: section.settings %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | strip | handleize }}"{% endif %}
 >
   {%- render 'contrast-override',
     background_color: section.settings.background_color,
@@ -102,6 +103,7 @@
 
 {% stylesheet %}
   .ca-sprints {
+    scroll-margin-top: 96px;
     background-color: var(--color-background);
   }
 
@@ -231,6 +233,7 @@
   "class": "ca-sprints-section",
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor id", "info": "Optional. Lets links jump here, e.g. sprints gives /pages/pricing#sprints." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Focused Builds sprints" },
     { "type": "inline_richtext", "id": "heading", "label": "Statement", "default": "For businesses that require speed and have a specific need." },
     { "type": "textarea", "id": "rows", "label": "Row labels", "info": "One per line", "default": "Dedicated team focus\nBest suited for\nEngagement style\nWeekly progress updates\nDedicated project manager" },

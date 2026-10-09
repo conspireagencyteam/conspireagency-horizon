@@ -80,7 +80,8 @@
         "background_color": "#f2f2f2",
         "text_color": "",
         "padding-block-start": 80,
-        "padding-block-end": 80
+        "padding-block-end": 80,
+        "anchor_id": "retainers"
       }
     },
     "sprints": {
@@ -91,7 +92,7 @@
           "settings": {
             "name": "Starter Sprint",
             "price": "$7.5k",
-            "values": "1 week\nTargeted updates and feature builds\nHighly focused, tight orchestration\nno\nyes",
+            "values": "1 week\nTargeted updates and feature builds\nHighly focused, tight orchestration\nyes\nyes\nBilled at a day rate, not another full week",
             "highlight": false,
             "button_label": "Get Started",
             "button_link": "#book-a-call"
@@ -102,7 +103,7 @@
           "settings": {
             "name": "Full Sprint",
             "price": "$14k",
-            "values": "2 weeks\nMigrations and smaller builds\nBetter weekly rate than a single week\nyes\nyes",
+            "values": "2 weeks\nMigrations and smaller builds\nBetter weekly rate than a single week\nyes\nyes\nBilled at a day rate, not another full week",
             "highlight": true,
             "button_label": "Get Started",
             "button_link": "#book-a-call"
@@ -116,11 +117,12 @@
       "settings": {
         "eyebrow": "Focused Builds sprints",
         "heading": "For businesses that require speed and have a specific need. Good for migrations, partial redesigns, or feature build. Businesses that want dedicated focus without a long-term commitment.",
-        "rows": "Dedicated team focus\nBest suited for\nEngagement style\nWeekly progress updates\nDedicated project manager",
+        "rows": "Dedicated team focus\nBest suited for\nEngagement style\nRegular progress updates\nDedicated project manager\nIf it runs over",
         "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 80,
-        "padding-block-end": 80
+        "padding-block-end": 80,
+        "anchor_id": "sprints"
       }
     },
     "build": {
@@ -142,7 +144,8 @@
         "background_color": "#0d110d",
         "text_color": "#ffffff",
         "padding-block-start": 80,
-        "padding-block-end": 80
+        "padding-block-end": 80,
+        "anchor_id": "builds"
       }
     },
     "clients": {

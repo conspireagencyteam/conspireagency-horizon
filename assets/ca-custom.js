@@ -38,20 +38,22 @@
     var label = '';
     var hidden = '';
     var textNodes = [];
+    var unsupported = false;
     Array.prototype.forEach.call(btn.childNodes, function (node) {
       if (node.nodeType === 3) {
         label += node.textContent;
         textNodes.push(node);
-      } else if (node.nodeType === 1 && node.classList.contains('visually-hidden')) {
+      } else if (node.nodeType === 1 && (node.classList.contains('visually-hidden') || node.classList.contains('ca-sr-only'))) {
+        // Screen-reader-only suffix ("Learn More" + " about X"): fold it into the name.
         hidden += ' ' + node.textContent;
         textNodes.push(node);
-      } else {
-        // Unknown child (icon, nested markup): leave this button alone.
-        label = null;
+      } else if (node.nodeType === 1) {
+        // Icon or nested markup: leave this button on the static chip.
+        unsupported = true;
       }
     });
-    label = label === null ? null : label.replace(/\s+/g, ' ').trim();
-    if (!label) return;
+    label = label.replace(/\s+/g, ' ').trim();
+    if (unsupported || !label) return;
     btn.dataset.caRoll = '1';
 
     textNodes.forEach(function (n) { btn.removeChild(n); });
@@ -67,7 +69,7 @@
 
     var name = document.createElement('span');
     name.className = 'visually-hidden';
-    name.textContent = (label + hidden).replace(/\s+/g, ' ').trim();
+    name.textContent = (label + hidden).replace(/\s+([:,.])/g, '$1').replace(/\s+/g, ' ').trim();
 
     var chip = document.createElement('span');
     chip.className = 'ca-btn__chip';
