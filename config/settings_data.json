@@ -10,10 +10,10 @@
 {
   "current": {
     "logo": "shopify://shop_images/CONSPIRE.svg",
-    "favicon": "shopify://shop_images/conspire-favicon.png",
     "logo_inverse": "shopify://shop_images/CONSPIRE-white.svg",
     "logo_height": 77,
     "logo_height_mobile": 24,
+    "favicon": "shopify://shop_images/conspire-favicon.png",
     "type_body_font": "helvetica_n4",
     "type_subheading_font": "helvetica_n4",
     "type_heading_font": "helvetica_n7",
@@ -87,6 +87,13 @@
     "variant_button_radius": 14,
     "variant_button_width": "equal-width-buttons",
     "content_for_index": [],
+    "blocks": {
+      "1631180644528073111": {
+        "type": "shopify://apps/pm5dm2479-opensend/blocks/opensend/01a01ac6-54e1-7ba1-af56-4265d6eb733e",
+        "disabled": false,
+        "settings": {}
+      }
+    },
     "color_palette": {
       "background": "#ffffff",
       "foreground": "#000000",
