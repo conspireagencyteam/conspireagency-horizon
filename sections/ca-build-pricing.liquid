@@ -84,16 +84,16 @@
       el.classList.add('is-inview');
       return;
     }
+    // is-inview: one-shot, plays the rise. is-alive: toggled with visibility so
+    // the idle breathing only runs while the chart is actually on screen.
     var io = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            el.classList.add('is-inview');
-            io.disconnect();
-          }
+          if (entry.isIntersecting) el.classList.add('is-inview');
+          el.classList.toggle('is-alive', entry.isIntersecting);
         });
       },
-      { threshold: 0.35 }
+      { threshold: [0, 0.35] }
     );
     io.observe(el);
   })();
@@ -241,10 +241,48 @@
     color: rgb(var(--color-foreground-rgb) / 0.8);
   }
 
+  /* Idle life once the bars have risen. The lines layer breathes along a
+     travelling wave (the individual `scale` property composes with the
+     entrance `transform`, so the rise is untouched) and the whole glow layer
+     slowly pulses. Both are compositor-only; the blurred glow is animated as
+     one layer on purpose, so it is never re-rasterised per frame. Runs only
+     while the chart is on screen (.is-alive, see the observer above). */
+  .ca-bprice__bars--lines span {
+    scale: 1 1;
+  }
+
+  .ca-bprice.is-alive .ca-bprice__bars--lines span {
+    animation: ca-bprice-breathe 6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -170ms);
+  }
+
+  .ca-bprice.is-alive .ca-bprice__bars--glow {
+    animation: ca-bprice-pulse 7s ease-in-out infinite;
+  }
+
+  @keyframes ca-bprice-breathe {
+    0%, 100% { scale: 1 0.96; }
+    50% { scale: 1 1.05; }
+  }
+
+  @keyframes ca-bprice-pulse {
+    0%, 100% { opacity: 0.82; scale: 1 0.985; }
+    50% { opacity: 1; scale: 1 1.015; }
+  }
+
+  .ca-bprice__bars--glow {
+    transform-origin: 50% 100%;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ca-bprice__bars span {
       transform: none;
       transition: none;
+    }
+
+    .ca-bprice.is-alive .ca-bprice__bars--lines span,
+    .ca-bprice.is-alive .ca-bprice__bars--glow {
+      animation: none;
     }
   }
 
