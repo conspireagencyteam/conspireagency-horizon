@@ -138,6 +138,130 @@ a.button-custom.size-style::before {
 }
 
 /* =========================================================================
+   Button hover roll  (designer prototype 2026-10-09: learn-more-button.html)
+
+   ca-custom.js upgrades each arrow button into:
+     <a class="button size-style ca-btn--roll">
+       <span class="ca-btn__text" aria-hidden="true"><span>Label</span><span>Label</span></span>
+       <span class="visually-hidden">Label (+ any hidden suffix)</span>
+       <span class="ca-btn__chip" aria-hidden="true"><span class="ca-btn__arrow"></span><span class="ca-btn__arrow"></span></span>
+     </a>
+   On hover/focus (and again on leave) the label rolls up and its copy rolls in
+   from below; the arrow flies out top-right while its copy flies in from the
+   bottom-left; the chip grows 12%. The pseudo-element chip is hidden once the
+   button is upgraded, so non-JS renders keep the static chip.
+   ========================================================================= */
+a.button.size-style.ca-btn--roll::before,
+a.button.size-style.ca-btn--roll::after,
+a.button-secondary.size-style.ca-btn--roll::before,
+a.button-secondary.size-style.ca-btn--roll::after,
+a.button-custom.size-style.ca-btn--roll::before,
+a.button-custom.size-style.ca-btn--roll::after {
+  content: none;
+}
+
+.ca-btn--roll {
+  --ca-btn-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --ca-btn-text-ms: 450ms;
+  --ca-btn-arrow-ms: 600ms;
+}
+
+.ca-btn__text {
+  position: relative;
+  display: block;
+  height: 1.2em;
+  line-height: 1.2;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ca-btn__text > span {
+  display: block;
+  will-change: transform;
+}
+
+.ca-btn__text > span + span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(100%);
+}
+
+.ca-btn__chip {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--ca-btn-chip-size);
+  height: var(--ca-btn-chip-size);
+  border-radius: 100px;
+  background-color: var(--ca-btn-chip-color);
+  overflow: hidden;
+  transition: transform 0.5s var(--ca-btn-ease);
+}
+
+.ca-btn--roll:hover .ca-btn__chip,
+.ca-btn--roll:focus-visible .ca-btn__chip {
+  transform: scale(1.12);
+}
+
+.ca-btn__arrow {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--ca-btn-icon-size);
+  height: var(--ca-btn-icon-size);
+  background-color: var(--ca-btn-arrow-color);
+  -webkit-mask: var(--ca-btn-arrow) center / contain no-repeat;
+  mask: var(--ca-btn-arrow) center / contain no-repeat;
+  will-change: transform;
+}
+
+.ca-btn__arrow + .ca-btn__arrow {
+  transform: translate(-110%, 110%);
+}
+
+.ca-btn--rolling .ca-btn__text > span:first-child {
+  animation: ca-btn-text-out var(--ca-btn-text-ms) var(--ca-btn-ease) both;
+}
+
+.ca-btn--rolling .ca-btn__text > span + span {
+  animation: ca-btn-text-in var(--ca-btn-text-ms) var(--ca-btn-ease) both;
+}
+
+.ca-btn--rolling .ca-btn__arrow:first-child {
+  animation: ca-btn-arrow-out var(--ca-btn-arrow-ms) var(--ca-btn-ease) both;
+}
+
+.ca-btn--rolling .ca-btn__arrow + .ca-btn__arrow {
+  animation: ca-btn-arrow-in var(--ca-btn-arrow-ms) var(--ca-btn-ease) both;
+}
+
+@keyframes ca-btn-text-out {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+
+@keyframes ca-btn-text-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes ca-btn-arrow-out {
+  from { transform: translate(0, 0); }
+  to { transform: translate(110%, -110%); }
+}
+
+@keyframes ca-btn-arrow-in {
+  from { transform: translate(-110%, 110%); }
+  to { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ca-btn__chip { transition: none; }
+  .ca-btn--roll:hover .ca-btn__chip,
+  .ca-btn--roll:focus-visible .ca-btn__chip { transform: none; }
+}
+
+/* =========================================================================
    Shared layout + type helpers for the inner pages (Conspire v2.0)
 
    The Figma pages sit on a 12 column grid (1392px content, 24px gutters).

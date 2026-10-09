@@ -23,6 +23,90 @@
     window.addEventListener('load', setHeaderHeight);
   }
 
+  // Button hover roll (designer prototype 2026-10-09). Upgrades the arrow
+  // buttons (see "Button hover roll" in ca-custom.css) and plays the SAME
+  // forward roll on enter, leave and focus, never a reverse transition, and
+  // never restarts a roll that is still running. Hover-capable devices only;
+  // touch keeps the static chip. The accessible name stays a single
+  // visually-hidden string (label + any existing hidden suffix).
+  var rollSelector = 'a.button.size-style, a.button-secondary.size-style, a.button-custom.size-style';
+  var canRoll = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  var upgradeButton = function (btn) {
+    if (btn.dataset.caRoll) return;
+    var label = '';
+    var hidden = '';
+    var textNodes = [];
+    Array.prototype.forEach.call(btn.childNodes, function (node) {
+      if (node.nodeType === 3) {
+        label += node.textContent;
+        textNodes.push(node);
+      } else if (node.nodeType === 1 && node.classList.contains('visually-hidden')) {
+        hidden += ' ' + node.textContent;
+        textNodes.push(node);
+      } else {
+        // Unknown child (icon, nested markup): leave this button alone.
+        label = null;
+      }
+    });
+    label = label === null ? null : label.replace(/\s+/g, ' ').trim();
+    if (!label) return;
+    btn.dataset.caRoll = '1';
+
+    textNodes.forEach(function (n) { btn.removeChild(n); });
+
+    var text = document.createElement('span');
+    text.className = 'ca-btn__text';
+    text.setAttribute('aria-hidden', 'true');
+    var t1 = document.createElement('span');
+    t1.textContent = label;
+    var t2 = t1.cloneNode(true);
+    text.appendChild(t1);
+    text.appendChild(t2);
+
+    var name = document.createElement('span');
+    name.className = 'visually-hidden';
+    name.textContent = (label + hidden).replace(/\s+/g, ' ').trim();
+
+    var chip = document.createElement('span');
+    chip.className = 'ca-btn__chip';
+    chip.setAttribute('aria-hidden', 'true');
+    chip.appendChild(document.createElement('span')).className = 'ca-btn__arrow';
+    chip.appendChild(document.createElement('span')).className = 'ca-btn__arrow';
+
+    btn.appendChild(text);
+    btn.appendChild(name);
+    btn.appendChild(chip);
+    btn.classList.add('ca-btn--roll');
+
+    var timer = 0;
+    var play = function () {
+      if (reduceMotion.matches || btn.classList.contains('ca-btn--rolling')) return;
+      btn.classList.add('ca-btn--rolling');
+      clearTimeout(timer);
+      // Longest leg is the arrow (600ms); the fallback timer covers a missed animationend.
+      timer = setTimeout(stop, 700);
+    };
+    var stop = function () {
+      clearTimeout(timer);
+      btn.classList.remove('ca-btn--rolling');
+    };
+    chip.lastElementChild.addEventListener('animationend', stop);
+    btn.addEventListener('mouseenter', play);
+    btn.addEventListener('mouseleave', play);
+    btn.addEventListener('focus', play);
+  };
+
+  var upgradeButtons = function (root) {
+    if (!canRoll) return;
+    Array.prototype.forEach.call((root || document).querySelectorAll(rollSelector), upgradeButton);
+  };
+  upgradeButtons();
+  // Sections re-rendered by the theme editor or Horizon's section rendering.
+  document.addEventListener('shopify:section:load', function (e) { upgradeButtons(e.target); });
+  window.caUpgradeButtons = upgradeButtons;
+
   // Warm hover/menu videos so the first play starts quickly. Videos ship with
   // preload="none"; this switches them to preload="metadata" one at a time,
   // which fetches the container header plus the first chunk (a few hundred KB)
