@@ -179,6 +179,15 @@ pushes only to a development theme, so dev-server edits are safe until pushed.
     own `testimonial` fields — note metaobjects created via the API start as publishable
     DRAFT and must be set ACTIVE or the storefront skips them. Services order everywhere:
     Growth & Support Teams, Websites, Migrations, Applications, CRO (CRO last on purpose).
+  - **Button hover roll (2026-10-09, designer prototype `learn-more-button.html` /
+    `learn-more-button-hover-v3.mp4`).** `ca-custom.js` upgrades every arrow button
+    (`a.button|.button-secondary|.button-custom.size-style` with plain-text content) into
+    stacked label copies + a real chip with two arrows (`.ca-btn--roll`); CSS in
+    `ca-custom.css` ("Button hover roll") plays the same forward roll on enter/leave/focus
+    (text 450 ms, arrow 600 ms, `cubic-bezier(.65,0,.35,1)`, chip ×1.12). Hover-capable
+    devices only; reduced motion → static; accessible name is one visually-hidden string.
+    Buttons with icons or nested markup are left on the pseudo-element chip. New sections
+    get it for free; sections rendered later call `window.caUpgradeButtons(root)`.
   - **Keyword H1 vs tagline.** `ca-brands-marquee` has an optional `seo_heading`
     setting: when set, it renders as the H1 styled as an eyebrow above the tagline
     and the tagline becomes `<p class="h1">` (same type). Set on
