@@ -23,6 +23,25 @@
     window.addEventListener('load', setHeaderHeight);
   }
 
+  // Anchor links (/pages/pricing#sprints, #book-a-call). Horizon scrolls
+  // .page-wrapper, not the window, on desktop (html/body are overflow: hidden
+  // there), so the browser's own fragment scrolling has nothing to move. Scroll
+  // the target into view ourselves on load and on every hash change; the
+  // sections' scroll-margin-top keeps them clear of the sticky header.
+  var scrollToHash = function () {
+    var id = location.hash && location.hash.slice(1);
+    if (!id) return;
+    var target = document.getElementById(id);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'instant', block: 'start' });
+  };
+  window.addEventListener('hashchange', scrollToHash);
+  if (location.hash) {
+    // After layout and the fonts/images above the target have settled.
+    if (document.readyState === 'complete') scrollToHash();
+    else window.addEventListener('load', scrollToHash, { once: true });
+  }
+
   // Button hover roll (designer prototype 2026-10-09). Upgrades the arrow
   // buttons (see "Button hover roll" in ca-custom.css) and plays the SAME
   // forward roll on enter, leave and focus, never a reverse transition, and
