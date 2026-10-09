@@ -125,59 +125,25 @@
       }
     },
     "clients": {
-      "type": "ca-client-rows",
-      "blocks": {
-        "client_1": {
-          "type": "client",
-          "settings": {
-            "client": "zia-tile",
-            "name": "Zia Tile",
-            "years": "6",
-            "summary": "Six years of daily development on systems their checkout depends on: arrival estimates based on order quantity, LTL freight, custom warehouse pickup, and the trade program that takes a pro from application to managed account. Around it: ADA compliance, privacy preferences, email flows, and attribution for their paid team.",
-            "pills": "Checkout-critical software\nArrival estimates\nLTL freight\nWarehouse pickup\nTrade program\nADA & privacy compliance\nAttribution setup"
-          }
-        },
-        "client_2": {
-          "type": "client",
-          "settings": {
-            "client": "body-bio",
-            "name": "BodyBio",
-            "years": "7",
-            "summary": "We manage four Shopify stores for BodyBio: consumer stores for the US and international markets, and healthcare practitioner stores for the US and Europe. We built and maintain the custom software that takes a practitioner from application to approval to welcome sample bundle, and we support every new release, protocol bundle, and fulfillment issue.",
-            "pills": "4 stores\nPractitioner onboarding systems\nCustom bundle software\nNew product launch support\nFulfillment triage"
-          }
-        },
-        "client_3": {
-          "type": "client",
-          "settings": {
-            "client": "cousins-maine-lobster",
-            "name": "Cousins Maine Lobster",
-            "years": "6",
-            "summary": "Every Cousins storefront runs through us, including the Cousins Fried Seafood store and the franchise portal we built, which handles ordering, compliance, and training for roughly 70 locations. We created their multimillion dollar direct-to-consumer business where other agencies could not, and our events tooling keeps each franchise visible in its market.",
-            "pills": "Franchise portal build & management\nOrdering & compliance systems\nTraining systems\nFranchise events tooling\nDTC store build"
-          }
-        },
-        "client_4": {
-          "type": "client",
-          "settings": {
-            "client": "tillamook-country-smoker-jerky",
-            "name": "Tillamook Country Smoker",
-            "years": "7",
-            "summary": "We built the original store and have supported every launch since, including their recent rebrand. Day to day we support their marketing teams, especially email, and Bonde Bundles, our own app, lifts conversion and average order value with bundle and save.",
-            "pills": "Original build\nOngoing launches\nEmail marketing support\nBonde Bundles\nRebrand rollout"
-          }
-        }
-      },
-      "block_order": [
-        "client_1",
-        "client_2",
-        "client_3",
-        "client_4"
-      ],
+      "type": "ca-work-grid",
       "settings": {
         "eyebrow": "Our case studies",
-        "heading": "",
-        "link_names": true,
+        "clients": [
+          "zia-tile",
+          "body-bio",
+          "cousins-maine-lobster",
+          "tillamook-country-smoker-jerky",
+          "natures-answer",
+          "kinto",
+          "portola-paints",
+          "simms-fishing",
+          "cousins-fried-seafood",
+          "omre"
+        ],
+        "default_image_field": "work_preview",
+        "stagger": true,
+        "button_label": "Learn More",
+        "style_class": "button",
         "background_color": "#f2f2f2",
         "text_color": "",
         "padding-block-start": 80,
@@ -188,17 +154,21 @@
       "type": "ca-more-projects",
       "settings": {
         "eyebrow": "More projects",
-        "clients": [
-          "p-kay-metal",
-          "sto-n-sho",
-          "portola-paints",
-          "omre",
-          "simms-fishing",
-          "elway-capital",
-          "embodied-moxie",
+        "clients": [],
+        "blog": "work",
+        "exclude_clients": [
+          "zia-tile",
+          "body-bio",
+          "cousins-maine-lobster",
+          "tillamook-country-smoker-jerky",
+          "natures-answer",
           "kinto",
-          "natures-answer"
+          "portola-paints",
+          "simms-fishing",
+          "cousins-fried-seafood",
+          "omre"
         ],
+        "exclude_handles": "supplement-health-product-shopify-websites, shopify-websites-for-tile-paint-brands, conspire-agency-website",
         "image_field": "featured_site_image",
         "background_color": "#ffffff",
         "text_color": "",
