@@ -127,7 +127,7 @@
     "clients": {
       "type": "ca-work-grid",
       "settings": {
-        "eyebrow": "Our case studies",
+        "eyebrow": "Top projects",
         "clients": [
           "zia-tile",
           "body-bio",
