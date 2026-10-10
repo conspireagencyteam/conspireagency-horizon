@@ -147,14 +147,28 @@
           "settings": {
             "text": "We're losing people between the product page and checkout. Why?"
           }
+        },
+        "quote_8": {
+          "type": "quote",
+          "settings": {
+            "text": "Marketing wants to use AI for product copy and SEO briefs. Can you train the team so it still sounds like us?"
+          }
+        },
+        "quote_9": {
+          "type": "quote",
+          "settings": {
+            "text": "Support is buried in order-status emails. Could an AI agent answer them from our order data?"
+          }
         }
       },
       "block_order": [
         "quote_1",
         "quote_2",
+        "quote_8",
         "quote_3",
         "quote_4",
         "quote_5",
+        "quote_9",
         "quote_6",
         "quote_7"
       ],
@@ -369,6 +383,13 @@
             "question": "Do you handle ads, SEO, or CRO?",
             "answer": "<p><p>That is a nuanced one. Our clients keep dedicated agencies that specialize in those spaces, and we work alongside them. It is not our core capability, but the experience runs deep, so we support where it counts: SEO reports, retargeting campaigns, static ad design, and email flows and design.</p></p>"
           }
+        },
+        "item_8": {
+          "type": "item",
+          "settings": {
+            "question": "Do you work with AI?",
+            "answer": "<p><p>Two different things, and we keep them separate. Your team learning to use AI for the jobs they already have, like product copy, support macros, ad variations and SEO briefs, is part of the retainer: we run working sessions on it, and we handle <a href=\"/blogs/shopify/ai-seo-for-shopify\">AI search visibility</a> so ChatGPT and the shopping agents describe your products accurately. Building AI agents on your store data is not. An agent that answers support from your orders or quotes your B2B customers has to be tested, monitored and tuned continuously after launch, so it runs as its own retainer with its own senior engineer, for brands at $15M+. Ask on the call and we will scope it.</p></p>"
+          }
         }
       },
       "block_order": [
@@ -378,7 +399,8 @@
         "item_4",
         "item_5",
         "item_6",
-        "item_7"
+        "item_7",
+        "item_8"
       ],
       "settings": {
         "eyebrow": "",
