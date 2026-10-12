@@ -1,8 +1,12 @@
 {%- comment -%}
   ca-header.liquid — Conspire Agency minimal header (Conspire v2.0 design).
 
-  Nav (left, from a Shopify navigation menu) + "Let's Talk" button + logo (right,
-  theme logo setting). A nav item whose title matches a `services_mega` or
+  Nav (left, from a Shopify navigation menu) + logo (right, theme logo setting).
+  The "Let's Talk" CTA is NOT in the nav: it is a floating pill pinned to the
+  viewport's bottom-right (.ca-header__float) that slides in once the first
+  section of the page (the hero) has scrolled out of view, because every hero
+  already carries a "Get Started"/"Let's Talk" link (visibility set by
+  assets/ca-header.js). Hidden on the page the CTA links to. A nav item whose title matches a `services_mega` or
   `work_mega` block's "Menu item title" opens that mega menu (hover or click,
   desktop only); the mobile drawer lists the same content as nested groups.
   Solid + sticky by default. Goes transparent over the first section when that
@@ -95,11 +99,6 @@
               </li>
             {%- endif -%}
           {%- endfor -%}
-          {%- if section.settings.cta_label != blank -%}
-            <li class="ca-header__item ca-header__item--cta">
-              <a class="button size-style ca-header__cta" href="{{ section.settings.cta_link | default: '/pages/contact' }}">{{ section.settings.cta_label }}</a>
-            </li>
-          {%- endif -%}
         </ul>
       </nav>
     </div>
@@ -226,16 +225,25 @@
             {%- endif -%}
           </li>
         {%- endfor -%}
-        {%- if section.settings.cta_label != blank -%}
-          <li class="ca-header__drawer-cta">
-            <a class="button size-style" href="{{ section.settings.cta_link | default: '/pages/contact' }}">{{ section.settings.cta_label }}</a>
-          </li>
-        {%- endif -%}
       </ul>
     </nav>
   </div>
   <div class="ca-header__overlay" data-ca-header-overlay inert></div>
 </ca-header>
+
+{%- liquid
+  assign cta_link = section.settings.cta_link | default: '/pages/contact'
+  assign cta_path = cta_link | split: '?' | first | split: '#' | first
+-%}
+{%- if section.settings.cta_label != blank and request.path != cta_path -%}
+  {%- comment -%}
+    Floating "Let's Talk": a sibling of <ca-header> (not a child) so the header's
+    sticky/transparent rules never touch it. Starts hidden (visibility:hidden,
+    so it is out of the tab order and the a11y tree) and ca-header.js sets
+    data-visible once the hero has scrolled past.
+  {%- endcomment -%}
+  <a class="button size-style ca-header__float" href="{{ cta_link }}" data-ca-header-float>{{ section.settings.cta_label }}</a>
+{%- endif -%}
 
 {% stylesheet %}
   .ca-header {
@@ -355,19 +363,44 @@
     outline-offset: 2px;
   }
 
-  /* "Let's Talk": the standard arrow-chip button, trimmed to sit in the nav row */
-  .ca-header__item--cta {
-    margin-inline-start: -16px;
+  /* ── Floating "Let's Talk" ───────────────────────────────────────────
+     The standard arrow-chip button, pinned to the viewport's bottom-right.
+     Hidden until ca-header.js sets data-visible (hero scrolled out of view),
+     then slides up and fades in. visibility:hidden (not display:none) so the
+     transition can run while the hidden pill stays unfocusable. Sits under
+     the header (z 12) so the mobile drawer overlay covers it; the cookie
+     banner lives bottom-LEFT so the two never collide. */
+  /* a.button.size-style (ca-custom.css) sets position:relative, so these
+     selectors carry the full button class list to outrank it. */
+  a.button.size-style.ca-header__float {
+    position: fixed;
+    inset-block-end: calc(20px + env(safe-area-inset-bottom, 0px));
+    inset-inline-end: calc(20px + env(safe-area-inset-right, 0px));
+    z-index: 11;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+      visibility 0s linear 0.35s,
+      background-color var(--animation-speed, 0.2s) ease,
+      color var(--animation-speed, 0.2s) ease;
   }
 
-  .ca-header__cta {
-    --ca-btn-chip-size: 1.75rem;
-    --ca-btn-icon-size: 1.125rem;
-    --ca-btn-gap: 0.75rem;
-    font-size: 1rem;
-    /* The header flips solid/transparent instantly; .button's colour
-       transition would leave a white-on-white pill for a beat. */
-    transition: none;
+  a.button.size-style.ca-header__float[data-visible] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.button.size-style.ca-header__float {
+      transition: visibility 0s, opacity 0.2s ease;
+      transform: none;
+    }
   }
 
   /* While a mega menu is open the header is always solid, even over a hero */
@@ -853,10 +886,6 @@
     text-decoration: none;
   }
 
-  .ca-header__drawer-cta {
-    margin-block-start: 8px;
-  }
-
   .ca-header__drawer-top {
     display: none;
   }
@@ -1030,15 +1059,6 @@
     display: block;
   }
 
-  /* Over a hero the CTA inverts to the hero's text/background pair so the pill
-     stays visible (a black pill on a near-black hero would vanish). */
-  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__cta,
-  body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__cta:hover {
-    --button-background-color: var(--ca-header-transparent-text, var(--color-foreground));
-    --button-border-color: var(--ca-header-transparent-text, var(--color-foreground));
-    --button-color: var(--ca-header-transparent-bg, var(--color-background));
-  }
-
   body:has(#MainContent > .shopify-section:first-child .ca-allow-transparent-header) .ca-header--sticky:not([data-stuck]):not([data-mega-open]) .ca-header__badge {
     --ca-badge-fg: var(--ca-header-transparent-text, var(--color-foreground));
     --ca-badge-bg: var(--ca-header-transparent-bg, var(--color-background));
@@ -1073,7 +1093,8 @@
     },
     {
       "type": "header",
-      "content": "Call to action"
+      "content": "Floating call to action",
+      "info": "A pill pinned to the bottom-right of the screen. It appears once the page's first section (the hero) has scrolled out of view, and is not shown on the page it links to. Leave the label empty to remove it."
     },
     {
       "type": "text",

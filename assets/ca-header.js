@@ -2,6 +2,8 @@
  * ca-header.js — Conspire Agency header behavior.
  *
  * - Toggles `data-stuck` on scroll so a transparent-over-hero header turns solid.
+ * - Reveals the floating "Let's Talk" pill (a sibling of <ca-header>) once the
+ *   page's first section (the hero) has scrolled out of view.
  * - Runs an accessible mobile drawer (focus trap, Esc, overlay click, inert).
  * - Runs the desktop mega menus: hover intent + click/keyboard toggle, Esc and
  *   outside-click close, hover-swapped feature panels, and video play/pause.
@@ -51,6 +53,7 @@ class CaHeader extends HTMLElement {
     document.addEventListener('pointerdown', this._onModality, true);
 
     this._setupMegaMenus();
+    this._setupFloatingCta();
 
     if (this.toggleBtn && this.drawer) {
       this.toggleBtn.addEventListener('click', () => (this.hasAttribute('data-drawer-open') ? this.close() : this.open()));
@@ -63,12 +66,55 @@ class CaHeader extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this._floatObserver?.disconnect();
+    this._floatObserver = null;
     document.removeEventListener('keydown', this._onModality, true);
     document.removeEventListener('pointerdown', this._onModality, true);
     document.removeEventListener('scroll', this._onScroll, { capture: true });
     document.removeEventListener('keydown', this._onKeydown);
     document.removeEventListener('pointerdown', this._onOutsidePointer);
     document.removeEventListener('keydown', this._onMegaKeydown);
+  }
+
+  /* ── Floating "Let's Talk" ───────────────────────────────────────── */
+
+  // The pill is rendered by ca-header.liquid next to this element and starts
+  // hidden. Every hero already carries its own "Get Started"/"Let's Talk"
+  // link, so the pill only earns its place once the hero is off screen: an
+  // IntersectionObserver against the viewport (root: null) watches the first
+  // section of #MainContent and reports the same answer whether `.page-wrapper`
+  // or the window is the scroll container (see the scroll note above), and it
+  // fires once on observe(), so a page restored mid-scroll lands in the right
+  // state. A page with no main section falls back to the header's own
+  // stuck threshold so the pill still shows after a scroll.
+  _setupFloatingCta() {
+    this._float = this.parentElement?.querySelector('[data-ca-header-float]') || document.querySelector('[data-ca-header-float]');
+    if (!this._float) return;
+
+    const hero = document.querySelector('#MainContent > .shopify-section:first-child');
+    if (!hero || !('IntersectionObserver' in window)) {
+      this._floatFallback = true;
+      this._onScroll();
+      return;
+    }
+
+    this._floatObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[entries.length - 1];
+        // "Scrolled past" means the hero's bottom edge is above the viewport,
+        // not merely off screen (it is the first section, so it can only leave
+        // upward, but the check keeps a zero-height hero from flashing the pill).
+        this._setFloatVisible(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
+      },
+      { root: null, threshold: 0 }
+    );
+    this._floatObserver.observe(hero);
+  }
+
+  _setFloatVisible(visible) {
+    if (!this._float) return;
+    if (visible) this._float.setAttribute('data-visible', '');
+    else this._float.removeAttribute('data-visible');
   }
 
   /* ── Mega menus ──────────────────────────────────────────────────── */
@@ -263,6 +309,7 @@ class CaHeader extends HTMLElement {
       } else if (stuck && y < UNSTUCK_AT) {
         this.removeAttribute('data-stuck');
       }
+      if (this._floatFallback) this._setFloatVisible(y > STUCK_AT);
     });
   }
 
