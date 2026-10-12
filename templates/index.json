@@ -63,10 +63,10 @@
           "type": "feature",
           "settings": {
             "image": "shopify://shop_images/fractional-shopify-website-teams.gif",
-            "video": "shopify://files/videos/website-reveal.mp4",
-            "poster": "shopify://shop_images/website-reveal-poster.jpg",
+            "video": "shopify://files/videos/fractional-shopify-website-teams.mp4",
+            "poster": "shopify://shop_images/fractional-shopify-website-teams-poster.jpg",
             "media_background": "#0d110d",
-            "image_ratio": "3 / 2",
+            "image_ratio": "11 / 10",
             "eyebrow": "Grow Your Team With Top Talent Fast",
             "title": "Fractional Shopify Website Teams",
             "body": "<p>Our Los Angeles-based team provides senior strategy, design, and development to own your website end-to-end.</p>",
