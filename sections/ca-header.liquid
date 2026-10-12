@@ -3,10 +3,11 @@
 
   Nav (left, from a Shopify navigation menu) + logo (right, theme logo setting).
   The "Let's Talk" CTA is NOT in the nav: it is a floating pill pinned to the
-  viewport's bottom-right (.ca-header__float) that slides in once the first
-  section of the page (the hero) has scrolled out of view, because every hero
-  already carries a "Get Started"/"Let's Talk" link (visibility set by
-  assets/ca-header.js). Hidden on the page the CTA links to. A nav item whose title matches a `services_mega` or
+  viewport's bottom-right (.ca-header__float). On pages whose hero (first main
+  section) has its own "Get Started"/"Let's Talk" button it slides in once the
+  hero has mostly scrolled out of view; on pages whose hero has no CTA (services
+  collection, case studies, blog posts) it shows as soon as the page lands.
+  Visibility is set by assets/ca-header.js. Hidden on the page the CTA links to. A nav item whose title matches a `services_mega` or
   `work_mega` block's "Menu item title" opens that mega menu (hover or click,
   desktop only); the mobile drawer lists the same content as nested groups.
   Solid + sticky by default. Goes transparent over the first section when that
@@ -1094,7 +1095,7 @@
     {
       "type": "header",
       "content": "Floating call to action",
-      "info": "A pill pinned to the bottom-right of the screen. It appears once the page's first section (the hero) has scrolled out of view, and is not shown on the page it links to. Leave the label empty to remove it."
+      "info": "A pill pinned to the bottom-right of the screen. On pages whose hero has its own call-to-action button it appears once the hero has mostly scrolled out of view; on pages without one (case studies, blog posts, the services collection) it shows right away. Not shown on the page it links to. Leave the label empty to remove it."
     },
     {
       "type": "text",

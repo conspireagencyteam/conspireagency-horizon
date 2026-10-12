@@ -2,8 +2,9 @@
  * ca-header.js — Conspire Agency header behavior.
  *
  * - Toggles `data-stuck` on scroll so a transparent-over-hero header turns solid.
- * - Reveals the floating "Let's Talk" pill (a sibling of <ca-header>) once the
- *   page's first section (the hero) has scrolled out of view.
+ * - Reveals the floating "Let's Talk" pill (a sibling of <ca-header>): at once
+ *   when the page's first section (the hero) has no CTA of its own, otherwise
+ *   once that hero has mostly scrolled out of view.
  * - Runs an accessible mobile drawer (focus trap, Esc, overlay click, inert).
  * - Runs the desktop mega menus: hover intent + click/keyboard toggle, Esc and
  *   outside-click close, hover-swapped feature panels, and video play/pause.
@@ -16,6 +17,14 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabin
 // Scroll offsets (px) at which the header sticks / releases (hysteresis band).
 const STUCK_AT = 120;
 const UNSTUCK_AT = 60;
+
+// Floating "Let's Talk": on a page whose hero has its own CTA the pill waits
+// until the hero's bottom edge has risen above a line this far down the
+// viewport (0 = the top edge, i.e. fully scrolled past; 0.5 = the midpoint).
+const FLOAT_REVEAL_AT = 0.5;
+// Marketing buttons (snippets/button.liquid) — the only links that count as a
+// hero CTA. Commerce <button>s and plain text links don't.
+const FLOAT_CTA_SELECTOR = 'a.button.size-style, a.button-secondary.size-style, a.button-custom.size-style';
 
 class CaHeader extends HTMLElement {
   connectedCallback() {
@@ -79,14 +88,20 @@ class CaHeader extends HTMLElement {
   /* ── Floating "Let's Talk" ───────────────────────────────────────── */
 
   // The pill is rendered by ca-header.liquid next to this element and starts
-  // hidden. Every hero already carries its own "Get Started"/"Let's Talk"
-  // link, so the pill only earns its place once the hero is off screen: an
-  // IntersectionObserver against the viewport (root: null) watches the first
-  // section of #MainContent and reports the same answer whether `.page-wrapper`
-  // or the window is the scroll container (see the scroll note above), and it
-  // fires once on observe(), so a page restored mid-scroll lands in the right
-  // state. A page with no main section falls back to the header's own
-  // stuck threshold so the pill still shows after a scroll.
+  // hidden. Heroes that carry their own "Get Started"/"Let's Talk" button
+  // (home, service pages: a marketing button linking within the site) keep the
+  // pill back until the hero has mostly left the screen; heroes without one
+  // (services collection, case studies whose only button is the client's site,
+  // blog posts, app pages) get the pill the moment the page lands.
+  //
+  // The scroll case uses an IntersectionObserver against the viewport
+  // (root: null), which reports the same answer whether `.page-wrapper` or the
+  // window is the scroll container (see the scroll note above) and fires once
+  // on observe(), so a page restored mid-scroll lands in the right state. The
+  // negative TOP rootMargin trims the root to the part of the viewport below
+  // the FLOAT_REVEAL_AT line, so a hero (anchored at the top) stops
+  // intersecting as soon as its bottom edge rises above that line.
+  // A page with no main section falls back to the header's own stuck threshold.
   _setupFloatingCta() {
     this._float = this.parentElement?.querySelector('[data-ca-header-float]') || document.querySelector('[data-ca-header-float]');
     if (!this._float) return;
@@ -98,17 +113,42 @@ class CaHeader extends HTMLElement {
       return;
     }
 
+    if (!this._heroHasCta(hero)) {
+      this._setFloatVisible(true);
+      return;
+    }
+
     this._floatObserver = new IntersectionObserver(
       (entries) => {
         const entry = entries[entries.length - 1];
-        // "Scrolled past" means the hero's bottom edge is above the viewport,
-        // not merely off screen (it is the first section, so it can only leave
-        // upward, but the check keeps a zero-height hero from flashing the pill).
-        this._setFloatVisible(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
+        // It is the first section, so it can only leave upward; the explicit
+        // bottom-edge check keeps a zero-height hero from flashing the pill.
+        const line = entry.rootBounds ? entry.rootBounds.top : window.innerHeight * FLOAT_REVEAL_AT;
+        this._setFloatVisible(!entry.isIntersecting && entry.boundingClientRect.bottom <= line);
       },
-      { root: null, threshold: 0 }
+      { root: null, threshold: 0, rootMargin: `-${Math.round(FLOAT_REVEAL_AT * 100)}% 0px 0px 0px` }
     );
     this._floatObserver.observe(hero);
+  }
+
+  // A hero "has a CTA" when one of its marketing buttons points somewhere on
+  // this site other than the home page: the contact page, the in-page
+  // #book-a-call booking section, pricing… Buttons that open the client's
+  // store or an app listing in a new tab are showcase links, not a way to
+  // reach us, and the 404 page's "back home" button doesn't count either.
+  _heroHasCta(hero) {
+    return Array.from(hero.querySelectorAll(FLOAT_CTA_SELECTOR)).some((a) => {
+      if (a.target === '_blank') return false;
+      let url;
+      try {
+        url = new URL(a.getAttribute('href') || '', location.href);
+      } catch {
+        return false;
+      }
+      if (url.origin !== location.origin) return false;
+      if (url.pathname === location.pathname && url.hash) return true;
+      return url.pathname !== '/';
+    });
   }
 
   _setFloatVisible(visible) {
