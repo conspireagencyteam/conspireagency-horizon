@@ -19,7 +19,11 @@
   assign contact_link = section.settings.contact_link
 -%}
 
-<div class="ca-apps spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+<div
+  class="ca-apps spacing-style color-custom-{{ section.id }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | strip | handleize }}"{% endif %}
+>
   {%- render 'contrast-override',
     background_color: section.settings.background_color,
     text_color: section.settings.text_color,
@@ -109,6 +113,7 @@
 
 {% stylesheet %}
   .ca-apps {
+    scroll-margin-top: var(--ca-header-height, 96px);
     background-color: var(--color-background);
   }
 
@@ -431,6 +436,12 @@
       "type": "url",
       "id": "contact_link",
       "label": "Contact button link"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "info": "Optional. Lets links jump here, e.g. apps gives /#apps."
     },
     {
       "type": "header",

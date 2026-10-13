@@ -207,6 +207,7 @@
         "intro": "<p>They're built specifically for established, high-revenue business owners, with features tailored to the way they actually run their stores.</p>",
         "contact_label": "Contact Us",
         "contact_link": "/pages/contact",
+        "anchor_id": "apps",
         "store_label_top": "Find it on the",
         "store_label_bottom": "Shopify App Store",
         "background_color": "{{ settings.color_palette.color2 }}",
