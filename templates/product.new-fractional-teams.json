@@ -14,7 +14,7 @@
       "settings": {
         "seo_heading": "Shopify Plus Premier Development Agency",
         "heading": "A team to solve your complex problems.",
-        "body": "<p>Your team can't do it all. You need a senior team, that knows your business, sits in your Slack alongside your people, and has the senior experience to transform business problems into solutions.</p>",
+        "body": "<p><strong>Now the whole funnel: store, email, SEO and paid.</strong></p><p>Your team can't do it all. You need a senior team, that knows your business, sits in your Slack alongside your people, and has the senior experience to transform business problems into solutions.</p>",
         "button_label": "Book a Strategy Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -159,15 +159,36 @@
           "settings": {
             "text": "Support is buried in order-status emails. Could an AI agent answer them from our order data?"
           }
+        },
+        "quote_10": {
+          "type": "quote",
+          "settings": {
+            "text": "Our Klaviyo flows haven't been touched since launch. What should we actually be sending?"
+          }
+        },
+        "quote_11": {
+          "type": "quote",
+          "settings": {
+            "text": "Are we showing up when someone asks ChatGPT for the best option in our category?"
+          }
+        },
+        "quote_12": {
+          "type": "quote",
+          "settings": {
+            "text": "The ad agency's dashboard says 6x ROAS but Shopify revenue is flat. Which one is lying?"
+          }
         }
       },
       "block_order": [
         "quote_1",
+        "quote_10",
         "quote_2",
         "quote_8",
+        "quote_11",
         "quote_3",
         "quote_4",
         "quote_5",
+        "quote_12",
         "quote_9",
         "quote_6",
         "quote_7"
@@ -353,7 +374,7 @@
           "type": "item",
           "settings": {
             "question": "Can you work with our ad agency, SEO contractor, or in-house team?",
-            "answer": "<p><p>We already do. Your paid, SEO, and email partners keep their lanes, and we are the team that makes their asks real on the store, attribution included.</p></p>"
+            "answer": "<p>Yes. Plenty of clients keep a paid or SEO partner, and we are the team that makes their asks real on the store, attribution included. If you would rather consolidate, we can take those lanes too.</p>"
           }
         },
         "item_4": {
@@ -380,8 +401,8 @@
         "item_7": {
           "type": "item",
           "settings": {
-            "question": "Do you handle ads, SEO, or CRO?",
-            "answer": "<p><p>That is a nuanced one. Our clients keep dedicated agencies that specialize in those spaces, and we work alongside them. It is not our core capability, but the experience runs deep, so we support where it counts: SEO reports, retargeting campaigns, static ad design, and email flows and design.</p></p>"
+            "question": "Do you handle email, SEO, or ads?",
+            "answer": "<p>Yes, and increasingly that is the point. Email through Klaviyo and onsite SEO, including AI search visibility, are part of the retainer. Google and Meta management is rolling out now. It all runs through the same team that builds the store, so the landing page, the flow, and the campaign are one piece of work, not three vendors' tickets.</p>"
           }
         },
         "item_8": {
@@ -609,9 +630,63 @@
         "eyebrow": "Is this right for you?",
         "heading": "Built for brands that take their store seriously.",
         "fit_label": "A Fit If",
-        "fit_items": "You already have traffic and revenue\nYour store is core to growth, not an afterthought\nYou're tired of juggling freelancers and agencies\nYou want consistent improvement, not one-off projects that start from zero\nYou need senior judgment, not junior execution",
+        "fit_items": "You already have traffic and revenue\nYour store is core to growth, not an afterthought\nYou want the store, email and SEO handled by one team\nYou're tired of juggling freelancers and agencies\nYou want consistent improvement, not one-off projects that start from zero\nYou need senior judgment, not junior execution",
         "not_label": "Not a Fit If",
         "not_items": "You're just getting started or still validating\nYou just need \"a few tweaks\"\nYou value lowest cost over best outcome\nYou want to manage multiple vendors yourself\nYou don't value long-term ownership",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "retainer": {
+      "type": "ca-value-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Store",
+            "title": "Design, development\nand CRO",
+            "text": "<p>The work the retainer was built on: checkout-critical systems, integrations, launches, landing pages, and the compliance and conversion work that keeps the store earning.</p>"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Email",
+            "title": "Klaviyo, run by\nyour store team",
+            "text": "<p>Flows, campaigns, segmentation, and list health, built by the same team that built the product pages and the checkout they send to.</p>"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "SEO & AI search",
+            "title": "Found on Google\nand inside the answer",
+            "text": "<p>Technical SEO, content structure, and AI search visibility, so ChatGPT and the shopping agents describe your products accurately and send people to you.</p>"
+          }
+        },
+        "card_4": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Paid media · Rolling out",
+            "title": "Google and Meta,\nreconciled to Shopify",
+            "text": "<p>Campaign management with attribution that ties back to real store revenue, not a platform dashboard. Rolling out to retainer clients now.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3",
+        "card_4"
+      ],
+      "settings": {
+        "eyebrow": "What's in the retainer",
+        "heading": "One team. <strong>The whole revenue stack of your store.</strong>",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
         "background_color": "",
         "text_color": "",
         "padding-block-start": 80,
@@ -623,6 +698,7 @@
     "hero",
     "clients",
     "questions",
+    "retainer",
     "communication",
     "tiers",
     "faq",
