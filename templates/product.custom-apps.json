@@ -50,8 +50,8 @@
           "type": "app",
           "settings": {
             "name": "Bonde",
-            "tagline": "Shopify Growth Super App",
-            "description": "<p>Bonde is a Shopify super app with an AI strategist built in. Subscriptions, upsells, loyalty, bundles, order tracking pages, and merchandising rules all live in one place, so you aren't stitching together five apps to run a growth program.</p>",
+            "tagline": "Subscriptions, no transaction fees",
+            "description": "<p>Bonde is a best-in-class Shopify subscription app with no transaction fees. Loyalty, upsells and bundles are built in alongside subscriptions, so one app runs your whole repeat-purchase program instead of five stitched together.</p>",
             "link": "https://getbonde.com",
             "store_url": "https://apps.shopify.com/bonde-subscription-upsells"
           }
