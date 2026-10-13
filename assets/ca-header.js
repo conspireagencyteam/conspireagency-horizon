@@ -2,6 +2,8 @@
  * ca-header.js — Conspire Agency header behavior.
  *
  * - Toggles `data-stuck` on scroll so a transparent-over-hero header turns solid.
+ * - Sets `data-badge-tone="dark"` while the Premier Partner ribbon hangs over a
+ *   dark background, so the ribbon flips to its light treatment there.
  * - Reveals the floating "Let's Talk" pill (a sibling of <ca-header>): at once
  *   when the page's first section (the hero) has no CTA of its own, otherwise
  *   once that hero has mostly scrolled out of view.
@@ -26,6 +28,11 @@ const FLOAT_REVEAL_AT = 0.5;
 // hero CTA. Commerce <button>s and plain text links don't.
 const FLOAT_CTA_SELECTOR = 'a.button.size-style, a.button-secondary.size-style, a.button-custom.size-style';
 
+// Premier Partner ribbon: sample points across it, and the smallest block (px
+// tall) whose background counts — anything shorter is a button, pill or icon.
+const BADGE_SAMPLES = 5;
+const BADGE_MIN_BLOCK = 120;
+
 class CaHeader extends HTMLElement {
   connectedCallback() {
     this.toggleBtn = this.querySelector('[data-ca-header-toggle]');
@@ -46,8 +53,15 @@ class CaHeader extends HTMLElement {
     // document hears whichever element is scrolling at the current width — and
     // survives Horizon swapping `.page-wrapper` during view transitions.
     this._pageWrapper = document.querySelector('.page-wrapper');
+    this._badge = this.querySelector('.ca-header__badge');
     this._onScroll();
     document.addEventListener('scroll', this._onScroll, { capture: true, passive: true });
+    // Layout can move a dark section under the ribbon without any scrolling
+    // (late images and fonts, a resize across the 990px scroller switch).
+    if (this._badge) {
+      window.addEventListener('resize', this._onScroll, { passive: true });
+      window.addEventListener('load', this._onScroll, { once: true });
+    }
 
     // Track the last input modality. Programmatic .focus() after a tap can match
     // :focus-visible on mobile browsers (nothing was focused before), which
@@ -80,6 +94,7 @@ class CaHeader extends HTMLElement {
     document.removeEventListener('keydown', this._onModality, true);
     document.removeEventListener('pointerdown', this._onModality, true);
     document.removeEventListener('scroll', this._onScroll, { capture: true });
+    window.removeEventListener('resize', this._onScroll);
     document.removeEventListener('keydown', this._onKeydown);
     document.removeEventListener('pointerdown', this._onOutsidePointer);
     document.removeEventListener('keydown', this._onMegaKeydown);
@@ -350,7 +365,64 @@ class CaHeader extends HTMLElement {
         this.removeAttribute('data-stuck');
       }
       if (this._floatFallback) this._setFloatVisible(y > STUCK_AT);
+      this._updateBadgeTone();
     });
+  }
+
+  /* ── Premier Partner ribbon tone ─────────────────────────────────── */
+
+  // The ribbon hangs below the header and rides over the page, so its colours
+  // follow whatever is under it: on a dark background it flips to the light
+  // treatment (light tab, dark mark), the same look the transparent-over-hero
+  // rule gives it at the top of a dark hero.
+  //
+  // Five points across the ribbon's midline each resolve to the nearest
+  // opaque background behind them (or a `.ca-invert` block, which already
+  // declares itself dark), and the majority decides. Only blocks at least
+  // BADGE_MIN_BLOCK px tall count, so a button, pill or icon sliding past
+  // doesn't make the ribbon blink; their section or card decides instead.
+  // Photos and videos have no background colour of their own, so they defer
+  // to their container: the ribbon tracks backgrounds, not image content.
+  _updateBadgeTone() {
+    const badge = this._badge;
+    if (!badge) return;
+    // Hidden below 750px (display:none) — nothing to sample against.
+    const rect = badge.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const y = rect.top + rect.height / 2;
+    let darkVotes = 0;
+    for (let i = 0; i < BADGE_SAMPLES; i++) {
+      const x = rect.left + (rect.width * (i + 0.5)) / BADGE_SAMPLES;
+      const under = document.elementsFromPoint(x, y).find((el) => !this.contains(el) && !el.closest('[data-ca-header-float]'));
+      if (under && this._isOnDark(under)) darkVotes++;
+    }
+    const dark = darkVotes > BADGE_SAMPLES / 2;
+
+    if (dark !== this.hasAttribute('data-badge-tone')) {
+      if (dark) this.setAttribute('data-badge-tone', 'dark');
+      else this.removeAttribute('data-badge-tone');
+    }
+  }
+
+  _isOnDark(el) {
+    for (let node = el; node && node.nodeType === 1; node = node.parentElement) {
+      if (node !== document.body && node.getBoundingClientRect().height < BADGE_MIN_BLOCK) continue;
+      if (node.classList.contains('ca-invert')) return true;
+      const rgb = this._opaqueRgb(getComputedStyle(node).backgroundColor);
+      // Same YIQ brightness test as Liquid's color_brightness (snippets/ca-invert.liquid).
+      if (rgb) return (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000 < 128;
+    }
+    return false;
+  }
+
+  _opaqueRgb(color) {
+    // Computed colours come back as rgb()/rgba(); skip transparent or see-through fills.
+    const m = color && color.match(/rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:[\s,/]+([\d.]+%?))?/);
+    if (!m) return null;
+    let alpha = m[4] === undefined ? 1 : parseFloat(m[4]);
+    if (m[4] && m[4].endsWith('%')) alpha /= 100;
+    return alpha >= 0.5 ? [+m[1], +m[2], +m[3]] : null;
   }
 
   open() {

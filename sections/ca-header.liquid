@@ -136,8 +136,16 @@
       Shopify Premier Partner ribbon: hangs off the header's bottom-left, flush to
       the viewport edge, and rides along with the sticky header over the page.
     {%- endcomment -%}
+    {%- comment -%}
+      badge_invert: the ribbon is a live photo negative of whatever is
+      behind it (see .ca-header__badge--invert). The mask asset is the mark's
+      silhouette, used to flip the logo back to the page's own colours.
+    {%- endcomment -%}
     <a
-      class="ca-header__badge"
+      class="ca-header__badge{% if section.settings.badge_invert %} ca-header__badge--invert{% endif %}"
+      {% if section.settings.badge_invert -%}
+        style="--ca-badge-mask: url('{{ 'ca-badge-premier-mask.svg' | asset_url }}');"
+      {%- endif %}
       href="{{ section.settings.badge_link | default: 'https://www.shopify.com/partners/directory/partner/conspire-agency' }}"
       target="_blank"
       rel="noopener noreferrer"
@@ -753,7 +761,16 @@
     clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%);
     transition:
       opacity var(--animation-speed, 0.2s) ease,
-      transform var(--animation-speed, 0.2s) ease;
+      transform var(--animation-speed, 0.2s) ease,
+      background-color var(--animation-speed, 0.2s) ease,
+      color var(--animation-speed, 0.2s) ease;
+  }
+
+  /* Over a dark section (ca-header.js sets data-badge-tone while most of the
+     ribbon sits on a dark background): swap to a light tab with a dark mark. */
+  .ca-header[data-badge-tone='dark'] .ca-header__badge {
+    --ca-badge-fg: var(--color-background);
+    --ca-badge-bg: var(--color-foreground);
   }
 
   .ca-header__badge:hover {
@@ -769,6 +786,54 @@
     display: block;
     height: 28px;
     width: auto;
+  }
+
+  /* Live-invert ribbon (badge_invert setting): no fill of its own. ::before
+     inverts the page behind the notched tab, so it reads black on white, white
+     on black, splits along section edges and turns photos and video into a
+     negative. ::after is a second invert in the shape of the mark (the mask
+     asset), which flips that area back to the page's real colours: the logo
+     shows the page through the tab. The inline SVG stays for layout and is
+     hidden. Browsers without backdrop-filter keep the solid swap treatment. */
+  @supports (backdrop-filter: invert(1)) or (-webkit-backdrop-filter: invert(1)) {
+    .ca-header__badge--invert {
+      background-color: transparent;
+      clip-path: none;
+    }
+
+    .ca-header__badge--invert::before,
+    .ca-header__badge--invert::after {
+      content: '';
+      position: absolute;
+      pointer-events: none;
+      -webkit-backdrop-filter: invert(1);
+      backdrop-filter: invert(1);
+    }
+
+    .ca-header__badge--invert::before {
+      inset: 0;
+      clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%);
+    }
+
+    .ca-header__badge--invert::after {
+      inset-inline-start: 12px;
+      top: 50%;
+      height: 28px;
+      aspect-ratio: 231 / 84;
+      transform: translateY(-50%);
+      -webkit-mask: var(--ca-badge-mask) center / 100% 100% no-repeat;
+      mask: var(--ca-badge-mask) center / 100% 100% no-repeat;
+    }
+
+    .ca-header__badge--invert .ca-badge__svg {
+      visibility: hidden;
+    }
+
+    /* The tab has no colour of its own, so ring it in both tones */
+    .ca-header__badge--invert:focus-visible {
+      outline: 2px solid var(--color-foreground);
+      box-shadow: 0 0 0 4px var(--color-background);
+    }
   }
 
   /* Tuck the ribbon away while a mega menu is open or the drawer is up */
@@ -1119,6 +1184,13 @@
       "label": "Show Shopify Premier Partner badge",
       "info": "A ribbon pinned to the header's bottom-left that stays with the sticky header. Desktop only.",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_invert",
+      "label": "Live invert badge",
+      "info": "The badge becomes a live photo negative of whatever it passes over, including photos and video. Off: it turns white over dark sections.",
+      "default": false
     },
     {
       "type": "url",
