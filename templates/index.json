@@ -66,6 +66,7 @@
             "video": "shopify://files/videos/fractional-shopify-website-teams.mp4",
             "poster": "shopify://shop_images/fractional-shopify-website-teams-poster.jpg",
             "media_background": "#0d110d",
+            "media_flush": true,
             "image_ratio": "11 / 10",
             "eyebrow": "Grow Your Team With Top Talent Fast",
             "title": "Fractional Shopify Website Teams",

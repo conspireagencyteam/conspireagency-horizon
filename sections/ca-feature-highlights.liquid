@@ -36,7 +36,7 @@
           -%}
           {%- capture card_inner -%}
             {%- if block.settings.video != blank or block.settings.image != blank -%}
-              <ca-feature-media class="ca-feature__media" style="--ca-feature-ratio: {{ ratio }};{% if block.settings.media_background != blank %} --ca-feature-media-bg: {{ block.settings.media_background }};{% endif %}">
+              <ca-feature-media class="ca-feature__media{% if block.settings.media_flush %} ca-feature__media--flush{% endif %}" style="--ca-feature-ratio: {{ ratio }};{% if block.settings.media_background != blank %} --ca-feature-media-bg: {{ block.settings.media_background }};{% endif %}">
                 {%- if block.settings.video != blank -%}
                   {%- comment -%}
                     Video beats image: an animated GIF is many MB on cellular,
@@ -180,6 +180,15 @@
     display: block;
   }
 
+  /* Edge to edge: no frame; the button keeps its inset. */
+  .ca-feature__media--flush {
+    padding: 0;
+  }
+
+  .ca-feature__media--flush .ca-feature__img {
+    object-fit: cover;
+  }
+
   /* Icon-only circular arrow button — overlaid, hidden until card hover/focus (desktop). */
   .ca-feature__btn {
     position: absolute;
@@ -316,6 +325,7 @@
         { "type": "video", "id": "video", "label": "Video", "info": "Preferred over the image: an MP4 is far lighter than an animated GIF. Plays muted and looped while the card is in view." },
         { "type": "image_picker", "id": "poster", "label": "Video poster", "info": "Shown until the video plays. Falls back to the video's own preview frame (often a dark first frame)." },
         { "type": "color", "id": "media_background", "label": "Media background", "default": "#0d110d" },
+        { "type": "checkbox", "id": "media_flush", "label": "Media edge to edge", "info": "Removes the frame padding and crops the media to fill the card.", "default": false },
         {
           "type": "select",
           "id": "image_ratio",
