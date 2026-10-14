@@ -148,5 +148,5 @@ Create these `app` entries. `description` is multi-line text. Attach an image to
 
 | Name | Description | Icon | App Store URL |
 |---|---|---|---|
-| Bonde | Bonde is a Shopify super app with an AI strategist built in. Subscriptions, upsells, loyalty, bundles, order tracking pages, and merchandising rules all live in one place. | *(upload)* | *(add App Store URL)* |
+| Bonde | Bonde is a best-in-class Shopify subscription app with no transaction fees. Loyalty, upsells and bundles are built in alongside subscriptions, so one app runs your whole repeat-purchase program instead of five stitched together. | *(upload)* | *(add App Store URL)* |
 | Wholesale GOAT | The fastest path from wholesale applicant to Shopify B2B customer. Customizable onboarding forms, with file upload, flow directly into the app. | *(upload)* | *(add App Store URL)* |
