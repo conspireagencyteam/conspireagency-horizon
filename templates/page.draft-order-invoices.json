@@ -78,7 +78,7 @@
         "t4": {
           "type": "pill",
           "settings": {
-            "label": "Quote requests from the cart",
+            "label": "Quote requests from the cart or a product page",
             "url": "https://apps.conspireagency.com/drafts/docs/guides/quote-requests",
             "is_new": true
           }
@@ -191,8 +191,8 @@
           "type": "feature",
           "settings": {
             "icon_asset": "ca-app-icon-message-square-quote.svg",
-            "title": "Quote requests from the cart",
-            "text": "Add a Request a Quote button to your cart page. Customers submit their cart with contact details, and you review and convert requests into draft orders.",
+            "title": "Quote requests from the cart or a product page",
+            "text": "Add a Request a Quote button to your cart page or to product pages, including products that can't be bought online. Customers submit their cart or the product they're viewing with contact details, and you review and convert requests into draft orders.",
             "link": "https://apps.conspireagency.com/drafts/docs/guides/quote-requests",
             "link_label": "Quote requests guide"
           }
@@ -373,7 +373,7 @@
           "type": "item",
           "settings": {
             "question": "Can customers request a quote instead of checking out?",
-            "answer": "<p>Yes. An optional cart page block adds a Request a Quote button. The customer submits their cart with contact details, you review the request in the app, convert it to a draft order, and send the invoice.</p>"
+            "answer": "<p>Yes. Optional theme blocks add a Request a Quote button to your cart page and to product pages. The product page button works without adding to cart, so it also covers products that can't be purchased online: show it on every product, only when a product is unavailable, or only on products with a tag. The customer submits the request with contact details, you review it in the app, convert it to a draft order, and send the invoice.</p>"
           }
         },
         "q6": {
