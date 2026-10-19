@@ -37,15 +37,23 @@
     </div>
 
     {%- if section.settings.image_small != blank or section.settings.image_large != blank -%}
+      {%- liquid
+        assign split_alt = section.settings.heading | strip_html | strip
+        if split_alt == blank
+          assign split_alt = section.settings.eyebrow | default: shop.name
+        endif
+        assign small_alt = section.settings.image_small.alt | default: split_alt
+        assign large_alt = section.settings.image_large.alt | default: split_alt
+      -%}
       <div class="ca-split__media">
         {%- if section.settings.image_small != blank -%}
           <div class="ca-split__small">
-            {{ section.settings.image_small | image_url: width: 900 | image_tag: class: 'ca-split__img', loading: 'lazy', widths: '450, 900', sizes: '(min-width: 750px) 32vw, 100vw' }}
+            {{ section.settings.image_small | image_url: width: 900 | image_tag: class: 'ca-split__img', alt: small_alt, loading: 'lazy', widths: '450, 900', sizes: '(min-width: 750px) 32vw, 100vw' }}
           </div>
         {%- endif -%}
         {%- if section.settings.image_large != blank -%}
           <div class="ca-split__large">
-            {{ section.settings.image_large | image_url: width: 1840 | image_tag: class: 'ca-split__img', loading: 'lazy', widths: '700, 920, 1400, 1840', sizes: '(min-width: 750px) 64vw, 100vw' }}
+            {{ section.settings.image_large | image_url: width: 1840 | image_tag: class: 'ca-split__img', alt: large_alt, loading: 'lazy', widths: '700, 920, 1400, 1840', sizes: '(min-width: 750px) 64vw, 100vw' }}
           </div>
         {%- endif -%}
       </div>

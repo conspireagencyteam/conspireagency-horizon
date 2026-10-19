@@ -74,7 +74,14 @@
                 {%- else -%}
                   <div class="ca-appcards__tour">
                 {%- endif -%}
-                  {{- block.settings.tour_image | image_url: width: 1280 | image_tag: loading: 'lazy', widths: '480, 760, 1280', sizes: '(min-width: 990px) 560px, 100vw', alt: '' -}}
+                  {%- liquid
+                    assign tour_alt = block.settings.tour_image.alt
+                    if tour_alt == blank
+                      assign tour_label_alt = block.settings.tour_label | default: 'Watch the tour'
+                      assign tour_alt = block.settings.name | append: ': ' | append: tour_label_alt
+                    endif
+                  -%}
+                  {{- block.settings.tour_image | image_url: width: 1280 | image_tag: loading: 'lazy', widths: '480, 760, 1280', sizes: '(min-width: 990px) 560px, 100vw', alt: tour_alt -}}
                   {%- if block.settings.tour_label != blank -%}
                     <span class="ca-appcards__tour-label"><span class="ca-appcards__play" aria-hidden="true"></span>{{ block.settings.tour_label }}</span>
                   {%- endif -%}

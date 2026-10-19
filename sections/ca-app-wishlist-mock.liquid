@@ -33,7 +33,8 @@
           {%- for block in section.blocks -%}
             <li class="ca-wlmock__row" {{ block.shopify_attributes }}>
               {%- if block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 240 | image_tag: widths: '120, 240', sizes: '60px', alt: '', loading: 'lazy', class: 'ca-wlmock__img' }}
+                {%- assign row_alt = block.settings.image.alt | default: block.settings.title | default: 'Product' -%}
+                {{ block.settings.image | image_url: width: 240 | image_tag: widths: '120, 240', sizes: '60px', alt: row_alt, loading: 'lazy', class: 'ca-wlmock__img' }}
               {%- else -%}<span class="ca-wlmock__img"></span>{%- endif -%}
               <span class="ca-wlmock__meta">
                 <small>{{ block.settings.vendor }}</small>

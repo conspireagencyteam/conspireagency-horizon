@@ -94,7 +94,7 @@
             {%- if video != blank -%}
               {%- render 'ca-preview-video', video: video, class: 'ca-more__preview' -%}
             {%- elsif image != blank -%}
-              {{- image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
+              {{- image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: name, widths: '300, 600', sizes: '300px' -}}
             {%- endif -%}
           {%- endcapture -%}
           {%- if url != blank -%}
@@ -129,7 +129,7 @@
             {%- if article.metafields.custom.banner_video.value != blank -%}
               {%- render 'ca-preview-video', video: article.metafields.custom.banner_video.value, class: 'ca-more__preview' -%}
             {%- elsif article.image != blank -%}
-              {{- article.image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: '', widths: '300, 600', sizes: '300px' -}}
+              {{- article.image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: name, widths: '300, 600', sizes: '300px' -}}
             {%- endif -%}
           </a>
         {%- endfor -%}

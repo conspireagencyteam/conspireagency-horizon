@@ -85,7 +85,10 @@
             assign alt = article.image.alt | default: article.title
             if img == blank
               assign img = section.settings[fallback_key]
-              assign alt = ''
+              comment
+                The shared fallback art carries a filename-style alt in Files ("Conspire blog fallback 1"); the card stands for the article, so name it after the article.
+              endcomment
+              assign alt = article.title
             endif
 
             if forloop.first

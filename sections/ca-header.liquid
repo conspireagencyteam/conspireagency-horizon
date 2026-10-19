@@ -166,7 +166,7 @@
       </button>
       <a href="{{ routes.root_url }}" class="ca-header__logo" aria-label="{{ shop.name }}">
         {%- if settings.logo != blank -%}
-          <img class="ca-header__logo-img" src="{{ settings.logo | image_url: height: logo_height }}" width="{{ logo_height | times: settings.logo.aspect_ratio | ceil }}" height="{{ logo_height }}" alt="" loading="lazy">
+          <img class="ca-header__logo-img" src="{{ settings.logo | image_url: height: logo_height }}" width="{{ logo_height | times: settings.logo.aspect_ratio | ceil }}" height="{{ logo_height }}" alt="{{ 'accessibility.home_logo_alt' | t: store_name: shop.name }}" loading="lazy">
         {%- else -%}
           <span class="ca-header__logo-text">{{ shop.name }}</span>
         {%- endif -%}

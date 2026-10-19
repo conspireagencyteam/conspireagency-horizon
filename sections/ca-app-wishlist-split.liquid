@@ -14,7 +14,10 @@
       {%- if section.settings.visual == 'product' -%}
         <div class="ca-wlsplit__pcard" aria-hidden="true">
           <div class="ca-wlsplit__pimg">
-            {%- if section.settings.product_image != blank -%}{{ section.settings.product_image | image_url: width: 800 | image_tag: widths: '400, 800', sizes: '(min-width: 990px) 40vw, 90vw', alt: '', loading: 'lazy' }}{%- endif -%}
+            {%- if section.settings.product_image != blank -%}
+              {%- assign pcard_alt = section.settings.product_image.alt | default: section.settings.product_title | default: 'Product' -%}
+              {{ section.settings.product_image | image_url: width: 800 | image_tag: widths: '400, 800', sizes: '(min-width: 990px) 40vw, 90vw', alt: pcard_alt, loading: 'lazy' }}
+            {%- endif -%}
           </div>
           <p class="ca-wlsplit__pname">{{ section.settings.product_title }}</p>
           <p class="ca-wlsplit__pvariant">{{ section.settings.product_variant }}</p>

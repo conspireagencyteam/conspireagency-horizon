@@ -81,8 +81,9 @@
                 <p class="ca-app__tagline">{{ block.settings.tagline }}</p>
               {%- endif -%}
               {%- if preview != blank -%}
+                {%- assign preview_alt = preview.alt | default: block.settings.name -%}
                 <span class="ca-app__preview" aria-hidden="true">
-                  {{- preview | image_url: width: 760 | image_tag: loading: 'lazy', widths: '380, 760', sizes: '348px', alt: '' -}}
+                  {{- preview | image_url: width: 760 | image_tag: loading: 'lazy', widths: '380, 760', sizes: '348px', alt: preview_alt -}}
                 </span>
               {%- endif -%}
             </div>

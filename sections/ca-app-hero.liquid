@@ -60,6 +60,16 @@
 
   {%- if cards.size > 0 -%}
     {%- comment -%} Strip rendered twice so translateX(-50%) is one seamless loop. {%- endcomment -%}
+    {%- liquid
+      comment
+        Storefront shots of brands running the apps. Named after the app on app pages; the statement layout's heading is a sentence, so fall back to a generic label.
+      endcomment
+      if layout == 'app'
+        assign cards_alt = page.title | default: heading_inline | strip_html | strip | prepend: 'Shopify store using '
+      else
+        assign cards_alt = 'Shopify store using Conspire apps'
+      endif
+    -%}
     <div class="ca-ahero__cards" aria-hidden="true">
       <div class="ca-ahero__strip">
         {%- for i in (1..2) -%}
@@ -67,7 +77,8 @@
             {%- for block in cards -%}
               <figure class="ca-ahero__card{% if block.settings.tall %} ca-ahero__card--tall{% endif %}" {{ block.shopify_attributes }}>
                 {%- if block.settings.image != blank -%}
-                  {{ block.settings.image | image_url: width: 480 | image_tag: loading: 'lazy', widths: '240, 480', sizes: '212px', alt: '' }}
+                  {%- assign card_alt = block.settings.image.alt | default: cards_alt -%}
+                  {{ block.settings.image | image_url: width: 480 | image_tag: loading: 'lazy', widths: '240, 480', sizes: '212px', alt: card_alt }}
                 {%- endif -%}
               </figure>
             {%- endfor -%}

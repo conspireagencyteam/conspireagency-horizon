@@ -31,7 +31,13 @@
             </div>
             {%- if block.settings.image != blank -%}
               <div class="ca-story__media">
-                {{ block.settings.image | image_url: width: 1400 | image_tag: class: 'ca-story__img', loading: 'lazy', widths: '480, 700, 1000, 1400', sizes: '(min-width: 750px) 48vw, 100vw' }}
+                {%- liquid
+                  assign story_alt = block.settings.image.alt
+                  if story_alt == blank
+                    assign story_alt = block.settings.text | strip_html | strip | truncatewords: 20
+                  endif
+                -%}
+                {{ block.settings.image | image_url: width: 1400 | image_tag: class: 'ca-story__img', alt: story_alt, loading: 'lazy', widths: '480, 700, 1000, 1400', sizes: '(min-width: 750px) 48vw, 100vw' }}
               </div>
             {%- endif -%}
           </li>

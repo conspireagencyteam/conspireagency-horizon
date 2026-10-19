@@ -132,7 +132,7 @@
                 {%- comment -%} maxresdefault is missing for some uploads; fall back to the always-present hqdefault. {%- endcomment -%}
                 <img
                   src="{{ yt_poster | escape }}"
-                  width="1280" height="720" alt="" loading="eager" fetchpriority="high"
+                  width="1280" height="720" alt="{{ yt_title | escape }}" loading="eager" fetchpriority="high"
                   onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/{{ yt_id | escape }}/hqdefault.jpg'"
                 >
                 <span class="ca-ahead__play" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3.5v17l14-8.5z"/></svg></span>
@@ -141,7 +141,9 @@
             </ca-lite-video>
           {%- elsif banner_video != blank -%}
             <div class="ca-ahead__poster ca-ahead__poster--static">
-              {{ banner_video | video_tag: image_size: '1400x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'ca-ahead__video' | replace: '<img ', '<img alt="" ' }}
+              {%- comment -%} video_tag emits a poster <img> fallback with no alt; name it after the article so SEO scanners (Bing flags alt="") see a described image. {%- endcomment -%}
+              {%- assign video_img_alt = article.title | escape | prepend: '<img alt="' | append: '" ' -%}
+              {{ banner_video | video_tag: image_size: '1400x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'ca-ahead__video' | replace: '<img ', video_img_alt }}
             </div>
           {%- else -%}
             <div class="ca-ahead__poster ca-ahead__poster--static">
@@ -156,7 +158,9 @@
   {%- if band != blank -%}
     <div class="ca-ahead__band" aria-hidden="true">
       {%- comment -%} Eager: the band sits at the fold, and lazy loading flashed the dark background before the image arrived. Same file on every article, so it caches. {%- endcomment -%}
-      {{ band | image_url: width: 2880 | image_tag: class: 'ca-ahead__band-img', alt: '', widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'eager', fetchpriority: 'low' }}
+      {%- comment -%} The band is aria-hidden, so the alt is for crawlers only (Bing flags alt=""). The shared art carries a filename-style alt in Files, so use the article title. {%- endcomment -%}
+      {%- assign band_alt = article.title -%}
+      {{ band | image_url: width: 2880 | image_tag: class: 'ca-ahead__band-img', alt: band_alt, widths: '750, 1100, 1440, 2000, 2880', sizes: '100vw', loading: 'eager', fetchpriority: 'low' }}
     </div>
   {%- endif -%}
 </div>

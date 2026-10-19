@@ -40,7 +40,7 @@
               <a class="ca-bgrid__link" href="{{ article.url }}">
                 {%- if has_image -%}
                   <div class="ca-bgrid__media">
-                    {{ article.image | image_url: width: 900 | image_tag: class: 'ca-bgrid__img', loading: 'lazy', alt: article.image.alt | default: '', widths: '450, 700, 900', sizes: '(min-width: 990px) 31vw, (min-width: 750px) 48vw, 100vw' }}
+                    {{ article.image | image_url: width: 900 | image_tag: class: 'ca-bgrid__img', loading: 'lazy', alt: article.image.alt | default: article.title, widths: '450, 700, 900', sizes: '(min-width: 990px) 31vw, (min-width: 750px) 48vw, 100vw' }}
                   </div>
                 {%- endif -%}
                 <h3 class="ca-bgrid__title">{{ article.title }}</h3>

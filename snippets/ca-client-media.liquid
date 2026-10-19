@@ -62,7 +62,13 @@
 {%- elsif ca_reveal_img != blank -%}
   <div class="ca-wcard__layer ca-wcard__reveal" aria-hidden="true">
     <div class="ca-wcard__window">
-      {{ ca_reveal_img | image_url: width: 900 | image_tag: class: 'ca-wcard__img ca-wcard__site', loading: 'lazy', alt: '', widths: '450, 900', sizes: '(min-width: 990px) 28vw, 60vw' }}
+      {%- liquid
+        assign ca_site_alt = ca_reveal_img.alt
+        if ca_site_alt == blank
+          assign ca_site_alt = ca_name | append: ' Shopify store' | strip
+        endif
+      -%}
+      {{ ca_reveal_img | image_url: width: 900 | image_tag: class: 'ca-wcard__img ca-wcard__site', loading: 'lazy', alt: ca_site_alt, widths: '450, 900', sizes: '(min-width: 990px) 28vw, 60vw' }}
     </div>
   </div>
 {%- endif -%}
