@@ -3,7 +3,9 @@
   (no dedicated Figma frame; cards follow the homepage blog block 278:2164).
 
   Lists the articles of the blog this template is used on: image, title and
-  date per card, three across. Articles without an image render as text cards.
+  date per card, three across. Articles without a featured image take the same
+  fallback art the homepage blog block uses (fallback_image_1..3, cycled by
+  card position); with no fallbacks set they render as text cards.
   Falls back to a chosen blog when used outside a blog template.
 {%- endcomment -%}
 
@@ -32,7 +34,22 @@
           {%- for article in source_blog.articles -%}
             {%- liquid
               assign has_image = false
-              if section.settings.show_images and article.image != blank
+              assign img = blank
+              assign alt = article.title
+              if section.settings.show_images
+                if article.image != blank
+                  assign img = article.image
+                  assign alt = article.image.alt | default: article.title
+                else
+                  comment
+                    Same fallback art as the homepage blog block, cycled by card position. The shared art carries a filename-style alt in Files; the card stands for the article, so name it after the article.
+                  endcomment
+                  assign slot = forloop.index0 | modulo: 3 | plus: 1
+                  assign fallback_key = 'fallback_image_' | append: slot
+                  assign img = section.settings[fallback_key]
+                endif
+              endif
+              if img != blank
                 assign has_image = true
               endif
             -%}
@@ -40,7 +57,7 @@
               <a class="ca-bgrid__link" href="{{ article.url }}">
                 {%- if has_image -%}
                   <div class="ca-bgrid__media">
-                    {{ article.image | image_url: width: 900 | image_tag: class: 'ca-bgrid__img', loading: 'lazy', alt: article.image.alt | default: article.title, widths: '450, 700, 900', sizes: '(min-width: 990px) 31vw, (min-width: 750px) 48vw, 100vw' }}
+                    {{ img | image_url: width: 900 | image_tag: class: 'ca-bgrid__img', loading: 'lazy', alt: alt, widths: '450, 700, 900', sizes: '(min-width: 990px) 31vw, (min-width: 750px) 48vw, 100vw' }}
                   </div>
                 {%- endif -%}
                 <h3 class="ca-bgrid__title">{{ article.title }}</h3>
@@ -200,6 +217,10 @@
     { "type": "range", "id": "per_page", "label": "Posts per page", "min": 6, "max": 48, "step": 3, "default": 12 },
     { "type": "checkbox", "id": "show_images", "label": "Show article images", "info": "Turn off for a text-only list, for example the market pages.", "default": true },
     { "type": "checkbox", "id": "show_date", "label": "Show date", "default": true },
+    { "type": "header", "content": "Fallback images", "info": "Used in turn for articles without a featured image. Pick the same three as the homepage blog block." },
+    { "type": "image_picker", "id": "fallback_image_1", "label": "Fallback image 1" },
+    { "type": "image_picker", "id": "fallback_image_2", "label": "Fallback image 2" },
+    { "type": "image_picker", "id": "fallback_image_3", "label": "Fallback image 3" },
     { "type": "text", "id": "empty_text", "label": "Text when there are no posts", "default": "Nothing here yet." },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
