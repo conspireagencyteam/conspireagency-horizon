@@ -457,8 +457,8 @@
         "item_3": {
           "type": "item",
           "settings": {
-            "question": "What's the difference between Conspire Builds and Signature Builds?",
-            "answer": "<p>Conspire Builds ($15K to $75K, 8 to 14 weeks) are built for funded early-growth brands and established eCommerce teams that need a fast, conversion-focused launch on a structured timeline. Most land between $25K and $45K. We combine proven Shopify architecture with our CRO and DTC experience to ship a store that's ready to scale with paid traffic.</p><p>Signature Builds ($100K+, 12+ weeks) are designed for established brands requiring custom design, advanced functionality, or complex integrations. These involve deep strategy work, custom development, and ongoing partnership for high-growth businesses.</p>"
+            "question": "What does a Conspire Build cost and how long does it take?",
+            "answer": "<p>A Conspire Build runs $15K to $75K and takes 8 to 14 weeks. Most land between $25K and $45K. It is built for funded early-growth brands and established eCommerce teams that need a fast, conversion-focused launch on a structured timeline. We combine proven Shopify architecture with our CRO and DTC experience to ship a store that's ready to scale with paid traffic.</p>"
           }
         },
         "item_4": {
