@@ -13,7 +13,7 @@
       "type": "ca-brands-marquee",
       "settings": {
         "heading": "Our Pricing",
-        "body": "<p>We work with established Shopify brands that need their website to perform at a higher level. Our model replaces fragmented execution with one accountable team - through conversion-focused rebuilds & migrations, fractional web ownership, and targeted sprints that unlock momentum.</p>",
+        "body": "<p>We work with established Shopify brands that need their website to perform at a higher level. Our model replaces fragmented execution with one accountable team - through conversion-focused rebuilds & migrations, fractional web ownership, and targeted sprints that unlock momentum.<\/p>",
         "button_label": "Schedule a Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -51,7 +51,7 @@
             "name": "Optimization Partner",
             "fit": "For brands doing $3M to $8M",
             "price": "$6k",
-            "cycle": "/ month"
+            "cycle": "\/ month"
           }
         },
         "tier_2": {
@@ -60,7 +60,7 @@
             "name": "Growth Partner",
             "fit": "For brands doing $8M to $15M",
             "price": "$10k",
-            "cycle": "/ month"
+            "cycle": "\/ month"
           }
         },
         "tier_3": {
@@ -69,7 +69,7 @@
             "name": "Dedicated Partner",
             "fit": "For brands doing $15M+",
             "price": "$18k",
-            "cycle": "/ month"
+            "cycle": "\/ month"
           }
         }
       },
@@ -138,7 +138,7 @@
       "type": "ca-build-pricing",
       "settings": {
         "eyebrow": "Pricing, scoped line by line",
-        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.</strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.</strong>",
+        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.<\/strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.<\/strong>",
         "button_label": "Schedule a Call",
         "button_link": "#book-a-call",
         "min_amount": "$15k",
@@ -147,8 +147,8 @@
         "mid_caption": "Where most builds land",
         "max_amount": "$100k+",
         "max_caption": "Full scope",
-        "axis_start": "8 weeks",
-        "axis_end": "14 weeks",
+        "axis_start": "6 weeks",
+        "axis_end": "12 weeks",
         "accent_color": "#ff4d00",
         "background_color": "#0d110d",
         "text_color": "#ffffff",
@@ -209,7 +209,7 @@
       ],
       "settings": {
         "eyebrow": "Built to stick around",
-        "heading": "We don't just launch projects. <strong>We build long-term partnerships, becoming an extension of your team as your business evolves.</strong>",
+        "heading": "We don't just launch projects. <strong>We build long-term partnerships, becoming an extension of your team as your business evolves.<\/strong>",
         "link_names": true,
         "background_color": "",
         "text_color": "",
@@ -241,14 +241,14 @@
           "type": "item",
           "settings": {
             "question": "Who it's for",
-            "answer": "<p>Brands pushing into at minimum eight figures, if not nine, where improvements at scale pay for themselves.</p>"
+            "answer": "<p>Brands pushing into at minimum eight figures, if not nine, where improvements at scale pay for themselves.<\/p>"
           }
         },
         "item_2": {
           "type": "item",
           "settings": {
             "question": "Who it's not for",
-            "answer": "<p>Brands earlier than that, or teams looking for sporadic help. The model only works at the right stage, and we hold to that.</p>"
+            "answer": "<p>Brands earlier than that, or teams looking for sporadic help. The model only works at the right stage, and we hold to that.<\/p>"
           }
         }
       },
@@ -260,7 +260,7 @@
         "eyebrow": "Book a strategy call",
         "heading": "",
         "button_label": "",
-        "statement": "<p>The first call is an introduction: some light discovery and a feel for whether we are a fit on both sides. If we are, the next step is an audit and a roadmap for at least the next six months. Then you hand your store's entire task list to a senior team that integrates with yours. No training, no ramp.</p>",
+        "statement": "<p>The first call is an introduction: some light discovery and a feel for whether we are a fit on both sides. If we are, the next step is an audit and a roadmap for at least the next six months. Then you hand your store's entire task list to a senior team that integrates with yours. No training, no ramp.<\/p>",
         "column_start": "6",
         "answer_size": "regular",
         "open_first": true,
@@ -277,97 +277,97 @@
         "photo_G6Nfg6": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/placeholer-level.jpg"
+            "image": "shopify:\/\/shop_images\/placeholer-level.jpg"
           }
         },
         "photo_94gPph": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+            "image": "shopify:\/\/shop_images\/Screenshot_2025-06-11_at_2.06.42_PM.png"
           }
         },
         "photo_T4K9MH": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/portola-paints-work-preview.jpg"
           }
         },
         "photo_UxzwFi": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/hustler-hollywood-work-preview.jpg"
           }
         },
         "photo_jgP7TN": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/natures-answer-work-preview.jpg"
           }
         },
         "photo_Pq7AJH": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto.jpg"
+            "image": "shopify:\/\/shop_images\/kinto.jpg"
           }
         },
         "photo_r9wB3D": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-banner-2.png"
+            "image": "shopify:\/\/shop_images\/kinto-banner-2.png"
           }
         },
         "photo_zWEgCX": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-banner-1.png"
+            "image": "shopify:\/\/shop_images\/kinto-banner-1.png"
           }
         },
         "photo_MmjPJM": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-main-image.png"
+            "image": "shopify:\/\/shop_images\/kinto-main-image.png"
           }
         },
         "photo_hNyFPQ": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/kinto-work-preview.jpg"
           }
         },
         "photo_DehCiJ": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/cml-main-image.png"
+            "image": "shopify:\/\/shop_images\/cml-main-image.png"
           }
         },
         "photo_AVrjVg": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/cml-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/cml-work-preview.jpg"
           }
         },
         "photo_JMcnVB": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/bodybio-web-teams.png"
+            "image": "shopify:\/\/shop_images\/bodybio-web-teams.png"
           }
         },
         "photo_TJbQtN": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/ziatile-main-image.png"
+            "image": "shopify:\/\/shop_images\/ziatile-main-image.png"
           }
         },
         "photo_7XUxFp": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/zia-tile-work-preview.png"
+            "image": "shopify:\/\/shop_images\/zia-tile-work-preview.png"
           }
         },
         "photo_ir8P8n": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/bodybio-main-image.png"
+            "image": "shopify:\/\/shop_images\/bodybio-main-image.png"
           }
         }
       },
@@ -394,7 +394,7 @@
         "heading": "",
         "background_color": "#f2f2f2",
         "text_color": "",
-        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_url": "https:\/\/calendly.com\/d\/crbh-5vt-9jc\/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
         "calendly_height": 700,
         "montage_background": "#0d110d",
         "padding-block-start": 0,

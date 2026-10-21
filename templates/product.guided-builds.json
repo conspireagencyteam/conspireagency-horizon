@@ -1,10 +1,19 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
         "heading": "Your store is the flagship. We build it like one.",
-        "body": "<p>Every marketing dollar you spend lands there first. We design Shopify stores that earn trust, guide the customer journey, and convert the traffic you're already paying for.</p>",
+        "body": "<p>Every marketing dollar you spend lands there first. We design Shopify stores that earn trust, guide the customer journey, and convert the traffic you're already paying for.<\/p>",
         "button_label": "Schedule a Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -97,7 +106,7 @@
       ],
       "settings": {
         "eyebrow": "The Conspire Build",
-        "heading": "<p><strong>Your store has seconds to earn trust and guide customers</strong> toward purchase<strong>.</strong></p><p>Our <strong>six-phase process is built around exactly that:</strong> strategic onboarding, art direction, conversion-focused UX, full design, development, and launch. <strong>A beautiful, on-brand store</strong> engineered around the customer journey<strong>, built end to end by our senior team.</strong></p>",
+        "heading": "<p><strong>Your store has seconds to earn trust and guide customers<\/strong> toward purchase<strong>.<\/strong><\/p><p>Our <strong>six-phase process is built around exactly that:<\/strong> strategic onboarding, art direction, conversion-focused UX, full design, development, and launch. <strong>A beautiful, on-brand store<\/strong> engineered around the customer journey<strong>, built end to end by our senior team.<\/strong><\/p>",
         "background_color": "#f2f2f2",
         "text_color": "",
         "padding-block-start": 80,
@@ -108,7 +117,7 @@
       "type": "ca-page-intro",
       "settings": {
         "eyebrow": "Shopify migrations",
-        "heading": "<p><strong>Migrating to Shopify?</strong> Trusted SEO preservation.</p><p>Our team has <strong>completed</strong> close to a <strong>hundred migrations</strong> from Magento, WooCommerce, etc. <strong>No migration is too complex</strong>. Ensure your migration goes smoothly with <strong>no SEO loss</strong>.</p>",
+        "heading": "<p><strong>Migrating to Shopify?<\/strong> Trusted SEO preservation.<\/p><p>Our team has <strong>completed<\/strong> close to a <strong>hundred migrations<\/strong> from Magento, WooCommerce, etc. <strong>No migration is too complex<\/strong>. Ensure your migration goes smoothly with <strong>no SEO loss<\/strong>.<\/p>",
         "heading_tag": "h2",
         "column_start": "5",
         "size": "lg",
@@ -209,7 +218,7 @@
       "type": "ca-build-pricing",
       "settings": {
         "eyebrow": "Pricing, scoped line by line",
-        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.</strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.</strong>",
+        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.<\/strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.<\/strong>",
         "button_label": "Schedule a Call",
         "button_link": "#book-a-call",
         "min_amount": "$15k",
@@ -218,8 +227,8 @@
         "mid_caption": "Where most builds land",
         "max_amount": "$100k+",
         "max_caption": "Full scope",
-        "axis_start": "8 weeks",
-        "axis_end": "14 weeks",
+        "axis_start": "6 weeks",
+        "axis_end": "12 weeks",
         "accent_color": "#ff4d00",
         "background_color": "#0d110d",
         "text_color": "#ffffff",
@@ -235,7 +244,7 @@
           "settings": {
             "eyebrow": "Your team",
             "title": "Publish without\na developer",
-            "text": "<p>The pain we hear most: the current store is hard to change, and every update waits on a developer.</p><p>Our builds are modular. Reusable sections your marketing team assembles into new pages and edits directly, no ticket required.</p>"
+            "text": "<p>The pain we hear most: the current store is hard to change, and every update waits on a developer.<\/p><p>Our builds are modular. Reusable sections your marketing team assembles into new pages and edits directly, no ticket required.<\/p>"
           }
         },
         "card_2": {
@@ -243,7 +252,7 @@
           "settings": {
             "eyebrow": "Your ad spend",
             "title": "Landing pages at\ncampaign speed",
-            "text": "<p>Paid campaigns need dedicated landing pages, and they need them this week, not next sprint.</p><p>The same reusable sections spin up campaign pages per audience or offer, so your ad team can test and iterate without touching code.</p>"
+            "text": "<p>Paid campaigns need dedicated landing pages, and they need them this week, not next sprint.<\/p><p>The same reusable sections spin up campaign pages per audience or offer, so your ad team can test and iterate without touching code.<\/p>"
           }
         },
         "card_3": {
@@ -251,7 +260,7 @@
           "settings": {
             "eyebrow": "Your rankings",
             "title": "Migrate without\nlosing SEO",
-            "text": "<p>The biggest fear in any replatform is losing years of earned SEO overnight.</p><p>Nearly a hundred migrations in, our process carries your URLs, redirects, and structured data across, so rankings and traffic come with you.</p>"
+            "text": "<p>The biggest fear in any replatform is losing years of earned SEO overnight.<\/p><p>Nearly a hundred migrations in, our process carries your URLs, redirects, and structured data across, so rankings and traffic come with you.<\/p>"
           }
         }
       },
@@ -333,97 +342,97 @@
         "photo_G6Nfg6": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/placeholer-level.jpg"
+            "image": "shopify:\/\/shop_images\/placeholer-level.jpg"
           }
         },
         "photo_94gPph": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+            "image": "shopify:\/\/shop_images\/Screenshot_2025-06-11_at_2.06.42_PM.png"
           }
         },
         "photo_T4K9MH": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/portola-paints-work-preview.jpg"
           }
         },
         "photo_UxzwFi": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/hustler-hollywood-work-preview.jpg"
           }
         },
         "photo_jgP7TN": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/natures-answer-work-preview.jpg"
           }
         },
         "photo_Pq7AJH": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto.jpg"
+            "image": "shopify:\/\/shop_images\/kinto.jpg"
           }
         },
         "photo_r9wB3D": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-banner-2.png"
+            "image": "shopify:\/\/shop_images\/kinto-banner-2.png"
           }
         },
         "photo_zWEgCX": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-banner-1.png"
+            "image": "shopify:\/\/shop_images\/kinto-banner-1.png"
           }
         },
         "photo_MmjPJM": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-main-image.png"
+            "image": "shopify:\/\/shop_images\/kinto-main-image.png"
           }
         },
         "photo_hNyFPQ": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/kinto-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/kinto-work-preview.jpg"
           }
         },
         "photo_DehCiJ": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/cml-main-image.png"
+            "image": "shopify:\/\/shop_images\/cml-main-image.png"
           }
         },
         "photo_AVrjVg": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/cml-work-preview.jpg"
+            "image": "shopify:\/\/shop_images\/cml-work-preview.jpg"
           }
         },
         "photo_JMcnVB": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/bodybio-web-teams.png"
+            "image": "shopify:\/\/shop_images\/bodybio-web-teams.png"
           }
         },
         "photo_TJbQtN": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/ziatile-main-image.png"
+            "image": "shopify:\/\/shop_images\/ziatile-main-image.png"
           }
         },
         "photo_7XUxFp": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/zia-tile-work-preview.png"
+            "image": "shopify:\/\/shop_images\/zia-tile-work-preview.png"
           }
         },
         "photo_ir8P8n": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/bodybio-main-image.png"
+            "image": "shopify:\/\/shop_images\/bodybio-main-image.png"
           }
         }
       },
@@ -450,7 +459,7 @@
         "heading": "",
         "background_color": "#f2f2f2",
         "text_color": "",
-        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_url": "https:\/\/calendly.com\/d\/crbh-5vt-9jc\/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
         "calendly_height": 700,
         "montage_background": "#0d110d",
         "padding-block-start": 80,
