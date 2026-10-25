@@ -10,11 +10,14 @@
         "button_label": "",
         "button_link": "",
         "style_class": "button",
-        "allow_transparent_header": false,
-        "background_color": "#f2f2f2",
-        "text_color": "",
+        "allow_transparent_header": true,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
         "padding-block-start": 80,
-        "padding-block-end": 80
+        "padding-block-end": 96,
+        "clients": [],
+        "article_clients": true,
+        "max_cards": 3
       }
     },
     "proof": {
@@ -30,6 +33,68 @@
         "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 80,
+        "padding-block-end": 80,
+        "client_years": "",
+        "client_captions": ""
+      }
+    },
+    "bought_trade": {
+      "type": "ca-hub-mock",
+      "settings": {
+        "variant": "trade",
+        "mock_side": "right",
+        "intro_eyebrow": "How tile and paint are bought",
+        "intro_heading": "",
+        "eyebrow": "",
+        "heading": "",
+        "text": "",
+        "link_label": "",
+        "link_url": "",
+        "caption": "",
+        "override_key": "hub_mock_trade",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 48
+      }
+    },
+    "bought_calculator": {
+      "type": "ca-hub-mock",
+      "settings": {
+        "variant": "calculator",
+        "mock_side": "left",
+        "intro_eyebrow": "",
+        "intro_heading": "",
+        "eyebrow": "",
+        "heading": "",
+        "text": "",
+        "link_label": "",
+        "link_url": "",
+        "caption": "",
+        "override_key": "hub_mock_calculator",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "bought_checkout": {
+      "type": "ca-hub-mock",
+      "settings": {
+        "variant": "checkout",
+        "mock_side": "right",
+        "intro_eyebrow": "",
+        "intro_heading": "",
+        "eyebrow": "",
+        "heading": "",
+        "text": "",
+        "link_label": "",
+        "link_url": "",
+        "caption": "",
+        "override_key": "hub_mock_checkout",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 48,
         "padding-block-end": 80
       }
     },
@@ -40,7 +105,7 @@
         "heading": "",
         "items": "",
         "numbered": true,
-        "background_color": "#f2f2f2",
+        "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 80
@@ -62,7 +127,7 @@
         "extra_link": "",
         "back_label": "",
         "back_link": "",
-        "background_color": "#ffffff",
+        "background_color": "#f2f2f2",
         "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 80
@@ -79,6 +144,100 @@
         "autoplay_interval": 6,
         "background_color": "#0d110d",
         "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "apps": {
+      "type": "ca-apps-cards",
+      "blocks": {
+        "wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Onboarding & Wholesale",
+            "tagline": "When trade customers apply, get approved and order at their pricing on the same Shopify store.",
+            "description": "<p>The front door Shopify B2B does not ship: the application form, the resale certificate, the review, the approval, and the company created in Shopify with the right catalog and payment terms. Ours; it grew out of the trade programs we built for tile and paint brands.</p>",
+            "page_link": "/pages/b2b-onboarding-wholesale",
+            "page_label": "B2B Onboarding & Wholesale",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
+            "tour_link": "",
+            "tour_label": ""
+          }
+        },
+        "wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Wishlist Project Planner",
+            "tagline": "When a designer is specifying a whole house, room by room, and ordering it in stages.",
+            "description": "<p>Projects and rooms on the product page, quantities by the box, shared lists, PDF quotes and draft orders, so a trade buyer plans the job in your Shopify store instead of a spreadsheet. Ours; it runs on Zia Tile and Replica Plants &amp; Decor.</p>",
+            "page_link": "/pages/b2b-wishlist-project-planner",
+            "page_label": "B2B Wishlist Project Planner",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "https://apps.conspireagency.com/wishlist/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+            "tour_link": "",
+            "tour_label": ""
+          }
+        },
+        "drafts": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Draft Order Invoices",
+            "tagline": "When a pallet order needs a quote first and an invoice the customer can pay on terms.",
+            "description": "<p>Quote requests from the product page, draft order invoices the customer views and pays from their account, PDF downloads and payment reminders, inside Shopify. Ours.</p>",
+            "page_link": "/pages/draft-order-invoices",
+            "page_label": "B2B Draft Order Invoices",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "https://apps.conspireagency.com/drafts/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
+            "tour_link": "",
+            "tour_label": ""
+          }
+        },
+        "bonde": {
+          "type": "app",
+          "settings": {
+            "name": "Bonde",
+            "tagline": "When repeat purchase is the business: subscriptions, bundles, upsells and loyalty in one app.",
+            "description": "<p>Subscriptions with no transaction fees, bundles, upsells and loyalty, built for established brands on Shopify. Ours, and one of several good options; we also work in whichever subscription app a brand already runs.</p>",
+            "page_link": "https://getbonde.com",
+            "page_label": "Bonde",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "",
+            "docs_label": "",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "wholesale",
+        "wishlist",
+        "drafts",
+        "bonde"
+      ],
+      "settings": {
+        "eyebrow": "Our apps",
+        "heading": "<strong>Built for the way established brands sell on Shopify.</strong> Each one started as something we built by hand for a client.",
+        "intro": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 80
       }
@@ -257,9 +416,13 @@
   "order": [
     "hero",
     "proof",
+    "bought_trade",
+    "bought_calculator",
+    "bought_checkout",
     "outcomes",
     "questions",
     "testimonial",
+    "apps",
     "offers",
     "booking"
   ]
