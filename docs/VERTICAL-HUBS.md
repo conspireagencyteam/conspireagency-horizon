@@ -94,7 +94,7 @@ phrases.
 |---|---|---|
 | `zia-tile` | `gid://shopify/Metaobject/51646103733` | years 6+, preview, site media, case study |
 | `bsd-haus` | `gid://shopify/Metaobject/343241883829` | years 6+, preview, site media, case study |
-| `portola-paints` | `gid://shopify/Metaobject/53687451829` | years "4+": the copy asks for no years label since the engagement ended; that is a change to the client record, for Danny |
+| `portola-paints` | `gid://shopify/Metaobject/53687451829` | years "4+": the copy asks for no years label now the engagement has ended. Either the client record's `years` is cleared (it also feeds `/blogs/work` and the homepage), or the work grid gains an "engagement ended" flag that hides the label; Danny decides. The dev preview hides it with a scoped style |
 | `natures-answer` | `gid://shopify/Metaobject/263690715317` | no years, preview, site media, case study |
 | `body-bio` | `gid://shopify/Metaobject/53561131189` | years 7+. Never alone: list it after another client |
 | quote `danny-mitchell-bsd-haus` | `gid://shopify/Metaobject/305509007541` | the homepage BSD Haus quote with highlights; its text contains an em dash ("web terms — Jack"), which only Danny can change in the record |
@@ -176,8 +176,11 @@ shopify theme push --development --only templates/article.vertical-hub.json \
 then `https://conspireagency.myshopify.com/blogs/work/<handle>?view=vertical-hub&preview_theme_id=<id>`.
 With no metafields set the page shows the hero from the title and the body as a lede, and
 omits the testimonial. The two `templates/article.preview-*.json` files used for the
-2026-10-25 review carry the copy agent's text in the section fallbacks and live only on the
-development theme; they are not committed.
+2026-10-25 review carry the copy agent's text in the section fallbacks, with the buyer
+questions and the testimonial as static `custom-liquid` sections in the same markup the
+real sections emit (the live bodies still hold the old copy, and the BSD Haus quote record
+carries an em dash). They live only on the development theme and are not committed; the
+copies are kept in the session scratchpad for re-pushing.
 
 Section stylesheets are bundled into `compiled_assets/styles.css`, and any change to how
 the article body renders should re-run the containment check
