@@ -11,6 +11,10 @@
                 with area and overage, boxes, total; a paint state (gallons from square
                 feet, two coats); and the Add to Project affordance of the B2B Wishlist
                 Project Planner.
+    samples     the sample moment: Order a sample beside Add to cart on the product page,
+                the confirmation ("Sample ordered. Ships in 2 business days."), and the
+                follow-up email a week later ("How did it look in the room?") linking back
+                to the product and the full order. No app name, no brand.
     checkout    a checkout in Shopify's layout and rhythm: contact, ship-to, shipping
                 methods with the pallet freight quoted for the address, Net 30 payment
                 terms for the trade account, the order summary, the draft-order
@@ -181,6 +185,45 @@
                     <span class="ca-buybox__btn ca-buybox__btn--solid">Add to cart</span>
                     <span class="ca-buybox__btn ca-buybox__btn--outline">Order sample · $6.00</span>
                   </div>
+                </div>
+              </div>
+            </div>
+
+          {%- when 'samples' -%}
+            <div class="ca-hmock__stack ca-hmock__stack--samples">
+              <div class="ca-mock ca-mock--sample">
+                <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/products/mineral-sage-4x4</span></div>
+                <div class="ca-mock__body">
+                  <div class="ca-mock__pdp">
+                    <div class="ca-mock__swatch ca-mock__swatch--sage"></div>
+                    <div class="ca-mock__pdp-copy">
+                      <div class="ca-mock__kicker">Ceramic · 4×4</div>
+                      <div class="ca-mock__title">Mineral Sage 4×4</div>
+                      <div class="ca-mock__sub">$72.00 per box · 10 tiles · 2.3 sq ft</div>
+                    </div>
+                  </div>
+                  <div class="ca-buybox ca-buybox--pair">
+                    <span class="ca-buybox__btn ca-buybox__btn--solid">Add to cart</span>
+                    <span class="ca-buybox__btn ca-buybox__btn--outline">Order a sample · $8.00</span>
+                  </div>
+                  <div class="ca-cartline">
+                    <span class="ca-mock__check">✓</span>
+                    <div><strong>Sample ordered.</strong><span>Ships in 2 business days by parcel · free with your first full order</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ca-mock ca-mock--followup">
+                <div class="ca-mock__bar ca-mock__bar--mail"><span class="ca-mock__mailfrom">yourstore.com</span><span class="ca-mock__mailwhen">One week after delivery</span></div>
+                <div class="ca-mock__body ca-mock__body--tight">
+                  <div class="ca-mock__kicker">Email · automated</div>
+                  <div class="ca-mock__title">How did it look in the room?</div>
+                  <div class="ca-followup__item">
+                    <span class="ca-mock__swatch ca-mock__swatch--sage"></span>
+                    <div><strong>Mineral Sage 4×4</strong><span>Your sample arrived a week ago. When you are ready, the full order ships by pallet, quoted for your address.</span></div>
+                  </div>
+                  <div class="ca-mock__actions"><span class="ca-mock__btn">Order the full quantity</span><span class="ca-mock__btn ca-mock__btn--ghost">Back to the product</span></div>
+                  <div class="ca-mock__sub">Sample credit applied to the full order</div>
                 </div>
               </div>
             </div>
@@ -416,6 +459,23 @@
   .ca-project__actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .ca-project__hint { font-size: 11px; color: var(--mock-soft); }
 
+  /* Samples: product page with the sample in the cart, and the follow-up email */
+  .ca-hmock__stack--samples { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .ca-hmock__stack--samples .ca-mock--followup { margin-block-start: 72px; }
+  .ca-buybox--pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ca-hmock .ca-mock__btn--ghost { background: transparent; color: var(--mock-ink); border: 1px solid var(--mock-line); }
+  .ca-cartline { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; background: #e6f4ea; color: #0f5132; font-size: 12px; min-width: 0; }
+  .ca-cartline div { display: grid; gap: 2px; flex: 1; min-width: 0; }
+  .ca-cartline strong { font-weight: 600; }
+  .ca-cartline div span { font-size: 11px; opacity: 0.85; }
+  .ca-hmock .ca-mock__bar--mail { justify-content: space-between; font-size: 12px; }
+  .ca-mock__mailfrom { font-weight: 600; }
+  .ca-mock__mailwhen { color: var(--mock-soft); }
+  .ca-followup__item { display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--mock-line); border-radius: 10px; min-width: 0; }
+  .ca-followup__item div { display: grid; gap: 3px; min-width: 0; }
+  .ca-followup__item strong { font-weight: 600; }
+  .ca-followup__item span:not(.ca-mock__swatch) { font-size: 12px; color: var(--mock-soft); }
+
   /* Paint buy box */
   .ca-mock__body--paint { gap: 14px; padding: 16px 14px 18px; }
   .ca-paintbox { display: grid; gap: 8px; font-size: 12px; }
@@ -474,7 +534,8 @@
     .ca-hmock .ca-mock__body { padding: 18px 16px 20px; }
     .ca-hmock__stack--trade { padding-block-end: 0; padding-inline-end: 0; display: grid; gap: 16px; }
     .ca-hmock__stack--trade .ca-mock--outcome { position: static; width: auto; }
-    .ca-hmock__stack--calc { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .ca-hmock__stack--calc, .ca-hmock__stack--samples { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .ca-hmock__stack--samples .ca-mock--followup { margin-block-start: 0; }
     .ca-hmock__stack--calc .ca-mock--paint { margin-block-start: 0; }
     .ca-form { grid-template-columns: minmax(0, 1fr); }
     .ca-form__field--wide { grid-column: auto; }
@@ -502,6 +563,7 @@
       "options": [
         { "value": "trade", "label": "Trade application and approval" },
         { "value": "calculator", "label": "Product page buy box with Add to Project" },
+        { "value": "samples", "label": "Sample order and the follow-up" },
         { "value": "checkout", "label": "Checkout with pallet freight and Net 30" }
       ],
       "default": "trade"
