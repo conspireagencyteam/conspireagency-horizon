@@ -2,10 +2,10 @@
 
 Written 2026-10-25 for the two vertical hub articles in the `work` blog
 (`/blogs/work/shopify-websites-for-tile-paint-brands`,
-`/blogs/work/supplement-health-product-shopify-websites`). The spec they were built to is the
-shared `vertical-hub-spec.md` (seven slots, in order: hero, proof, what changes, buyer
-questions, testimonial, how we work with you, form). The facts and the voice come from the
-house brief (`conspire/CLAUDE.md`); nothing here restates them.
+`/blogs/work/supplement-health-product-shopify-websites`). Second pass the same day: the
+nine-slot structure from `vertical-hub-spec-v2-tile.md` (hero, proof, how tile and paint are
+bought, what changes, buyer questions, testimonial, apps, how we work with you, form). The facts
+and the voice come from the house brief (`conspire/CLAUDE.md`); nothing here restates them.
 
 ## The decision: one template, content on the article
 
@@ -26,21 +26,85 @@ Every section also accepts the same content in its own settings, as a fallback. 
 how the dev-theme previews were built (`?view=preview-tile-paint`, see below), and it is the
 path for anyone working in the theme editor. The article value wins whenever it is set.
 
+Two slots are the exception and live in the template's section settings only, because they
+are the same on every hub or are chosen per section instance: the three UI mocks' variants
+(which screen each shows) and the apps strip's cards (name, line, link, thumbnail). The
+mocks' copy and the apps strip's copy can still be changed per article (see the table).
+
 ## Slot by slot
 
 | Slot | Section | Content source on the article | Fallback in the section |
 |---|---|---|---|
-| 1 Hero | `ca-hub-hero` (new) | `title` (H1); `summary` (lead sentence); `custom.hub_eyebrow`; `custom.hub_pills` | eyebrow, lead, pills settings |
-| 2 Proof | `ca-work-grid` (existing, "Use the article's clients" on) | `custom.hub_clients`: ordered list of `client` metaobjects | the Clients list |
-| 3 What changes | `ca-hub-outcomes` (new) | `custom.hub_outcomes`: three statements | Statements setting |
-| 4 Buyer questions | `ca-article-body` (existing, headings shown, FAQ schema on) | `body`: H2 per question, 60 to 120 words under each | none (the body is the page) |
-| 5 Testimonial | `ca-testimonials` (existing, "Use the article's quote" on) | `custom.quote`: one `quote` metaobject | the Quotes list; with neither, the block is omitted |
-| 6 How we work with you | `ca-hub-offers` (new) | `custom.hub_fractional`, `custom.hub_build` (rich text) | the two offer blocks' house paragraphs |
-| 7 Form | `ca-booking` (existing) | `custom.hub_form_heading`, `custom.hub_form_text` | the panel heading and text settings |
+| 1 Hero (black) | `ca-hub-hero` | `title` (H1); `summary` (lead); `custom.hub_eyebrow`; `custom.hub_pills`; `custom.hub_clients` (the first three with a `work_preview` become the floating store cards) | eyebrow, lead, pills, Clients settings |
+| 2 Proof | `ca-work-grid` ("Use the article's clients" on) | `custom.hub_clients`: ordered list of `client` metaobjects; `custom.hub_client_years` and `custom.hub_client_captions`, aligned by position | the Clients list, Years labels, Card captions |
+| 3 How tile and paint are bought | `ca-hub-mock` x3 (`trade`, `calculator`, `checkout`; sides right, left, right) | `custom.hub_mocks_heading` (the chapter statement); per mock `custom.hub_mock_<variant>_heading`, `_text`, `_caption` | intro eyebrow and statement, eyebrow, heading, text, bullets (blocks), app link, caption |
+| 4 What changes | `ca-hub-outcomes` | `custom.hub_outcomes`: three statements | Statements setting |
+| 5 Buyer questions | `ca-article-body` (headings shown, FAQ schema on) | `body`: H2 per question, 60 to 120 words under each | none (the body is the page) |
+| 6 Testimonial | `ca-testimonials` ("Use the article's quote" on) | `custom.quote`: one `quote` metaobject | the Quotes list; with neither, the block is omitted |
+| 7 Apps | `ca-apps-cards` | none | the four `app` blocks in the template (name, line, page link, documentation link, thumbnail) |
+| 8 How we work with you | `ca-hub-offers` | `custom.hub_fractional`, `custom.hub_build` (rich text) | the two offer blocks' house paragraphs |
+| 9 Form | `ca-booking` | `custom.hub_form_heading`, `custom.hub_form_text` | the panel heading and text settings |
 | SEO | theme head | `global.title_tag`, `global.description_tag` | title; summary |
 
-Backgrounds alternate down the page: hero `#f2f2f2`, proof `#ffffff`, what changes
-`#f2f2f2`, questions `#ffffff`, testimonial `#0d110d`, offers `#ffffff`, booking `#f2f2f2`.
+Backgrounds down the page: hero `#0d110d` (white text, transparent header, the case-study
+hero treatment), proof `#ffffff`, the three mocks `#f2f2f2` (one chapter), what changes
+`#ffffff`, questions `#f2f2f2`, testimonial `#0d110d`, apps `#f2f2f2`, offers `#ffffff`,
+booking `#f2f2f2`.
+
+### The hero cards
+
+The hero shows the proof clients' Shopify stores as floating cards (the homepage work-card
+look: the client's own photograph with the store capture framed over it), sliding in and then
+drifting. Backdrop: the client's `work_preview`. Capture: `featured_site_image`, else the
+poster of `featured_site_media`. A client with neither is skipped; at most three cards
+(`max_cards`). Only Files assets are used, so a new client needs those images on its
+`client` record before it appears. Alt text: the image's own alt, else the client name
+(backdrop) and "<name> Shopify store" (capture).
+
+### Proof cards: no 404s, years per client
+
+With "Use the article's clients" on, a client whose `case_study_reference` is blank or
+points at an article that is not published is left out of the grid, so a client can sit in
+`custom.hub_clients` before its case study goes live (Replica Plants & Decor,
+`gid://shopify/Metaobject/101246730421`, is in that state: no case study, no images yet).
+
+The years label comes from the client record (`years`), which also feeds the homepage and
+`/blogs/work`. `custom.hub_client_years` overrides it per hub without touching the record:
+a list aligned with `hub_clients` by position; `6+` shows that label, `0` or `none` hides it
+(a build, or an engagement that has ended). `custom.hub_client_captions` adds one line under
+the name, same alignment. The tile hub hides the label for BSD Haus (a build, not a
+retainer) and Portola Paints (ended).
+
+### The mocks
+
+`sections/ca-hub-mock.liquid` follows `ca-app-wholesale-mock`: a copy column beside a static,
+`aria-hidden` recreation of a storefront screen; every meaningful statement is in the copy.
+Three variants, one per section instance:
+
+- `trade`: the storefront trade application (the fields of the App Store listing's form,
+  filled for Retail Co. and Marcus Reed) and, overlapping it, the outcome card: approved into
+  the Gold tier, Shopify company created, Net 30.
+- `calculator`: the product page with the tile buy box (the Gable & Oak demo theme's "Tile
+  buy box" block: Order sample, the Full order disclosure with Area to cover and Overage,
+  "12 boxes will cover 27.6 sq ft (120 tiles)", Total, Add order to cart, "Sold by the box ·
+  2.3 sq ft per box (10 tiles)"), the Add to Project affordance of B2B Wishlist Project
+  Planner (Create New Project, Project name, Room name, Add to Room), and beside it the paint
+  buy box (quart, gallon, five gallon rows with coverage at two coats).
+- `checkout`: a checkout in Shopify's layout and rhythm: contact, ship-to, shipping methods
+  with the LTL pallet freight quoted for the address, Net 30 payment terms, the order
+  summary, the draft-order-invoice line. No Shopify logo, no Shop Pay mark; the bar reads
+  yourstore.com.
+
+Mock data is the set already on the live app pages (Retail Co., Marcus Reed,
+marcus@retailco.com, Portland OR, resale-certificate.pdf, Gold tier, Net 30, Pale Calcite
+Zellige Hex, Mineral Sage 4x4); the paint product is generic ("Interior eggshell, Chalk").
+No em dash anywhere in a mock.
+
+A mock section renders nothing when it has no heading from either source, so the shared
+template shows the mocks only on an article that carries `custom.hub_mock_<variant>_heading`
+(or when the theme editor sets the fallback). The supplements hub therefore has no mocks
+until its own variants exist (a subscription portal and Bonde are a later pass; they would be
+new variants of the same section).
 
 ## The content contract (what the copy agent delivers, field by field)
 
@@ -53,23 +117,29 @@ type given (see "Setting the content"). `custom.quote` already has a definition.
 | `title` | article field | The H1. Written the way the searcher asks, proper nouns included, never a slogan. The current titles are cited; a change is a proposal for Danny. |
 | `summary` (excerpt) | article field | The hero lead: one sentence, plain text, who the page is for and what changes. Also the meta description fallback and the BlogPosting description. |
 | `custom.hub_eyebrow` | `single_line_text_field` | The vertical, in sentence case ("Tile, paint and home renovation"); the theme sets it uppercase. |
-| `custom.hub_pills` | `list.single_line_text_field` | Three to five short facts, two to four words each ("Shopify Plus Premier Partner", "B2B and wholesale", "NetSuite and ERP", "Since 2011"). Rendered as outlined pills in the case written. |
-| `custom.hub_clients` | `list.metaobject_reference` (type `client`) | The proof cards, in display order. Each client needs a `client` metaobject with `work_preview` (the backdrop photograph), `featured_site_media` or `featured_site_image` (the floating store capture) and `case_study_reference` (the card link). The card shows the client's `name`, `years` and `services`. |
+| `custom.hub_pills` | `list.single_line_text_field` | Three to five short facts, two to four words each. Rendered as outlined pills in the case written. |
+| `custom.hub_clients` | `list.metaobject_reference` (type `client`) | The proof cards and the hero cards, in display order. Each client needs a `client` metaobject with `work_preview`, `featured_site_media` or `featured_site_image`, and `case_study_reference` to a published case study (unpublished: the card is omitted). |
+| `custom.hub_client_years` | `list.single_line_text_field` | Optional. One entry per client in `hub_clients`, same order: `6+` shows the label, `0` or `none` hides it. Omit to show every record's own years. |
+| `custom.hub_client_captions` | `list.single_line_text_field` | Optional. One line per client, same order, shown under the name. |
+| `custom.hub_mocks_heading` | `single_line_text_field` | The chapter statement over the mocks ("Three screens that decide whether a renovation buyer finishes the order."). |
+| `custom.hub_mock_trade_heading`, `custom.hub_mock_calculator_heading`, `custom.hub_mock_checkout_heading` | `single_line_text_field` | The H2 beside each mock. |
+| `custom.hub_mock_trade_text`, `..._calculator_text`, `..._checkout_text` | `rich_text_field` (or `multi_line_text_field`) | One paragraph, 60 to 80 words, naming the app as ours with its page linked. The bullets under it stay in the template's blocks. |
+| `custom.hub_mock_trade_caption`, `..._calculator_caption`, `..._checkout_caption` | `single_line_text_field` | Optional caption under the copy ("Shown with example data."). |
 | `custom.hub_outcomes` | `list.single_line_text_field` | Exactly three statements, each an outcome for the brand, up to about 30 words. No service lists. |
-| `body` | article field | The buyer questions. One `<h2>` per question (3 to 5), phrased as the buyer asks it, followed by one or two `<p>` of 60 to 120 words naming a client where true. Links allowed (`<a href="/blogs/work/zia-tile">`). An optional `<p>` before the first `<h2>` renders as the lede. No `<h1>`, no `<div>` or `<section>` wrappers, no `<strong>`, `<b>` or `<em>`, no em dashes. The headings feed the sticky question list and the FAQPage structured data. |
-| `custom.quote` | `metaobject_reference` (type `quote`) | One quote record. Highlights come from the bold runs inside the record's `quote` rich text (rendered full colour; the rest muted); years from `partner_since`; the logo from `logo`. Omit the metafield to omit the block. |
-| `custom.hub_fractional` | `rich_text_field` | One paragraph on Fractional Shopify Teams, with the link to `/products/shopify-fractional-teams` (the live handle; `/products/fractional-shopify-teams` does not exist). Replaces the house paragraph in the template. |
+| `body` | article field | The buyer questions. One `<h2>` per question (3 to 5), phrased as the buyer asks it, followed by one or two `<p>` of 60 to 120 words naming a client where true. Links allowed. An optional `<p>` before the first `<h2>` renders as the lede. No `<h1>`, no `<div>` or `<section>` wrappers, no `<strong>`, `<b>` or `<em>`, no em dashes. The headings feed the sticky question list and the FAQPage structured data. |
+| `custom.quote` | `metaobject_reference` (type `quote`) | One quote record. Highlights come from the bold runs inside the record's `quote` rich text; years from `partner_since` (leave it empty for a quote with no years label, as BSD Haus); the logo from `logo`. Omit the metafield to omit the block. |
+| `custom.hub_fractional` | `rich_text_field` | One paragraph on Fractional Shopify Teams, with the link to `/products/shopify-fractional-teams` (the live handle). |
 | `custom.hub_build` | `rich_text_field` | One paragraph on the Conspire Build, with the link to `/products/shopify-websites`. |
-| `custom.hub_form_heading` | `single_line_text_field` | The line over the booking montage ("Bring us the trade program, the catalog or the next launch."). |
+| `custom.hub_form_heading` | `single_line_text_field` | The line over the booking montage. |
 | `custom.hub_form_text` | `multi_line_text_field` | One sentence under it. |
 | `global.title_tag` | `single_line_text_field` | SEO title, under 60 characters including " \| Conspire". |
 | `global.description_tag` | `single_line_text_field` | Meta description, under 155 characters, written for the searcher. |
 
-Alt text: the hub template has no image of its own. The proof cards use the client's name
-for the backdrop photograph and "<name> Shopify store" for the floating capture unless the
-image in Files carries its own alt, so the alt text the copy agent writes per card belongs
-on the client's `featured_site_image` (or media poster) and `work_preview` files in
-Settings > Files. The booking montage tiles and the quote logo already carry alts.
+Alt text: the hub template's own images are the hero cards and the apps strip thumbnails.
+The hero cards use the image's own alt, else the client name and "<name> Shopify store";
+the proof cards do the same; the apps thumbnails use the image's alt, else "<app>: Watch the
+tour". Richer alts belong on the Files records (Settings > Files). The booking montage tiles
+and the quote logo already carry alts.
 
 ### Rich text JSON
 
@@ -77,7 +147,7 @@ Settings > Files. The booking montage tiles and the quote logo already carry alt
 
 ```json
 {"type":"root","children":[{"type":"paragraph","children":[
-  {"type":"text","value":"Most of the tile and paint brands we work with are on a "},
+  {"type":"text","value":"Most tile and paint brands we work with are on a "},
   {"type":"link","url":"/products/shopify-fractional-teams","title":null,"target":null,
    "children":[{"type":"text","value":"Fractional Shopify Team"}]},
   {"type":"text","value":": a senior team that becomes part of yours."}
@@ -92,12 +162,13 @@ phrases.
 
 | Handle | GID | Notes |
 |---|---|---|
-| `zia-tile` | `gid://shopify/Metaobject/51646103733` | years 6+, preview, site media, case study |
-| `bsd-haus` | `gid://shopify/Metaobject/343241883829` | years 6+, preview, site media, case study |
-| `portola-paints` | `gid://shopify/Metaobject/53687451829` | years "4+": the copy asks for no years label now the engagement has ended. Either the client record's `years` is cleared (it also feeds `/blogs/work` and the homepage), or the work grid gains an "engagement ended" flag that hides the label; Danny decides. The dev preview hides it with a scoped style |
+| `zia-tile` | `gid://shopify/Metaobject/51646103733` | years 6+, preview, site media and image, case study |
+| `bsd-haus` | `gid://shopify/Metaobject/343241883829` | years "6+" on the record, which is wrong (a build, not a retainer; the homepage carousel and the case-study header show it too); the hub hides it through `hub_client_years`. Preview, site media (video; its poster is the hero capture), case study |
+| `portola-paints` | `gid://shopify/Metaobject/53687451829` | years "4+" on the record; the hub hides it the same way (engagement ended). Preview, site media and image, case study |
+| `replica-decor` | `gid://shopify/Metaobject/101246730421` | exists, but no name, images or case study yet; listed in `hub_clients` it renders nothing until the case study is published and the images are on the record |
 | `natures-answer` | `gid://shopify/Metaobject/263690715317` | no years, preview, site media, case study |
 | `body-bio` | `gid://shopify/Metaobject/53561131189` | years 7+. Never alone: list it after another client |
-| quote `danny-mitchell-bsd-haus` | `gid://shopify/Metaobject/305509007541` | the homepage BSD Haus quote with highlights; its text contains an em dash ("web terms — Jack"), which only Danny can change in the record |
+| quote `danny-mitchell-bsd-haus` | `gid://shopify/Metaobject/305509007541` | the homepage BSD Haus quote with highlights; its text contains an em dash after "web terms" and `partner_since` yields "+6 years partnered"; both need Danny's change in the record before the hub uses it (the dev preview renders the quote as static text, attributed "BSD Haus", no years) |
 | quote `bodybio` | `gid://shopify/Metaobject/317309845685` | the homepage BodyBio quote with highlights |
 
 Wholesome Wellness has no `client` record and no case study, so it cannot be a proof card
@@ -125,7 +196,17 @@ mutation SetHub($metafields: [MetafieldsSetInput!]!) {
 {"metafields":[
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_eyebrow","type":"single_line_text_field","value":"Tile, paint and home renovation"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_pills","type":"list.single_line_text_field","value":"[\"Shopify Plus Premier Partner\",\"B2B and wholesale\",\"Trade programs\",\"NetSuite and ERP\",\"Since 2011\"]"},
- {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_clients","type":"list.metaobject_reference","value":"[\"gid://shopify/Metaobject/51646103733\",\"gid://shopify/Metaobject/343241883829\",\"gid://shopify/Metaobject/53687451829\"]"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_clients","type":"list.metaobject_reference","value":"[\"gid://shopify/Metaobject/51646103733\",\"gid://shopify/Metaobject/343241883829\",\"gid://shopify/Metaobject/53687451829\",\"gid://shopify/Metaobject/101246730421\"]"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_client_years","type":"list.single_line_text_field","value":"[\"6+\",\"0\",\"0\",\"0\"]"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_client_captions","type":"list.single_line_text_field","value":"[\"...\",\"...\",\"...\",\"...\"]"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mocks_heading","type":"single_line_text_field","value":"Three screens that decide whether a renovation buyer finishes the order."},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_trade_heading","type":"single_line_text_field","value":"Designers and dealers apply once, then shop at their pricing."},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_trade_text","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_trade_caption","type":"single_line_text_field","value":"Shown with example data."},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_calculator_heading","type":"single_line_text_field","value":"Buy in square feet. Get the right boxes."},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_calculator_text","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_checkout_heading","type":"single_line_text_field","value":"Pallet freight quoted for the address. Terms for the trade."},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_checkout_text","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_outcomes","type":"list.single_line_text_field","value":"[\"...\",\"...\",\"...\"]"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"quote","type":"metaobject_reference","value":"gid://shopify/Metaobject/305509007541"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_fractional","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
@@ -155,6 +236,12 @@ access on. `custom.quote` exists already.
 | Hub eyebrow | `hub_eyebrow` | Single line text |
 | Hub pills | `hub_pills` | Single line text, list of values |
 | Hub clients | `hub_clients` | Metaobject reference, Client, list of entries |
+| Hub client years | `hub_client_years` | Single line text, list of values |
+| Hub client captions | `hub_client_captions` | Single line text, list of values |
+| Hub mocks heading | `hub_mocks_heading` | Single line text |
+| Hub mock trade heading / text / caption | `hub_mock_trade_heading`, `hub_mock_trade_text`, `hub_mock_trade_caption` | Single line text / Rich text / Single line text |
+| Hub mock calculator heading / text / caption | `hub_mock_calculator_*` | same |
+| Hub mock checkout heading / text / caption | `hub_mock_checkout_*` | same |
 | Hub outcomes | `hub_outcomes` | Single line text, list of values |
 | Hub fractional paragraph | `hub_fractional` | Rich text |
 | Hub build paragraph | `hub_build` | Rich text |
@@ -168,32 +255,40 @@ seen in the hub template on a development theme without touching them:
 
 ```
 shopify theme push --development --only templates/article.vertical-hub.json \
-  sections/ca-hub-hero.liquid sections/ca-hub-outcomes.liquid sections/ca-hub-offers.liquid \
-  sections/ca-work-grid.liquid sections/ca-testimonials.liquid sections/ca-article-body.liquid \
-  sections/ca-booking.liquid snippets/ca-quote.liquid
+  sections/ca-hub-hero.liquid sections/ca-hub-mock.liquid sections/ca-hub-outcomes.liquid \
+  sections/ca-hub-offers.liquid sections/ca-work-grid.liquid sections/ca-testimonials.liquid \
+  sections/ca-article-body.liquid sections/ca-apps-cards.liquid sections/ca-booking.liquid \
+  snippets/ca-quote.liquid
 ```
 
 then `https://conspireagency.myshopify.com/blogs/work/<handle>?view=vertical-hub&preview_theme_id=<id>`.
-With no metafields set the page shows the hero from the title and the body as a lede, and
-omits the testimonial. The two `templates/article.preview-*.json` files used for the
-2026-10-25 review carry the copy agent's text in the section fallbacks, with the buyer
-questions and the testimonial as static `custom-liquid` sections in the same markup the
-real sections emit (the live bodies still hold the old copy, and the BSD Haus quote record
-carries an em dash). They live only on the development theme and are not committed; the
-copies are kept in the session scratchpad for re-pushing.
+With no metafields set the page shows the black hero from the title (no cards), the body as
+a lede, no mocks, the apps strip and the offers, and omits the proof and the testimonial.
+The two `templates/article.preview-*.json` files used for the 2026-10-25 reviews carry the
+copy agent's text in the section fallbacks, with the buyer questions and the testimonial as
+static `custom-liquid` sections in the same markup the real sections emit (the live bodies
+still hold the old copy, and the BSD Haus quote record carries an em dash and a years
+value). They live only on the development theme and are not committed; the copies are kept
+in the session scratchpad for re-pushing.
 
 Section stylesheets are bundled into `compiled_assets/styles.css`, and any change to how
 the article body renders should re-run the containment check
 (`.page-wrapper.contains(footer)`); both are in the memory note `horizon-theme-dev-testing`.
+A mock card that lays out nowrap text in nested grids needs `min-width: 0` on every grid
+item down to the clipped element, or the column overflows under its neighbour.
 
 ## Checklist before a page goes live
 
 - Title and H1 read as the searcher's query; handle unchanged.
 - Summary is one sentence; `global.description_tag` under 155 characters.
 - Three to five pills, three outcomes, three to five H2 questions with 60 to 120 words each.
-- Clients listed exist as `client` metaobjects with a preview, a store capture and a case
-  study link; BodyBio never first or alone.
+- Clients listed exist as `client` metaobjects with a preview, a store capture and a
+  published case study; BodyBio never first or alone; years hidden where the engagement is a
+  build or has ended.
+- Mock copy names each app as ours and links its page; no price, no hour count.
 - No em dashes anywhere, including the quote record; no bold in the body or the rich text
   paragraphs; no price that is not in the brief or on the Pricing page.
 - Every image has an alt (the theme supplies them; richer alts go on the Files records).
-- Links: `/products/shopify-fractional-teams`, `/products/shopify-websites`, `/pages/pricing`.
+- Links: `/products/shopify-fractional-teams`, `/products/shopify-websites`, `/pages/pricing`,
+  `/pages/b2b-onboarding-wholesale`, `/pages/b2b-wishlist-project-planner`,
+  `/pages/draft-order-invoices`, `https://getbonde.com`.
