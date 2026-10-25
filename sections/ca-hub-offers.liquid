@@ -7,11 +7,16 @@
   The words on each card come from an `offer` metaobject, so a price changes in one place:
     name        the card title
     eyebrow     the small line over it
-    blurb       the paragraph (multi-line text)
+    blurb       the paragraph (multi-line text), the neutral fallback for every page
     price_line  the price sentence, shown as its own line under the paragraph
     link_label  the button
     link        the offer page
     video       optional; the block's own video and poster are the fallback
+  The paragraph is per page (Danny, 2026-10-25): a block's "Article metafield key" names a
+  custom.* metafield on the article (rich text or multi-line; hub_fractional, hub_build)
+  that replaces the entry's blurb when set; the block's own "Paragraph" setting is the
+  next fallback (previews, theme editor); the entry's blurb is the last. The price line
+  always comes from the entry.
   Each "offer" block names the entry by handle (fractional-shopify-teams,
   the-conspire-build) and carries the media settings. A block whose handle resolves to
   nothing renders only in the theme editor, with a hint.
@@ -61,6 +66,24 @@
               assign video = block.settings.video
             endif
             assign ratio = block.settings.image_ratio | default: '11 / 10'
+
+            assign blurb = offer.blurb.value | newline_to_br
+            if block.settings.blurb != blank
+              assign blurb = block.settings.blurb
+            endif
+            assign key = block.settings.override_key | strip
+            if key != blank and article != blank
+              assign override = article.metafields.custom[key]
+              if override.value != blank
+                if override.type == 'rich_text_field'
+                  capture blurb
+                    echo override | metafield_tag
+                  endcapture
+                else
+                  assign blurb = override.value | newline_to_br
+                endif
+              endif
+            endif
           -%}
           {%- if name != blank -%}
             <article class="ca-feature__card ca-offer" {{ block.shopify_attributes }}>
@@ -90,8 +113,8 @@
                   <p class="ca-eyebrow ca-feature__card-eyebrow">{{ offer.eyebrow.value }}</p>
                 {%- endif -%}
                 <{{ offer_tag }} class="ca-feature__title ca-offer__title">{{ name }}</{{ offer_tag }}>
-                {%- if offer.blurb.value != blank -%}
-                  <div class="ca-feature__body ca-offer__blurb">{{ offer.blurb.value | newline_to_br }}</div>
+                {%- if blurb != blank -%}
+                  <div class="ca-feature__body ca-offer__blurb">{{ blurb }}</div>
                 {%- endif -%}
                 {%- if offer.price_line.value != blank -%}
                   <p class="ca-offer__price">{{ offer.price_line.value }}</p>
@@ -181,6 +204,16 @@
     letter-spacing: -0.03em;
   }
 
+  .ca-offer__blurb > :first-child,
+  .ca-offer__blurb .metafield-rich_text_field > :first-child {
+    margin-block-start: 0;
+  }
+
+  .ca-offer__blurb > :last-child,
+  .ca-offer__blurb .metafield-rich_text_field > :last-child {
+    margin-block-end: 0;
+  }
+
   .ca-offer__price {
     margin: 0;
     color: var(--ca-muted);
@@ -220,7 +253,7 @@
   "class": "ca-offers-section",
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
-    { "type": "paragraph", "content": "Each card's words (name, eyebrow, blurb, price line, link) come from an Offer metaobject entry, named by handle on the block, so a price is changed once in Content > Metaobjects > Offer." },
+    { "type": "paragraph", "content": "Each card's name, eyebrow, price line and link come from an Offer metaobject entry, named by handle on the block, so a price is changed once in Content > Metaobjects > Offer. The paragraph is per page: the article metafield named on the block, else the block's Paragraph, else the entry's blurb." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How we work with you" },
     { "type": "inline_richtext", "id": "heading", "label": "Statement", "info": "Bold the words to emphasise. The rest is shown muted." },
     {
@@ -248,6 +281,8 @@
       "name": "Offer",
       "settings": [
         { "type": "text", "id": "handle", "label": "Offer entry handle", "info": "fractional-shopify-teams or the-conspire-build.", "default": "fractional-shopify-teams" },
+        { "type": "richtext", "id": "blurb", "label": "Paragraph (fallback)", "info": "Used when the article has no metafield under the key below. Leave empty to show the entry's own blurb." },
+        { "type": "text", "id": "override_key", "label": "Article metafield key", "info": "A custom.* metafield on the article (rich text or multi-line) that replaces the paragraph when set: hub_fractional or hub_build." },
         { "type": "header", "content": "Media (the offer entry's video wins when set)" },
         { "type": "video", "id": "video", "label": "Video", "info": "Plays muted and looped while the card is in view." },
         { "type": "image_picker", "id": "poster", "label": "Video poster" },
@@ -275,8 +310,8 @@
       "name": "Vertical hub offers",
       "category": "Conspire",
       "blocks": [
-        { "type": "offer", "settings": { "handle": "fractional-shopify-teams" } },
-        { "type": "offer", "settings": { "handle": "the-conspire-build" } }
+        { "type": "offer", "settings": { "handle": "fractional-shopify-teams", "override_key": "hub_fractional" } },
+        { "type": "offer", "settings": { "handle": "the-conspire-build", "override_key": "hub_build" } }
       ]
     }
   ]

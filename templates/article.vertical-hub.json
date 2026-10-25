@@ -260,7 +260,9 @@
             "poster": "shopify://shop_images/fractional-shopify-website-teams-poster.jpg",
             "media_background": "#0d110d",
             "media_flush": true,
-            "image_ratio": "11 / 10"
+            "image_ratio": "11 / 10",
+            "blurb": "",
+            "override_key": "hub_fractional"
           }
         },
         "build": {
@@ -271,7 +273,9 @@
             "poster": "shopify://shop_images/conspire-showreel-poster.jpg",
             "media_background": "#000000",
             "media_flush": false,
-            "image_ratio": "11 / 10"
+            "image_ratio": "11 / 10",
+            "blurb": "",
+            "override_key": "hub_build"
           }
         }
       },
