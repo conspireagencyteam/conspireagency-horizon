@@ -3,8 +3,9 @@
 Written 2026-10-25 for the two vertical hub articles in the `work` blog
 (`/blogs/work/shopify-websites-for-tile-paint-brands`,
 `/blogs/work/supplement-health-product-shopify-websites`). Second pass the same day: the
-nine-slot structure from `vertical-hub-spec-v2-tile.md` (hero, proof, how tile and paint are
-bought, what changes, buyer questions, testimonial, apps, how we work with you, form). The facts
+structure from `vertical-hub-spec-v2-tile.md`; third pass that evening from Danny's review:
+eight slots (hero, some examples of our work, how tile and paint are bought with four mocks,
+buyer questions, testimonial, apps, how we work with you, form). "What changes" is gone. The facts
 and the voice come from the house brief (`conspire/CLAUDE.md`); nothing here restates them.
 
 ## The decision: one template, content on the article
@@ -36,20 +37,18 @@ mocks' copy and the apps strip's copy can still be changed per article (see the 
 | Slot | Section | Content source on the article | Fallback in the section |
 |---|---|---|---|
 | 1 Hero (black) | `ca-hub-hero` | `title` (H1); `summary` (lead); `custom.hub_eyebrow`; `custom.hub_pills`; `custom.hub_clients` (the first three with a `work_preview` become the floating store cards) | eyebrow, lead, pills, Clients settings |
-| 2 Proof | `ca-work-grid` ("Use the article's clients" on) | `custom.hub_clients`: ordered list of `client` metaobjects; `custom.hub_client_years` and `custom.hub_client_captions`, aligned by position | the Clients list, Years labels, Card captions |
-| 3 How tile and paint are bought | `ca-hub-mock` x3 (`trade`, `calculator`, `checkout`; sides right, left, right) | `custom.hub_mocks_heading` (the chapter statement); per mock `custom.hub_mock_<variant>_heading`, `_text`, `_caption` | intro eyebrow and statement, eyebrow, heading, text, bullets (blocks), app link, caption |
-| 4 What changes | `ca-hub-outcomes` | `custom.hub_outcomes`: three statements | Statements setting |
-| 5 Buyer questions | `ca-article-body` (headings shown, FAQ schema on) | `body`: H2 per question, 60 to 120 words under each | none (the body is the page) |
-| 6 Testimonial | `ca-testimonials` ("Use the article's quote" on) | `custom.quote`: one `quote` metaobject | the Quotes list; with neither, the block is omitted |
-| 7 Apps | `ca-apps-cards` | none | the four `app` blocks in the template (name, line, page link, documentation link, thumbnail) |
-| 8 How we work with you | `ca-hub-offers` | `custom.hub_fractional`, `custom.hub_build` (rich text) | the two offer blocks' house paragraphs |
-| 9 Form | `ca-booking` | `custom.hub_form_heading`, `custom.hub_form_text` | the panel heading and text settings |
+| 2 Some examples of our work | `ca-work-grid` ("Use the article's clients" on, eyebrow "Some examples of our work") | `custom.hub_clients`: ordered list of `client` metaobjects; `custom.hub_client_years` and `custom.hub_client_captions`, aligned by position | the Clients list, Years labels, Card captions |
+| 3 How tile and paint are bought | `ca-hub-mock` x4 (`trade`, `calculator`, `samples`, `checkout`; sides right, left, right, left) | `custom.hub_mocks_heading` (the plain chapter statement); per mock `custom.hub_mock_<variant>_heading`, `_text`, `_caption` | intro eyebrow and statement, eyebrow, heading, text, bullets (blocks), app link, caption |
+| 4 Buyer questions | `ca-article-body` (headings shown, FAQ schema on) | `body`: H2 per question, 60 to 120 words under each | none (the body is the page) |
+| 5 Testimonial | `ca-testimonials` ("Use the article's quote" on) | `custom.quote`: one `quote` metaobject | the Quotes list; with neither, the block is omitted |
+| 6 Apps | `ca-apps-cards` | none | the four `app` blocks in the template (name, line, page link, documentation link, thumbnail) |
+| 7 How we work with you | `ca-hub-offers` | none on the article: the two `offer` metaobject entries (`fractional-shopify-teams`, `the-conspire-build`), named by handle on the blocks | the blocks' video, poster and media settings; the closing Pricing link |
+| 8 Form | `ca-booking` | `custom.hub_form_heading`, `custom.hub_form_text` | the panel heading and text settings |
 | SEO | theme head | `global.title_tag`, `global.description_tag` | title; summary |
 
 Backgrounds down the page: hero `#0d110d` (white text, transparent header, the case-study
-hero treatment), proof `#ffffff`, the three mocks `#f2f2f2` (one chapter), what changes
-`#ffffff`, questions `#f2f2f2`, testimonial `#0d110d`, apps `#f2f2f2`, offers `#ffffff`,
-booking `#f2f2f2`.
+hero treatment), proof `#ffffff`, the four mocks `#f2f2f2` (one chapter), questions
+`#ffffff`, testimonial `#0d110d`, apps `#f2f2f2`, offers `#ffffff`, booking `#f2f2f2`.
 
 ### The hero cards
 
@@ -79,7 +78,7 @@ retainer) and Portola Paints (ended).
 
 `sections/ca-hub-mock.liquid` follows `ca-app-wholesale-mock`: a copy column beside a static,
 `aria-hidden` recreation of a storefront screen; every meaningful statement is in the copy.
-Three variants, one per section instance:
+Four variants, one per section instance:
 
 - `trade`: the storefront trade application (the fields of the App Store listing's form,
   filled for Retail Co. and Marcus Reed) and, overlapping it, the outcome card: approved into
@@ -90,6 +89,10 @@ Three variants, one per section instance:
   2.3 sq ft per box (10 tiles)"), the Add to Project affordance of B2B Wishlist Project
   Planner (Create New Project, Project name, Room name, Add to Room), and beside it the paint
   buy box (quart, gallon, five gallon rows with coverage at two coats).
+- `samples`: the product page with "Order a sample" beside "Add to cart", the confirmation
+  ("Sample ordered. Ships in 2 business days.") and, beside it, the follow-up email a week
+  later ("How did it look in the room?") linking back to the product and the full order. No
+  app name (nothing we sell tracks samples), no brand.
 - `checkout`: a checkout in Shopify's layout and rhythm: contact, ship-to, shipping methods
   with the LTL pallet freight quoted for the address, Net 30 payment terms, the order
   summary, the draft-order-invoice line. No Shopify logo, no Shop Pay mark; the bar reads
@@ -98,6 +101,8 @@ Three variants, one per section instance:
 Mock data is the set already on the live app pages (Retail Co., Marcus Reed,
 marcus@retailco.com, Portland OR, resale-certificate.pdf, Gold tier, Net 30, Pale Calcite
 Zellige Hex, Mineral Sage 4x4); the paint product is generic ("Interior eggshell, Chalk").
+The figures agree with each other: $96.00 a box at 2.3 sq ft, 24 sq ft at 15% overage is
+12 boxes; Mineral Sage is $72.00 a box, the sample $8.00.
 No em dash anywhere in a mock.
 
 A mock section renders nothing when it has no heading from either source, so the shared
@@ -105,6 +110,26 @@ template shows the mocks only on an article that carries `custom.hub_mock_<varia
 (or when the theme editor sets the fallback). The supplements hub therefore has no mocks
 until its own variants exist (a subscription portal and Bonde are a later pass; they would be
 new variants of the same section).
+
+### How we work with you: the `offer` metaobjects
+
+`sections/ca-hub-offers.liquid` is a modified copy of the homepage's `ca-feature-highlights`
+(the two video cards) that reads its words from `offer` metaobject entries, so a price is
+changed once. Definition `offer` (`gid://shopify/MetaobjectDefinition/44715180213`,
+storefront access, publishable): `name`, `eyebrow`, `blurb` (multi-line), `price_line`,
+`link_label`, `link` (url), `video` (file reference, optional). Entries:
+`fractional-shopify-teams` (`gid://shopify/Metaobject/377913442485`) and `the-conspire-build`
+(`gid://shopify/Metaobject/377913606325`), both ACTIVE, text from the copy file's slot 7.
+Each block names an entry by handle and carries the media (the homepage videos
+`fractional-shopify-website-teams.mp4` and `Conspire-showreel.mp4` with their posters); an
+entry's own `video` wins when set. The section closes with one link, Pricing, to
+`/pages/pricing` (section settings). The legacy `builds` metaobject (two entries, one of
+them "Signature Builds", a second build tier the brief forbids) is not used and was left
+alone.
+
+The entries' blurbs are written for the tile hub ("Most tile and paint brands we work
+with..."); the supplements hub shows the same two entries until a per-vertical entry or a
+neutral blurb is decided.
 
 ## The content contract (what the copy agent delivers, field by field)
 
@@ -122,14 +147,11 @@ type given (see "Setting the content"). `custom.quote` already has a definition.
 | `custom.hub_client_years` | `list.single_line_text_field` | Optional. One entry per client in `hub_clients`, same order: `6+` shows the label, `0` or `none` hides it. Omit to show every record's own years. |
 | `custom.hub_client_captions` | `list.single_line_text_field` | Optional. One line per client, same order, shown under the name. |
 | `custom.hub_mocks_heading` | `single_line_text_field` | The chapter statement over the mocks ("Three screens that decide whether a renovation buyer finishes the order."). |
-| `custom.hub_mock_trade_heading`, `custom.hub_mock_calculator_heading`, `custom.hub_mock_checkout_heading` | `single_line_text_field` | The H2 beside each mock. |
-| `custom.hub_mock_trade_text`, `..._calculator_text`, `..._checkout_text` | `rich_text_field` (or `multi_line_text_field`) | One paragraph, 60 to 80 words, naming the app as ours with its page linked. The bullets under it stay in the template's blocks. |
-| `custom.hub_mock_trade_caption`, `..._calculator_caption`, `..._checkout_caption` | `single_line_text_field` | Optional caption under the copy ("Shown with example data."). |
-| `custom.hub_outcomes` | `list.single_line_text_field` | Exactly three statements, each an outcome for the brand, up to about 30 words. No service lists. |
+| `custom.hub_mock_trade_heading`, `..._calculator_heading`, `..._samples_heading`, `..._checkout_heading` | `single_line_text_field` | The H2 beside each mock. |
+| `custom.hub_mock_trade_text`, `..._calculator_text`, `..._samples_text`, `..._checkout_text` | `rich_text_field` (or `multi_line_text_field`) | One paragraph, 60 to 80 words, naming the app as ours with its page linked (the samples column names no app). The bullets under it stay in the template's blocks. |
+| `custom.hub_mock_trade_caption`, `..._calculator_caption`, `..._samples_caption`, `..._checkout_caption` | `single_line_text_field` | Optional caption under the copy ("Shown with example data."). |
 | `body` | article field | The buyer questions. One `<h2>` per question (3 to 5), phrased as the buyer asks it, followed by one or two `<p>` of 60 to 120 words naming a client where true. Links allowed. An optional `<p>` before the first `<h2>` renders as the lede. No `<h1>`, no `<div>` or `<section>` wrappers, no `<strong>`, `<b>` or `<em>`, no em dashes. The headings feed the sticky question list and the FAQPage structured data. |
 | `custom.quote` | `metaobject_reference` (type `quote`) | One quote record. Highlights come from the bold runs inside the record's `quote` rich text; years from `partner_since` (leave it empty for a quote with no years label, as BSD Haus); the logo from `logo`. Omit the metafield to omit the block. |
-| `custom.hub_fractional` | `rich_text_field` | One paragraph on Fractional Shopify Teams, with the link to `/products/shopify-fractional-teams` (the live handle). |
-| `custom.hub_build` | `rich_text_field` | One paragraph on the Conspire Build, with the link to `/products/shopify-websites`. |
 | `custom.hub_form_heading` | `single_line_text_field` | The line over the booking montage. |
 | `custom.hub_form_text` | `multi_line_text_field` | One sentence under it. |
 | `global.title_tag` | `single_line_text_field` | SEO title, under 60 characters including " \| Conspire". |
@@ -207,10 +229,9 @@ mutation SetHub($metafields: [MetafieldsSetInput!]!) {
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_calculator_text","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_checkout_heading","type":"single_line_text_field","value":"Pallet freight quoted for the address. Terms for the trade."},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_checkout_text","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
- {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_outcomes","type":"list.single_line_text_field","value":"[\"...\",\"...\",\"...\"]"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_samples_heading","type":"single_line_text_field","value":"Almost every order starts with a sample."},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_samples_text","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"quote","type":"metaobject_reference","value":"gid://shopify/Metaobject/305509007541"},
- {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_fractional","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
- {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_build","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_form_heading","type":"single_line_text_field","value":"Bring us the trade program, the catalog or the next launch."},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_form_text","type":"multi_line_text_field","value":"20 minutes, no pitch deck. We'll come with one specific take on your Shopify store."},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"global","key":"title_tag","type":"single_line_text_field","value":"..."},
@@ -241,10 +262,8 @@ access on. `custom.quote` exists already.
 | Hub mocks heading | `hub_mocks_heading` | Single line text |
 | Hub mock trade heading / text / caption | `hub_mock_trade_heading`, `hub_mock_trade_text`, `hub_mock_trade_caption` | Single line text / Rich text / Single line text |
 | Hub mock calculator heading / text / caption | `hub_mock_calculator_*` | same |
+| Hub mock samples heading / text / caption | `hub_mock_samples_*` | same |
 | Hub mock checkout heading / text / caption | `hub_mock_checkout_*` | same |
-| Hub outcomes | `hub_outcomes` | Single line text, list of values |
-| Hub fractional paragraph | `hub_fractional` | Rich text |
-| Hub build paragraph | `hub_build` | Rich text |
 | Hub form heading | `hub_form_heading` | Single line text |
 | Hub form text | `hub_form_text` | Multi-line text |
 
@@ -255,15 +274,15 @@ seen in the hub template on a development theme without touching them:
 
 ```
 shopify theme push --development --only templates/article.vertical-hub.json \
-  sections/ca-hub-hero.liquid sections/ca-hub-mock.liquid sections/ca-hub-outcomes.liquid \
-  sections/ca-hub-offers.liquid sections/ca-work-grid.liquid sections/ca-testimonials.liquid \
+  sections/ca-hub-hero.liquid sections/ca-hub-mock.liquid sections/ca-hub-offers.liquid sections/ca-work-grid.liquid sections/ca-testimonials.liquid \
   sections/ca-article-body.liquid sections/ca-apps-cards.liquid sections/ca-booking.liquid \
   snippets/ca-quote.liquid
 ```
 
 then `https://conspireagency.myshopify.com/blogs/work/<handle>?view=vertical-hub&preview_theme_id=<id>`.
 With no metafields set the page shows the black hero from the title (no cards), the body as
-a lede, no mocks, the apps strip and the offers, and omits the proof and the testimonial.
+a lede, no mocks, the apps strip and the offers (from the metaobjects), and omits the proof
+and the testimonial.
 The two `templates/article.preview-*.json` files used for the 2026-10-25 reviews carry the
 copy agent's text in the section fallbacks, with the buyer questions and the testimonial as
 static `custom-liquid` sections in the same markup the real sections emit (the live bodies
@@ -286,6 +305,8 @@ item down to the clipped element, or the column overflows under its neighbour.
   published case study; BodyBio never first or alone; years hidden where the engagement is a
   build or has ended.
 - Mock copy names each app as ours and links its page; no price, no hour count.
+- The two `offer` entries carry the current brief prices; a price change goes to the brief
+  first, then to Content > Metaobjects > Offer, never to a template.
 - No em dashes anywhere, including the quote record; no bold in the body or the rich text
   paragraphs; no price that is not in the brief or on the Pricing page.
 - Every image has an alt (the theme supplies them; richer alts go on the Files records).
