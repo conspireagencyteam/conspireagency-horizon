@@ -325,14 +325,14 @@
 
   /* ── Stacked mocks (a second card overlaps the first) ───────────────── */
   .ca-hmock__stack { position: relative; }
-  .ca-hmock__stack--trade { padding-block-end: 88px; padding-inline-end: 8%; }
-  .ca-hmock__stack--trade .ca-mock--outcome { position: absolute; right: 0; bottom: 0; width: 64%; z-index: 2; }
-  .ca-hmock__stack--calc { padding-block-end: 64px; padding-inline-end: 10%; }
-  .ca-hmock__stack--calc .ca-mock--pdp { width: 78%; }
-  .ca-hmock__stack--calc .ca-mock--paint { position: absolute; right: 0; bottom: 0; width: 56%; z-index: 2; }
+  .ca-hmock__stack--trade { padding-block-end: 120px; padding-inline-end: 6%; }
+  .ca-hmock__stack--trade .ca-mock--outcome { position: absolute; right: 0; bottom: 0; width: 58%; z-index: 2; }
+  .ca-hmock__stack--calc { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .ca-hmock__stack--calc .ca-mock--paint { margin-block-start: 56px; }
 
   /* ── Decorative mock chrome (shared vocabulary with ca-app-wholesale-mock) ─ */
   .ca-hmock .ca-mock {
+    container-type: inline-size;
     --mock-bg: #ffffff;
     --mock-ink: #0d110d;
     --mock-soft: rgb(13 17 13 / 0.62);
@@ -361,7 +361,7 @@
   .ca-hmock .ca-mock__sub { font-size: 12px; color: var(--mock-soft); margin-top: 3px; }
   .ca-hmock .ca-mock__pill { flex: none; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--mock-ink); color: #fff; white-space: nowrap; }
   .ca-hmock .ca-mock__actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  .ca-hmock .ca-mock__actions--inline { align-items: center; gap: 14px; }
+  .ca-hmock .ca-mock__actions--inline { flex-direction: column; align-items: flex-start; gap: 10px; }
   .ca-hmock .ca-mock__btn { display: inline-block; padding: 9px 14px; border-radius: 999px; background: var(--mock-ink); color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; }
   .ca-hmock .ca-mock__btn--go { background: #1f7a4d; }
   .ca-hmock .ca-mock__thanks { font-size: 13px; color: var(--mock-soft); }
@@ -417,14 +417,14 @@
   .ca-project__hint { font-size: 11px; color: var(--mock-soft); }
 
   /* Paint buy box */
-  .ca-mock__body--paint { gap: 14px; padding: 18px 18px 20px; }
+  .ca-mock__body--paint { gap: 14px; padding: 16px 14px 18px; }
   .ca-paintbox { display: grid; gap: 8px; font-size: 12px; }
   .ca-paintbox__head, .ca-paintbox__row, .ca-paintbox__total { display: grid; grid-template-columns: 1.1fr 1.2fr 0.9fr 0.9fr; gap: 8px; align-items: center; }
   .ca-paintbox__head { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mock-soft); padding-block-end: 6px; border-bottom: 1px solid var(--mock-line); }
   .ca-paintbox__row { padding-block: 4px; }
   .ca-paintbox__row > span:nth-child(3), .ca-paintbox__row > span:nth-child(4), .ca-paintbox__head > span:nth-child(3), .ca-paintbox__head > span:nth-child(4), .ca-paintbox__total > :nth-child(2), .ca-paintbox__total > :nth-child(3) { text-align: right; }
   .ca-paintbox__step { display: inline-flex; align-items: center; justify-content: space-between; height: 28px; border: 1px solid var(--mock-line); }
-  .ca-paintbox__step i { font-style: normal; width: 24px; text-align: center; color: var(--mock-soft); }
+  .ca-paintbox__step i { font-style: normal; width: 20px; text-align: center; color: var(--mock-soft); }
   .ca-paintbox__step b { font-weight: 500; }
   .ca-paintbox__total { grid-template-columns: 1.1fr 1.2fr 0.9fr 0.9fr; padding-block-start: 8px; border-top: 1px solid var(--mock-line); }
   .ca-paintbox__total > span:first-child { grid-column: 1 / span 2; }
@@ -433,15 +433,15 @@
 
   /* Checkout */
   .ca-checkout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
-  .ca-checkout__main { padding: 22px 24px 24px; display: grid; gap: 18px; align-content: start; }
-  .ca-checkout__side { padding: 22px 22px 24px; display: grid; gap: 12px; align-content: start; background: var(--mock-tint); border-inline-start: 1px solid var(--mock-line); }
+  .ca-checkout__main { container-type: inline-size; min-width: 0; padding: 22px 24px 24px; display: grid; gap: 18px; align-content: start; }
+  .ca-checkout__side { container-type: inline-size; min-width: 0; padding: 22px 22px 24px; display: grid; gap: 12px; align-content: start; background: var(--mock-tint); border-inline-start: 1px solid var(--mock-line); }
   .ca-checkout__store { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
-  .ca-checkout__block { display: grid; gap: 8px; }
+  .ca-checkout__block { display: grid; gap: 8px; min-width: 0; }
   .ca-checkout__label { font-size: 13px; font-weight: 600; }
-  .ca-checkout__line { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid var(--mock-line); border-radius: 8px; font-size: 12px; }
+  .ca-checkout__line { display: flex; justify-content: space-between; gap: 12px; min-width: 0; overflow: hidden; padding: 10px 12px; border: 1px solid var(--mock-line); border-radius: 8px; font-size: 12px; }
   .ca-checkout__line span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ca-checkout__line em { font-style: normal; color: var(--mock-soft); text-decoration: underline; flex: none; }
-  .ca-checkout__opt { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--mock-line); border-radius: 8px; font-size: 12px; }
+  .ca-checkout__opt { display: flex; align-items: center; gap: 10px; min-width: 0; overflow: hidden; padding: 10px 12px; border: 1px solid var(--mock-line); border-radius: 8px; font-size: 12px; }
   .ca-checkout__opt + .ca-checkout__opt { margin-block-start: -2px; }
   .ca-checkout__opt.is-on { border-color: var(--mock-ink); background: rgb(13 17 13 / 0.03); }
   .ca-checkout__opt i { flex: none; width: 16px; height: 16px; border-radius: 999px; border: 1.5px solid var(--mock-line); }
@@ -453,7 +453,7 @@
   .ca-checkout__submit { display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 8px; background: var(--mock-ink); color: #fff; font-size: 13px; font-weight: 600; }
   .ca-checkout__draft { font-size: 11px; color: var(--mock-soft); text-align: center; }
   .ca-checkout__draft span { text-decoration: underline; color: var(--mock-ink); }
-  .ca-checkout__item { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+  .ca-checkout__item { display: flex; align-items: center; gap: 12px; font-size: 12px; min-width: 0; }
   .ca-checkout__item div { display: grid; gap: 2px; min-width: 0; flex: 1; }
   .ca-checkout__item strong { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ca-checkout__item span { font-size: 11px; color: var(--mock-soft); }
@@ -474,8 +474,8 @@
     .ca-hmock .ca-mock__body { padding: 18px 16px 20px; }
     .ca-hmock__stack--trade { padding-block-end: 0; padding-inline-end: 0; display: grid; gap: 16px; }
     .ca-hmock__stack--trade .ca-mock--outcome { position: static; width: auto; }
-    .ca-hmock__stack--calc { padding-block-end: 0; padding-inline-end: 0; display: grid; gap: 16px; }
-    .ca-hmock__stack--calc .ca-mock--pdp, .ca-hmock__stack--calc .ca-mock--paint { position: static; width: auto; }
+    .ca-hmock__stack--calc { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .ca-hmock__stack--calc .ca-mock--paint { margin-block-start: 0; }
     .ca-form { grid-template-columns: minmax(0, 1fr); }
     .ca-form__field--wide { grid-column: auto; }
   }
@@ -501,7 +501,7 @@
       "label": "Mock",
       "options": [
         { "value": "trade", "label": "Trade application and approval" },
-        { "value": "calculator", "label": "Product page buy box (tile and paint) with Add to Project" },
+        { "value": "calculator", "label": "Product page buy box with Add to Project" },
         { "value": "checkout", "label": "Checkout with pallet freight and Net 30" }
       ],
       "default": "trade"
