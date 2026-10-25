@@ -42,7 +42,7 @@ mocks' copy and the apps strip's copy can still be changed per article (see the 
 | 4 Buyer questions | `ca-article-body` (headings shown, FAQ schema on) | `body`: H2 per question, 60 to 120 words under each | none (the body is the page) |
 | 5 Testimonial | `ca-testimonials` ("Use the article's quote" on) | `custom.quote`: one `quote` metaobject | the Quotes list; with neither, the block is omitted |
 | 6 Apps | `ca-apps-cards` | none | the four `app` blocks in the template (name, line, page link, documentation link, thumbnail) |
-| 7 How we work with you | `ca-hub-offers` | none on the article: the two `offer` metaobject entries (`fractional-shopify-teams`, `the-conspire-build`), named by handle on the blocks | the blocks' video, poster and media settings; the closing Pricing link |
+| 7 How we work with you | `ca-hub-offers` | `custom.hub_fractional`, `custom.hub_build` (the per-page paragraphs); name, eyebrow, price line and link from the two `offer` metaobject entries (`fractional-shopify-teams`, `the-conspire-build`), named by handle on the blocks | the blocks' Paragraph (then the entry's blurb), video, poster and media settings; the closing Pricing link |
 | 8 Form | `ca-booking` | `custom.hub_form_heading`, `custom.hub_form_text` | the panel heading and text settings |
 | SEO | theme head | `global.title_tag`, `global.description_tag` | title; summary |
 
@@ -119,17 +119,21 @@ changed once. Definition `offer` (`gid://shopify/MetaobjectDefinition/4471518021
 storefront access, publishable): `name`, `eyebrow`, `blurb` (multi-line), `price_line`,
 `link_label`, `link` (url), `video` (file reference, optional). Entries:
 `fractional-shopify-teams` (`gid://shopify/Metaobject/377913442485`) and `the-conspire-build`
-(`gid://shopify/Metaobject/377913606325`), both ACTIVE, text from the copy file's slot 7.
+(`gid://shopify/Metaobject/377913606325`), both ACTIVE, name, eyebrow, price line, link label
+and link from the copy file's slot 7.
+
+The paragraph is per page (Danny, 2026-10-25) and the price line is not: a block's
+"Article metafield key" names `custom.hub_fractional` or `custom.hub_build` on the article,
+which replaces the paragraph when set; the block's own Paragraph setting is the next
+fallback (how the previews carry the tile-flavoured paragraphs); the entry's `blurb` is the
+last and reads for any vertical ("Most of the brands we work with..."). A price change
+still goes to the brief first, then to the entry's `price_line`, once.
 Each block names an entry by handle and carries the media (the homepage videos
 `fractional-shopify-website-teams.mp4` and `Conspire-showreel.mp4` with their posters); an
 entry's own `video` wins when set. The section closes with one link, Pricing, to
 `/pages/pricing` (section settings). The legacy `builds` metaobject (two entries, one of
 them "Signature Builds", a second build tier the brief forbids) is not used and was left
 alone.
-
-The entries' blurbs are written for the tile hub ("Most tile and paint brands we work
-with..."); the supplements hub shows the same two entries until a per-vertical entry or a
-neutral blurb is decided.
 
 ## The content contract (what the copy agent delivers, field by field)
 
@@ -151,6 +155,8 @@ type given (see "Setting the content"). `custom.quote` already has a definition.
 | `custom.hub_mock_trade_text`, `..._calculator_text`, `..._samples_text`, `..._checkout_text` | `rich_text_field` (or `multi_line_text_field`) | One paragraph, 60 to 80 words, naming the app as ours with its page linked (the samples column names no app). The bullets under it stay in the template's blocks. |
 | `custom.hub_mock_trade_caption`, `..._calculator_caption`, `..._samples_caption`, `..._checkout_caption` | `single_line_text_field` | Optional caption under the copy ("Shown with example data."). |
 | `body` | article field | The buyer questions. One `<h2>` per question (3 to 5), phrased as the buyer asks it, followed by one or two `<p>` of 60 to 120 words naming a client where true. Links allowed. An optional `<p>` before the first `<h2>` renders as the lede. No `<h1>`, no `<div>` or `<section>` wrappers, no `<strong>`, `<b>` or `<em>`, no em dashes. The headings feed the sticky question list and the FAQPage structured data. |
+| `custom.hub_fractional` | `rich_text_field` (or `multi_line_text_field`) | The Fractional Shopify Teams paragraph for this vertical, no price in it (the price line comes from the `offer` entry). Omit to show the entry's neutral blurb. |
+| `custom.hub_build` | `rich_text_field` (or `multi_line_text_field`) | The Conspire Build paragraph for this vertical, same rule. |
 | `custom.quote` | `metaobject_reference` (type `quote`) | One quote record. Highlights come from the bold runs inside the record's `quote` rich text; years from `partner_since` (leave it empty for a quote with no years label, as BSD Haus); the logo from `logo`. Omit the metafield to omit the block. |
 | `custom.hub_form_heading` | `single_line_text_field` | The line over the booking montage. |
 | `custom.hub_form_text` | `multi_line_text_field` | One sentence under it. |
@@ -232,6 +238,8 @@ mutation SetHub($metafields: [MetafieldsSetInput!]!) {
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_samples_heading","type":"single_line_text_field","value":"Almost every order starts with a sample."},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_mock_samples_text","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"quote","type":"metaobject_reference","value":"gid://shopify/Metaobject/305509007541"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_fractional","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
+ {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_build","type":"rich_text_field","value":"{\"type\":\"root\",\"children\":[...]}"},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_form_heading","type":"single_line_text_field","value":"Bring us the trade program, the catalog or the next launch."},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"custom","key":"hub_form_text","type":"multi_line_text_field","value":"20 minutes, no pitch deck. We'll come with one specific take on your Shopify store."},
  {"ownerId":"gid://shopify/Article/611812966581","namespace":"global","key":"title_tag","type":"single_line_text_field","value":"..."},
@@ -264,6 +272,8 @@ access on. `custom.quote` exists already.
 | Hub mock calculator heading / text / caption | `hub_mock_calculator_*` | same |
 | Hub mock samples heading / text / caption | `hub_mock_samples_*` | same |
 | Hub mock checkout heading / text / caption | `hub_mock_checkout_*` | same |
+| Hub fractional paragraph | `hub_fractional` | Rich text |
+| Hub build paragraph | `hub_build` | Rich text |
 | Hub form heading | `hub_form_heading` | Single line text |
 | Hub form text | `hub_form_text` | Multi-line text |
 
@@ -281,8 +291,8 @@ shopify theme push --development --only templates/article.vertical-hub.json \
 
 then `https://conspireagency.myshopify.com/blogs/work/<handle>?view=vertical-hub&preview_theme_id=<id>`.
 With no metafields set the page shows the black hero from the title (no cards), the body as
-a lede, no mocks, the apps strip and the offers (from the metaobjects), and omits the proof
-and the testimonial.
+a lede, no mocks, the apps strip and the offers (neutral blurbs from the metaobjects), and
+omits the proof and the testimonial.
 The two `templates/article.preview-*.json` files used for the 2026-10-25 reviews carry the
 copy agent's text in the section fallbacks, with the buyer questions and the testimonial as
 static `custom-liquid` sections in the same markup the real sections emit (the live bodies
