@@ -8,12 +8,26 @@
     logo (image).
 
   "Flip" toggle moves the years + logo above the quote.
+
+  On article templates with "Use the article's quote" on, the article's own
+  custom.quote metafield (one `quote` reference) replaces the list when it is set:
+  the vertical hub pages carry their vertical's quote that way. A single quote
+  renders without dots or arrows. The slide markup lives in snippets/ca-quote.
+  With no quote from either source the section renders nothing.
 {%- endcomment -%}
 
 <script src="{{ 'ca-testimonials.js' | asset_url }}" type="module" fetchpriority="low"></script>
 
 {%- liquid
   assign quotes = section.settings.quotes
+  assign quote_count = quotes.count
+  assign article_quote = blank
+  if section.settings.article_quote and article != blank
+    assign article_quote = article.metafields.custom.quote.value
+    if article_quote != blank
+      assign quote_count = 1
+    endif
+  endif
   assign flip = section.settings.flip_meta
   assign autoplay_ms = 0
   if section.settings.autoplay
@@ -27,6 +41,7 @@
   section_id: section.id
 %}
 
+{%- if quote_count > 0 or request.design_mode -%}
 <div
   class="ca-testimonials spacing-style color-custom-{{ section.id }}"
   style="{% render 'spacing-style', settings: section.settings %}"
@@ -37,63 +52,45 @@
     {%- endif -%}
 
     <div class="ca-testimonials__main">
-      {%- if quotes.count > 0 -%}
+      {%- if quote_count > 0 -%}
         <ca-carousel class="ca-testimonials__carousel" data-autoplay="{{ autoplay_ms }}">
           <div class="ca-testimonials__viewport">
             <div class="ca-testimonials__track" ref="track">
-              {%- for quote in quotes -%}
-                {%- liquid
-                  assign years = ''
-                  assign py = quote.partner_since.value
-                  if py != blank and py > 0
-                    assign current_year = 'now' | date: '%Y' | times: 1
-                    assign years = current_year | minus: py
-                  endif
-                  assign logo = quote.logo.value
-                  assign logo_alt = quote.client_name.value | default: quote.company.value | default: quote.system.display_name | default: 'Client'
-                  if logo.image
-                    assign logo = logo.image
-                  endif
-                -%}
-                <article class="ca-quote{% if flip %} ca-quote--flip{% endif %}">
-                  <div class="ca-quote__text">{{ quote.quote | metafield_tag }}</div>
-                  {%- if years != blank or logo != blank -%}
-                    <div class="ca-quote__meta">
-                      {%- if years != blank and years > 0 -%}
-                        <span class="ca-quote__years"><span class="ca-quote__years-num">+{{ years }}</span> years partnered</span>
-                      {%- endif -%}
-                      {%- if logo != blank -%}
-                        <span class="ca-quote__logo">{% render 'image', image: logo, class: 'ca-quote__logo-img', alt_text_fallback: logo_alt %}</span>
-                      {%- endif -%}
-                    </div>
-                  {%- endif -%}
-                </article>
-              {%- endfor -%}
+              {%- if article_quote != blank -%}
+                {%- render 'ca-quote', quote: article_quote, flip: flip -%}
+              {%- else -%}
+                {%- for quote in quotes -%}
+                  {%- render 'ca-quote', quote: quote, flip: flip -%}
+                {%- endfor -%}
+              {%- endif -%}
             </div>
           </div>
 
-          <div class="ca-testimonials__foot">
-            <div class="ca-testimonials__dots" ref="dots"></div>
-            <div class="ca-testimonials__arrows">
-              <button class="ca-testimonials__arrow ca-testimonials__arrow--prev" ref="prev" type="button" aria-label="Previous testimonial">
-                <svg class="ca-testimonials__arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-                  <path d="M18.3666 12.0003H5.63871M12.0027 5.63633L5.63871 12.0003L12.0027 18.3643" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
-                </svg>
-              </button>
-              <button class="ca-testimonials__arrow ca-testimonials__arrow--next" ref="next" type="button" aria-label="Next testimonial">
-                <svg class="ca-testimonials__arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-                  <path d="M5.63677 11.9997H18.3647M12.0007 18.3637L18.3647 11.9997L12.0007 5.63574" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
-                </svg>
-              </button>
+          {%- if quote_count > 1 -%}
+            <div class="ca-testimonials__foot">
+              <div class="ca-testimonials__dots" ref="dots"></div>
+              <div class="ca-testimonials__arrows">
+                <button class="ca-testimonials__arrow ca-testimonials__arrow--prev" ref="prev" type="button" aria-label="Previous testimonial">
+                  <svg class="ca-testimonials__arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M18.3666 12.0003H5.63871M12.0027 5.63633L5.63871 12.0003L12.0027 18.3643" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                  </svg>
+                </button>
+                <button class="ca-testimonials__arrow ca-testimonials__arrow--next" ref="next" type="button" aria-label="Next testimonial">
+                  <svg class="ca-testimonials__arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M5.63677 11.9997H18.3647M12.0007 18.3637L18.3647 11.9997L12.0007 5.63574" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </div>
             </div>
-          </div>
+          {%- endif -%}
         </ca-carousel>
-      {%- elsif request.design_mode -%}
-        <p class="ca-testimonials__empty">Add <strong>Quote</strong> entries in this section's settings to populate the testimonials.</p>
+      {%- else -%}
+        <p class="ca-testimonials__empty">Add <strong>Quote</strong> entries in this section's settings, or a quote on the article, to populate the testimonials.</p>
       {%- endif -%}
     </div>
   </div>
 </div>
+{%- endif -%}
 
 {% stylesheet %}
   .ca-testimonials__inner {
@@ -329,6 +326,13 @@
       "label": "Quotes",
       "metaobject_type": "quote",
       "limit": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "article_quote",
+      "label": "Use the article's quote",
+      "info": "On article templates: shows the quote in the article's custom.quote metafield when it is set, instead of the list above (vertical hub pages).",
+      "default": false
     },
     {
       "type": "checkbox",

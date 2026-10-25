@@ -14,12 +14,30 @@
     RIGHT : a Calendly inline embed (matches the live site).
 
   Calendly is lazy-loaded by the <ca-calendly> element at the bottom of this file.
+
+  The copy over the montage can come from the article: the two "Article metafield
+  key" settings name custom.* metafields (single or multi-line text) that replace the
+  panel heading and text when set, so one template can end every vertical hub page in
+  the page's own words (docs/VERTICAL-HUBS.md).
 {%- endcomment -%}
 
 {%- liquid
   assign photos = section.blocks
   assign photo_count = photos.size
   assign montage_bg = section.settings.montage_background | default: '#0d110d'
+
+  assign panel_heading = section.settings.panel_heading
+  assign panel_text = section.settings.panel_text
+  if article != blank
+    assign heading_key = section.settings.panel_heading_key | strip
+    if heading_key != blank and article.metafields.custom[heading_key].value != blank
+      assign panel_heading = article.metafields.custom[heading_key].value
+    endif
+    assign text_key = section.settings.panel_text_key | strip
+    if text_key != blank and article.metafields.custom[text_key].value != blank
+      assign panel_text = article.metafields.custom[text_key].value
+    endif
+  endif
 -%}
 
 <div id="book-a-call" class="ca-booking spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
@@ -108,13 +126,13 @@
         {%- endif -%}
 
         {%- comment -%} Optional copy centred over the montage (Figma 315:1891) {%- endcomment -%}
-        {%- if section.settings.panel_heading != blank or section.settings.panel_text != blank or section.settings.panel_button_label != blank -%}
+        {%- if panel_heading != blank or panel_text != blank or section.settings.panel_button_label != blank -%}
           <div class="ca-booking__overlay ca-invert">
-            {%- if section.settings.panel_heading != blank -%}
-              <p class="ca-booking__overlay-heading">{{ section.settings.panel_heading }}</p>
+            {%- if panel_heading != blank -%}
+              <p class="ca-booking__overlay-heading">{{ panel_heading }}</p>
             {%- endif -%}
-            {%- if section.settings.panel_text != blank -%}
-              <p class="ca-booking__overlay-text">{{ section.settings.panel_text }}</p>
+            {%- if panel_text != blank -%}
+              <p class="ca-booking__overlay-text">{{ panel_text | newline_to_br }}</p>
             {%- endif -%}
             {%- if section.settings.panel_button_label != blank -%}
               {%- if section.settings.panel_button_link != blank -%}
@@ -557,6 +575,8 @@
     { "type": "textarea", "id": "panel_text", "label": "Text", "default": "To discuss your project please select a convenient date & time for you and we will contact you!" },
     { "type": "text", "id": "panel_button_label", "label": "Button label", "default": "Contact Us" },
     { "type": "url", "id": "panel_button_link", "label": "Button link" },
+    { "type": "text", "id": "panel_heading_key", "label": "Article metafield key for the heading", "info": "Optional, article templates only. A custom.* text metafield on the article that replaces the heading above when set, for example hub_form_heading." },
+    { "type": "text", "id": "panel_text_key", "label": "Article metafield key for the text", "info": "Optional, article templates only. For example hub_form_text." },
     {
       "type": "header",
       "content": "t:content.padding"

@@ -19,6 +19,10 @@
   Works on article templates, pages (page.content), products (description) and
   collections (description). Content with no matching headings renders plain,
   with no list.
+
+  "Output FAQ structured data" (off by default) emits a FAQPage: each heading is
+  a question and the text under it the answer. For pages whose headings are
+  written as questions, such as the vertical hub pages (docs/VERTICAL-HUBS.md).
 {%- endcomment -%}
 
 <script src="{{ 'ca-toc.js' | asset_url }}" type="module" fetchpriority="low"></script>
@@ -190,6 +194,39 @@
     </div>
   </div>
 </div>
+
+{%- if section.settings.faq_schema and has_toc -%}
+  {%- comment -%}
+    FAQPage: one Question per heading, its answer the text under it (tags stripped,
+    as ca-faq-list does). Headings with nothing under them are skipped; the comma
+    is written before every item after the first so the list never ends in one.
+  {%- endcomment -%}
+  {%- assign faq_printed = 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for part in parts offset: 1 -%}
+          {%- liquid
+            assign heading_html = part | split: close_tag | first
+            assign faq_q = open_tag | append: heading_html | append: close_tag | strip_html | strip | replace: '&amp;', '&'
+            assign faq_a = part | remove_first: heading_html | remove_first: close_tag | strip_html | strip | replace: '&nbsp;', ' ' | replace: '&amp;', '&'
+          -%}
+          {%- if faq_q != blank and faq_a != blank -%}
+            {%- if faq_printed > 0 %},{% endif -%}
+            {%- assign faq_printed = faq_printed | plus: 1 -%}
+            {
+              "@type": "Question",
+              "name": {{ faq_q | json }},
+              "acceptedAnswer": { "@type": "Answer", "text": {{ faq_a | json }} }
+            }
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
 
 {% stylesheet %}
   .ca-abody {
@@ -426,6 +463,7 @@
     { "type": "text", "id": "toc_label", "label": "List label for screen readers", "default": "On this page" },
     { "type": "checkbox", "id": "show_headings", "label": "Show section headings in the content", "info": "Off: the list is the only visible label on desktop (headings stay in the page for search engines and screen readers).", "default": false },
     { "type": "checkbox", "id": "lead", "label": "Large first paragraph in each section", "default": true },
+    { "type": "checkbox", "id": "faq_schema", "label": "Output FAQ structured data", "info": "Each heading becomes a question and the text under it the answer. For pages whose headings are written as questions.", "default": false },
     {
       "type": "select",
       "id": "bullets",

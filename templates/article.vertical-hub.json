@@ -1,0 +1,558 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-hub-hero",
+      "settings": {
+        "eyebrow": "",
+        "lead": "",
+        "pills": "",
+        "size": "large",
+        "button_label": "",
+        "button_link": "",
+        "style_class": "button",
+        "allow_transparent_header": true,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 96,
+        "clients": [],
+        "article_clients": true,
+        "max_cards": 3
+      }
+    },
+    "proof": {
+      "type": "ca-work-grid",
+      "settings": {
+        "eyebrow": "Some examples of our work",
+        "clients": [],
+        "article_clients": true,
+        "default_image_field": "work_preview",
+        "stagger": true,
+        "button_label": "Learn More",
+        "style_class": "button",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "client_years": "",
+        "client_captions": ""
+      }
+    },
+    "bought_trade": {
+      "type": "ca-hub-mock",
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "label": "Apply on your store, approved by your team, pricing applied on login"
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "label": "Trade orders land in the same Shopify admin as retail, so customer service never splits"
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "label": "Shopify's own request form covers the simplest programs; the app adds the application, the documents and the approval"
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3"
+      ],
+      "settings": {
+        "variant": "trade",
+        "mock_side": "right",
+        "intro_eyebrow": "How tile and paint are bought",
+        "intro_heading": "Tile, paint and home goods are not bought like other products. The customer is planning a room: a sample first, then the right quantity, often through a designer or contractor on trade terms, and an order that ships by pallet.",
+        "eyebrow": "Trade program",
+        "heading": "",
+        "text": "",
+        "link_label": "B2B Onboarding & Wholesale",
+        "link_url": "/pages/b2b-onboarding-wholesale",
+        "caption": "",
+        "override_key": "hub_mock_trade",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 48
+      }
+    },
+    "bought_calculator": {
+      "type": "ca-hub-mock",
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "label": "Square feet in, boxes out, overage included"
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "label": "Arrival estimate for that quantity, read from the ERP (Zia Tile)"
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "label": "Add to Project: rooms and projects, shared with the client, turned into a quote"
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3"
+      ],
+      "settings": {
+        "variant": "calculator",
+        "mock_side": "left",
+        "intro_eyebrow": "",
+        "intro_heading": "",
+        "eyebrow": "The product page",
+        "heading": "",
+        "text": "",
+        "link_label": "B2B Wishlist Project Planner",
+        "link_url": "/pages/b2b-wishlist-project-planner",
+        "caption": "",
+        "override_key": "hub_mock_calculator",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "bought_samples": {
+      "type": "ca-hub-mock",
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "label": "A sample from the product page, in one step"
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "label": "Several samples in one order for the customer still comparing"
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "label": "Sample kits by project type, as built for Portola Paints"
+          }
+        },
+        "point_4": {
+          "type": "point",
+          "settings": {
+            "label": "A follow-up while the sample is still in the room"
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3",
+        "point_4"
+      ],
+      "settings": {
+        "variant": "samples",
+        "mock_side": "right",
+        "intro_eyebrow": "",
+        "intro_heading": "",
+        "eyebrow": "Samples",
+        "heading": "",
+        "text": "",
+        "link_label": "",
+        "link_url": "",
+        "caption": "",
+        "override_key": "hub_mock_samples",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "bought_checkout": {
+      "type": "ca-hub-mock",
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "label": "LTL pallet freight rated live for the ship-to address"
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "label": "Samples ship parcel, tile ships freight, one order"
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "label": "Net 30 and other payment terms for approved companies"
+          }
+        },
+        "point_4": {
+          "type": "point",
+          "settings": {
+            "label": "Quote to draft order to paid invoice, with reminders until it is settled"
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3",
+        "point_4"
+      ],
+      "settings": {
+        "variant": "checkout",
+        "mock_side": "left",
+        "intro_eyebrow": "",
+        "intro_heading": "",
+        "eyebrow": "Checkout",
+        "heading": "",
+        "text": "",
+        "link_label": "B2B Draft Order Invoices",
+        "link_url": "/pages/draft-order-invoices",
+        "caption": "",
+        "override_key": "hub_mock_checkout",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 48,
+        "padding-block-end": 80
+      }
+    },
+    "questions": {
+      "type": "ca-article-body",
+      "settings": {
+        "hoist_video": false,
+        "heading_level": "h2",
+        "toc_label": "Questions",
+        "show_headings": true,
+        "lead": false,
+        "faq_schema": true,
+        "bullets": "dot",
+        "intro_label": "",
+        "intro_display": false,
+        "extra_label": "",
+        "extra_link": "",
+        "back_label": "",
+        "back_link": "",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "testimonial": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [],
+        "article_quote": true,
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "apps": {
+      "type": "ca-apps-cards",
+      "blocks": {
+        "wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Onboarding & Wholesale",
+            "tagline": "Trade buyers apply, get approved and shop at their pricing on the store you run.",
+            "description": "",
+            "page_link": "/pages/b2b-onboarding-wholesale",
+            "page_label": "B2B Onboarding & Wholesale",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
+            "tour_link": "",
+            "tour_label": ""
+          }
+        },
+        "wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Wishlist Project Planner",
+            "tagline": "Three jobs stay three projects, by room, shared and turned into a quote.",
+            "description": "",
+            "page_link": "/pages/b2b-wishlist-project-planner",
+            "page_label": "B2B Wishlist Project Planner",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "https://apps.conspireagency.com/wishlist/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+            "tour_link": "",
+            "tour_label": ""
+          }
+        },
+        "drafts": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Draft Order Invoices",
+            "tagline": "Quoted jobs get paid: invoices on the account page, Pay Now at checkout, reminders.",
+            "description": "",
+            "page_link": "/pages/draft-order-invoices",
+            "page_label": "B2B Draft Order Invoices",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "https://apps.conspireagency.com/drafts/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
+            "tour_link": "",
+            "tour_label": ""
+          }
+        },
+        "bonde": {
+          "type": "app",
+          "settings": {
+            "name": "Bonde",
+            "tagline": "Subscriptions with no transaction fees; bundles, upsells and loyalty in the same app.",
+            "description": "",
+            "page_link": "https://getbonde.com",
+            "page_label": "Bonde",
+            "store_link": "",
+            "store_label": "",
+            "docs_link": "",
+            "docs_label": "",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "wholesale",
+        "wishlist",
+        "drafts",
+        "bonde"
+      ],
+      "settings": {
+        "eyebrow": "Our apps",
+        "heading": "<strong>Four apps,</strong> built from this work.",
+        "intro": "<p>Ours, built from this work, and never the only option.</p>",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "offers": {
+      "type": "ca-hub-offers",
+      "blocks": {
+        "fractional": {
+          "type": "offer",
+          "settings": {
+            "handle": "fractional-shopify-teams",
+            "video": "shopify://files/videos/fractional-shopify-website-teams.mp4",
+            "poster": "shopify://shop_images/fractional-shopify-website-teams-poster.jpg",
+            "media_background": "#0d110d",
+            "media_flush": true,
+            "image_ratio": "11 / 10",
+            "blurb": "",
+            "override_key": "hub_fractional"
+          }
+        },
+        "build": {
+          "type": "offer",
+          "settings": {
+            "handle": "the-conspire-build",
+            "video": "shopify://files/videos/Conspire-showreel.mp4",
+            "poster": "shopify://shop_images/conspire-showreel-poster.jpg",
+            "media_background": "#000000",
+            "media_flush": false,
+            "image_ratio": "11 / 10",
+            "blurb": "",
+            "override_key": "hub_build"
+          }
+        }
+      },
+      "block_order": [
+        "fractional",
+        "build"
+      ],
+      "settings": {
+        "eyebrow": "How we work with you",
+        "heading": "<strong>A senior team that becomes part of yours.</strong> Fractional first; the Conspire Build when the Shopify store has to be rebuilt or moved.",
+        "style_class": "button",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "footer_label": "Pricing",
+        "footer_link": "shopify://pages/pricing"
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "panel_heading_key": "hub_form_heading",
+        "panel_text_key": "hub_form_text"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "proof",
+    "bought_trade",
+    "bought_calculator",
+    "bought_samples",
+    "bought_checkout",
+    "questions",
+    "testimonial",
+    "apps",
+    "offers",
+    "booking"
+  ]
+}
