@@ -1,7 +1,11 @@
 {%- comment -%}
-  ca-hub-hero.liquid — vertical hub page title (Conspire v2.0 art direction; assembled
-  from the article header and the section intro: eyebrow in the left columns, the title
-  on the right, one lead sentence and outlined pill tags under it).
+  ca-hub-hero.liquid: vertical hub page title (Conspire v2.0 art direction).
+
+  The case-study hero treatment: near-black canvas (#0d110d), white text, runs up
+  under the transparent header. Left: uppercase eyebrow, the H1, one lead sentence,
+  outlined pill tags. Right (below on phones): the vertical's client Shopify stores
+  as floating cards, the homepage work-card look (the client's own photography with
+  the store capture framed over it); the cards slide in, then keep drifting.
 
   Everything comes from the article, and each slot falls back to a section setting so
   the section also works from the theme editor:
@@ -10,9 +14,12 @@
     lead      article.excerpt (the article summary), one sentence
     pills     custom.hub_pills (list of short facts), then the "Pills" setting (one
               per line)
+    cards     custom.hub_clients (the proof clients, in order; the first three with a
+              work_preview image become cards), then the "Clients" setting
 
-  Light canvas (#f2f2f2) by default, so the site header stays solid. The content
-  contract is in docs/VERTICAL-HUBS.md.
+  Card images: work_preview is the backdrop; featured_site_image, or the poster of
+  featured_site_media, is the capture. Only the store's Files assets, never stock.
+  The content contract is in docs/VERTICAL-HUBS.md.
 {%- endcomment -%}
 
 {%- liquid
@@ -28,6 +35,15 @@
     assign pills = section.settings.pills | newline_to_br | split: '<br />'
   endif
 
+  assign clients = section.settings.clients
+  if section.settings.article_clients and article != blank
+    assign hub_clients = article.metafields.custom.hub_clients.value
+    if hub_clients.size > 0
+      assign clients = hub_clients
+    endif
+  endif
+  assign max_cards = section.settings.max_cards | default: 3
+
   assign transparent = section.settings.allow_transparent_header
 -%}
 
@@ -38,8 +54,59 @@
   {%- endstyle -%}
 {%- endif -%}
 
+{%- capture cards -%}
+  {%- assign card_n = 0 -%}
+  {%- for client in clients -%}
+    {%- if card_n >= max_cards -%}{%- break -%}{%- endif -%}
+    {%- liquid
+      assign name = client.name.value | default: client.system.handle
+      assign backdrop = client.work_preview.value
+      if backdrop.image
+        assign backdrop = backdrop.image
+      endif
+      assign capture = client.featured_site_image.value
+      if capture.image
+        assign capture = capture.image
+      endif
+      if capture == blank
+        assign media = client.featured_site_media.value
+        if media.preview_image
+          assign capture = media.preview_image
+        elsif media.image
+          assign capture = media.image
+        elsif media != blank and media.sources == blank
+          assign capture = media
+        endif
+      endif
+      if backdrop == blank and capture != blank
+        assign backdrop = capture
+        assign capture = blank
+      endif
+    -%}
+    {%- if backdrop != blank -%}
+      {%- assign card_n = card_n | plus: 1 -%}
+      {%- assign backdrop_alt = backdrop.alt | default: name -%}
+      <div class="ca-hhero__card ca-hhero__card--{{ card_n }}" style="--i: {{ card_n }};">
+        {{ backdrop | image_url: width: 1000 | image_tag: class: 'ca-hhero__backdrop', loading: 'eager', fetchpriority: 'low', alt: backdrop_alt, widths: '500, 1000', sizes: '(min-width: 990px) 28vw, 70vw' }}
+        {%- if capture != blank -%}
+          {%- liquid
+            assign capture_alt = capture.alt
+            if capture_alt == blank
+              assign capture_alt = name | append: ' Shopify store'
+            endif
+          -%}
+          <div class="ca-hhero__window">
+            {{ capture | image_url: width: 700 | image_tag: class: 'ca-hhero__capture', loading: 'eager', fetchpriority: 'low', alt: capture_alt, widths: '350, 700', sizes: '(min-width: 990px) 18vw, 44vw' }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign cards = cards | strip -%}
+
 <div
-  class="ca-hhero spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header ca-under-header{% endif %}"
+  class="ca-hhero spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header ca-under-header{% endif %}{% if cards != blank %} ca-hhero--cards{% endif %}"
   style="{% render 'spacing-style', settings: section.settings %}"
 >
   {%- render 'contrast-override',
@@ -48,19 +115,19 @@
     section_id: section.id
   -%}
   <div class="ca-inner ca-hhero__grid">
-    {%- if eyebrow != blank -%}
-      <p class="ca-eyebrow ca-hhero__eyebrow">{{ eyebrow }}</p>
-    {%- endif -%}
-
     <div class="ca-hhero__main">
-      <h1 class="ca-hhero__title ca-hhero__title--{{ section.settings.size | default: 'large' }}">{{ article.title }}</h1>
+      {%- if eyebrow != blank -%}
+        <p class="ca-eyebrow ca-hhero__eyebrow ca-hhero__in" style="--i: 0">{{ eyebrow }}</p>
+      {%- endif -%}
+
+      <h1 class="ca-hhero__title ca-hhero__title--{{ section.settings.size | default: 'large' }} ca-hhero__in" style="--i: 1">{{ article.title }}</h1>
 
       {%- if lead != blank -%}
-        <p class="ca-hhero__lead">{{ lead }}</p>
+        <p class="ca-hhero__lead ca-hhero__in" style="--i: 2">{{ lead }}</p>
       {%- endif -%}
 
       {%- if pills.size > 0 -%}
-        <ul class="ca-pills ca-hhero__pills" aria-label="At a glance">
+        <ul class="ca-pills ca-hhero__pills ca-hhero__in" style="--i: 3" aria-label="At a glance">
           {%- for pill in pills -%}
             {%- assign pill_text = pill | strip -%}
             {%- if pill_text != blank -%}
@@ -71,16 +138,24 @@
       {%- endif -%}
 
       {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
-        <a class="{{ section.settings.style_class | default: 'button' }} size-style ca-hhero__button" href="{{ section.settings.button_link }}">
+        <a class="{{ section.settings.style_class | default: 'button' }} size-style ca-hhero__button ca-hhero__in" style="--i: 4" href="{{ section.settings.button_link }}">
           {{- section.settings.button_label -}}
         </a>
       {%- endif -%}
     </div>
+
+    {%- if cards != blank -%}
+      <div class="ca-hhero__stage ca-hhero__stage--{{ card_n }}">
+        {{ cards }}
+      </div>
+    {%- endif -%}
   </div>
 </div>
 
 {% stylesheet %}
   .ca-hhero {
+    position: relative;
+    overflow: hidden;
     background-color: var(--color-background);
   }
 
@@ -88,22 +163,25 @@
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: 24px;
-    row-gap: 24px;
-    align-items: start;
-  }
-
-  .ca-hhero__eyebrow {
-    grid-column: 1 / span 4;
-    padding-block-start: 6px;
+    row-gap: 48px;
+    align-items: center;
   }
 
   .ca-hhero__main {
-    grid-column: 5 / -1;
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 28px;
     min-width: 0;
+  }
+
+  .ca-hhero--cards .ca-hhero__main {
+    grid-column: 1 / span 7;
+  }
+
+  .ca-hhero__eyebrow {
+    margin: 0;
   }
 
   .ca-hhero__title {
@@ -152,9 +230,103 @@
     margin-block-start: 4px;
   }
 
+  /* ── Floating store cards ──────────────────────────────────────────── */
+  .ca-hhero__stage {
+    position: relative;
+    grid-column: 8 / -1;
+    aspect-ratio: 5 / 4;
+    min-width: 0;
+  }
+
+  .ca-hhero__card {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: rgb(var(--color-foreground-rgb) / 0.08);
+    box-shadow: 0 30px 60px -24px rgb(0 0 0 / 0.6);
+    animation:
+      ca-hhero-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+      ca-hhero-drift var(--drift, 11s) ease-in-out calc(0.9s + var(--i, 1) * 120ms) infinite alternate;
+    animation-delay: calc(var(--i, 1) * 140ms), calc(0.9s + var(--i, 1) * 140ms);
+  }
+
+  .ca-hhero__card--1 { inset: 0 auto auto 0; width: 62%; aspect-ratio: 4 / 5; --drift: 11s; }
+  .ca-hhero__card--2 { inset: 22% 0 auto auto; width: 52%; aspect-ratio: 4 / 5; z-index: 2; --drift: 13s; }
+  .ca-hhero__card--3 { inset: auto auto 0 16%; width: 48%; aspect-ratio: 5 / 4; z-index: 3; --drift: 9s; }
+
+  /* Two cards: side by side, the second dropped a step. One card: the whole stage. */
+  .ca-hhero__stage--2 .ca-hhero__card--1 { width: 56%; }
+  .ca-hhero__stage--2 .ca-hhero__card--2 { inset: 18% 0 auto auto; width: 52%; }
+  .ca-hhero__stage--1 .ca-hhero__card--1 { inset: 0; width: 100%; aspect-ratio: auto; }
+
+  .ca-hhero__backdrop {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* The store capture: a centred window over the photograph, as on the work cards. */
+  .ca-hhero__window {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .ca-hhero__window::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 0.18);
+  }
+
+  .ca-hhero__capture {
+    position: relative;
+    display: block;
+    width: 66%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    object-position: center top;
+    background-color: #fff;
+    box-shadow: 0 16px 48px rgb(0 0 0 / 0.35);
+  }
+
+  .ca-hhero__card--3 .ca-hhero__capture {
+    width: 72%;
+    aspect-ratio: 16 / 11;
+  }
+
+  /* Staggered reveal, then a slow float. */
+  .ca-hhero__in {
+    animation: ca-hhero-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  @keyframes ca-hhero-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes ca-hhero-drift {
+    from { translate: 0 0; }
+    to { translate: 0 -14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-hhero__in,
+    .ca-hhero__card {
+      animation: none;
+    }
+  }
+
   @media screen and (max-width: 989px) {
-    .ca-hhero__eyebrow,
-    .ca-hhero__main {
+    .ca-hhero__grid {
+      row-gap: 40px;
+    }
+
+    .ca-hhero--cards .ca-hhero__main,
+    .ca-hhero__stage {
       grid-column: 1 / -1;
     }
 
@@ -165,6 +337,17 @@
     .ca-hhero__pills {
       gap: 8px;
     }
+
+    .ca-hhero__stage {
+      aspect-ratio: 16 / 10;
+      max-width: 640px;
+    }
+
+    .ca-hhero__card--1 { inset: 0 auto auto 0; width: 44%; aspect-ratio: 4 / 5; }
+    .ca-hhero__card--2 { inset: 10% auto auto 36%; width: 34%; aspect-ratio: 4 / 5; }
+    .ca-hhero__card--3 { inset: auto 0 0 auto; width: 40%; aspect-ratio: 5 / 4; }
+    .ca-hhero__stage--2 .ca-hhero__card--1 { width: 50%; }
+    .ca-hhero__stage--2 .ca-hhero__card--2 { inset: 12% 0 auto auto; width: 44%; }
   }
 {% endstylesheet %}
 
@@ -175,7 +358,7 @@
   "class": "ca-hhero-section",
   "enabled_on": { "templates": ["article"] },
   "settings": [
-    { "type": "paragraph", "content": "Title, lead and pills come from the article: the title, the summary (excerpt) and the Vertical hub metafields (custom.hub_eyebrow, custom.hub_pills). The fields below are the fallbacks when an article has none." },
+    { "type": "paragraph", "content": "Title, lead, pills and the floating store cards come from the article: the title, the summary (excerpt) and the Vertical hub metafields (custom.hub_eyebrow, custom.hub_pills, custom.hub_clients). The fields below are the fallbacks when an article has none." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow (fallback)", "info": "The vertical, for example Tile, paint and home renovation. Shown uppercase." },
     { "type": "textarea", "id": "lead", "label": "Lead sentence (fallback)", "info": "Used when the article has no summary." },
     { "type": "textarea", "id": "pills", "label": "Pills (fallback)", "info": "One per line, three to five short facts. Used when the article has no custom.hub_pills metafield." },
@@ -189,6 +372,10 @@
       ],
       "default": "large"
     },
+    { "type": "header", "content": "Floating store cards" },
+    { "type": "metaobject_list", "id": "clients", "label": "Clients (fallback)", "metaobject_type": "client", "limit": 3, "info": "Used when the article has no custom.hub_clients metafield. A client needs a Work preview image to become a card." },
+    { "type": "checkbox", "id": "article_clients", "label": "Use the article's clients", "default": true },
+    { "type": "range", "id": "max_cards", "label": "Cards", "min": 1, "max": 3, "step": 1, "default": 3 },
     { "type": "header", "content": "Button (optional)" },
     { "type": "text", "id": "button_label", "label": "Button label" },
     { "type": "url", "id": "button_link", "label": "Button link" },
@@ -203,10 +390,10 @@
       "default": "button"
     },
     { "type": "header", "content": "Site header" },
-    { "type": "checkbox", "id": "allow_transparent_header", "label": "Run under a transparent header", "info": "For a dark hero. Leave off on the light canvas.", "default": false },
+    { "type": "checkbox", "id": "allow_transparent_header", "label": "Run under a transparent header", "info": "On for the dark canvas (the case-study hero treatment).", "default": true },
     { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
-    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#0d110d" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text", "default": "#ffffff" },
     { "type": "header", "content": "t:content.padding" },
     { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
     { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
