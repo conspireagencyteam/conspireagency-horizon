@@ -1,0 +1,183 @@
+{%- comment -%}
+  ca-hub-offers.liquid — "How we work with you": the offers, one column each, in the
+  order the house brief sells them (Fractional Shopify Teams first, then the Conspire
+  Build). Intro row (eyebrow + statement), then hairline columns with the offer name,
+  one paragraph and a button to the offer page.
+
+  Each "offer" block carries the house paragraph as its default text. An article can
+  replace that paragraph through a metafield: the block's "Article metafield key" names
+  a custom.* metafield (rich text or multi-line text) on the article, and when it is
+  set it wins. The vertical hub template uses hub_fractional and hub_build.
+{%- endcomment -%}
+
+{%- liquid
+  assign offer_tag = 'h2'
+  if section.settings.heading != blank
+    assign offer_tag = 'h3'
+  endif
+-%}
+
+<div
+  class="ca-offers spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- render 'ca-intro',
+      eyebrow: section.settings.eyebrow,
+      heading: section.settings.heading,
+      start: 6,
+      class: 'ca-offers__intro'
+    -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="ca-offers__grid" style="--ca-offers-count: {{ section.blocks.size | at_most: 3 }};">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign text = block.settings.text
+            assign key = block.settings.override_key | strip
+            if key != blank and article != blank
+              assign override = article.metafields.custom[key]
+              if override.value != blank
+                capture text
+                  echo override | metafield_tag
+                endcapture
+              endif
+            endif
+          -%}
+          <article class="ca-offer" {{ block.shopify_attributes }}>
+            {%- if block.settings.eyebrow != blank -%}
+              <{{ offer_tag }} class="ca-eyebrow ca-offer__eyebrow">{{ block.settings.eyebrow }}</{{ offer_tag }}>
+            {%- endif -%}
+            {%- if text != blank -%}
+              <div class="ca-rte ca-offer__text">{{ text }}</div>
+            {%- endif -%}
+            {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+              <a class="{{ section.settings.style_class | default: 'button' }} size-style ca-offer__button" href="{{ block.settings.button_link }}">
+                {{- block.settings.button_label -}}
+              </a>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- elsif request.design_mode -%}
+      <p class="ca-offers__empty">Add <strong>Offer</strong> blocks to this section.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-offers {
+    background-color: var(--color-background);
+  }
+
+  .ca-offers__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-offers__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ca-offers-count, 2), minmax(0, 1fr));
+    gap: 48px 24px;
+  }
+
+  .ca-offer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    min-width: 0;
+    padding-block-start: 24px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-offer__eyebrow {
+    margin: 0;
+  }
+
+  .ca-offer__text {
+    color: var(--ca-soft);
+  }
+
+  .ca-offer__text > :first-child,
+  .ca-offer__text .metafield-rich_text_field > :first-child {
+    margin-block-start: 0;
+  }
+
+  .ca-offer__text > :last-child,
+  .ca-offer__text .metafield-rich_text_field > :last-child {
+    margin-block-end: 0;
+  }
+
+  .ca-offer__button {
+    margin-block-start: 8px;
+  }
+
+  .ca-offers__empty {
+    padding-block: 40px;
+    color: var(--ca-muted);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-offers__intro {
+      margin-block-end: 48px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-offers__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Vertical hub offers",
+  "tag": "section",
+  "class": "ca-offers-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How we work with you" },
+    { "type": "inline_richtext", "id": "heading", "label": "Statement", "info": "Bold the words to emphasise. The rest is shown muted." },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offer",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Name", "default": "Fractional Shopify Teams" },
+        { "type": "richtext", "id": "text", "label": "Text", "info": "The house paragraph for this offer. Plain weight only." },
+        { "type": "text", "id": "override_key", "label": "Article metafield key", "info": "Optional. A custom.* metafield on the article (rich text or multi-line text) that replaces the text above when set, for example hub_fractional." },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Learn More" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    { "name": "Vertical hub offers", "category": "Conspire", "blocks": [{ "type": "offer" }, { "type": "offer" }] }
+  ]
+}
+{% endschema %}

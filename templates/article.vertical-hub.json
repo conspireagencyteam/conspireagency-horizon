@@ -1,0 +1,266 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-hub-hero",
+      "settings": {
+        "eyebrow": "",
+        "lead": "",
+        "pills": "",
+        "size": "large",
+        "button_label": "",
+        "button_link": "",
+        "style_class": "button",
+        "allow_transparent_header": false,
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "proof": {
+      "type": "ca-work-grid",
+      "settings": {
+        "eyebrow": "Proof",
+        "clients": [],
+        "article_clients": true,
+        "default_image_field": "work_preview",
+        "stagger": true,
+        "button_label": "Learn More",
+        "style_class": "button",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "outcomes": {
+      "type": "ca-hub-outcomes",
+      "settings": {
+        "eyebrow": "What changes",
+        "heading": "",
+        "items": "",
+        "numbered": true,
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "questions": {
+      "type": "ca-article-body",
+      "settings": {
+        "hoist_video": false,
+        "heading_level": "h2",
+        "toc_label": "Questions",
+        "show_headings": true,
+        "lead": false,
+        "faq_schema": true,
+        "bullets": "dot",
+        "intro_label": "",
+        "intro_display": false,
+        "extra_label": "",
+        "extra_link": "",
+        "back_label": "",
+        "back_link": "",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "testimonial": {
+      "type": "ca-testimonials",
+      "settings": {
+        "eyebrow": "What our clients say",
+        "quotes": [],
+        "article_quote": true,
+        "flip_meta": true,
+        "autoplay": false,
+        "autoplay_interval": 6,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "offers": {
+      "type": "ca-hub-offers",
+      "blocks": {
+        "fractional": {
+          "type": "offer",
+          "settings": {
+            "eyebrow": "Fractional Shopify Teams",
+            "text": "<p>A senior team that becomes part of yours: strategy, design, development, CRO, compliance, SEO, monitoring and attribution, in your Slack and on your standups, with one accountable lead. Priced per month on a 12-month commitment. There is a reason some of our clients have been with us for almost a decade.</p>",
+            "override_key": "hub_fractional",
+            "button_label": "Fractional Shopify Teams",
+            "button_link": "shopify://products/shopify-fractional-teams"
+          }
+        },
+        "build": {
+          "type": "offer",
+          "settings": {
+            "eyebrow": "The Conspire Build",
+            "text": "<p>One scoped build, line by line: strategic onboarding, art direction, conversion-focused UX, full design, development, launch and handoff. Migration is part of the build when the brand is moving to Shopify. Six to twelve weeks. Most build clients stay on as a fractional team afterwards.</p>",
+            "override_key": "hub_build",
+            "button_label": "The Conspire Build",
+            "button_link": "shopify://products/shopify-websites"
+          }
+        }
+      },
+      "block_order": [
+        "fractional",
+        "build"
+      ],
+      "settings": {
+        "eyebrow": "How we work with you",
+        "heading": "<strong>A senior team that becomes part of yours.</strong> Fractional first; the Conspire Build when the Shopify store has to be rebuilt or moved.",
+        "style_class": "button",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "panel_heading_key": "hub_form_heading",
+        "panel_text_key": "hub_form_text"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "proof",
+    "outcomes",
+    "questions",
+    "testimonial",
+    "offers",
+    "booking"
+  ]
+}

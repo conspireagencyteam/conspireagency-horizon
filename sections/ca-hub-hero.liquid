@@ -1,0 +1,216 @@
+{%- comment -%}
+  ca-hub-hero.liquid — vertical hub page title (Conspire v2.0 art direction; assembled
+  from the article header and the section intro: eyebrow in the left columns, the title
+  on the right, one lead sentence and outlined pill tags under it).
+
+  Everything comes from the article, and each slot falls back to a section setting so
+  the section also works from the theme editor:
+    eyebrow   custom.hub_eyebrow (the vertical, e.g. "Tile, paint and home renovation")
+    title     article.title (the H1, written the way the searcher asks)
+    lead      article.excerpt (the article summary), one sentence
+    pills     custom.hub_pills (list of short facts), then the "Pills" setting (one
+              per line)
+
+  Light canvas (#f2f2f2) by default, so the site header stays solid. The content
+  contract is in docs/VERTICAL-HUBS.md.
+{%- endcomment -%}
+
+{%- liquid
+  assign eyebrow = article.metafields.custom.hub_eyebrow.value | default: section.settings.eyebrow
+
+  assign lead = article.excerpt | strip_html | strip
+  if lead == blank
+    assign lead = section.settings.lead
+  endif
+
+  assign pills = article.metafields.custom.hub_pills.value
+  if pills == blank and section.settings.pills != blank
+    assign pills = section.settings.pills | newline_to_br | split: '<br />'
+  endif
+
+  assign transparent = section.settings.allow_transparent_header
+-%}
+
+{%- if transparent and section.settings.text_color != blank -%}
+  {%- style -%}
+    .ca-header { --ca-header-transparent-text: {{ section.settings.text_color }}; }
+    .ca-header { --ca-header-transparent-bg: {{ section.settings.background_color | default: '#ffffff' }}; }
+  {%- endstyle -%}
+{%- endif -%}
+
+<div
+  class="ca-hhero spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}{% if transparent %} ca-allow-transparent-header ca-under-header{% endif %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner ca-hhero__grid">
+    {%- if eyebrow != blank -%}
+      <p class="ca-eyebrow ca-hhero__eyebrow">{{ eyebrow }}</p>
+    {%- endif -%}
+
+    <div class="ca-hhero__main">
+      <h1 class="ca-hhero__title ca-hhero__title--{{ section.settings.size | default: 'large' }}">{{ article.title }}</h1>
+
+      {%- if lead != blank -%}
+        <p class="ca-hhero__lead">{{ lead }}</p>
+      {%- endif -%}
+
+      {%- if pills.size > 0 -%}
+        <ul class="ca-pills ca-hhero__pills" aria-label="At a glance">
+          {%- for pill in pills -%}
+            {%- assign pill_text = pill | strip -%}
+            {%- if pill_text != blank -%}
+              <li class="ca-pill">{{ pill_text }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <a class="{{ section.settings.style_class | default: 'button' }} size-style ca-hhero__button" href="{{ section.settings.button_link }}">
+          {{- section.settings.button_label -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-hhero {
+    background-color: var(--color-background);
+  }
+
+  .ca-hhero__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 24px;
+    align-items: start;
+  }
+
+  .ca-hhero__eyebrow {
+    grid-column: 1 / span 4;
+    padding-block-start: 6px;
+  }
+
+  .ca-hhero__main {
+    grid-column: 5 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  .ca-hhero__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight, 400);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .ca-hhero__title--display {
+    font-size: var(--ca-fs-86);
+    line-height: 1;
+  }
+
+  .ca-hhero__title--large {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .ca-hhero__lead {
+    margin: 0;
+    max-width: 56ch;
+    font-size: var(--ca-fs-20);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+    text-wrap: pretty;
+  }
+
+  /* Outlined pills with centred text, 42px tall, 14px side padding, 12px gaps (brief, section 7).
+     Facts keep the case they were written in ("B2B and wholesale", "NetSuite"). */
+  .ca-hhero__pills {
+    gap: 12px;
+  }
+
+  .ca-hhero__pills .ca-pill {
+    min-height: 42px;
+    justify-content: center;
+    text-align: center;
+    text-transform: none;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-hhero__button {
+    margin-block-start: 4px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-hhero__eyebrow,
+    .ca-hhero__main {
+      grid-column: 1 / -1;
+    }
+
+    .ca-hhero__main {
+      gap: 20px;
+    }
+
+    .ca-hhero__pills {
+      gap: 8px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Vertical hub hero",
+  "tag": "section",
+  "class": "ca-hhero-section",
+  "enabled_on": { "templates": ["article"] },
+  "settings": [
+    { "type": "paragraph", "content": "Title, lead and pills come from the article: the title, the summary (excerpt) and the Vertical hub metafields (custom.hub_eyebrow, custom.hub_pills). The fields below are the fallbacks when an article has none." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (fallback)", "info": "The vertical, for example Tile, paint and home renovation. Shown uppercase." },
+    { "type": "textarea", "id": "lead", "label": "Lead sentence (fallback)", "info": "Used when the article has no summary." },
+    { "type": "textarea", "id": "pills", "label": "Pills (fallback)", "info": "One per line, three to five short facts. Used when the article has no custom.hub_pills metafield." },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Title size",
+      "options": [
+        { "value": "large", "label": "Large" },
+        { "value": "display", "label": "Display (page title size)" }
+      ],
+      "default": "large"
+    },
+    { "type": "header", "content": "Button (optional)" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
+    },
+    { "type": "header", "content": "Site header" },
+    { "type": "checkbox", "id": "allow_transparent_header", "label": "Run under a transparent header", "info": "For a dark hero. Leave off on the light canvas.", "default": false },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Vertical hub hero", "category": "Conspire" }]
+}
+{% endschema %}

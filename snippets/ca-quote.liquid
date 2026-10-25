@@ -1,0 +1,35 @@
+{%- comment -%}
+  ca-quote.liquid — one testimonial slide for ca-testimonials: the quote (rich text;
+  bold renders highlighted, the rest muted), then "+N years partnered" and the logo.
+  Rendered for every entry of the section's quote list, and for an article's own
+  custom.quote metafield on the vertical hub template.
+
+  @param {object} quote - `quote` metaobject (quote, name, partner_since, logo)
+  @param {boolean} [flip] - years and logo above the quote
+{%- endcomment -%}
+{%- liquid
+  assign ca_q_years = ''
+  assign ca_q_since = quote.partner_since.value
+  if ca_q_since != blank and ca_q_since > 0
+    assign ca_q_now = 'now' | date: '%Y' | times: 1
+    assign ca_q_years = ca_q_now | minus: ca_q_since
+  endif
+  assign ca_q_logo = quote.logo.value
+  assign ca_q_logo_alt = quote.name.value | default: quote.client_name.value | default: quote.company.value | default: quote.system.display_name | default: 'Client'
+  if ca_q_logo.image
+    assign ca_q_logo = ca_q_logo.image
+  endif
+-%}
+<article class="ca-quote{% if flip %} ca-quote--flip{% endif %}">
+  <div class="ca-quote__text">{{ quote.quote | metafield_tag }}</div>
+  {%- if ca_q_years != blank or ca_q_logo != blank -%}
+    <div class="ca-quote__meta">
+      {%- if ca_q_years != blank and ca_q_years > 0 -%}
+        <span class="ca-quote__years"><span class="ca-quote__years-num">+{{ ca_q_years }}</span> years partnered</span>
+      {%- endif -%}
+      {%- if ca_q_logo != blank -%}
+        <span class="ca-quote__logo">{% render 'image', image: ca_q_logo, class: 'ca-quote__logo-img', alt_text_fallback: ca_q_logo_alt %}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</article>

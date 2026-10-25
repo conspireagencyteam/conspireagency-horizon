@@ -19,6 +19,20 @@
 
 {%- liquid
   assign clients = section.settings.clients
+  assign client_count = clients.count
+  comment
+    Vertical hub articles name their own clients in the custom.hub_clients metafield
+    (a list of client references). With "Use the article's clients" on, that list
+    replaces the one picked here when it is set, so one template serves every hub.
+    See docs/VERTICAL-HUBS.md.
+  endcomment
+  if section.settings.article_clients and article != blank
+    assign hub_clients = article.metafields.custom.hub_clients.value
+    if hub_clients.size > 0
+      assign clients = hub_clients
+      assign client_count = hub_clients.size
+    endif
+  endif
   assign button_label = section.settings.button_label | default: 'Learn More'
 -%}
 
@@ -32,11 +46,11 @@
     section_id: section.id
   -%}
   <div class="ca-inner">
-    {%- if section.settings.eyebrow != blank -%}
+    {%- if section.settings.eyebrow != blank and client_count > 0 -%}
       <h2 class="ca-eyebrow ca-wgrid__eyebrow">{{ section.settings.eyebrow }}</h2>
     {%- endif -%}
 
-    {%- if clients.count > 0 -%}
+    {%- if client_count > 0 -%}
       <ca-work-grid class="ca-wgrid__grid{% if section.settings.stagger %} ca-wgrid__grid--stagger{% endif %}">
         {%- for client in clients -%}
           {%- liquid
@@ -115,6 +129,8 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+    /* Lets the name size itself to the card (see .ca-wcard__name). */
+    container-type: inline-size;
   }
 
   .ca-wcard__media {
@@ -214,11 +230,16 @@
     margin-block-start: 16px;
   }
 
+  /* A client name never breaks across lines (brief, section 7): it stays on one
+     line and, where a card is narrower than the name wants, shrinks with the card
+     (6.4cqi fits a 30-character name in a 340px card). */
   .ca-wcard__name {
     margin: 0;
     font-size: var(--ca-fs-36);
+    font-size: min(var(--ca-fs-36), 6.4cqi);
     line-height: 1.1;
     letter-spacing: -0.03em;
+    white-space: nowrap;
   }
 
   .ca-wcard__body {
@@ -288,6 +309,7 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Top projects" },
     { "type": "metaobject_list", "id": "clients", "label": "Clients", "metaobject_type": "client", "limit": 24 },
+    { "type": "checkbox", "id": "article_clients", "label": "Use the article's clients", "info": "On article templates: shows the clients in the article's custom.hub_clients metafield when it is set, instead of the list above (vertical hub pages).", "default": false },
     {
       "type": "select",
       "id": "default_image_field",
