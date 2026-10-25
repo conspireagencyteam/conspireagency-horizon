@@ -26,12 +26,33 @@
     replaces the one picked here when it is set, so one template serves every hub.
     See docs/VERTICAL-HUBS.md.
   endcomment
+  assign hub_mode = false
   if section.settings.article_clients and article != blank
+    assign hub_mode = true
     assign hub_clients = article.metafields.custom.hub_clients.value
     if hub_clients.size > 0
       assign clients = hub_clients
       assign client_count = hub_clients.size
     endif
+  endif
+  comment
+    Per-client labels, aligned with the clients list by position (vertical hub pages):
+    custom.hub_client_years overrides the client record's years ("6+" shows it, "0" or
+    "none" hides it: a build, or an engagement that has ended, carries no years label);
+    custom.hub_client_captions adds one line under the name. Each falls back to the
+    section's own one-per-line settings. Blank entries leave the record's value.
+  endcomment
+  assign years_list = blank
+  assign captions_list = blank
+  if hub_mode
+    assign years_list = article.metafields.custom.hub_client_years.value
+    assign captions_list = article.metafields.custom.hub_client_captions.value
+  endif
+  if years_list == blank and section.settings.client_years != blank
+    assign years_list = section.settings.client_years | newline_to_br | split: '<br />'
+  endif
+  if captions_list == blank and section.settings.client_captions != blank
+    assign captions_list = section.settings.client_captions | newline_to_br | split: '<br />'
   endif
   assign button_label = section.settings.button_label | default: 'Learn More'
 -%}
@@ -57,7 +78,41 @@
             assign name = client.name.value | default: client.system.handle
             assign url = client.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', ''
             assign services = client.services.value
+
+            comment
+              Hub pages: a card never links to a 404. A client whose case study is not
+              published (or has no link at all) is left out, so a client can sit in
+              custom.hub_clients before its case study goes live.
+            endcomment
+            assign skip = false
+            if hub_mode
+              if url == blank
+                assign skip = true
+              elsif url contains '/blogs/'
+                assign case_handle = url | split: '/blogs/' | last | split: '?' | first | split: '#' | first
+                assign case_article = articles[case_handle]
+                if case_article == blank or case_article.title == blank
+                  assign skip = true
+                endif
+              endif
+            endif
+
+            assign years = client.years.value
+            assign card_caption = blank
+            assign pos = forloop.index0
+            if years_list.size > pos
+              assign years_override = years_list[pos] | strip | downcase
+              if years_override == '0' or years_override == 'none'
+                assign years = blank
+              elsif years_override != blank
+                assign years = years_override
+              endif
+            endif
+            if captions_list.size > pos
+              assign card_caption = captions_list[pos] | strip
+            endif
           -%}
+          {%- if skip -%}{%- continue -%}{%- endif -%}
           <article class="ca-wcard">
             {%- if url != blank -%}
               <a class="ca-wcard__media" href="{{ url }}" aria-label="{{ name | escape }}: {{ button_label | escape }}" tabindex="-1">
@@ -71,10 +126,13 @@
 
             <div class="ca-wcard__head">
               <h3 class="ca-wcard__name">{{ name }}</h3>
-              {%- render 'ca-years', years: client.years.value -%}
+              {%- render 'ca-years', years: years -%}
             </div>
 
             <div class="ca-wcard__body">
+              {%- if card_caption != blank -%}
+                <p class="ca-wcard__caption">{{ card_caption }}</p>
+              {%- endif -%}
               {%- if services.size > 0 -%}
                 <p class="ca-wcard__label">Services included:</p>
                 <ul class="ca-pills ca-pills--lg">
@@ -257,6 +315,15 @@
     letter-spacing: -0.02em;
   }
 
+  .ca-wcard__caption {
+    margin: 0;
+    font-size: var(--ca-fs-18);
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+    text-wrap: pretty;
+  }
+
   .ca-wcard__more {
     margin-block-start: 4px;
   }
@@ -309,7 +376,9 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Top projects" },
     { "type": "metaobject_list", "id": "clients", "label": "Clients", "metaobject_type": "client", "limit": 24 },
-    { "type": "checkbox", "id": "article_clients", "label": "Use the article's clients", "info": "On article templates: shows the clients in the article's custom.hub_clients metafield when it is set, instead of the list above (vertical hub pages).", "default": false },
+    { "type": "checkbox", "id": "article_clients", "label": "Use the article's clients", "info": "On article templates: shows the clients in the article's custom.hub_clients metafield when it is set, instead of the list above (vertical hub pages). A client whose case study is not published is left out, so no card links to a 404.", "default": false },
+    { "type": "textarea", "id": "client_years", "label": "Years labels (fallback)", "info": "Vertical hub pages. One per line, in the order of the clients: 6+ shows that label, 0 or none hides it, a blank line keeps the client record's years. The article's custom.hub_client_years list wins when set." },
+    { "type": "textarea", "id": "client_captions", "label": "Card captions (fallback)", "info": "Vertical hub pages. One per line, in the order of the clients, shown under the name. The article's custom.hub_client_captions list wins when set." },
     {
       "type": "select",
       "id": "default_image_field",
