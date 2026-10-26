@@ -44,19 +44,19 @@
         "point_1": {
           "type": "point",
           "settings": {
-            "label": "Apply on your store, approved by your team, pricing applied on login"
+            "label": "A designer or builder can apply, be approved and start buying the same week, without a phone call"
           }
         },
         "point_2": {
           "type": "point",
           "settings": {
-            "label": "Trade orders land in the same Shopify admin as retail, so customer service never splits"
+            "label": "Their pricing and terms sit on the account, so the price list never goes out by email again"
           }
         },
         "point_3": {
           "type": "point",
           "settings": {
-            "label": "Shopify's own request form covers the simplest programs; the app adds the application, the documents and the approval"
+            "label": "Trade and retail orders land in one place, run by the same team"
           }
         }
       },
@@ -69,7 +69,7 @@
         "variant": "trade",
         "mock_side": "right",
         "intro_eyebrow": "How tile and paint are bought",
-        "intro_heading": "Tile, paint and home goods are not bought like other products. The customer is planning a room: a sample first, then the right quantity, often through a designer or contractor on trade terms, and an order that ships by pallet.",
+        "intro_heading": "<strong>Tile, paint and home goods are not bought like other products.</strong> Your Shopify store has to sell the way your customers plan a room.",
         "eyebrow": "Trade program",
         "heading": "",
         "text": "",
@@ -89,19 +89,19 @@
         "point_1": {
           "type": "point",
           "settings": {
-            "label": "Square feet in, boxes out, overage included"
+            "label": "Room size in, the right number of boxes or gallons out"
           }
         },
         "point_2": {
           "type": "point",
           "settings": {
-            "label": "Arrival estimate for that quantity, read from the ERP (Zia Tile)"
+            "label": "The customer knows when it will arrive before they commit"
           }
         },
         "point_3": {
           "type": "point",
           "settings": {
-            "label": "Add to Project: rooms and projects, shared with the client, turned into a quote"
+            "label": "Designers keep each job as its own project and turn it into a quote"
           }
         }
       },
@@ -115,7 +115,7 @@
         "mock_side": "left",
         "intro_eyebrow": "",
         "intro_heading": "",
-        "eyebrow": "The product page",
+        "eyebrow": "The calculator",
         "heading": "",
         "text": "",
         "link_label": "B2B Wishlist Project Planner",
@@ -134,25 +134,25 @@
         "point_1": {
           "type": "point",
           "settings": {
-            "label": "A sample from the product page, in one step"
+            "label": "A sample is one step from any product page"
           }
         },
         "point_2": {
           "type": "point",
           "settings": {
-            "label": "Several samples in one order for the customer still comparing"
+            "label": "Several samples in one order for the customer still deciding"
           }
         },
         "point_3": {
           "type": "point",
           "settings": {
-            "label": "Sample kits by project type, as built for Portola Paints"
+            "label": "Sample buyers get a follow-up by email or SMS while the sample is still in the room"
           }
         },
         "point_4": {
           "type": "point",
           "settings": {
-            "label": "A follow-up while the sample is still in the room"
+            "label": "You see how many samples become full orders"
           }
         }
       },
@@ -186,25 +186,25 @@
         "point_1": {
           "type": "point",
           "settings": {
-            "label": "LTL pallet freight rated live for the ship-to address"
+            "label": "The freight the customer sees is the freight you pay"
           }
         },
         "point_2": {
           "type": "point",
           "settings": {
-            "label": "Samples ship parcel, tile ships freight, one order"
+            "label": "Samples by parcel, tile by pallet, one order"
           }
         },
         "point_3": {
           "type": "point",
           "settings": {
-            "label": "Net 30 and other payment terms for approved companies"
+            "label": "Approved trade accounts pay on the terms you set"
           }
         },
         "point_4": {
           "type": "point",
           "settings": {
-            "label": "Quote to draft order to paid invoice, with reminders until it is settled"
+            "label": "Quotes turn into invoices that get paid without chasing"
           }
         }
       },
@@ -219,7 +219,7 @@
         "mock_side": "left",
         "intro_eyebrow": "",
         "intro_heading": "",
-        "eyebrow": "Checkout",
+        "eyebrow": "Freight and terms",
         "heading": "",
         "text": "",
         "link_label": "B2B Draft Order Invoices",
