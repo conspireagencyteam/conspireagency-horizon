@@ -63,7 +63,12 @@
 {%- endif -%}
 {%- if ca_reveal_video != blank -%}
   <div class="ca-wcard__layer ca-wcard__reveal ca-wcard__reveal--video" aria-hidden="true">
-    <div class="ca-wcard__window">
+    {%- comment -%}
+      The window takes the video's own aspect ratio (site recordings are 16:9 or
+      3356x2160), so nothing is trimmed off the sides; the stylesheet's 16 / 10 is
+      only the fallback for a video with no dimensions.
+    {%- endcomment -%}
+    <div class="ca-wcard__window"{% if ca_reveal_video.aspect_ratio %} style="aspect-ratio: {{ ca_reveal_video.aspect_ratio }};"{% endif %}>
       {%- render 'ca-preview-video', video: ca_reveal_video, quality: 'hd', class: 'ca-wcard__video', poster_width: 1000 -%}
     </div>
   </div>
