@@ -74,6 +74,10 @@ class CaWorkGrid extends HTMLElement {
 
   play(video) {
     if (this.reducedMotion.matches) return;
+    // The playing flag keeps caWarmVideos (ca-custom.js) off this video: its
+    // warm-up load() runs after the window load event and would reset a card
+    // that was in view, and already playing, when the page opened.
+    video.dataset.playing = '1';
     // Chrome stalls play() on preload="none" videos that were hidden at
     // parse until load() runs once.
     if (video.readyState === 0 && !video.dataset.loaded) {
@@ -88,7 +92,9 @@ class CaWorkGrid extends HTMLElement {
     const i = this.playing.indexOf(card);
     if (i !== -1) this.playing.splice(i, 1);
     const video = card.querySelector('.ca-wcard__video');
-    if (video) video.pause();
+    if (!video) return;
+    delete video.dataset.playing;
+    video.pause();
   }
 }
 
