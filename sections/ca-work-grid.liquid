@@ -5,11 +5,12 @@
   column dropped down a step. Each card: image, name with years partnered,
   "Services included" pills, and a Learn More button to the case study.
 
-  Hover (pointer devices): the image eases in and the client's site screenshot
-  fades up on top of it as a centred window. The reveal is optional; a client
-  with a single image just gets the gentle zoom. See snippets/ca-client-media.
-  Touch devices show the reveal from the start (still, or a video's poster);
-  ca-work-grid.js plays the video while the card is in view.
+  In view (every device, nothing on hover): while a card is at least half in
+  the viewport the image eases in and the client's site preview fades up on top
+  of it as a centred window; a video preview plays there and pauses when the
+  card leaves (ca-work-grid.js, the same rule as the proposal pages). The
+  reveal is optional; a client with a single image just shows it. See
+  snippets/ca-client-media.
 
   Data: `client` metaobjects (name, years, services, work_preview,
   featured_site_media / featured_site_image, case_study_reference).
@@ -243,31 +244,13 @@
     object-position: center top;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .ca-wcard:hover .ca-wcard__backdrop,
-    .ca-wcard:focus-within .ca-wcard__backdrop {
-      transform: scale(1.06);
-    }
-
-    .ca-wcard:hover .ca-wcard__reveal,
-    .ca-wcard:focus-within .ca-wcard__reveal {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  /* Touch devices have no hover, so the site preview is simply shown on top
-     from the start: a still reveal renders as-is and a video reveal shows its
-     poster (no gesture, no script, no autoplay needed — iOS Low Power Mode
-     never autoplays). ca-work-grid.js then marks a card with a video
-     `is-active` while it is at least half in view and plays it there, which
-     also zooms the backdrop as the hover does on desktop. Same device split
-     as the hover block above, negated, so no device falls between them. */
-  @media not all and (hover: hover) and (pointer: fine) {
-    .ca-wcard__reveal {
-      opacity: 1;
-      transform: none;
-    }
+  /* ca-work-grid.js marks a card `is-active` while it is in view (at least
+     half of it, or half the viewport); the backdrop zooms and the reveal fades
+     up, a video plays. Hover does nothing. Without script (the element never
+     upgrades) every reveal simply shows, as a still or a video's poster. */
+  ca-work-grid:not(:defined) .ca-wcard__reveal {
+    opacity: 1;
+    transform: none;
   }
 
   .ca-wcard.is-active .ca-wcard__backdrop {

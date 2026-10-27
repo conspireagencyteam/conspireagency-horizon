@@ -6,10 +6,11 @@
 
   Media behaviour:
     - Default state shows `work_preview` (configurable).
-    - On hover (desktop) the box reveals `featured_site_media` (fallback
+    - While the row is in view (at least half of it, every device; hover does
+      nothing) the box reveals `featured_site_media` (fallback
       `featured_site_image`): if an image, it smooth-scrolls via object-position;
-      if a video, it autoplays muted/looping. Fade-in + zoom-out reveal.
-    - On mobile there is no hover — the reveal media is shown by default.
+      if a video, it plays muted and looping, pausing when the row leaves.
+      Fade-in + zoom-out reveal. One row at a time (assets/ca-work.js).
 
   Client field keys: name, services (list), work_preview, featured_site_media
   (image|video), featured_site_image (fallback), case_study_reference. See
@@ -156,7 +157,7 @@
     color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text, 0.6));
   }
 
-  /* Mobile: no hover — JS activates the in-view row; background stays visible. */
+  /* Mobile: one column; JS activates the in-view row; background stays visible. */
   @media screen and (max-width: 749px) {
     .ca-work__row {
       grid-template-columns: 1fr;
