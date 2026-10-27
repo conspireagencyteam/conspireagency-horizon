@@ -1156,7 +1156,7 @@ ca-app-scroller.is-scroll [ref="track"] > * {
   object-position: center top;
 }
 
-/* Active row (JS: hovered on desktop / in-view on mobile) — reveal + yoyo scroll. */
+/* Active row (JS: the row in view, every device) — reveal + yoyo scroll. */
 .ca-work__row.is-active .ca-work__reveal {
   opacity: 1;
   transform: scale(1);
