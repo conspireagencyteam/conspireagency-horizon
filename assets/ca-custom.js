@@ -155,7 +155,9 @@
     var next = function (i) {
       var video = list[i];
       if (!video) return;
-      if (video.dataset.warmed || video.dataset.playing) {
+      // Never load() a video that is playing or asked to play: load() resets
+      // it to paused (a card in view at page open would stop a beat later).
+      if (video.dataset.warmed || video.dataset.playing || !video.paused) {
         next(i + 1);
         return;
       }
