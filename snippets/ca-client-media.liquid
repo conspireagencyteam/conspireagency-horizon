@@ -48,9 +48,17 @@
     assign ca_reveal_img = blank
   endif
 -%}
+{%- comment -%}
+  The backdrop loads eagerly: the card is the page's content, and a lazy backdrop
+  requested only as the card scrolled in used to arrive 0.5 to 1 s late (the work
+  cards lower on /blogs/work, slowest on a cold CDN edge and on phones, where the
+  in-view video download competed with it). Widths stop at 1000: the card is about
+  676 CSS px wide, so 1000 covers 1.5x, and the 1400 rendition was 300 KB+ for the
+  heavier previews. The hover reveal stays lazy; it is hidden until pointer-over.
+{%- endcomment -%}
 {%- if ca_default != blank -%}
   <div class="ca-wcard__layer ca-wcard__backdrop">
-    {{ ca_default | image_url: width: 1400 | image_tag: class: 'ca-wcard__img', loading: 'lazy', alt: ca_name, widths: '480, 700, 1000, 1400', sizes: sizes }}
+    {{ ca_default | image_url: width: 1000 | image_tag: class: 'ca-wcard__img', loading: 'eager', decoding: 'async', alt: ca_name, widths: '480, 700, 1000', sizes: sizes }}
   </div>
 {%- endif -%}
 {%- if ca_reveal_video != blank -%}
