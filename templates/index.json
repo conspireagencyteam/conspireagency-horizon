@@ -49,9 +49,10 @@
           "type": "feature",
           "settings": {
             "image": "shopify://shop_images/shopify-website-design-development.gif",
-            "video": "shopify://files/videos/Conspire-showreel.mp4",
-            "poster": "shopify://shop_images/conspire-showreel-poster.jpg",
+            "video": "shopify://files/videos/portfolio-loop-v6.mp4",
+            "poster": "shopify://shop_images/portfolio-loop-poster.jpg",
             "media_background": "#000000",
+            "media_flush": true,
             "image_ratio": "11 / 10",
             "eyebrow": "Builds & Migrations",
             "title": "Shopify Website Design & Development",
