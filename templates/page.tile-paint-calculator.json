@@ -25,7 +25,8 @@
         "padding-block-end": 80,
         "structured_data": true,
         "schema_price": "0",
-        "schema_price_note": "Free. Every feature, unlimited products and calculations."
+        "schema_price_note": "Free. Every feature, unlimited products and calculations.",
+        "tour_image": "shopify://shop_images/ca-app-calculator-tour.png"
       }
     },
     "mock_reveal": {
