@@ -222,7 +222,7 @@
         "eyebrow": "Features",
         "heading": "Everything a tile or paint product page needs",
         "intro": "From the first square foot typed in to the sample that comes back as a full order, Tile & Paint Calculator covers the product page, the collection card, the cart and the admin behind them.",
-        "columns": 4,
+        "columns": "4",
         "background_color": "",
         "text_color": "",
         "padding-block-start": 96,
