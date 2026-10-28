@@ -118,8 +118,8 @@
         "eyebrow": "The calculator",
         "heading": "",
         "text": "",
-        "link_label": "B2B Wishlist Project Planner",
-        "link_url": "/pages/b2b-wishlist-project-planner",
+        "link_label": "Tile & Paint Calculator",
+        "link_url": "/pages/tile-paint-calculator",
         "caption": "",
         "override_key": "hub_mock_calculator",
         "background_color": "#f2f2f2",
@@ -345,9 +345,29 @@
             "rating_link": "",
             "tour_label": ""
           }
+        },
+        "calculator": {
+          "type": "app",
+          "settings": {
+            "name": "Tile & Paint Calculator",
+            "tagline": "Square feet become whole boxes, coats become cans, and every sample is followed to its order.",
+            "description": "<p>Shoppers order the right boxes or cans, samples turn into full orders, and specs stay complete. Tile and paint buy boxes, spec rows, catalog health and sample tracking for your product pages.</p>",
+            "page_link": "/pages/tile-paint-calculator",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/tile-paint-calculator",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/tile-paint/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_link": "https://www.youtube.com/watch?v=zloeh03OTA8",
+            "tour_label": "Watch the tour · 4:00",
+            "tour_image": ""
+          }
         }
       },
       "block_order": [
+        "calculator",
         "wholesale",
         "wishlist",
         "drafts",
@@ -355,7 +375,7 @@
       ],
       "settings": {
         "eyebrow": "Our apps",
-        "heading": "<strong>Four apps,</strong> built from this work.",
+        "heading": "<strong>Five apps,</strong> built from this work.",
         "intro": "<p>Ours, built from this work, and never the only option.</p>",
         "background_color": "#f2f2f2",
         "text_color": "",

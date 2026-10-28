@@ -23,7 +23,10 @@
         "text_color": "#ffffff",
         "allow_transparent_header": true,
         "padding-block-start": 64,
-        "padding-block-end": 80
+        "padding-block-end": 80,
+        "structured_data": true,
+        "schema_price": "0",
+        "schema_price_note": "Free plan available; Project planner plan $29/month after a 14-day free trial"
       }
     },
     "mock": {
@@ -580,16 +583,36 @@
             "tour_link": "https://www.youtube.com/watch?v=6YJXBUOeImo",
             "tour_label": "Watch the tour · 1:31"
           }
+        },
+        "calculator": {
+          "type": "app",
+          "settings": {
+            "name": "Tile & Paint Calculator",
+            "tagline": "Square feet to boxes and cans, samples that convert, spec rows",
+            "description": "<p>Shoppers order the right boxes or cans, samples turn into full orders, and specs stay complete. Tile and paint buy boxes, spec rows, catalog health and sample tracking for your product pages.</p>",
+            "page_link": "/pages/tile-paint-calculator",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/tile-paint-calculator",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/tile-paint/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_link": "https://www.youtube.com/watch?v=zloeh03OTA8",
+            "tour_label": "Watch the tour · 4:00",
+            "tour_image": ""
+          }
         }
       },
       "block_order": [
         "wholesale",
-        "drafts"
+        "drafts",
+        "calculator"
       ],
       "settings": {
-        "eyebrow": "More B2B apps",
+        "eyebrow": "More Conspire apps",
         "heading": "From the same Conspire team",
-        "intro": "<p>Three focused Shopify apps for stores that sell to trade and wholesale buyers. <a href=\"/pages/best-shopify-apps\">See all B2B apps</a>.</p>",
+        "intro": "<p>Four Shopify apps from one team that builds for stores selling to the trade: wholesale onboarding, project wishlists, payable draft order invoices and a tile and paint calculator. <a href=\"/pages/best-shopify-apps\">See all Conspire apps</a>.</p>",
         "background_color": "",
         "text_color": "",
         "padding-block-start": 96,
