@@ -7,7 +7,7 @@
         "eyebrow": "",
         "heading": "<p>Shoppers order the right boxes or cans. Samples turn into full orders.</p>",
         "heading_tag": "h1",
-        "lede": "<p>Tile and paint buy boxes for your Shopify product pages. Square feet become whole boxes with the overage the shopper picks, coats become the containers to buy, and every sample is followed to the order that comes after it.</p>",
+        "lede": "<p>Tile and paint buy boxes for your Shopify product pages: a measurement price calculator and sample ordering in one free app. Square feet become whole boxes with the overage the shopper picks, coats become the containers to buy, and every sample is followed to the order that comes after it.</p>",
         "proof": "Free · Every feature, unlimited products · Built by a Shopify Premier Partner",
         "rating_value": "",
         "rating_count": 0,
@@ -470,6 +470,13 @@
             "question": "Who builds and supports the app?",
             "answer": "<p>Conspire, a Shopify development company and Premier Partner founded in Los Angeles. The senior team that has built and run Shopify stores for tile and paint brands answers your support messages; the documentation is at apps.conspireagency.com.</p>"
           }
+        },
+        "q11": {
+          "type": "item",
+          "settings": {
+            "question": "I use the WooCommerce Measurement Price Calculator. What replaces it on Shopify?",
+            "answer": "<p>Tile & Paint Calculator does the same job on the Shopify product page: the shopper enters the area, the buy box prices and adds whole boxes or containers with the overage they pick. Coverage values move over by CSV or by mapping the metafields a migration already created. Sample ordering, the free-sample allowance and sample tracking are new. If the store itself is moving, the migration is part of the Conspire Build.</p>"
+          }
         }
       },
       "block_order": [
@@ -481,6 +488,7 @@
         "q6",
         "q7",
         "q8",
+        "q11",
         "q9",
         "q10"
       ],
@@ -648,6 +656,112 @@
         "padding-block-start": 80,
         "padding-block-end": 80
       }
+    },
+    "industries": {
+      "type": "ca-value-cards",
+      "settings": {
+        "eyebrow": "Who it is for",
+        "heading": "<strong>Built for tile and paint.</strong> Works for anything sold by coverage.",
+        "button_label": "",
+        "button_link": "",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      },
+      "blocks": {
+        "i1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Tile and stone",
+            "title": "Sold by the box, crate or sheet",
+            "text": "<p>Ceramic, porcelain, zellige, terrazzo and stone. The area to cover becomes whole boxes with the overage for cuts, and the sample sits next to it.</p>"
+          }
+        },
+        "i2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Paint and coatings",
+            "title": "Sold by the gallon, litre or kilo",
+            "text": "<p>Interior and exterior paint, lime wash and clay finishes. Area and coats become the quarts, gallons, pails or kilo tubs to buy.</p>"
+          }
+        },
+        "i3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Wallpaper and murals",
+            "title": "Sold by the roll or panel",
+            "text": "<p>Wall area in, rolls or panels out, from the coverage you set per roll, with the swatch one click away.</p>"
+          }
+        },
+        "i4": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Flooring",
+            "title": "Sold by the carton",
+            "text": "<p>Vinyl plank, laminate, hardwood, cork and carpet tile. Room size in, cartons out, with the square feet they cover and the price per square foot on the button.</p>"
+          }
+        },
+        "i5": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Fabric and upholstery",
+            "title": "Sold by the yard or metre",
+            "text": "<p>Set the coverage a yard gives and the buy box turns the area into yards to order, with the swatch ordered before the bolt.</p>"
+          }
+        },
+        "i6": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Countertops and slabs",
+            "title": "Sold by the square foot",
+            "text": "<p>Quartz, solid surface and slab products priced by the square foot, with the sample chip and the follow-up from sample to order.</p>"
+          }
+        },
+        "i7": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Decking, lumber and panels",
+            "title": "Sold by the board or piece",
+            "text": "<p>Deck boards, planks and wall panels sold by the piece. The area to cover becomes the pieces to buy, with the overage for offcuts.</p>"
+          }
+        },
+        "i8": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Turf, sod and pavers",
+            "title": "Sold by the roll or pallet",
+            "text": "<p>Artificial grass, sod and pavers sold by the roll, pallet or square foot, with overage for the cuts and a sample before the order.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6",
+        "i7",
+        "i8"
+      ]
+    },
+    "woocommerce": {
+      "type": "ca-migration-platform",
+      "settings": {
+        "anchor_id": "woocommerce",
+        "eyebrow": "Coming from WooCommerce",
+        "heading": "The measurement price calculator, <strong>on Shopify</strong>",
+        "text": "<p>On WooCommerce the job is done by the Measurement Price Calculator extension. On Shopify, Tile & Paint Calculator covers the same product pages: area to quantity, pricing by the box or container, the overage the shopper picks, plus the sample ordering and sample tracking the extension never had. Free, from the Shopify App Store. If the store itself is still on WooCommerce, the move is part of the Conspire Build.</p>",
+        "button_label": "How we move stores from WooCommerce",
+        "button_link": "/collections/shopify-migrations",
+        "items_label": "What carries over",
+        "items": "Area to quantity pricing, per product\nThe overage the shopper picks\nSquare feet or square metres, store wide\nCoverage values by CSV, or mapped from the metafields a migration already created\nNew on Shopify: sample ordering, the free-sample allowance and sample to order tracking",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
     }
   },
   "order": [
@@ -657,7 +771,9 @@
     "mock_paint",
     "mock_samples",
     "features",
+    "industries",
     "process",
+    "woocommerce",
     "team",
     "faq",
     "cta",
