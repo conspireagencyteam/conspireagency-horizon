@@ -754,7 +754,7 @@
         "heading": "The measurement price calculator, <strong>on Shopify</strong>",
         "text": "<p>On WooCommerce the job is done by the Measurement Price Calculator extension. On Shopify, Tile & Paint Calculator covers the same product pages: area to quantity, pricing by the box or container, the overage the shopper picks, plus the sample ordering and sample tracking the extension never had. Free, from the Shopify App Store. If the store itself is still on WooCommerce, the move is part of the Conspire Build.</p>",
         "button_label": "How we move stores from WooCommerce",
-        "button_link": "/collections/shopify-migrations",
+        "button_link": "/products/shopify-migration#woocommerce",
         "items_label": "What carries over",
         "items": "Area to quantity pricing, per product\nThe overage the shopper picks\nSquare feet or square metres, store wide\nCoverage values by CSV, or mapped from the metafields a migration already created\nNew on Shopify: sample ordering, the free-sample allowance and sample to order tracking",
         "background_color": "#f2f2f2",
