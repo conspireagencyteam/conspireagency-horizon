@@ -15,6 +15,16 @@ published theme (a push is a production deploy, ~1–2 min). `shopify theme dev`
 pushes only to a development theme, so dev-server edits are safe until pushed.
 `conspire-concept` is the rollback.
 
+### Done 2026-10-29 (Tile & Paint Calculator page, search terms)
+
+- `templates/page.tile-paint-calculator.json`: the hero lede names the page a "measurement price
+  calculator and sample ordering" app (the one query cluster with merchant demand, about 250 a month,
+  owned by the WooCommerce extension of that name); a `ca-value-cards` industries section (eight
+  trades and the unit each sells in, for entity coverage, not volume); a `ca-migration-platform`
+  "Coming from WooCommerce" section; FAQ item on replacing the WooCommerce Measurement Price
+  Calculator. Page `global.title_tag` / `global.description_tag` set store-side the same day.
+  Research: `conspire/notes/tile-paint-keyword-research-2026-10-29.md`.
+
 ### Done 2026-10-28 (Tile & Paint Calculator page)
 
 - `templates/page.tile-paint-calculator.json` (PR #10): the fourth app's landing page in the
