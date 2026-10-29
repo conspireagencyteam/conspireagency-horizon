@@ -180,6 +180,9 @@
       {%- endif -%}
     {%- endif -%}
   </div>
+  {%- if layout == 'app' and s.structured_data and s.store_url != blank -%}
+    {%- render 'ca-app-schema', settings: s -%}
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
@@ -548,6 +551,10 @@
     { "type": "text", "id": "tour_duration", "label": "Duration label", "info": "e.g. 1:32" },
     { "type": "text", "id": "tour_title", "label": "Video title", "info": "Accessible name of the player; falls back to the heading." },
     { "type": "image_picker", "id": "tour_image", "label": "Tour thumbnail", "info": "Falls back to the YouTube poster." },
+    { "type": "header", "content": "Structured data" },
+    { "type": "checkbox", "id": "structured_data", "label": "Emit SoftwareApplication schema", "info": "App layout only: name from the page title, description from the lede, the App Store URL as installUrl, the rating when set.", "default": false },
+    { "type": "text", "id": "schema_price", "label": "Price (USD, from)", "info": "0 for a free plan.", "default": "0" },
+    { "type": "text", "id": "schema_price_note", "label": "Offer description", "info": "e.g. Free plan for up to 10 companies; paid plans from $29/month" },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "Background", "default": "#0d110d" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },

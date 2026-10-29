@@ -1,0 +1,415 @@
+{%- comment -%}
+  ca-app-calculator-mock.liquid: copy column (eyebrow, H2, text, optional bullet list,
+  optional caption) beside a static, decorative UI mock of the Tile & Paint Calculator app.
+  Four mock variants: "tile-reveal" (the Full order button closed and open as the panel
+  header), "tile-layouts" (the inline layout with the sample card, and the sample under
+  Add to cart), "paint" (the lowest-price container recommendation, the policy setting and a
+  product sold by the kilo) and "samples" (the collection card quick-add and the cart
+  allowance banner). The mock is aria-hidden; all meaningful text lives in the copy column.
+  Figures are example data that agree with each other (2.3 sq ft a box, 10 tiles, $96.00 a
+  box, 24 sq ft at 15 percent = 12 boxes; 350 sq ft a gallon a coat, quart $32, gallon $74,
+  5 gallon $340; clay 45 sq ft a kilo, kilo $38, 5 kilo $165).
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = section.settings.variant | default: 'tile-reveal'
+  assign side = section.settings.mock_side | default: 'right'
+-%}
+
+<div
+  class="ca-cmock spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %} ca-cmock--{{ side }} ca-cmock--{{ variant }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner ca-cmock__row">
+    <div class="ca-cmock__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ca-eyebrow ca-cmock__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ca-cmock__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="ca-cmock__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="ca-cmock__list list-unstyled" role="list">
+          {%- for block in section.blocks -%}
+            <li class="ca-cmock__li" {{ block.shopify_attributes }}>{{ block.settings.label }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if section.settings.caption != blank -%}
+        <p class="ca-cmock__caption">{{ section.settings.caption }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="ca-cmock__media" aria-hidden="true">
+      {%- case variant -%}
+
+        {%- when 'tile-layouts' -%}
+          <div class="ca-cmock__stack ca-cmock__stack--two">
+            <div class="ca-mock ca-cmock__card">
+              <span class="ca-cmock__tag">Inline</span>
+              <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/products/pale-calcite-zellige-hex</span></div>
+              <div class="ca-mock__body ca-cmock__body">
+                <div class="ca-cmock__samplecard">
+                  <strong>Order a Sample</strong>
+                  <span>We recommend ordering a sample, as colour and finish can look different in the light of your home.</span>
+                  <span class="ca-buybox__btn ca-buybox__btn--outline">Order sample · $8.00</span>
+                </div>
+                <div class="ca-cmock__heading-sm">Enter tile quantity</div>
+                <div class="ca-buybox__calc ca-cmock__calc ca-cmock__calc--inline">
+                  <div class="ca-buybox__fields">
+                    <div class="ca-buybox__field"><span>Area to cover</span><div class="ca-buybox__input">24 <em>sq ft</em></div></div>
+                    <div class="ca-buybox__field"><span>Overage</span><div class="ca-buybox__input ca-buybox__input--select">15%</div></div>
+                  </div>
+                  <div class="ca-buybox__field"><span>Boxes</span><div class="ca-buybox__input">12 <em>boxes</em></div></div>
+                  <div class="ca-buybox__summary">12 boxes will cover 27.6 sq ft (120 tiles)</div>
+                  <div class="ca-buybox__total"><span>Total</span><strong>$1,152.00</strong></div>
+                  <span class="ca-buybox__btn ca-buybox__btn--solid">Add to cart</span>
+                </div>
+              </div>
+            </div>
+            <div class="ca-mock ca-cmock__card ca-cmock__card--offset">
+              <span class="ca-cmock__tag">Sample below</span>
+              <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/products/mineral-sage-4x4</span></div>
+              <div class="ca-mock__body ca-cmock__body">
+                <div class="ca-cmock__heading-sm">Enter tile quantity</div>
+                <div class="ca-buybox__calc ca-cmock__calc ca-cmock__calc--inline">
+                  <div class="ca-buybox__fields">
+                    <div class="ca-buybox__field"><span>Area to cover</span><div class="ca-buybox__input">40 <em>sq ft</em></div></div>
+                    <div class="ca-buybox__field"><span>Overage</span><div class="ca-buybox__input ca-buybox__input--select">10%</div></div>
+                  </div>
+                  <div class="ca-buybox__summary">20 boxes will cover 46 sq ft (200 tiles)</div>
+                  <div class="ca-buybox__total"><span>Total</span><strong>$1,440.00</strong></div>
+                  <span class="ca-buybox__btn ca-buybox__btn--solid">Add to cart</span>
+                </div>
+                <span class="ca-buybox__btn ca-buybox__btn--outline">Order sample · $8.00</span>
+                <div class="ca-buybox__note">First 5 samples free</div>
+              </div>
+            </div>
+          </div>
+
+        {%- when 'paint' -%}
+          <div class="ca-cmock__stack ca-cmock__stack--paint">
+            <div class="ca-mock ca-cmock__card">
+              <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/products/interior-eggshell-chalk</span></div>
+              <div class="ca-mock__body ca-cmock__body">
+                <div class="ca-mock__pdp">
+                  <div class="ca-mock__swatch ca-mock__swatch--chalk"></div>
+                  <div class="ca-mock__pdp-copy"><div class="ca-mock__kicker">Interior eggshell</div><div class="ca-mock__title ca-mock__title--sm">Chalk</div></div>
+                </div>
+                <div class="ca-buybox__calc ca-cmock__calc ca-cmock__calc--open">
+                  <div class="ca-buybox__fields">
+                    <div class="ca-buybox__field"><span>Area to cover (sq ft)</span><div class="ca-buybox__input">475</div></div>
+                    <div class="ca-buybox__field"><span>Coats</span><div class="ca-buybox__input">2</div></div>
+                  </div>
+                  <div class="ca-buybox__summary">About 2.7 gallons for 2 coats. These containers cover 1,050 sq ft per coat.</div>
+                  <div class="ca-cmock__rec"><span>3 × 1 Gallon</span><span class="ca-cmock__chip">Lowest price that covers</span><strong>$222.00</strong></div>
+                  <div class="ca-cmock__compare">2 gallons and 3 quarts: $244.00 · One 5 gallon: $340.00</div>
+                  <div class="ca-buybox__total"><span>Total</span><strong>$222.00</strong></div>
+                  <span class="ca-buybox__btn ca-buybox__btn--solid">Add paint to cart</span>
+                  <div class="ca-buybox__note">Coverage per gallon, one coat: 350 sq ft</div>
+                </div>
+              </div>
+            </div>
+            <div class="ca-cmock__column">
+              <div class="ca-mock ca-cmock__card ca-cmock__card--admin">
+                <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">Apps · Tile &amp; Paint Calculator · Settings</span></div>
+                <div class="ca-mock__body ca-cmock__body">
+                  <div class="ca-mock__kicker">Which containers to recommend</div>
+                  <div class="ca-cmock__radios">
+                    <div class="ca-cmock__radio ca-cmock__radio--on"><i></i><div><strong>Lowest price</strong><span>The cheapest set that covers the area; ties go to fewer containers.</span></div></div>
+                    <div class="ca-cmock__radio"><i></i><div><strong>Fewest containers</strong><span>Rounds up to larger sizes, never a small container for a remainder.</span></div></div>
+                    <div class="ca-cmock__radio"><i></i><div><strong>Exact fit</strong><span>Largest first, the remainder in the smallest size that covers it.</span></div></div>
+                  </div>
+                  <div class="ca-buybox__note">Container unit per product: gallon, quart, litre, kilo</div>
+                </div>
+              </div>
+              <div class="ca-mock ca-cmock__card">
+                <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/products/roman-clay-terracotta</span></div>
+                <div class="ca-mock__body ca-cmock__body">
+                  <div class="ca-mock__pdp">
+                    <div class="ca-mock__swatch ca-cmock__swatch--terracotta"></div>
+                    <div class="ca-mock__pdp-copy"><div class="ca-mock__kicker">Roman clay</div><div class="ca-mock__title ca-mock__title--sm">Terracotta</div></div>
+                  </div>
+                  <div class="ca-buybox__calc ca-cmock__calc ca-cmock__calc--open">
+                    <div class="ca-buybox__fields">
+                      <div class="ca-buybox__field"><span>Area to cover (sq ft)</span><div class="ca-buybox__input">180</div></div>
+                      <div class="ca-buybox__field"><span>Coats</span><div class="ca-buybox__input">2</div></div>
+                    </div>
+                    <div class="ca-buybox__summary">About 8 kilos for 2 coats.</div>
+                    <div class="ca-cmock__rec ca-cmock__rec--plain"><span>1 × 5 kilo pail</span><strong>$165.00</strong></div>
+                    <div class="ca-cmock__rec ca-cmock__rec--plain"><span>3 × 1 kilo</span><strong>$114.00</strong></div>
+                    <div class="ca-buybox__total"><span>Total</span><strong>$279.00</strong></div>
+                    <div class="ca-buybox__note">Coverage per kilo, one coat: 45 sq ft</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {%- when 'samples' -%}
+          <div class="ca-cmock__stack ca-cmock__stack--samples">
+            <div class="ca-cmock__column ca-cmock__column--top">
+              <div class="ca-mock ca-cmock__card">
+                <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/collections/zellige</span></div>
+                <div class="ca-mock__body ca-cmock__body">
+                  <div class="ca-cmock__grid">
+                    <div class="ca-cmock__product">
+                      <div class="ca-cmock__tile ca-mock__swatch--calcite"></div>
+                      <strong>Pale Calcite Zellige Hex</strong><span>$96.00 / box</span>
+                      <span class="ca-buybox__btn ca-buybox__btn--outline ca-cmock__qa">Add sample</span>
+                    </div>
+                    <div class="ca-cmock__product">
+                      <div class="ca-cmock__tile ca-mock__swatch--sage"></div>
+                      <strong>Mineral Sage 4×4</strong><span>$72.00 / box</span>
+                      <span class="ca-buybox__btn ca-buybox__btn--solid ca-cmock__qa">Added ✓</span>
+                    </div>
+                    <div class="ca-cmock__product">
+                      <div class="ca-cmock__tile ca-cmock__swatch--gloss"></div>
+                      <strong>Calcite Gloss 2×2</strong><span>$88.00 / box</span>
+                      <span class="ca-buybox__btn ca-buybox__btn--outline ca-cmock__qa">Add sample</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ca-mock ca-cmock__card ca-cmock__card--mini">
+                <span class="ca-cmock__tag">Over the image</span>
+                <div class="ca-mock__body ca-cmock__body">
+                  <div class="ca-cmock__product">
+                    <div class="ca-cmock__tile ca-mock__swatch--calcite"><span class="ca-cmock__plus" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5v11M1.5 7h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+                    <strong>Pale Calcite Zellige Hex</strong><span>$96.00 / box · sample $8.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ca-mock ca-cmock__card ca-cmock__card--offset">
+              <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">Your cart</span></div>
+              <div class="ca-mock__body ca-cmock__body">
+                <div class="ca-cmock__banner">2 of 5 free samples used</div>
+                <div class="ca-cmock__cartline"><div class="ca-cmock__tile ca-cmock__tile--sm ca-mock__swatch--calcite"></div><div><strong>Pale Calcite Zellige Hex · Sample</strong><span>Free with your sample allowance</span></div><s>$8.00</s></div>
+                <div class="ca-cmock__cartline"><div class="ca-cmock__tile ca-cmock__tile--sm ca-mock__swatch--sage"></div><div><strong>Mineral Sage 4×4 · Sample</strong><span>Free with your sample allowance</span></div><s>$8.00</s></div>
+                <div class="ca-buybox__total"><span>Sample allowance</span><strong>−$16.00</strong></div>
+                <div class="ca-buybox__total ca-cmock__total--plain"><span>Total</span><strong>$0.00</strong></div>
+                <div class="ca-buybox__note">Shipping calculated at checkout</div>
+                <span class="ca-buybox__btn ca-buybox__btn--solid">Check out</span>
+              </div>
+            </div>
+          </div>
+
+        {%- else -%}
+          <div class="ca-cmock__stack ca-cmock__stack--reveal">
+            <div class="ca-mock ca-cmock__card ca-cmock__card--closed">
+              <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/products/pale-calcite-zellige-hex</span></div>
+              <div class="ca-mock__body ca-cmock__body">
+                <div class="ca-mock__pdp">
+                  <div class="ca-mock__swatch ca-mock__swatch--calcite"></div>
+                  <div class="ca-mock__pdp-copy"><div class="ca-mock__kicker">Zellige · 4×4</div><div class="ca-mock__title">Pale Calcite Zellige Hex</div><div class="ca-mock__sub">$96.00 per box · In stock, ships in 2 business days</div></div>
+                </div>
+                <div class="ca-buybox">
+                  <span class="ca-buybox__btn ca-buybox__btn--outline">Order sample · $8.00</span>
+                  <span class="ca-buybox__btn ca-buybox__btn--solid ca-buybox__btn--summary"><span>Full order · $41.74/sq ft · $96.00/box</span><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+                </div>
+              </div>
+            </div>
+            <div class="ca-mock ca-cmock__card ca-cmock__card--open">
+              <div class="ca-mock__body ca-cmock__body">
+                <div class="ca-cmock__header"><span>Full order · $41.74/sq ft</span><span>$96.00/box</span><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 8l4-4 4 4" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                <div class="ca-buybox__calc ca-cmock__calc">
+                  <div class="ca-buybox__fields">
+                    <div class="ca-buybox__field"><span>Area to cover</span><div class="ca-buybox__input">24 <em>sq ft</em></div></div>
+                    <div class="ca-buybox__field"><span>Overage</span><div class="ca-buybox__input ca-buybox__input--select">15%</div></div>
+                  </div>
+                  <div class="ca-buybox__field"><span>Boxes</span><div class="ca-buybox__input">12 <em>boxes</em></div></div>
+                  <div class="ca-buybox__summary">12 boxes will cover 27.6 sq ft (120 tiles)</div>
+                  <div class="ca-buybox__total"><span>Total</span><strong>$1,152.00</strong></div>
+                  <span class="ca-buybox__btn ca-buybox__btn--solid">Add to cart</span>
+                  <span class="ca-cmock__link">Order sample · $8.00</span>
+                  <div class="ca-buybox__note">Sold by the box · 2.3 sq ft per box (10 tiles)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      {%- endcase -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-cmock { background-color: var(--color-background); }
+  .ca-cmock__row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: center; }
+  .ca-cmock__copy { grid-column: 1 / span 5; }
+  .ca-cmock__media { grid-column: 7 / span 6; min-width: 0; }
+  .ca-cmock--left .ca-cmock__copy { grid-column: 8 / span 5; order: 2; }
+  .ca-cmock--left .ca-cmock__media { grid-column: 1 / span 6; order: 1; }
+  .ca-cmock__eyebrow { margin-block-end: 24px; }
+  .ca-cmock__heading { margin: 0 0 24px; font-size: var(--ca-fs-48); line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance; }
+  .ca-cmock__text { color: var(--ca-soft); font-size: var(--ca-fs-18); line-height: 1.5; }
+  .ca-cmock__text > :first-child { margin-block-start: 0; }
+  .ca-cmock__text > :last-child { margin-block-end: 0; }
+  .ca-cmock__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; margin: 28px 0 0; padding: 0; }
+  .ca-cmock__li { position: relative; padding-inline-start: 22px; font-size: var(--ca-fs-18); letter-spacing: -0.02em; }
+  .ca-cmock__li::before { content: ""; position: absolute; inset-inline-start: 0; top: 0.55em; width: 10px; height: 10px; border-radius: 999px; background: currentColor; }
+  .ca-cmock__caption { margin: 28px 0 0; font-size: 0.9375rem; color: var(--ca-muted); }
+
+  /* The mock cards: chrome scoped here so the section renders the same wherever it sits. */
+  .ca-cmock .ca-mock {
+    --mock-bg: #ffffff; --mock-ink: #0d110d; --mock-soft: rgb(13 17 13 / 0.62); --mock-line: rgb(13 17 13 / 0.12); --mock-tint: #f2f2f2;
+    position: relative; border: 1px solid var(--mock-line); border-radius: 14px; background: var(--mock-bg); color: var(--mock-ink);
+    font-size: 14px; line-height: 1.35; letter-spacing: -0.01em; box-shadow: 0 30px 60px -30px rgb(13 17 13 / 0.35); overflow: hidden; min-width: 0;
+  }
+  .ca-cmock .ca-mock__bar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; background: var(--mock-tint); border-bottom: 1px solid var(--mock-line); }
+  .ca-cmock .ca-mock__dot { width: 9px; height: 9px; border-radius: 999px; background: var(--mock-line); }
+  .ca-cmock .ca-mock__url { margin-inline-start: 10px; font-size: 12px; color: var(--mock-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ca-cmock .ca-mock__body { padding: 20px 22px 22px; display: grid; gap: 14px; }
+  .ca-cmock .ca-mock__pdp { display: flex; gap: 14px; align-items: center; min-width: 0; }
+  .ca-cmock .ca-mock__swatch { flex: none; width: 56px; height: 56px; border-radius: 8px; background: #d9d4c7; }
+  .ca-cmock .ca-mock__swatch--calcite { background: linear-gradient(135deg, #e9e3d6, #cfc6b3); }
+  .ca-cmock .ca-mock__swatch--sage { background: linear-gradient(135deg, #b9c4b0, #8a9a84); }
+  .ca-cmock .ca-mock__swatch--chalk { background: linear-gradient(135deg, #f4f1ea, #e3ded2); }
+  .ca-cmock__swatch--terracotta { background: linear-gradient(135deg, #c98d6b, #a66a4a); }
+  .ca-cmock__swatch--gloss { background: linear-gradient(135deg, #efe9dd, #d6cdbc); }
+  .ca-cmock .ca-mock__pdp-copy { min-width: 0; }
+  .ca-cmock .ca-mock__kicker { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mock-soft); }
+  .ca-cmock .ca-mock__title { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin-top: 2px; }
+  .ca-cmock .ca-mock__title--sm { font-size: 16px; }
+  .ca-cmock .ca-mock__sub { font-size: 12px; color: var(--mock-soft); margin-top: 3px; }
+
+  .ca-cmock .ca-buybox { display: grid; gap: 8px; }
+  .ca-cmock .ca-buybox__btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 18px; font-size: 13px; font-weight: 500; text-align: center; white-space: nowrap; }
+  .ca-cmock .ca-buybox__btn--outline { border: 1px solid var(--mock-ink); color: var(--mock-ink); background: transparent; }
+  .ca-cmock .ca-buybox__btn--solid { background: var(--mock-ink); color: #fff; }
+  .ca-cmock .ca-buybox__btn--summary { justify-content: space-between; }
+  .ca-cmock .ca-buybox__calc { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--mock-line); border-top: 0; }
+  .ca-cmock__calc--inline, .ca-cmock__calc--open { border-top: 1px solid var(--mock-line); background: #f6f4ef; }
+  .ca-cmock__calc--open { border-top: 0; background: #fff; }
+  .ca-cmock .ca-buybox__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ca-cmock .ca-buybox__field { display: grid; gap: 5px; min-width: 0; }
+  .ca-cmock .ca-buybox__field > span { font-size: 11px; color: var(--mock-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ca-cmock .ca-buybox__input { height: 38px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; border: 1px solid var(--mock-line); background: #fff; font-size: 13px; }
+  .ca-cmock .ca-buybox__input em { font-style: normal; color: var(--mock-soft); font-size: 12px; }
+  .ca-cmock .ca-buybox__input--select::after { content: "▾"; margin-inline-start: auto; color: var(--mock-soft); font-size: 11px; }
+  .ca-cmock .ca-buybox__summary { font-size: 12px; color: var(--mock-soft); }
+  .ca-cmock .ca-buybox__total { display: flex; justify-content: space-between; align-items: baseline; padding-block-start: 10px; border-top: 1px solid var(--mock-line); font-size: 13px; }
+  .ca-cmock .ca-buybox__total strong { font-size: 16px; font-weight: 600; }
+  .ca-cmock__total--plain { border-top: 0; padding-block-start: 0; }
+  .ca-cmock .ca-buybox__note { font-size: 11px; color: var(--mock-soft); }
+
+  .ca-cmock__heading-sm { font-size: 15px; font-weight: 500; }
+  .ca-cmock__samplecard { display: grid; gap: 6px; padding: 14px; background: #f6f4ef; font-size: 12px; color: var(--mock-soft); }
+  .ca-cmock__samplecard strong { font-size: 14px; color: var(--mock-ink); }
+  .ca-cmock__samplecard .ca-buybox__btn { margin-top: 6px; background: #fff; }
+  .ca-cmock__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 42px; padding: 0 14px; border: 1px solid var(--mock-line); border-bottom: 0; background: #f6f4ef; font-size: 13px; font-weight: 500; }
+  .ca-cmock__header span:last-of-type { margin-inline-start: auto; }
+  .ca-cmock__link { font-size: 13px; text-decoration: underline; text-underline-offset: 3px; justify-self: start; }
+  .ca-cmock__rec { display: flex; align-items: center; gap: 10px; font-size: 13px; flex-wrap: wrap; }
+  .ca-cmock__rec > span:first-child { white-space: nowrap; }
+  .ca-cmock__rec strong { margin-inline-start: auto; font-weight: 600; }
+  .ca-cmock__rec--plain { justify-content: space-between; }
+  .ca-cmock__chip { padding: 3px 8px; border-radius: 999px; background: #e6f4ea; color: #0f5132; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .ca-cmock__compare { font-size: 11px; color: var(--mock-soft); }
+  .ca-cmock__radios { display: grid; gap: 10px; }
+  .ca-cmock__radio { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; color: var(--mock-soft); }
+  .ca-cmock__radio i { flex: none; width: 16px; height: 16px; margin-top: 1px; border-radius: 999px; border: 1px solid var(--mock-line); background: #fff; }
+  .ca-cmock__radio--on i { border: 5px solid var(--mock-ink); }
+  .ca-cmock__radio strong { display: block; color: var(--mock-ink); font-weight: 600; margin-bottom: 2px; }
+
+  .ca-cmock__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .ca-cmock__product { display: grid; gap: 5px; font-size: 12px; color: var(--mock-soft); min-width: 0; }
+  .ca-cmock__product strong { color: var(--mock-ink); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ca-cmock__tile { position: relative; aspect-ratio: 1; border-radius: 8px; background: #d9d4c7; margin-bottom: 4px; }
+  .ca-cmock__tile--sm { width: 40px; height: 40px; aspect-ratio: auto; margin: 0; flex: none; }
+  .ca-cmock .ca-cmock__qa { height: auto; min-height: 30px; font-size: 11px; padding: 4px 8px; white-space: normal; line-height: 1.2; }
+  .ca-cmock__plus { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: #fff; color: var(--mock-ink); border: 1px solid var(--mock-ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); }
+  .ca-cmock__card--mini { width: 46%; }
+  .ca-cmock__card--mini .ca-cmock__product { font-size: 12px; }
+  .ca-cmock__banner { padding: 10px 14px; border: 1px solid var(--mock-line); background: #f6f4ef; font-size: 13px; font-weight: 500; }
+  .ca-cmock__cartline { display: flex; align-items: center; gap: 12px; font-size: 12px; min-width: 0; }
+  .ca-cmock__cartline div { display: grid; gap: 2px; flex: 1; min-width: 0; }
+  .ca-cmock__cartline strong { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ca-cmock__cartline span { color: var(--mock-soft); }
+  .ca-cmock__cartline s { color: var(--mock-soft); }
+
+  .ca-cmock__tag { position: absolute; top: 10px; right: 12px; z-index: 2; padding: 3px 8px; border-radius: 999px; background: var(--mock-ink); color: #fff; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* Stacks */
+  .ca-cmock__stack { position: relative; min-width: 0; }
+  .ca-cmock__stack--reveal { padding-block-end: 150px; padding-inline-end: 8%; }
+  .ca-cmock__stack--reveal .ca-cmock__card--open { position: absolute; right: 0; bottom: 0; width: 62%; z-index: 2; }
+  .ca-cmock__stack--two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+  .ca-cmock__card--offset { margin-block-start: 40px; }
+  .ca-cmock__stack--paint { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .ca-cmock__stack--samples { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .ca-cmock__column { display: grid; gap: 20px; margin-block-start: 32px; }
+  .ca-cmock__column--top { margin-block-start: 0; }
+
+  @media screen and (max-width: 989px) {
+    .ca-cmock__row { gap: 40px 24px; }
+    .ca-cmock__copy, .ca-cmock__media, .ca-cmock--left .ca-cmock__copy, .ca-cmock--left .ca-cmock__media { grid-column: 1 / -1; order: initial; }
+    .ca-cmock__heading { font-size: var(--ca-fs-36); }
+    .ca-cmock__list { grid-template-columns: minmax(0, 1fr); }
+    .ca-cmock .ca-mock { font-size: 13px; }
+    .ca-cmock .ca-mock__body { padding: 16px 14px 18px; }
+    .ca-cmock__stack--reveal { padding: 0; }
+    .ca-cmock__stack--reveal .ca-cmock__card--open { position: static; width: auto; margin-block-start: 16px; }
+    .ca-cmock__stack--two, .ca-cmock__stack--paint, .ca-cmock__stack--samples { grid-template-columns: minmax(0, 1fr); }
+    .ca-cmock__card--offset, .ca-cmock__column { margin-block-start: 0; }
+    .ca-cmock__card--mini { width: auto; }
+    .ca-cmock__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CA App calculator mock",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Mock",
+      "options": [
+        { "value": "tile-reveal", "label": "Tile buy box: Full order button, closed and open" },
+        { "value": "tile-layouts", "label": "Tile buy box: inline and sample below arrangements" },
+        { "value": "paint", "label": "Paint buy box: recommendation, policy and kilos" },
+        { "value": "samples", "label": "Collection card quick-add and the cart allowance" }
+      ],
+      "default": "tile-reveal"
+    },
+    {
+      "type": "select",
+      "id": "mock_side",
+      "label": "Mock position",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "caption", "label": "Caption" },
+    { "type": "color", "id": "background_color", "label": "Background" },
+    { "type": "color", "id": "text_color", "label": "Text colour" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Bullet",
+      "settings": [{ "type": "text", "id": "label", "label": "Label" }]
+    }
+  ],
+  "presets": [{ "name": "CA App calculator mock", "category": "Conspire" }]
+}
+{% endschema %}

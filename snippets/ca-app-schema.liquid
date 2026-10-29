@@ -1,0 +1,44 @@
+{%- comment -%}
+  ca-app-schema.liquid: SoftwareApplication JSON-LD for an app landing page, rendered by
+  ca-app-hero (app layout) when its "structured_data" setting is on. Name = the page title,
+  description = the lede, installUrl = the App Store URL, aggregateRating only when the hero
+  carries a rating, offers from schema_price / schema_price_note, author = the Organization
+  node ca-schema.liquid emits on every page. Absolute URLs on the canonical host, never
+  request.origin (preview hosts). Params: settings (the section settings).
+{%- endcomment -%}
+{%- liquid
+  assign site = 'https://www.conspireagency.com'
+  assign org_id = site | append: '/#organization'
+  assign app_name = page.title | default: shop.name
+  assign description = settings.lede | strip_html | strip
+  assign page_url = site | append: page.url
+  assign price = settings.schema_price | default: '0'
+  assign rating_value = settings.rating_value | strip
+  assign rating_count = settings.rating_count | default: 0
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": {{ page_url | append: '#app' | json }},
+  "name": {{ app_name | json }},
+  "url": {{ page_url | json }},
+  "description": {{ description | json }},
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "installUrl": {{ settings.store_url | json }},
+  "author": { "@id": {{ org_id | json }} },
+  "offers": {
+    "@type": "Offer",
+    "price": {{ price | json }},
+    "priceCurrency": "USD"{% if settings.schema_price_note != blank %},
+    "description": {{ settings.schema_price_note | json }}{% endif %}
+  }{% if rating_value != blank and rating_count > 0 %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ rating_value | json }},
+    "reviewCount": {{ rating_count | json }},
+    "bestRating": "5"
+  }{% endif %}
+}
+</script>

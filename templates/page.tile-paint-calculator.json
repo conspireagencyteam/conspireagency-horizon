@@ -1,0 +1,667 @@
+{
+  "sections": {
+    "hero": {
+      "type": "ca-app-hero",
+      "settings": {
+        "layout": "app",
+        "eyebrow": "",
+        "heading": "<p>Shoppers order the right boxes or cans. Samples turn into full orders.</p>",
+        "heading_tag": "h1",
+        "lede": "<p>Tile and paint buy boxes for your Shopify product pages. Square feet become whole boxes with the overage the shopper picks, coats become the containers to buy, and every sample is followed to the order that comes after it.</p>",
+        "proof": "Free · Every feature, unlimited products · Built by a Shopify Premier Partner",
+        "rating_value": "",
+        "rating_count": 0,
+        "store_label": "Install on Shopify",
+        "store_url": "https://apps.shopify.com/tile-paint-calculator",
+        "docs_label": "Documentation",
+        "docs_url": "https://apps.conspireagency.com/tile-paint/docs",
+        "youtube_id": "zloeh03OTA8",
+        "tour_duration": "4:00",
+        "tour_title": "Tile & Paint Calculator app tour",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "allow_transparent_header": true,
+        "padding-block-start": 64,
+        "padding-block-end": 80,
+        "structured_data": true,
+        "schema_price": "0",
+        "schema_price_note": "Free. Every feature, unlimited products and calculations.",
+        "tour_image": "shopify://shop_images/ca-app-calculator-tour.png"
+      }
+    },
+    "mock_reveal": {
+      "type": "ca-app-calculator-mock",
+      "settings": {
+        "variant": "tile-reveal",
+        "mock_side": "right",
+        "eyebrow": "How it looks",
+        "heading": "Square feet in. Whole boxes out.",
+        "text": "<p>The shopper types the area to cover and picks the overage. The buy box rounds up to whole boxes, says what they cover and what it costs, and adds the boxes to the cart. The full order opens behind one solid button that carries the price per square foot and per box and becomes the panel header when it opens.</p>",
+        "caption": "Shown with example data. Fonts come from your theme; colours and labels are block settings.",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      },
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "label": "Area and overage to whole boxes, never fewer than one"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "label": "Price per square foot and per box on the button"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "label": "Type a number of boxes instead and see the area it covers"
+          }
+        },
+        "b4": {
+          "type": "point",
+          "settings": {
+            "label": "Order sample next to it, with the price"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ]
+    },
+    "mock_layouts": {
+      "type": "ca-app-calculator-mock",
+      "settings": {
+        "variant": "tile-layouts",
+        "mock_side": "left",
+        "eyebrow": "Your arrangement",
+        "heading": "The sample where your customers look for it.",
+        "text": "<p>Pick the layout per product template in the theme editor. Inline keeps the calculator open under its own heading with a sample card above it. Dropdown keeps the page short until the shopper asks for the full order. The sample button sits above the calculator, under Add to cart, or inside the opened panel.</p>",
+        "caption": "The headings, the sample card text and every label are editable.",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      },
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "label": "Inline: always open, sample card above"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "label": "Dropdown: a Full order button opens it"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "label": "Sample above, below Add to cart, or inside the panel"
+          }
+        },
+        "b4": {
+          "type": "point",
+          "settings": {
+            "label": "Crates, sheets, pallets and planks instead of boxes and tiles, per product"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ]
+    },
+    "mock_paint": {
+      "type": "ca-app-calculator-mock",
+      "settings": {
+        "variant": "paint",
+        "mock_side": "right",
+        "eyebrow": "Paint",
+        "heading": "Coats become the containers to buy.",
+        "text": "<p>Area and coats go in; the buy box reads coverage per gallon and the container sizes on the product’s variants and recommends what to buy. You choose the rule: the lowest price that covers the job, the fewest containers, or an exact fit. Containers can be gallons, quarts, litres or kilos, per product, so clay and lime finishes sold by the kilo work the same way.</p>",
+        "caption": "Shown with example data at two coats.",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      },
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "label": "Lowest price that covers, fewest containers, or exact fit"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "label": "Gallon, quart, litre or kilo, per product"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "label": "Only the chosen colour’s sizes on a colour and size product"
+          }
+        },
+        "b4": {
+          "type": "point",
+          "settings": {
+            "label": "Every recommended container added to the cart in one step"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ]
+    },
+    "mock_samples": {
+      "type": "ca-app-calculator-mock",
+      "settings": {
+        "variant": "samples",
+        "mock_side": "left",
+        "eyebrow": "Samples",
+        "heading": "Almost every order starts with a sample. Make that one click.",
+        "text": "<p>An Add sample button on collection and product cards, the free-sample allowance counted down in the cart, and a Samples page that shows who sampled and came back for the full size. Trade customers can carry their own allowance. Klaviyo gets the events and the customer gets the tags; the app sends no email of its own.</p>",
+        "caption": "Works with separate sample products or a Sample variant.",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      },
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "label": "Add sample on collection cards, inline or over the image"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "label": "First N samples free, or an amount off, as a Shopify discount"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "label": "The cart banner counts the allowance down as samples go in"
+          }
+        },
+        "b4": {
+          "type": "point",
+          "settings": {
+            "label": "Sample to full order conversion on the Samples page"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ]
+    },
+    "features": {
+      "type": "ca-app-features",
+      "settings": {
+        "eyebrow": "Features",
+        "heading": "Everything a tile or paint product page needs",
+        "intro": "From the first square foot typed in to the sample that comes back as a full order, Tile & Paint Calculator covers the product page, the collection card, the cart and the admin behind them.",
+        "columns": "4",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      },
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-quantities.svg",
+            "title": "Tile buy box",
+            "text": "The area to cover becomes whole boxes with the overage the shopper picks, with the area covered, the piece count and the total."
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-layers.svg",
+            "title": "Paint buy box",
+            "text": "Square feet and coats become quarts, gallons and pails, added to the cart in one step."
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-sku.svg",
+            "title": "Container policy and units",
+            "text": "Lowest price that covers, fewest containers or exact fit, with gallons, quarts, litres or kilos set per product."
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-cart.svg",
+            "title": "Order a Sample",
+            "text": "A sample button or card on tile and paint product pages, one click to the cart, from a sample product or a Sample variant."
+          }
+        },
+        "f5": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-store.svg",
+            "title": "Sample quick-add on cards",
+            "text": "Add sample on collection and product cards, inline or over the image, with the price and the allowance line."
+          }
+        },
+        "f6": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-badge-percent.svg",
+            "title": "Sample allowance",
+            "text": "First N samples free or an amount off, run as a Shopify discount, with its own number for trade customers and a cart banner that counts it down."
+          }
+        },
+        "f7": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-list-checks.svg",
+            "title": "Spec rows",
+            "text": "Tiles per square foot, tiles per box and dimensions on the tile page; coverage, sizes and recommended coats on the paint page."
+          }
+        },
+        "f8": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-clipboard-check.svg",
+            "title": "Catalog health",
+            "text": "Rules per collection list every product missing a coverage value, a dimension or a working sample, with a fix field in the row."
+          }
+        },
+        "f9": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-dashboard.svg",
+            "title": "Sample tracking",
+            "text": "Who ordered a sample and came back for the full size, as journeys and a conversion share on the Samples page."
+          }
+        },
+        "f10": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-mail.svg",
+            "title": "Klaviyo events and customer tags",
+            "text": "Sample Order Placed, Journey Started, Converted and Lapsed as Klaviyo metrics, plus sample-ordered and sample-converted tags on the customer."
+          }
+        },
+        "f11": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-file-spreadsheet.svg",
+            "title": "Values in bulk",
+            "text": "Set coverage, pieces, dimensions and the words a tile is sold by across the catalog, import and export CSV, or map the metafields you already have."
+          }
+        },
+        "f12": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-theme.svg",
+            "title": "Theme editor blocks",
+            "text": "App blocks in your theme’s fonts, with colours and every label as settings. Nothing is written to your theme files."
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6",
+        "f7",
+        "f8",
+        "f9",
+        "f10",
+        "f11",
+        "f12"
+      ]
+    },
+    "process": {
+      "type": "ca-process",
+      "settings": {
+        "eyebrow": "How it works",
+        "heading": "<p>On the product page this afternoon</p>",
+        "heading_tag": "h2",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "label": "01 · Install and set the values",
+            "text": "Install from the Shopify App Store. The app creates its metafields and you set coverage per box, pieces per box and dimensions on tile, or coverage per gallon and container sizes on paint, in bulk or by CSV."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "label": "02 · Add the blocks in the theme editor",
+            "text": "Place the Tile buy box or Paint buy box on the product template, add the spec row and the sample quick-add on cards if you want them, and pick the layout. They take your theme’s fonts."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "label": "03 · Shoppers buy the right quantity",
+            "text": "Area in, boxes or containers out, samples one click away. Catalog health keeps the values complete and the Samples page shows which samples became orders."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
+    },
+    "team": {
+      "type": "ca-split-feature",
+      "settings": {
+        "eyebrow": "Built by Conspire",
+        "heading": "<strong>Built from years inside</strong> tile and paint stores on Shopify",
+        "text": "<p>Tile & Paint Calculator is built and supported by Conspire, a Shopify Premier Partner founded in Los Angeles. The buy boxes, the sample flows and the catalog checks come from the work we have done on the Shopify stores of tile and paint brands such as Zia Tile, Portola Paints and BSD Haus, where the same problems came up order after order.</p><p>Need the rest of the store to sell the way tile and paint are bought? We build and run those stores too.</p>",
+        "button_label": "Shopify stores for tile and paint brands",
+        "button_link": "/blogs/work/shopify-websites-for-tile-paint-brands",
+        "image_small": "shopify://shop_images/ca-app-wishlist-demo-zellige.jpg",
+        "image_large": "shopify://shop_images/ca-app-wishlist-demo-mineral-sage.jpg",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "faq": {
+      "type": "ca-faq-list",
+      "blocks": {
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "What does Tile & Paint Calculator cost?",
+            "answer": "<p>Nothing. One plan, free, with every feature, unlimited products and unlimited calculations. The current pricing is always on the <a href=\"https://apps.shopify.com/tile-paint-calculator\" target=\"_blank\" rel=\"noopener\">Shopify App Store listing</a>.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "How does the tile buy box work out the boxes?",
+            "answer": "<p>It multiplies the area by one plus the overage, divides by the coverage per box and rounds up to whole boxes, never fewer than one. The result line says how much those boxes cover and how many pieces that is, and the total comes from the box price. A shopper can also type a number of boxes and see the area the other way round.</p>"
+          }
+        },
+        "q3": {
+          "type": "item",
+          "settings": {
+            "question": "Can I change the overage options?",
+            "answer": "<p>Yes. The overage choices and the default are settings in the app and in the theme editor; 10, 15 and 20 percent come out of the box. The area unit is store wide, square feet or square metres, and dimensions convert to inches or centimetres to match.</p>"
+          }
+        },
+        "q4": {
+          "type": "item",
+          "settings": {
+            "question": "How does the paint buy box choose containers?",
+            "answer": "<p>Area times coats divided by coverage per gallon gives the paint needed. The container policy decides how that becomes products in the cart: the lowest price that covers the job, the fewest containers, or an exact fit. Container sizes live on the variants with their unit, gallon, quart, litre or kilo, so a 5 kilo pail of clay finish is handled like a 5 gallon pail of eggshell.</p>"
+          }
+        },
+        "q5": {
+          "type": "item",
+          "settings": {
+            "question": "Where does the sample button go?",
+            "answer": "<p>Wherever your customers look for it. On the product page it can sit above the calculator as a card, under Add to cart, or inside the opened panel. On collection and product cards the Sample quick-add block adds it inline or over the image. The sample comes from a linked sample product or a Sample variant, and the price shows next to it.</p>"
+          }
+        },
+        "q6": {
+          "type": "item",
+          "settings": {
+            "question": "How does sample tracking work?",
+            "answer": "<p>Turn it on and the app watches orders. A sample order starts a journey; a later full-size order of the same product by the same email converts it, and a journey that goes quiet lapses. The Samples page shows the journeys and the share that converted. Klaviyo receives the events and the customer carries the tags sample-ordered, sample-lapsed and sample-converted, so your own flows do the follow-up. The app sends no email or SMS itself.</p>"
+          }
+        },
+        "q7": {
+          "type": "item",
+          "settings": {
+            "question": "What is Catalog health?",
+            "answer": "<p>Rules you set per collection, tag or product type that say which values a product must carry: coverage, pieces, dimensions, a working sample. The audit runs nightly and whenever you save, and lists every product that falls short with a fix field in the row, so the buy box never meets a product it cannot calculate.</p>"
+          }
+        },
+        "q8": {
+          "type": "item",
+          "settings": {
+            "question": "Does it change my theme files?",
+            "answer": "<p>No. The buy boxes, spec rows, quick-add and cart banner are theme app extension blocks you place in the theme editor. They take your theme’s fonts; colours, radius and every label are block settings. Removing the app removes the blocks.</p>"
+          }
+        },
+        "q9": {
+          "type": "item",
+          "settings": {
+            "question": "Does it work with the other Conspire apps?",
+            "answer": "<p>Yes, side by side. B2B Wishlist Project Planner adds Add to Project next to the buy box so a designer keeps each job as a project by room. B2B Onboarding & Wholesale runs the trade application and tier, and the sample allowance can give trade customers their own number of free samples. Each app also works on its own.</p>"
+          }
+        },
+        "q10": {
+          "type": "item",
+          "settings": {
+            "question": "Who builds and supports the app?",
+            "answer": "<p>Conspire, a Shopify development company and Premier Partner founded in Los Angeles. The senior team that has built and run Shopify stores for tile and paint brands answers your support messages; the documentation is at apps.conspireagency.com.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8",
+        "q9",
+        "q10"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "button_label": "Browse the documentation",
+        "button_link": "https://apps.conspireagency.com/tile-paint/docs",
+        "style_class": "button-secondary",
+        "statement": "",
+        "column_start": "5",
+        "answer_size": "large",
+        "open_first": true,
+        "structured_data": true,
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "anchor_id": "faq"
+      }
+    },
+    "cta": {
+      "type": "ca-app-hero",
+      "settings": {
+        "layout": "cta",
+        "eyebrow": "Get started",
+        "heading": "<p>Put the right quantity on every product page</p>",
+        "heading_tag": "h2",
+        "lede": "<p>Install Tile & Paint Calculator, set your coverage values and add the blocks in the theme editor. Your shoppers order whole boxes and the right cans from today.</p>",
+        "proof": "Free · Every feature · Unlimited products",
+        "rating_value": "",
+        "rating_count": 0,
+        "store_label": "Install on Shopify",
+        "store_url": "https://apps.shopify.com/tile-paint-calculator",
+        "docs_label": "Documentation",
+        "docs_url": "https://apps.conspireagency.com/tile-paint/docs",
+        "youtube_id": "",
+        "tour_duration": "",
+        "tour_title": "",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "allow_transparent_header": false,
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "more": {
+      "type": "ca-apps-cards",
+      "blocks": {
+        "wholesale": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Onboarding & Wholesale",
+            "tagline": "Wholesale onboarding forms, document management & B2B pricing",
+            "description": "<p>Wholesale registration forms with approval, buyer document management, and B2B pricing on any Shopify plan. Unlimited price groups, net terms, and quick order.</p>",
+            "page_link": "/pages/b2b-onboarding-wholesale",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+            "store_label": "App Store",
+            "docs_link": "https://apps.conspireagency.com/wholesale/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wholesale-b2b-trade-program#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=PEF3yQ564Uo",
+            "tour_label": "Watch the tour · 1:32"
+          }
+        },
+        "wishlist": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Wishlist Project Planner",
+            "tagline": "B2B wishlists with quote requests, PDF exports & draft orders",
+            "description": "<p>Shopify wishlist app for B2B & project planning: multiple wishlists, subgroups, quantities, sharing, PDF quotes, draft orders & add to cart.</p>",
+            "page_link": "/pages/b2b-wishlist-project-planner",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wishlist-project-planner",
+            "store_label": "App Store",
+            "docs_link": "https://apps.conspireagency.com/wishlist/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/wishlist-project-planner#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=EjvqM4SR11Q",
+            "tour_label": "Watch the tour · 1:28"
+          }
+        },
+        "drafts": {
+          "type": "app",
+          "settings": {
+            "name": "B2B Draft Order Invoices",
+            "tagline": "Draft order invoices & quote requests customers can pay",
+            "description": "<p>Customers view & pay draft order invoices from their account page, with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
+            "page_link": "/pages/draft-order-invoices",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/draft-order-invoices",
+            "store_label": "App Store",
+            "docs_link": "https://apps.conspireagency.com/drafts/docs",
+            "docs_label": "Documentation",
+            "rating_label": "5.0 on the Shopify App Store",
+            "rating_link": "https://apps.shopify.com/draft-order-invoices#adp-reviews",
+            "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
+            "tour_link": "https://www.youtube.com/watch?v=6YJXBUOeImo",
+            "tour_label": "Watch the tour · 1:31"
+          }
+        }
+      },
+      "block_order": [
+        "wholesale",
+        "wishlist",
+        "drafts"
+      ],
+      "settings": {
+        "eyebrow": "More Conspire apps",
+        "heading": "From the same Conspire team",
+        "background_color": "",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96,
+        "intro": "<p>Four Shopify apps from one team that builds for stores selling to the trade: wholesale onboarding, project wishlists, payable draft order invoices and this calculator. <a href=\"/pages/best-shopify-apps\">See all Conspire apps</a>.</p>"
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-hero-window.jpg"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-lights-canada.jpg"
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-replica-decor.jpg"
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ca-apps-brand-via-motif.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_3",
+        "photo_4"
+      ],
+      "settings": {
+        "eyebrow": "Running a tile or paint store on Shopify?",
+        "heading": "Talk to the team behind the app",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "mock_reveal",
+    "mock_layouts",
+    "mock_paint",
+    "mock_samples",
+    "features",
+    "process",
+    "team",
+    "faq",
+    "cta",
+    "more",
+    "booking"
+  ]
+}

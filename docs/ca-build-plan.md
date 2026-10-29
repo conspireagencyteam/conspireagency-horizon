@@ -15,6 +15,20 @@ published theme (a push is a production deploy, ~1–2 min). `shopify theme dev`
 pushes only to a development theme, so dev-server edits are safe until pushed.
 `conspire-concept` is the rollback.
 
+### Done 2026-10-28 (Tile & Paint Calculator page)
+
+- `templates/page.tile-paint-calculator.json` (PR #10): the fourth app's landing page in the
+  shape of the three B2B pages, with `sections/ca-app-calculator-mock.liquid` (four CSS-only
+  mock variants: tile reveal, layouts, paint recommendation, samples) and an optional
+  SoftwareApplication JSON-LD on `ca-app-hero` (`snippets/ca-app-schema.liquid`, setting
+  `structured_data`). Page `gid://shopify/Page/176113483957` created unpublished with
+  `global.title_tag` / `global.description_tag`; tour image `ca-app-calculator-tour.png` in
+  Files. Danny publishes the page once the App Store listing is approved.
+- Family wiring (PR #11, draft, merge after the page is published): hub, the three sibling
+  pages (plus their SoftwareApplication schema), the mega menu sentence, the vertical hub
+  (calculator mock link and apps strip), home and custom-apps `ca-apps`, and a second
+  `ca-article-apps` band on articles tagged `tile-paint`.
+
 ### Done 2026-10-07 (SEO pass, launch cleanup)
 
 - **Audit.** 39 URLs on the dev theme vs live, four auditors. Findings and the
