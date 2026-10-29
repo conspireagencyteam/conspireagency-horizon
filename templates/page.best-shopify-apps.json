@@ -75,7 +75,7 @@
         "eyebrow": "Our Shopify apps",
         "heading": "<p>The best B2B & wholesale apps for Shopify stores.</p>",
         "heading_tag": "h1",
-        "lede": "<p>Three focused Shopify apps from a team that specializes in trade and wholesale businesses. Streamline onboarding and document management for your B2B customers, plan large orders and projects with purpose-built wishlists, and supercharge invoicing in Shopify. Built and supported by Conspire, a Shopify Premier Partner.</p>",
+        "lede": "<p>Four Shopify apps from a team that specializes in trade, wholesale, tile and paint. Onboard and price your B2B customers, let buyers plan projects with purpose-built wishlists, get draft order invoices paid, and put the right quantity on every tile and paint product page. Built and supported by Conspire, a Shopify Premier Partner.</p>",
         "proof": "",
         "rating_value": "",
         "rating_count": 0,
@@ -152,21 +152,41 @@
             "tour_link": "https://www.youtube.com/watch?v=6YJXBUOeImo",
             "tour_label": "Watch the tour · 1:31"
           }
+        },
+        "calculator": {
+          "type": "app",
+          "settings": {
+            "name": "Tile & Paint Calculator",
+            "tagline": "Square feet to boxes and cans, samples that convert, spec rows",
+            "description": "<p>Shoppers order the right boxes or cans, samples turn into full orders, and specs stay complete. Tile and paint buy boxes, spec rows, catalog health and sample tracking for your product pages.</p>",
+            "page_link": "/pages/tile-paint-calculator",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/tile-paint-calculator",
+            "store_label": "Install on Shopify",
+            "docs_link": "https://apps.conspireagency.com/tile-paint/docs",
+            "docs_label": "Documentation",
+            "rating_label": "",
+            "rating_link": "",
+            "tour_link": "https://www.youtube.com/watch?v=zloeh03OTA8",
+            "tour_label": "Watch the tour · 4:00",
+            "tour_image": ""
+          }
         }
       },
       "block_order": [
         "wholesale",
         "wishlist",
-        "drafts"
+        "drafts",
+        "calculator"
       ],
       "settings": {
-        "eyebrow": "Three apps",
+        "eyebrow": "Four apps",
         "heading": "Built for stores that sell to serious buyers",
         "background_color": "",
         "text_color": "",
         "padding-block-start": 96,
         "padding-block-end": 96,
-        "intro": "<p>Three focused Shopify apps from a team that specializes in trade and wholesale businesses. Streamline onboarding and document management for your B2B customers, plan large orders and projects with purpose-built wishlists, and supercharge invoicing in Shopify. Built and supported by Conspire, a Shopify Premier Partner.</p>"
+        "intro": "<p>Four Shopify apps from a team that specializes in trade, wholesale, tile and paint. Onboard and price your B2B customers, let buyers plan projects with purpose-built wishlists, get draft order invoices paid, and put the right quantity on every tile and paint product page. Built and supported by Conspire, a Shopify Premier Partner.</p>"
       }
     },
     "team": {
@@ -188,10 +208,18 @@
     "workflow": {
       "type": "ca-value-cards",
       "blocks": {
+        "step_0": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "01 · Buy the right quantity",
+            "title": "Sell by the square foot",
+            "text": "<p>Shoppers turn an area into whole boxes or the right cans and order a sample in one click, with every sample followed to the order that comes after it.</p>"
+          }
+        },
         "step_1": {
           "type": "card",
           "settings": {
-            "eyebrow": "01 · Onboard & price",
+            "eyebrow": "02 · Onboard & price",
             "title": "Run wholesale pricing",
             "text": "<p>Buyers apply through a sign-up form, get approved into a tier, and log in to see their prices already applied on your existing Shopify store.</p>"
           }
@@ -199,7 +227,7 @@
         "step_2": {
           "type": "card",
           "settings": {
-            "eyebrow": "02 · Plan",
+            "eyebrow": "03 · Plan",
             "title": "Let buyers plan with wishlists",
             "text": "<p>Trade customers organize products by room or job, set quantities, share lists with their team, and export PDF quotes.</p>"
           }
@@ -207,20 +235,21 @@
         "step_3": {
           "type": "card",
           "settings": {
-            "eyebrow": "03 · Settle",
+            "eyebrow": "04 · Settle",
             "title": "Settle it with payable invoices",
             "text": "<p>Wishlists and quote requests become draft orders. Customers view and pay the invoices from their account page, with automated reminders.</p>"
           }
         }
       },
       "block_order": [
+        "step_0",
         "step_1",
         "step_2",
         "step_3"
       ],
       "settings": {
         "eyebrow": "Better together",
-        "heading": "Three apps, one B2B workflow",
+        "heading": "Four apps, one trade workflow",
         "button_label": "",
         "button_link": "",
         "style_class": "button",
@@ -237,21 +266,21 @@
           "type": "item",
           "settings": {
             "question": "Do the apps work on any Shopify plan?",
-            "answer": "<p>Yes. All three apps run on any Shopify plan, including Basic, with no Shopify Plus requirement. The wholesale app adds B2B pricing, sign-up forms and approvals to your existing store.</p>"
+            "answer": "<p>Yes. All four apps install from the Shopify App Store on the store you already run. The wholesale app adds sign-up forms, approvals and B2B pricing; the calculator’s buy boxes are theme app extension blocks, so nothing is written to your theme files.</p>"
           }
         },
         "item_2": {
           "type": "item",
           "settings": {
             "question": "How much do the apps cost?",
-            "answer": "<p>B2B Onboarding & Wholesale has a free plan for up to 10 wholesale companies, with Grow at $29/month and Pro at $99/month. B2B Wishlist Project Planner has a free plan, and the Project planner plan is $29/month with a 14-day trial. B2B Draft Order Invoices starts at $5/month with a free trial on every plan. Current pricing is always on each Shopify App Store listing.</p>"
+            "answer": "<p>B2B Onboarding & Wholesale has a free plan for up to 10 wholesale companies, with Grow at $29/month and Pro at $99/month. B2B Wishlist Project Planner has a free plan, and the Project planner plan is $29/month with a 14-day trial. B2B Draft Order Invoices starts at $5/month with a free trial on every plan. Current pricing is always on each Shopify App Store listing. Tile & Paint Calculator is free, every feature included.</p>"
           }
         },
         "item_3": {
           "type": "item",
           "settings": {
             "question": "Do the apps work together?",
-            "answer": "<p>Yes. Wishlists convert to draft orders, draft orders become payable invoices on the customer account page, and wholesale buyers see their approved pricing throughout. Each app also works on its own.</p>"
+            "answer": "<p>Yes. Wishlists convert to draft orders, draft orders become payable invoices on the customer account page, and wholesale buyers see their approved pricing throughout. Each app also works on its own. The calculator sits beside the wishlist’s Add to Project on tile and paint product pages.</p>"
           }
         },
         "item_4": {

@@ -85,18 +85,29 @@
             "link": "/pages/draft-order-invoices",
             "store_url": "https://apps.shopify.com/draft-order-invoices"
           }
+        },
+        "app_calculator": {
+          "type": "app",
+          "settings": {
+            "name": "Tile & Paint Calculator",
+            "tagline": "For tile and paint stores",
+            "description": "<p>Tile and paint buy boxes for Shopify product pages: square feet to whole boxes with overage, coats to containers, spec rows, catalog health and sample tracking. Free.</p>",
+            "link": "/pages/tile-paint-calculator",
+            "store_url": "https://apps.shopify.com/tile-paint-calculator"
+          }
         }
       },
       "block_order": [
         "app_bonde",
         "app_wholesale",
         "app_wishlist",
-        "app_drafts"
+        "app_drafts",
+        "app_calculator"
       ],
       "settings": {
         "eyebrow": "Our public apps",
         "heading": "Our apps power hundreds of Shopify stores and reach millions of customers every month.",
-        "intro": "<p>The team that builds your custom app also maintains four public apps on the Shopify App Store. That is the bar: production software, used every day by stores that cannot afford downtime.</p>",
+        "intro": "<p>The team that builds your custom app also maintains five public apps on the Shopify App Store. That is the bar: production software, used every day by stores that cannot afford downtime.</p>",
         "contact_label": "Contact Us",
         "contact_link": "/pages/contact",
         "store_label_top": "Find it on the",
