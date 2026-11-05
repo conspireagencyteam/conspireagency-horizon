@@ -44,3 +44,10 @@ repo is worked on outside the tree (the Mac mini's change jobs), the job spec ca
 server squats the port, `pkill -f "shopify theme dev"`). `shopify theme push --development` once, then
 `--only <file>` previews one file on the development theme. `shopify theme dev` never touches the
 published theme.
+
+## Finished work gets merged, not parked
+
+- Finished, verified work lands on `main` in the same session. If it went through a PR, the session that opened the PR merges it once the checks pass (`gh pr merge --squash --delete-branch`), confirms the deploy and removes its worktree. A PR is never left for Danny to merge (2026-11-03: "if a fix is ready it gets merged automatically").
+- Only four things stay open for him: anything that starts spend, anything sent to a client or prospect, a DB schema change, a secret. The PR body says which one.
+- A PR that will not merge is closed with a one-line reason. Open PRs go stale, conflict and hide what is live (2026-11-05: more than a dozen were sitting across the Conspire repos).
+- Before ending a session, `gh pr list --author @me` shows nothing of yours open here except those four cases. Before starting, look at what is already open and finish or close what is yours to finish.
