@@ -15,6 +15,30 @@ published theme (a push is a production deploy, ~1–2 min). `shopify theme dev`
 pushes only to a development theme, so dev-server edits are safe until pushed.
 `conspire-concept` is the rollback.
 
+### Done 2026-10-29 (Tile & Paint Calculator page, search terms)
+
+- `templates/page.tile-paint-calculator.json`: the hero lede names the page a "measurement price
+  calculator and sample ordering" app (the one query cluster with merchant demand, about 250 a month,
+  owned by the WooCommerce extension of that name); a `ca-value-cards` industries section (eight
+  trades and the unit each sells in, for entity coverage, not volume); a `ca-migration-platform`
+  "Coming from WooCommerce" section; FAQ item on replacing the WooCommerce Measurement Price
+  Calculator. Page `global.title_tag` / `global.description_tag` set store-side the same day.
+  Research: `conspire/notes/tile-paint-keyword-research-2026-10-29.md`.
+
+### Done 2026-10-28 (Tile & Paint Calculator page)
+
+- `templates/page.tile-paint-calculator.json` (PR #10): the fourth app's landing page in the
+  shape of the three B2B pages, with `sections/ca-app-calculator-mock.liquid` (four CSS-only
+  mock variants: tile reveal, layouts, paint recommendation, samples) and an optional
+  SoftwareApplication JSON-LD on `ca-app-hero` (`snippets/ca-app-schema.liquid`, setting
+  `structured_data`). Page `gid://shopify/Page/176113483957` created unpublished with
+  `global.title_tag` / `global.description_tag`; tour image `ca-app-calculator-tour.png` in
+  Files. Danny publishes the page once the App Store listing is approved.
+- Family wiring (PR #11, draft, merge after the page is published): hub, the three sibling
+  pages (plus their SoftwareApplication schema), the mega menu sentence, the vertical hub
+  (calculator mock link and apps strip), home and custom-apps `ca-apps`, and a second
+  `ca-article-apps` band on articles tagged `tile-paint`.
+
 ### Done 2026-10-07 (SEO pass, launch cleanup)
 
 - **Audit.** 39 URLs on the dev theme vs live, four auditors. Findings and the

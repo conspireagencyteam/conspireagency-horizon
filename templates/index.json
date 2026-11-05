@@ -26,6 +26,7 @@
           "body-bio",
           "tillamook-country-smoker-jerky",
           "kinto",
+          "heavenly-heat-saunas",
           "p-kay-metal",
           "natures-answer",
           "hustler-hollywood",
@@ -97,7 +98,8 @@
           "zia-tile",
           "cousins-maine-lobster",
           "natures-answer",
-          "kinto"
+          "kinto",
+          "heavenly-heat-saunas"
         ],
         "default_image_field": "work_preview",
         "media_ratio": "8 / 7",

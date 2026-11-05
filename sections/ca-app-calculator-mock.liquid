@@ -156,23 +156,35 @@
 
         {%- when 'samples' -%}
           <div class="ca-cmock__stack ca-cmock__stack--samples">
-            <div class="ca-mock ca-cmock__card">
-              <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/collections/zellige</span></div>
-              <div class="ca-mock__body ca-cmock__body">
-                <div class="ca-cmock__grid">
-                  <div class="ca-cmock__product">
-                    <div class="ca-cmock__tile ca-mock__swatch--calcite"></div>
-                    <strong>Pale Calcite Zellige Hex</strong><span>$96.00 / box</span>
-                    <span class="ca-buybox__btn ca-buybox__btn--outline ca-cmock__qa">Add sample</span>
+            <div class="ca-cmock__column ca-cmock__column--top">
+              <div class="ca-mock ca-cmock__card">
+                <div class="ca-mock__bar"><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__dot"></span><span class="ca-mock__url">yourstore.com/collections/zellige</span></div>
+                <div class="ca-mock__body ca-cmock__body">
+                  <div class="ca-cmock__grid">
+                    <div class="ca-cmock__product">
+                      <div class="ca-cmock__tile ca-mock__swatch--calcite"></div>
+                      <strong>Pale Calcite Zellige Hex</strong><span>$96.00 / box</span>
+                      <span class="ca-buybox__btn ca-buybox__btn--outline ca-cmock__qa">Add sample</span>
+                    </div>
+                    <div class="ca-cmock__product">
+                      <div class="ca-cmock__tile ca-mock__swatch--sage"></div>
+                      <strong>Mineral Sage 4×4</strong><span>$72.00 / box</span>
+                      <span class="ca-buybox__btn ca-buybox__btn--solid ca-cmock__qa">Added ✓</span>
+                    </div>
+                    <div class="ca-cmock__product">
+                      <div class="ca-cmock__tile ca-cmock__swatch--gloss"></div>
+                      <strong>Calcite Gloss 2×2</strong><span>$88.00 / box</span>
+                      <span class="ca-buybox__btn ca-buybox__btn--outline ca-cmock__qa">Add sample</span>
+                    </div>
                   </div>
+                </div>
+              </div>
+              <div class="ca-mock ca-cmock__card ca-cmock__card--mini">
+                <span class="ca-cmock__tag">Over the image</span>
+                <div class="ca-mock__body ca-cmock__body">
                   <div class="ca-cmock__product">
-                    <div class="ca-cmock__tile ca-mock__swatch--sage"></div>
-                    <strong>Mineral Sage 4×4</strong><span>$72.00 / box</span>
-                    <span class="ca-buybox__btn ca-buybox__btn--solid ca-cmock__qa">Added ✓</span>
-                  </div>
-                  <div class="ca-cmock__product">
-                    <div class="ca-cmock__tile ca-cmock__swatch--gloss"><span class="ca-cmock__qa ca-cmock__qa--overlay">Add sample</span></div>
-                    <strong>Calcite Gloss 2×2</strong><span>$88.00 / box</span>
+                    <div class="ca-cmock__tile ca-mock__swatch--calcite"><span class="ca-cmock__plus" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5v11M1.5 7h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+                    <strong>Pale Calcite Zellige Hex</strong><span>$96.00 / box · sample $8.00</span>
                   </div>
                 </div>
               </div>
@@ -315,7 +327,9 @@
   .ca-cmock__tile { position: relative; aspect-ratio: 1; border-radius: 8px; background: #d9d4c7; margin-bottom: 4px; }
   .ca-cmock__tile--sm { width: 40px; height: 40px; aspect-ratio: auto; margin: 0; flex: none; }
   .ca-cmock .ca-cmock__qa { height: auto; min-height: 30px; font-size: 11px; padding: 4px 8px; white-space: normal; line-height: 1.2; }
-  .ca-cmock__qa--overlay { position: absolute; left: 6px; bottom: 6px; display: inline-flex; align-items: center; min-height: 26px; padding: 0 8px; border: 1px solid var(--mock-ink); background: #fff; font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .ca-cmock__plus { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: #fff; color: var(--mock-ink); border: 1px solid var(--mock-ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); }
+  .ca-cmock__card--mini { width: 46%; }
+  .ca-cmock__card--mini .ca-cmock__product { font-size: 12px; }
   .ca-cmock__banner { padding: 10px 14px; border: 1px solid var(--mock-line); background: #f6f4ef; font-size: 13px; font-weight: 500; }
   .ca-cmock__cartline { display: flex; align-items: center; gap: 12px; font-size: 12px; min-width: 0; }
   .ca-cmock__cartline div { display: grid; gap: 2px; flex: 1; min-width: 0; }
@@ -334,6 +348,7 @@
   .ca-cmock__stack--paint { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px; align-items: start; }
   .ca-cmock__stack--samples { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; align-items: start; }
   .ca-cmock__column { display: grid; gap: 20px; margin-block-start: 32px; }
+  .ca-cmock__column--top { margin-block-start: 0; }
 
   @media screen and (max-width: 989px) {
     .ca-cmock__row { gap: 40px 24px; }
@@ -346,6 +361,7 @@
     .ca-cmock__stack--reveal .ca-cmock__card--open { position: static; width: auto; margin-block-start: 16px; }
     .ca-cmock__stack--two, .ca-cmock__stack--paint, .ca-cmock__stack--samples { grid-template-columns: minmax(0, 1fr); }
     .ca-cmock__card--offset, .ca-cmock__column { margin-block-start: 0; }
+    .ca-cmock__card--mini { width: auto; }
     .ca-cmock__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   }
 {% endstylesheet %}

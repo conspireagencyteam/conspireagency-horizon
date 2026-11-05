@@ -485,7 +485,7 @@
           "type": "item",
           "settings": {
             "question": "How much does it cost?",
-            "answer": "<p>There's a free plan with unlimited wishlists, subgroups, quantities, and sharing. The Project planner plan is $29/month with a 14-day free trial and adds PDF quote export and draft order conversion. See current pricing on the <a href=\"https://apps.shopify.com/wishlist-project-planner\" target=\"_blank\" rel=\"noopener\">Shopify App Store listing</a>.</p>"
+            "answer": "<p>There's a free plan for finding out whether your customers use wishlists: up to 50 wishlists across the store, with subgroups, quantities, and sharing. The Project planner plan is $29/month with a 14-day free trial. It has no wishlist limit and adds branded PDF quotes, quote-only products, draft order conversion, and full analytics. See current pricing on the <a href=\"https://apps.shopify.com/wishlist-project-planner\" target=\"_blank\" rel=\"noopener\">Shopify App Store listing</a>.</p>"
           }
         },
         "q_7": {
