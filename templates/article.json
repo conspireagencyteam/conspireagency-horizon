@@ -276,12 +276,83 @@
         "padding-block-start": 80,
         "padding-block-end": 80
       }
+    },
+    "apps_tile": {
+      "type": "ca-article-apps",
+      "blocks": {
+        "app_calculator": {
+          "type": "app",
+          "settings": {
+            "eyebrow": "Calculator",
+            "name": "Tile & Paint Calculator",
+            "text": "Square feet to whole boxes, coats to containers, samples followed to the full order.",
+            "youtube_id": "zloeh03OTA8",
+            "tour_duration": "4:00",
+            "tour_title": "Tile & Paint Calculator app tour",
+            "tour_image": "",
+            "page_link": "/pages/tile-paint-calculator",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/tile-paint-calculator",
+            "store_label": "Install on Shopify"
+          }
+        },
+        "app_wishlist": {
+          "type": "app",
+          "settings": {
+            "eyebrow": "Wishlists",
+            "name": "B2B Wishlist Project Planner",
+            "text": "Multiple wishlists with quantities, sharing, PDF quotes, and draft orders for project buyers.",
+            "youtube_id": "EjvqM4SR11Q",
+            "tour_duration": "1:28",
+            "tour_title": "B2B Wishlist & Project Planner app tour",
+            "tour_image": "shopify://shop_images/ca-app-wishlist-tour.jpg",
+            "page_link": "shopify://pages/b2b-wishlist-project-planner",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wishlist-project-planner",
+            "store_label": "Install on Shopify"
+          }
+        },
+        "app_wholesale": {
+          "type": "app",
+          "settings": {
+            "eyebrow": "Wholesale",
+            "name": "B2B Onboarding & Wholesale",
+            "text": "Wholesale registration with approval, buyer documents, and B2B pricing on any Shopify plan.",
+            "youtube_id": "PEF3yQ564Uo",
+            "tour_duration": "1:32",
+            "tour_title": "B2B Onboarding & Wholesale app tour",
+            "tour_image": "shopify://shop_images/ca-app-wholesale-tour.jpg",
+            "page_link": "shopify://pages/b2b-onboarding-wholesale",
+            "page_label": "Learn more",
+            "store_link": "https://apps.shopify.com/wholesale-b2b-trade-program",
+            "store_label": "Install on Shopify"
+          }
+        }
+      },
+      "block_order": [
+        "app_calculator",
+        "app_wishlist",
+        "app_wholesale"
+      ],
+      "settings": {
+        "trigger_tag": "tile-paint",
+        "eyebrow": "Our tile and paint apps",
+        "heading": "<strong>Built for tile and paint stores on Shopify.</strong> Apps from the team behind this article.",
+        "services_text": "Need something the apps don't cover? We build custom B2B features for Shopify stores.",
+        "services_label": "Talk to us about custom development",
+        "services_link": "shopify://collections/services",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
     }
   },
   "order": [
     "header",
     "body",
     "apps",
+    "apps_tile",
     "related",
     "booking"
   ]
