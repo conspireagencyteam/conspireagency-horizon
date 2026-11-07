@@ -54,7 +54,13 @@
   cards lower on /blogs/work, slowest on a cold CDN edge and on phones, where the
   in-view video download competed with it). Widths stop at 1000: the card is about
   676 CSS px wide, so 1000 covers 1.5x, and the 1400 rendition was 300 KB+ for the
-  heavier previews. The hover reveal stays lazy; it is hidden until pointer-over.
+  heavier previews. The reveal image loads eagerly too, at low priority: it was
+  lazy, and a lazy image only starts downloading once its card is in view, which
+  is the moment the reveal fades up, so the window sat as an empty grey block for
+  the half second the file took to arrive (OMRE on /blogs/work, 2026-11-07). Low
+  priority keeps it behind the backdrops. The CDN keeps a PNG a PNG whatever
+  `format` asks, so a site capture is uploaded as JPEG (the Kinto reveal was a
+  2 MB PNG at 900 wide until it was re-uploaded as kinto-site-capture.jpg).
 {%- endcomment -%}
 {%- if ca_default != blank -%}
   <div class="ca-wcard__layer ca-wcard__backdrop">
@@ -81,7 +87,7 @@
           assign ca_site_alt = ca_name | append: ' Shopify store' | strip
         endif
       -%}
-      {{ ca_reveal_img | image_url: width: 900 | image_tag: class: 'ca-wcard__img ca-wcard__site', loading: 'lazy', alt: ca_site_alt, widths: '450, 900', sizes: '(min-width: 990px) 28vw, 60vw' }}
+      {{ ca_reveal_img | image_url: width: 900 | image_tag: class: 'ca-wcard__img ca-wcard__site', loading: 'eager', fetchpriority: 'low', decoding: 'async', alt: ca_site_alt, widths: '450, 900', sizes: '(min-width: 990px) 28vw, 60vw' }}
     </div>
   </div>
 {%- endif -%}

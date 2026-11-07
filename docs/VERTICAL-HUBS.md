@@ -191,7 +191,7 @@ phrases.
 | Handle | GID | Notes |
 |---|---|---|
 | `zia-tile` | `gid://shopify/Metaobject/51646103733` | years 6+, preview, site media and image, case study |
-| `bsd-haus` | `gid://shopify/Metaobject/343241883829` | years "6+" on the record, which is wrong (a build, not a retainer; the homepage carousel and the case-study header show it too); the hub hides it through `hub_client_years`. Preview, site media (video; its poster is the hero capture), case study |
+| `bsd-haus` | `gid://shopify/Metaobject/343241883829` | years cleared on the record 2026-11-07 (a build, not a retainer; it had shown "+6 years partnered" on /blogs/work, the homepage carousel and the case-study header); the hub also hides it through `hub_client_years`. Preview, site media (video; its poster is the hero capture), case study |
 | `portola-paints` | `gid://shopify/Metaobject/53687451829` | years "4+" on the record; the hub hides it the same way (engagement ended). Preview, site media and image, case study |
 | `replica-decor` | `gid://shopify/Metaobject/101246730421` | exists, but no name, images or case study yet; listed in `hub_clients` it renders nothing until the case study is published and the images are on the record |
 | `natures-answer` | `gid://shopify/Metaobject/263690715317` | no years, preview, site media, case study |
