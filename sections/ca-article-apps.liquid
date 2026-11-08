@@ -14,9 +14,11 @@
   App Store links.
 
   The tour modal reuses `<ca-tour-dialog>` and the `.ca-ahero__dialog*` classes
-  from ca-app-hero.liquid: Horizon bundles every section's javascript and
-  stylesheet tags into one file served on every page, so they are available
-  here without the hero on the page. Keep them in sync if the hero changes.
+  from ca-app-hero.liquid. Horizon compiles section stylesheet tags into one
+  site-wide styles.css, so the modal CSS is available here without the hero on
+  the page, but section javascript tags are compiled per page from the sections
+  rendered on it, so the element is defined again below (guarded, same code as
+  the hero). Keep both copies in sync if the hero changes.
 {%- endcomment -%}
 
 {%- liquid
@@ -351,6 +353,52 @@
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  // Same definition as ca-app-hero.liquid. Section JS is compiled per page from
+  // the rendered sections only, so article pages need their own copy; the guard
+  // keeps the two from clashing when both sections are on one page.
+  if (!customElements.get('ca-tour-dialog')) {
+    customElements.define(
+      'ca-tour-dialog',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.dialog = this.querySelector('dialog');
+          this.frame = this.querySelector('[data-tour-frame]');
+          if (!this.dialog || !this.frame) return;
+          this.querySelectorAll('[data-tour-open]').forEach((b) => b.addEventListener('click', (e) => this.open(e.currentTarget)));
+          this.querySelectorAll('[data-tour-close]').forEach((b) => b.addEventListener('click', () => this.close()));
+          this.dialog.addEventListener('click', (e) => { if (e.target === this.dialog) this.close(); });
+          this.dialog.addEventListener('cancel', (e) => { e.preventDefault(); this.close(); });
+          this.dialog.addEventListener('close', () => this.unmount());
+        }
+        open(trigger) {
+          this.trigger = trigger;
+          const id = this.dataset.videoId;
+          const iframe = document.createElement('iframe');
+          iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+          iframe.title = this.dataset.title || 'Video';
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.allowFullscreen = true;
+          this.frame.replaceChildren(iframe);
+          this.dialog.showModal();
+        }
+        close() {
+          if (this.dialog.open) this.dialog.close();
+          this.unmount();
+        }
+        unmount() {
+          // Removing the iframe is what stops playback; focus goes back to the trigger.
+          this.frame.replaceChildren();
+          if (this.trigger && this.trigger.isConnected && document.activeElement !== this.trigger) {
+            this.trigger.focus();
+            this.trigger = null;
+          }
+        }
+      }
+    );
+  }
+{% endjavascript %}
 
 {% schema %}
 {
