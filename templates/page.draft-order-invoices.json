@@ -30,7 +30,7 @@
         "heading": "<p>Draft orders, paid. Invoices your customers can see and settle.</p>",
         "heading_tag": "h1",
         "lede": "<p>Every open draft order invoice on your customers' account page, paid in one click at Shopify checkout, with automatic reminders until it's settled.</p>",
-        "proof": "From $5/month · Free trial · Built by a Shopify Premier Partner",
+        "proof": "Free plan · Paid plans from $29/month · Built by a Shopify Premier Partner",
         "rating_value": "5.0",
         "rating_count": 3,
         "store_label": "Install on Shopify",
@@ -48,7 +48,7 @@
         "padding-block-end": 80,
         "structured_data": true,
         "schema_price": "0",
-        "schema_price_note": "Free plan available (up to 5 open invoices); paid plans from $9.99/month with a free trial"
+        "schema_price_note": "Free plan available (up to 20 invoices a month); paid plans from $29/month with a free trial"
       }
     },
     "ticker": {
@@ -390,7 +390,7 @@
           "type": "item",
           "settings": {
             "question": "How much does it cost?",
-            "answer": "<p>Pricing scales with your Shopify plan, starting at $5/month for Basic Shopify stores, with a free trial on every plan. See the Shopify App Store listing for current pricing.</p>"
+            "answer": "<p>There is a free plan for up to 20 invoices a month. Paid plans are priced by invoices sent and start at $29 a month, with a free trial on every paid plan. See the Shopify App Store listing for current pricing.</p>"
           }
         },
         "q8": {
