@@ -39,7 +39,7 @@
         "docs_url": "https://apps.conspireagency.com/drafts/docs",
         "youtube_id": "6YJXBUOeImo",
         "tour_duration": "1:31",
-        "tour_title": "B2B Draft Order Invoices app tour",
+        "tour_title": "Draft Order Invoices & Quotes app tour",
         "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
         "background_color": "#0d110d",
         "text_color": "#ffffff",
@@ -330,7 +330,7 @@
       "settings": {
         "eyebrow": "Built by Conspire",
         "heading": "Crafted by a <strong>Los Angeles Shopify development company</strong>",
-        "text": "<p>B2B Draft Order Invoices is built by Conspire, a Shopify development company and Shopify Premier Partner founded in Los Angeles. The same senior Shopify developers and designers who build high-performing storefronts for leading brands design, develop, and support this app, and answer your support messages.</p><p>Need more than an app? Conspire also offers full Shopify development services, from storefront design to custom B2B builds.</p>",
+        "text": "<p>Draft Order Invoices & Quotes is built by Conspire, a Shopify development company and Shopify Premier Partner founded in Los Angeles. The same senior Shopify developers and designers who build high-performing storefronts for leading brands design, develop, and support this app, and answer your support messages.</p><p>Need more than an app? Conspire also offers full Shopify development services, from storefront design to custom B2B builds.</p>",
         "button_label": "Shopify services",
         "button_link": "/pages/pricing",
         "image_small": "shopify://shop_images/ca-apps-brand-replica-decor.jpg",
@@ -347,7 +347,7 @@
         "q1": {
           "type": "item",
           "settings": {
-            "question": "What does B2B Draft Order Invoices actually do?",
+            "question": "What does Draft Order Invoices & Quotes actually do?",
             "answer": "<p>It makes Shopify draft order invoices visible and payable. Draft orders sync from your store automatically, customers see their open invoices on the account page (classic or new customer accounts), pay through Shopify's secure invoice checkout, and the app follows up on unpaid invoices with automated email reminders.</p>"
           }
         },
@@ -433,7 +433,7 @@
       "type": "ca-page-intro",
       "settings": {
         "eyebrow": "Ready when you are",
-        "heading": "<p><strong>Get your draft orders paid.</strong> Install B2B Draft Order Invoices and give customers a clear place to see, download, and pay every open invoice.</p>",
+        "heading": "<p><strong>Get your draft orders paid.</strong> Install Draft Order Invoices & Quotes and give customers a clear place to see, download, and pay every open invoice.</p>",
         "heading_tag": "h2",
         "column_start": "5",
         "size": "",
