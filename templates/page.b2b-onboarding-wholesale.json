@@ -410,7 +410,7 @@
         "drafts": {
           "type": "app",
           "settings": {
-            "name": "B2B Draft Order Invoices",
+            "name": "Draft Order Invoices & Quotes",
             "tagline": "Draft order invoices & quote requests customers can pay",
             "description": "<p>Customers view & pay draft order invoices from their account page, with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
             "page_link": "/pages/draft-order-invoices",

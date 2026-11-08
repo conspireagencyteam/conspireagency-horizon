@@ -88,11 +88,11 @@
           "type": "app",
           "settings": {
             "eyebrow": "Invoices",
-            "name": "B2B Draft Order Invoices",
+            "name": "Draft Order Invoices & Quotes",
             "text": "Customers view and pay draft order invoices from their account, with reminders and POS support.",
             "youtube_id": "6YJXBUOeImo",
             "tour_duration": "1:31",
-            "tour_title": "B2B Draft Order Invoices app tour",
+            "tour_title": "Draft Order Invoices & Quotes app tour",
             "tour_image": "shopify://shop_images/ca-app-drafts-tour.jpg",
             "page_link": "shopify://pages/draft-order-invoices",
             "page_label": "Learn more",

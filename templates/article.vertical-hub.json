@@ -222,7 +222,7 @@
         "eyebrow": "Freight and terms",
         "heading": "",
         "text": "",
-        "link_label": "B2B Draft Order Invoices",
+        "link_label": "Draft Order Invoices & Quotes",
         "link_url": "/pages/draft-order-invoices",
         "caption": "",
         "override_key": "hub_mock_checkout",
@@ -313,11 +313,11 @@
         "drafts": {
           "type": "app",
           "settings": {
-            "name": "B2B Draft Order Invoices",
+            "name": "Draft Order Invoices & Quotes",
             "tagline": "Quoted jobs get paid: invoices on the account page, Pay Now at checkout, reminders.",
             "description": "",
             "page_link": "/pages/draft-order-invoices",
-            "page_label": "B2B Draft Order Invoices",
+            "page_label": "Draft Order Invoices & Quotes",
             "store_link": "",
             "store_label": "",
             "docs_link": "https://apps.conspireagency.com/drafts/docs",

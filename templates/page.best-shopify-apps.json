@@ -137,7 +137,7 @@
         "drafts": {
           "type": "app",
           "settings": {
-            "name": "B2B Draft Order Invoices",
+            "name": "Draft Order Invoices & Quotes",
             "tagline": "Draft order invoices & quote requests customers can pay",
             "description": "<p>Customers view & pay draft order invoices from their account page, with PDF downloads, quote requests, automated payment reminders, and Shopify POS support.</p>",
             "page_link": "/pages/draft-order-invoices",
@@ -273,7 +273,7 @@
           "type": "item",
           "settings": {
             "question": "How much do the apps cost?",
-            "answer": "<p>B2B Onboarding & Wholesale has a free plan for up to 10 wholesale companies, with Grow at $29/month and Pro at $99/month. B2B Wishlist Project Planner has a free plan, and the Project planner plan is $29/month with a 14-day trial. B2B Draft Order Invoices has a free plan for up to 20 invoices a month, with paid plans from $29/month and a free trial. Current pricing is always on each Shopify App Store listing. Tile & Paint Calculator is free, every feature included.</p>"
+            "answer": "<p>B2B Onboarding & Wholesale has a free plan for up to 10 wholesale companies, with Grow at $29/month and Pro at $99/month. B2B Wishlist Project Planner has a free plan, and the Project planner plan is $29/month with a 14-day trial. Draft Order Invoices & Quotes has a free plan for up to 20 invoices a month, with paid plans from $29/month and a free trial. Current pricing is always on each Shopify App Store listing. Tile & Paint Calculator is free, every feature included.</p>"
           }
         },
         "item_3": {
