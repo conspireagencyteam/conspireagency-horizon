@@ -43,7 +43,8 @@
           "portola-paints",
           "omre",
           "cousins-fried-seafood",
-          "bsd-haus"
+          "bsd-haus",
+          "method-race-wheels"
         ],
         "default_image_field": "work_preview",
         "stagger": true,
@@ -72,7 +73,8 @@
           "portola-paints",
           "omre",
           "cousins-fried-seafood",
-          "bsd-haus"
+          "bsd-haus",
+          "method-race-wheels"
         ],
         "exclude_handles": "supplement-health-product-shopify-websites, shopify-websites-for-tile-paint-brands, conspire-agency-website",
         "image_field": "featured_site_image",
