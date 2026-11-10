@@ -12,9 +12,9 @@
     "hero": {
       "type": "ca-brands-marquee",
       "settings": {
+        "heading": "Your website is your flagship. That's how we design it.",
         "seo_heading": "Shopify Website Design & Development",
-        "heading": "Your store is the flagship. We build it like one.",
-        "body": "<p>Every marketing dollar you spend lands there first. We design Shopify stores that earn trust, guide the customer journey, and convert the traffic you're already paying for.<\/p>",
+        "body": "<p>Every marketing dollar you spend lands there first. We design Shopify stores that earn trust, guide the customer journey, and convert the traffic you're already paying for.</p>",
         "button_label": "Schedule a Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -45,6 +45,160 @@
     },
     "process": {
       "type": "ca-process",
+      "settings": {
+        "eyebrow": "The Conspire Build",
+        "heading": "<p><strong>Your store has seconds to earn trust and guide customers</strong> towards a purchase<strong>.</strong></p><p>Our <strong>six-phase process is proven to consistently produce beautiful, on-brand stores</strong> engineered around the customer journey.<strong>&nbsp;</strong></p>",
+        "heading_tag": "div",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "pricing": {
+      "type": "ca-build-pricing",
+      "settings": {
+        "anchor_id": "",
+        "eyebrow": "Pricing, scoped line by line",
+        "heading": "Every Conspire Build is <strong>tailored</strong> <strong>to your needs.</strong> We work with you to identify all the touch points and <strong>weaknesses in your current setup.</strong>",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "min_amount": "$15k",
+        "min_caption": "Starting point",
+        "mid_amount": "$25-45k",
+        "mid_caption": "Where most builds land",
+        "max_amount": "$100k+",
+        "max_caption": "Full scope",
+        "axis_start": "6 weeks",
+        "axis_end": "12 weeks",
+        "accent_color": "#ff4d00",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "growth": {
+      "type": "ca-value-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your team",
+            "title": "Publish without\na developer",
+            "text": "<p>The pain we hear most: the current store is hard to change, and every update waits on a developer.</p><p>Our builds are modular. Reusable sections your marketing team assembles into new pages and edits directly, no ticket required.</p>"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your ad spend",
+            "title": "Landing pages at\ncampaign speed",
+            "text": "<p>Paid campaigns need dedicated landing pages, and they need them this week, not next sprint.</p><p>The same reusable sections spin up campaign pages per audience or offer, so your ad team can test and iterate without touching code.</p>"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your rankings",
+            "title": "Migrate without\nlosing SEO",
+            "text": "<p>The biggest fear in any replatform is losing years of earned SEO overnight.</p><p>Nearly a hundred migrations in, our process carries your URLs, redirects, and structured data across, so rankings and traffic come with you.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {
+        "eyebrow": "Built for growth",
+        "heading": "Your next build decides the next few years of revenue",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 40
+      }
+    },
+    "clients": {
+      "type": "ca-work-grid",
+      "settings": {
+        "eyebrow": "Top projects",
+        "clients": [
+          "zia-tile",
+          "body-bio",
+          "cousins-maine-lobster",
+          "tillamook-country-smoker-jerky",
+          "natures-answer",
+          "kinto",
+          "portola-paints",
+          "omre",
+          "cousins-fried-seafood",
+          "bsd-haus"
+        ],
+        "article_clients": false,
+        "client_years": "",
+        "client_captions": "",
+        "default_image_field": "work_preview",
+        "stagger": true,
+        "button_label": "Learn More",
+        "style_class": "button",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "migrations": {
+      "type": "ca-page-intro",
+      "settings": {
+        "eyebrow": "Shopify migrations",
+        "heading": "<p><strong>Migrating to Shopify?</strong> Trusted SEO preservation.</p><p>Our team has <strong>completed</strong> close to a <strong>hundred migrations</strong> from Magento, WooCommerce, etc. <strong>No migration is too complex</strong>. Ensure your migration goes smoothly with <strong>no SEO loss</strong>.</p>",
+        "heading_tag": "h2",
+        "column_start": "5",
+        "size": "lg",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "rule": false,
+        "allow_transparent_header": false,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "more": {
+      "type": "ca-more-projects",
+      "settings": {
+        "eyebrow": "More projects",
+        "clients": [],
+        "blog": "work",
+        "exclude_clients": [
+          "zia-tile",
+          "body-bio",
+          "cousins-maine-lobster",
+          "tillamook-country-smoker-jerky",
+          "natures-answer",
+          "kinto",
+          "portola-paints",
+          "omre",
+          "cousins-fried-seafood",
+          "bsd-haus"
+        ],
+        "exclude_handles": "supplement-health-product-shopify-websites, shopify-websites-for-tile-paint-brands, conspire-agency-website",
+        "image_field": "featured_site_image",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 0
+      }
+    },
+    "process_carousel": {
+      "type": "ca-process-carousel",
       "blocks": {
         "step_1": {
           "type": "step",
@@ -106,149 +260,10 @@
         "step_7"
       ],
       "settings": {
-        "eyebrow": "The Conspire Build",
-        "heading": "<p><strong>Your store has seconds to earn trust and guide customers<\/strong> toward purchase<strong>.<\/strong><\/p><p>Our <strong>six-phase process is built around exactly that:<\/strong> strategic onboarding, art direction, conversion-focused UX, full design, development, and launch. <strong>A beautiful, on-brand store<\/strong> engineered around the customer journey<strong>, built end to end by our senior team.<\/strong><\/p>",
+        "label": "The Conspire Build",
         "background_color": "#f2f2f2",
         "text_color": "",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
-    "migrations": {
-      "type": "ca-page-intro",
-      "settings": {
-        "eyebrow": "Shopify migrations",
-        "heading": "<p><strong>Migrating to Shopify?<\/strong> Trusted SEO preservation.<\/p><p>Our team has <strong>completed<\/strong> close to a <strong>hundred migrations<\/strong> from Magento, WooCommerce, etc. <strong>No migration is too complex<\/strong>. Ensure your migration goes smoothly with <strong>no SEO loss<\/strong>.<\/p>",
-        "heading_tag": "h2",
-        "column_start": "5",
-        "size": "lg",
-        "button_label": "Book a Call",
-        "button_link": "#book-a-call",
-        "style_class": "button",
-        "rule": false,
-        "allow_transparent_header": false,
-        "background_color": "#0d110d",
-        "text_color": "#ffffff",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
-    "clients": {
-      "type": "ca-work-grid",
-      "settings": {
-        "eyebrow": "Top projects",
-        "clients": [
-          "zia-tile",
-          "body-bio",
-          "cousins-maine-lobster",
-          "tillamook-country-smoker-jerky",
-          "natures-answer",
-          "kinto",
-          "portola-paints",
-          "omre",
-          "cousins-fried-seafood",
-          "bsd-haus"
-        ],
-        "default_image_field": "work_preview",
-        "stagger": true,
-        "button_label": "Learn More",
-        "style_class": "button",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
-    "more": {
-      "type": "ca-more-projects",
-      "settings": {
-        "eyebrow": "More projects",
-        "clients": [],
-        "blog": "work",
-        "exclude_clients": [
-          "zia-tile",
-          "body-bio",
-          "cousins-maine-lobster",
-          "tillamook-country-smoker-jerky",
-          "natures-answer",
-          "kinto",
-          "portola-paints",
-          "omre",
-          "cousins-fried-seafood",
-          "bsd-haus"
-        ],
-        "exclude_handles": "supplement-health-product-shopify-websites, shopify-websites-for-tile-paint-brands, conspire-agency-website",
-        "image_field": "featured_site_image",
-        "background_color": "#ffffff",
-        "text_color": "",
-        "padding-block-start": 80,
-        "padding-block-end": 0
-      }
-    },
-    "pricing": {
-      "type": "ca-build-pricing",
-      "settings": {
-        "eyebrow": "Pricing, scoped line by line",
-        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.<\/strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.<\/strong>",
-        "button_label": "Schedule a Call",
-        "button_link": "#book-a-call",
-        "min_amount": "$15k",
-        "min_caption": "Starting point",
-        "mid_amount": "$25-45k",
-        "mid_caption": "Where most builds land",
-        "max_amount": "$100k+",
-        "max_caption": "Full scope",
-        "axis_start": "6 weeks",
-        "axis_end": "12 weeks",
-        "accent_color": "#ff4d00",
-        "background_color": "#0d110d",
-        "text_color": "#ffffff",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
-    "growth": {
-      "type": "ca-value-cards",
-      "blocks": {
-        "card_1": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "Your team",
-            "title": "Publish without\na developer",
-            "text": "<p>The pain we hear most: the current store is hard to change, and every update waits on a developer.<\/p><p>Our builds are modular. Reusable sections your marketing team assembles into new pages and edits directly, no ticket required.<\/p>"
-          }
-        },
-        "card_2": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "Your ad spend",
-            "title": "Landing pages at\ncampaign speed",
-            "text": "<p>Paid campaigns need dedicated landing pages, and they need them this week, not next sprint.<\/p><p>The same reusable sections spin up campaign pages per audience or offer, so your ad team can test and iterate without touching code.<\/p>"
-          }
-        },
-        "card_3": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "Your rankings",
-            "title": "Migrate without\nlosing SEO",
-            "text": "<p>The biggest fear in any replatform is losing years of earned SEO overnight.<\/p><p>Nearly a hundred migrations in, our process carries your URLs, redirects, and structured data across, so rankings and traffic come with you.<\/p>"
-          }
-        }
-      },
-      "block_order": [
-        "card_1",
-        "card_2",
-        "card_3"
-      ],
-      "settings": {
-        "eyebrow": "Built for growth",
-        "heading": "Your next build decides the next few years of revenue",
-        "button_label": "Schedule a Call",
-        "button_link": "#book-a-call",
-        "style_class": "button",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "padding-block-start": 80,
+        "padding-block-start": 40,
         "padding-block-end": 80
       }
     },
@@ -275,11 +290,148 @@
           "bodybio",
           "danny-mitchell-bsd-haus"
         ],
+        "article_quote": false,
         "flip_meta": true,
         "autoplay": false,
         "autoplay_interval": 6,
         "background_color": "#0d110d",
         "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#0d110d",
+        "panel_heading": "Ready to grow your business?",
+        "panel_text": "To discuss your project please select a convenient date & time for you and we will contact you!",
+        "panel_button_label": "Contact Us",
+        "panel_button_link": "",
+        "panel_heading_key": "",
+        "panel_text_key": "",
         "padding-block-start": 80,
         "padding-block-end": 80
       }
@@ -307,136 +459,6 @@
         "padding-block-end": 80
       }
     },
-    "booking": {
-      "type": "ca-booking",
-      "blocks": {
-        "photo_G6Nfg6": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/placeholer-level.jpg"
-          }
-        },
-        "photo_94gPph": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Screenshot_2025-06-11_at_2.06.42_PM.png"
-          }
-        },
-        "photo_T4K9MH": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/portola-paints-work-preview.jpg"
-          }
-        },
-        "photo_UxzwFi": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/hustler-hollywood-work-preview.jpg"
-          }
-        },
-        "photo_jgP7TN": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/natures-answer-work-preview.jpg"
-          }
-        },
-        "photo_Pq7AJH": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/kinto.jpg"
-          }
-        },
-        "photo_r9wB3D": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/kinto-banner-2.png"
-          }
-        },
-        "photo_zWEgCX": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/kinto-banner-1.png"
-          }
-        },
-        "photo_MmjPJM": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/kinto-main-image.png"
-          }
-        },
-        "photo_hNyFPQ": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/kinto-work-preview.jpg"
-          }
-        },
-        "photo_DehCiJ": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/cml-main-image.png"
-          }
-        },
-        "photo_AVrjVg": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/cml-work-preview.jpg"
-          }
-        },
-        "photo_JMcnVB": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/bodybio-web-teams.png"
-          }
-        },
-        "photo_TJbQtN": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/ziatile-main-image.png"
-          }
-        },
-        "photo_7XUxFp": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/zia-tile-work-preview.png"
-          }
-        },
-        "photo_ir8P8n": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/bodybio-main-image.png"
-          }
-        }
-      },
-      "block_order": [
-        "photo_G6Nfg6",
-        "photo_94gPph",
-        "photo_T4K9MH",
-        "photo_UxzwFi",
-        "photo_jgP7TN",
-        "photo_Pq7AJH",
-        "photo_r9wB3D",
-        "photo_zWEgCX",
-        "photo_MmjPJM",
-        "photo_hNyFPQ",
-        "photo_DehCiJ",
-        "photo_AVrjVg",
-        "photo_JMcnVB",
-        "photo_TJbQtN",
-        "photo_7XUxFp",
-        "photo_ir8P8n"
-      ],
-      "settings": {
-        "eyebrow": "",
-        "heading": "",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "calendly_url": "https:\/\/calendly.com\/d\/crbh-5vt-9jc\/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
-        "calendly_height": 700,
-        "montage_background": "#0d110d",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
     "faq": {
       "type": "ca-faq-list",
       "blocks": {
@@ -444,28 +466,28 @@
           "type": "item",
           "settings": {
             "question": "What makes Conspire different from other Shopify agencies?",
-            "answer": "<p>As a Shopify agency with 15+ years of platform experience since 2011, we've completed hundreds of projects with a 98% satisfaction rate. Unlike many Shopify development agencies, we offer both strategic guidance and technical execution from our Los Angeles-based office, treating your website as a living product that drives real business results. Our boutique approach means you work directly with seasoned experts, not junior developers.<\/p>"
+            "answer": "<p>As a Shopify agency with 15+ years of platform experience since 2011, we've completed hundreds of projects with a 98% satisfaction rate. Unlike many Shopify development agencies, we offer both strategic guidance and technical execution from our Los Angeles-based office, treating your website as a living product that drives real business results. Our boutique approach means you work directly with seasoned experts, not junior developers.</p>"
           }
         },
         "item_2": {
           "type": "item",
           "settings": {
             "question": "Do you only work with Shopify, or do you build on other platforms?",
-            "answer": "<p>While we're experienced with multiple platforms, Shopify is our specialty and where we deliver the most value. As dedicated Shopify Plus developers, we believe Shopify offers the best combination of scalability, reliability, and ecosystem support for growing DTC brands. Our deep platform expertise allows us to leverage Shopify's full potential in ways generalist agencies cannot.<\/p>"
+            "answer": "<p>While we're experienced with multiple platforms, Shopify is our specialty and where we deliver the most value. As dedicated Shopify Plus developers, we believe Shopify offers the best combination of scalability, reliability, and ecosystem support for growing DTC brands. Our deep platform expertise allows us to leverage Shopify's full potential in ways generalist agencies cannot.</p>"
           }
         },
         "item_3": {
           "type": "item",
           "settings": {
             "question": "What does a Conspire Build cost and how long does it take?",
-            "answer": "<p>A Conspire Build runs $15K to $75K and takes 6 to 12 weeks. Most land between $25K and $45K. It is built for funded early-growth brands and established eCommerce teams that need a fast, conversion-focused launch on a structured timeline. We combine proven Shopify architecture with our CRO and DTC experience to ship a store that's ready to scale with paid traffic.<\/p>"
+            "answer": "<p>A Conspire Build runs $15K to $75K and takes 6 to 12 weeks. Most land between $25K and $45K. It is built for funded early-growth brands and established eCommerce teams that need a fast, conversion-focused launch on a structured timeline. We combine proven Shopify architecture with our CRO and DTC experience to ship a store that's ready to scale with paid traffic.</p>"
           }
         },
         "item_4": {
           "type": "item",
           "settings": {
             "question": "Can you migrate my existing website to Shopify?",
-            "answer": "<p>Absolutely. As experienced Shopify developers, we handle migrations from various platforms including WooCommerce, Magento, BigCommerce, and custom solutions. Our migration process includes SEO preservation strategies, data migration (products, customers, orders), URL redirect planning, design improvement opportunities, and performance optimization.<\/p>"
+            "answer": "<p>Absolutely. As experienced Shopify developers, we handle migrations from various platforms including WooCommerce, Magento, BigCommerce, and custom solutions. Our migration process includes SEO preservation strategies, data migration (products, customers, orders), URL redirect planning, design improvement opportunities, and performance optimization.</p>"
           }
         }
       },
@@ -476,6 +498,7 @@
         "item_4"
       ],
       "settings": {
+        "anchor_id": "",
         "eyebrow": "",
         "heading": "Frequently asked questions",
         "button_label": "Book a Call",
@@ -496,11 +519,12 @@
   "order": [
     "hero",
     "process",
-    "migrations",
-    "clients",
-    "more",
     "pricing",
     "growth",
+    "clients",
+    "migrations",
+    "more",
+    "process_carousel",
     "fit",
     "testimonials",
     "booking",

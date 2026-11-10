@@ -1,15 +1,12 @@
 {%- comment -%}
   ca-process.liquid — "The Conspire Build" (Conspire v2.0, Figma 396:136).
 
-  Intro (eyebrow + multi-paragraph two-tone statement), then a carousel of
-  process steps. The active step is wide with a large line of copy; the others
-  sit beside it, narrow and muted. Arrows bottom-left, dots bottom-right.
-
-  Steps are "step" blocks (label + text). <ca-process> (assets/ca-process.js)
-  handles the active state; with no JS the row simply scrolls sideways.
+  Intro (eyebrow + multi-paragraph two-tone statement). Step blocks are
+  optional: when present, the step carousel (snippets/ca-process-carousel.liquid)
+  renders under the intro. To place the carousel anywhere else on a page, leave
+  this section without steps and add the "Process carousel" section
+  (sections/ca-process-carousel.liquid), which also holds the carousel styles.
 {%- endcomment -%}
-
-<script src="{{ 'ca-process.js' | asset_url }}" type="module" fetchpriority="low"></script>
 
 <div
   class="ca-process spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
@@ -20,46 +17,23 @@
     text_color: section.settings.text_color,
     section_id: section.id
   -%}
+  {%- liquid
+    assign intro_class = 'ca-process__intro'
+    if section.blocks.size == 0
+      assign intro_class = 'ca-process__intro ca-process__intro--solo'
+    endif
+  -%}
   <div class="ca-inner">
     {%- render 'ca-intro',
       eyebrow: section.settings.eyebrow,
       heading: section.settings.heading,
       tag: section.settings.heading_tag,
-      class: 'ca-process__intro'
+      class: intro_class
     -%}
   </div>
 
   {%- if section.blocks.size > 0 -%}
-    <ca-process class="ca-process__carousel" tabindex="0" aria-roledescription="carousel" aria-label="{{ section.settings.eyebrow | default: 'Process' | escape }}">
-      <div class="ca-process__viewport">
-        <ol class="ca-process__track">
-          {%- for block in section.blocks -%}
-            <li class="ca-process__step{% if forloop.first %} is-active{% endif %}" {{ block.shopify_attributes }}>
-              {%- if block.settings.label != blank -%}
-                <p class="ca-eyebrow ca-process__label">{{ block.settings.label }}</p>
-              {%- endif -%}
-              <p class="ca-process__text">{{ block.settings.text }}</p>
-            </li>
-          {%- endfor -%}
-        </ol>
-      </div>
-
-      <div class="ca-inner ca-process__controls">
-        <div class="ca-process__arrows">
-          <button class="ca-process__arrow ca-process__arrow--prev" type="button" aria-label="Previous step">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M18.3666 12.0003H5.63871M12.0027 5.63633L5.63871 12.0003L12.0027 18.3643" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </button>
-          <button class="ca-process__arrow ca-process__arrow--next" type="button" aria-label="Next step">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5.63677 11.9997H18.3647M12.0007 18.3637L18.3647 11.9997L12.0007 5.63574" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-        <div class="ca-process__dots">
-          {%- for block in section.blocks -%}
-            <button class="ca-process__dot{% if forloop.first %} is-active{% endif %}" type="button" aria-label="Step {{ forloop.index }}: {{ block.settings.label | escape }}"></button>
-          {%- endfor -%}
-        </div>
-      </div>
-    </ca-process>
+    {%- render 'ca-process-carousel', blocks: section.blocks, label: section.settings.eyebrow -%}
   {%- endif -%}
 </div>
 
@@ -73,207 +47,14 @@
     margin-block-end: 80px;
   }
 
-  .ca-process__carousel {
-    --ca-process-gap: 20px;
-    --ca-process-active: min(56vw, 780px);
-    --ca-process-idle: min(29vw, 400px);
-    display: block;
-    outline-offset: 4px;
-  }
-
-  .ca-process__viewport {
-    width: 100%;
-    max-width: var(--page-width, 1440px);
-    margin-inline: auto;
-    padding-inline: var(--page-margin, 24px);
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .ca-process__carousel.is-enhanced .ca-process__viewport {
-    overflow: visible;
-  }
-
-  .ca-process__track {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--ca-process-gap);
-    min-height: 260px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .ca-process__step {
-    flex: 0 0 var(--ca-process-idle);
-    cursor: pointer;
-    transition: flex-basis 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .ca-process__step.is-active {
-    flex-basis: var(--ca-process-active);
-    cursor: default;
-  }
-
-  .ca-process__label {
-    margin-block-end: 24px;
-    padding-block-end: 24px;
-    border-block-end: 1px solid var(--ca-hairline-strong);
-    transition: border-color 0.3s ease;
-  }
-
-  .ca-process__step.is-active .ca-process__label {
-    border-block-end-color: rgb(var(--color-foreground-rgb));
-  }
-
-  .ca-process__text {
-    margin: 0;
-    font-size: var(--ca-fs-24);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    /* 0.55 keeps idle steps readable (>= 4.5:1 on the grey section; 0.3 was 2.1:1) */
-    color: rgb(var(--color-foreground-rgb) / 0.55);
-    transition: font-size 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
-  }
-
-  .ca-process__step.is-active .ca-process__text {
-    font-size: var(--ca-fs-48);
-    color: rgb(var(--color-foreground-rgb));
-  }
-
-  .ca-process__controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-block-start: 40px;
-  }
-
-  .ca-process__carousel:not(.is-enhanced) .ca-process__controls {
-    display: none;
-  }
-
-  .ca-process__arrows {
-    display: flex;
-  }
-
-  .ca-process__arrow {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-  }
-
-  .ca-process__arrow:disabled {
-    opacity: 0.3;
-    cursor: default;
-  }
-
-  .ca-process__dots {
-    display: flex;
-    gap: 0;
-  }
-
-  .ca-process__dot {
-    /* 24px hit target (WCAG 2.5.8); the visible dot is the ::before */
-    position: relative;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-  }
-
-  .ca-process__dot::before {
-    content: '';
-    position: absolute;
-    inset: 50% auto auto 50%;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: rgb(var(--color-foreground-rgb) / 0.2);
-    transform: translate(-50%, -50%);
-    transition: background-color 0.2s ease;
-  }
-
-  .ca-process__dot.is-active::before {
-    background-color: rgb(var(--color-foreground-rgb));
-  }
-
-  /* Narrow/touch: native swipeable scroller (class set by ca-process.js). */
-  .ca-process__carousel.is-scroll .ca-process__viewport {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y;
-    overscroll-behavior-x: contain;
-    scroll-padding-inline: var(--page-margin, 24px);
-  }
-
-  .ca-process__carousel.is-scroll .ca-process__viewport::-webkit-scrollbar {
-    display: none;
-  }
-
-  .ca-process__carousel.is-scroll .ca-process__track {
-    transform: none !important;
-    transition: none;
-    width: max-content;
-    /* room so the last step can snap to the start edge */
-    padding-inline-end: calc(100vw - var(--ca-process-active) - 2 * var(--page-margin, 24px));
-  }
-
-  .ca-process__carousel.is-scroll .ca-process__step {
-    flex: 0 0 var(--ca-process-active);
-    min-width: var(--ca-process-active);
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    transition: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ca-process__track,
-    .ca-process__step,
-    .ca-process__text {
-      transition: none;
-    }
+  /* No steps in this section: the carousel lives in its own section. */
+  .ca-process__intro.ca-process__intro--solo {
+    margin-block-end: 0;
   }
 
   @media screen and (max-width: 989px) {
     .ca-process__intro {
       margin-block-end: 48px;
-    }
-
-    .ca-process__carousel {
-      --ca-process-active: 78vw;
-      --ca-process-idle: 52vw;
-    }
-
-    .ca-process__track {
-      min-height: 220px;
-    }
-  }
-
-  @media screen and (max-width: 749px) {
-    .ca-process__carousel {
-      --ca-process-gap: 16px;
-      --ca-process-active: 80vw;
-      --ca-process-idle: 56vw;
-    }
-
-    .ca-process__step.is-active .ca-process__text {
-      font-size: 1.75rem;
-    }
-
-    .ca-process__text {
-      font-size: 1.125rem;
     }
   }
 {% endstylesheet %}
@@ -293,6 +74,7 @@
       "info": "Bold the words to emphasise. The rest is shown muted."
     },
     { "type": "select", "id": "heading_tag", "label": "Heading tag", "options": [ { "value": "div", "label": "None (div)" }, { "value": "h2", "label": "H2" } ], "default": "div" },
+    { "type": "paragraph", "content": "Steps added here show as a carousel under the statement. To place the carousel elsewhere on the page, use the Process carousel section instead." },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
     { "type": "color", "id": "text_color", "label": "t:settings.text" },
