@@ -115,25 +115,6 @@
         "padding-block-end": 80
       }
     },
-    "migrations": {
-      "type": "ca-page-intro",
-      "settings": {
-        "eyebrow": "Shopify migrations",
-        "heading": "<p><strong>Migrating to Shopify?</strong> Trusted SEO preservation.</p><p>Our team has <strong>completed</strong> close to a <strong>hundred migrations</strong> from Magento, WooCommerce, etc. <strong>No migration is too complex</strong>. Ensure your migration goes smoothly with <strong>no SEO loss</strong>.</p>",
-        "heading_tag": "h2",
-        "column_start": "5",
-        "size": "lg",
-        "button_label": "Book a Call",
-        "button_link": "#book-a-call",
-        "style_class": "button",
-        "rule": false,
-        "allow_transparent_header": false,
-        "background_color": "#0d110d",
-        "text_color": "#ffffff",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
     "pricing": {
       "type": "ca-build-pricing",
       "settings": {
@@ -151,6 +132,70 @@
         "axis_start": "6 weeks",
         "axis_end": "12 weeks",
         "accent_color": "#ff4d00",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "growth": {
+      "type": "ca-value-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your team",
+            "title": "Publish without\na developer",
+            "text": "<p>The pain we hear most: the current store is hard to change, and every update waits on a developer.</p><p>Our builds are modular. Reusable sections your marketing team assembles into new pages and edits directly, no ticket required.</p>"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your ad spend",
+            "title": "Landing pages at\ncampaign speed",
+            "text": "<p>Paid campaigns need dedicated landing pages, and they need them this week, not next sprint.</p><p>The same reusable sections spin up campaign pages per audience or offer, so your ad team can test and iterate without touching code.</p>"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Your rankings",
+            "title": "Migrate without\nlosing SEO",
+            "text": "<p>The biggest fear in any replatform is losing years of earned SEO overnight.</p><p>Nearly a hundred migrations in, our process carries your URLs, redirects, and structured data across, so rankings and traffic come with you.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {
+        "eyebrow": "Built for growth",
+        "heading": "Your next build decides the next few years of revenue",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "migrations": {
+      "type": "ca-page-intro",
+      "settings": {
+        "eyebrow": "Shopify migrations",
+        "heading": "<p><strong>Migrating to Shopify?</strong> Trusted SEO preservation.</p><p>Our team has <strong>completed</strong> close to a <strong>hundred migrations</strong> from Magento, WooCommerce, etc. <strong>No migration is too complex</strong>. Ensure your migration goes smoothly with <strong>no SEO loss</strong>.</p>",
+        "heading_tag": "h2",
+        "column_start": "5",
+        "size": "lg",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "rule": false,
+        "allow_transparent_header": false,
         "background_color": "#0d110d",
         "text_color": "#ffffff",
         "padding-block-start": 80,
@@ -210,51 +255,6 @@
         "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 0
-      }
-    },
-    "growth": {
-      "type": "ca-value-cards",
-      "blocks": {
-        "card_1": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "Your team",
-            "title": "Publish without\na developer",
-            "text": "<p>The pain we hear most: the current store is hard to change, and every update waits on a developer.</p><p>Our builds are modular. Reusable sections your marketing team assembles into new pages and edits directly, no ticket required.</p>"
-          }
-        },
-        "card_2": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "Your ad spend",
-            "title": "Landing pages at\ncampaign speed",
-            "text": "<p>Paid campaigns need dedicated landing pages, and they need them this week, not next sprint.</p><p>The same reusable sections spin up campaign pages per audience or offer, so your ad team can test and iterate without touching code.</p>"
-          }
-        },
-        "card_3": {
-          "type": "card",
-          "settings": {
-            "eyebrow": "Your rankings",
-            "title": "Migrate without\nlosing SEO",
-            "text": "<p>The biggest fear in any replatform is losing years of earned SEO overnight.</p><p>Nearly a hundred migrations in, our process carries your URLs, redirects, and structured data across, so rankings and traffic come with you.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "card_1",
-        "card_2",
-        "card_3"
-      ],
-      "settings": {
-        "eyebrow": "Built for growth",
-        "heading": "Your next build decides the next few years of revenue",
-        "button_label": "Schedule a Call",
-        "button_link": "#book-a-call",
-        "style_class": "button",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "padding-block-start": 80,
-        "padding-block-end": 80
       }
     },
     "fit": {
@@ -510,10 +510,10 @@
     "hero",
     "process",
     "pricing",
+    "growth",
     "migrations",
     "clients",
     "more",
-    "growth",
     "fit",
     "testimonials",
     "booking",
