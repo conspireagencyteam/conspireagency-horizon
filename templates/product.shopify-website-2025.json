@@ -123,25 +123,6 @@
         "padding-block-end": 40
       }
     },
-    "migrations": {
-      "type": "ca-page-intro",
-      "settings": {
-        "eyebrow": "Shopify migrations",
-        "heading": "<p><strong>Migrating to Shopify?</strong> Trusted SEO preservation.</p><p>Our team has <strong>completed</strong> close to a <strong>hundred migrations</strong> from Magento, WooCommerce, etc. <strong>No migration is too complex</strong>. Ensure your migration goes smoothly with <strong>no SEO loss</strong>.</p>",
-        "heading_tag": "h2",
-        "column_start": "5",
-        "size": "lg",
-        "button_label": "Book a Call",
-        "button_link": "#book-a-call",
-        "style_class": "button",
-        "rule": false,
-        "allow_transparent_header": false,
-        "background_color": "#0d110d",
-        "text_color": "#ffffff",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
     "clients": {
       "type": "ca-work-grid",
       "settings": {
@@ -167,6 +148,25 @@
         "style_class": "button",
         "background_color": "#f2f2f2",
         "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "migrations": {
+      "type": "ca-page-intro",
+      "settings": {
+        "eyebrow": "Shopify migrations",
+        "heading": "<p><strong>Migrating to Shopify?</strong> Trusted SEO preservation.</p><p>Our team has <strong>completed</strong> close to a <strong>hundred migrations</strong> from Magento, WooCommerce, etc. <strong>No migration is too complex</strong>. Ensure your migration goes smoothly with <strong>no SEO loss</strong>.</p>",
+        "heading_tag": "h2",
+        "column_start": "5",
+        "size": "lg",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "rule": false,
+        "allow_transparent_header": false,
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
         "padding-block-start": 80,
         "padding-block-end": 80
       }
@@ -521,8 +521,8 @@
     "process",
     "pricing",
     "growth",
-    "migrations",
     "clients",
+    "migrations",
     "more",
     "process_carousel",
     "fit",
