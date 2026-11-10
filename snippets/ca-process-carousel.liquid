@@ -1,0 +1,49 @@
+{%- comment -%}
+  ca-process-carousel.liquid — the step carousel (Conspire v2.0, Figma 396:136).
+
+  The active step is wide with a large line of copy; the others sit beside it,
+  narrow and muted. Arrows bottom-left, dots bottom-right. <ca-process>
+  (assets/ca-process.js) handles the active state; with no JS the row simply
+  scrolls sideways.
+
+  Used by sections/ca-process-carousel.liquid (the carousel on its own) and by
+  sections/ca-process.liquid (intro with the carousel under it). The styles live
+  in the ca-process-carousel section's stylesheet. The wrapper needs the
+  .ca-process class (it clips the track that runs off the right edge).
+
+  @param {object} blocks - "step" blocks (label + text)
+  @param {string} [label] - accessible name of the carousel, default "Process"
+{%- endcomment -%}
+
+<script src="{{ 'ca-process.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+<ca-process class="ca-process__carousel" tabindex="0" aria-roledescription="carousel" aria-label="{{ label | default: 'Process' | escape }}">
+  <div class="ca-process__viewport">
+    <ol class="ca-process__track">
+      {%- for block in blocks -%}
+        <li class="ca-process__step{% if forloop.first %} is-active{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.label != blank -%}
+            <p class="ca-eyebrow ca-process__label">{{ block.settings.label }}</p>
+          {%- endif -%}
+          <p class="ca-process__text">{{ block.settings.text }}</p>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+
+  <div class="ca-inner ca-process__controls">
+    <div class="ca-process__arrows">
+      <button class="ca-process__arrow ca-process__arrow--prev" type="button" aria-label="Previous step">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M18.3666 12.0003H5.63871M12.0027 5.63633L5.63871 12.0003L12.0027 18.3643" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="ca-process__arrow ca-process__arrow--next" type="button" aria-label="Next step">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5.63677 11.9997H18.3647M12.0007 18.3637L18.3647 11.9997L12.0007 5.63574" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="ca-process__dots">
+      {%- for block in blocks -%}
+        <button class="ca-process__dot{% if forloop.first %} is-active{% endif %}" type="button" aria-label="Step {{ forloop.index }}: {{ block.settings.label | escape }}"></button>
+      {%- endfor -%}
+    </div>
+  </div>
+</ca-process>

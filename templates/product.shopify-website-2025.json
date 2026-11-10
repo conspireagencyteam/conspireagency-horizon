@@ -45,66 +45,6 @@
     },
     "process": {
       "type": "ca-process",
-      "blocks": {
-        "step_1": {
-          "type": "step",
-          "settings": {
-            "label": "Art Direction",
-            "text": "Your brand, translated into a store customers remember and trust"
-          }
-        },
-        "step_2": {
-          "type": "step",
-          "settings": {
-            "label": "Strategy",
-            "text": "Online strategy review, positioning, and content strategy"
-          }
-        },
-        "step_3": {
-          "type": "step",
-          "settings": {
-            "label": "UX",
-            "text": "The core purchasing journey, wireframed with working copy your team refines"
-          }
-        },
-        "step_4": {
-          "type": "step",
-          "settings": {
-            "label": "Design",
-            "text": "Home and product pages designed in full, desktop and mobile"
-          }
-        },
-        "step_5": {
-          "type": "step",
-          "settings": {
-            "label": "Development",
-            "text": "Modern Shopify theme architecture, optimized for SEO and speed"
-          }
-        },
-        "step_6": {
-          "type": "step",
-          "settings": {
-            "label": "Handoff",
-            "text": "Expert training and an app stack review; your team runs it without a developer"
-          }
-        },
-        "step_7": {
-          "type": "step",
-          "settings": {
-            "label": "Migration",
-            "text": "Nearly a hundred completed, from every major platform"
-          }
-        }
-      },
-      "block_order": [
-        "step_1",
-        "step_2",
-        "step_3",
-        "step_4",
-        "step_5",
-        "step_6",
-        "step_7"
-      ],
       "settings": {
         "eyebrow": "The Conspire Build",
         "heading": "<p><strong>Your store has seconds to earn trust and guide customers</strong> toward purchase<strong>.</strong></p><p>Our <strong>six-phase process is built around exactly that:</strong> strategic onboarding, art direction, conversion-focused UX, full design, development, and launch. <strong>A beautiful, on-brand store</strong> engineered around the customer journey<strong>, built end to end by our senior team.</strong></p>",
@@ -180,6 +120,76 @@
         "background_color": "#f2f2f2",
         "text_color": "",
         "padding-block-start": 80,
+        "padding-block-end": 40
+      }
+    },
+    "process_carousel": {
+      "type": "ca-process-carousel",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "label": "Art Direction",
+            "text": "Your brand, translated into a store customers remember and trust"
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "label": "Strategy",
+            "text": "Online strategy review, positioning, and content strategy"
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "label": "UX",
+            "text": "The core purchasing journey, wireframed with working copy your team refines"
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "label": "Design",
+            "text": "Home and product pages designed in full, desktop and mobile"
+          }
+        },
+        "step_5": {
+          "type": "step",
+          "settings": {
+            "label": "Development",
+            "text": "Modern Shopify theme architecture, optimized for SEO and speed"
+          }
+        },
+        "step_6": {
+          "type": "step",
+          "settings": {
+            "label": "Handoff",
+            "text": "Expert training and an app stack review; your team runs it without a developer"
+          }
+        },
+        "step_7": {
+          "type": "step",
+          "settings": {
+            "label": "Migration",
+            "text": "Nearly a hundred completed, from every major platform"
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4",
+        "step_5",
+        "step_6",
+        "step_7"
+      ],
+      "settings": {
+        "label": "The Conspire Build",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 40,
         "padding-block-end": 80
       }
     },
@@ -509,6 +519,7 @@
   "order": [
     "hero",
     "process",
+    "process_carousel",
     "pricing",
     "growth",
     "migrations",

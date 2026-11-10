@@ -1,0 +1,255 @@
+{%- comment -%}
+  ca-process-carousel.liquid — the process step carousel as its own section
+  (Conspire v2.0, Figma 396:136), so it can sit anywhere on a page.
+
+  Steps are "step" blocks (label + text); the markup is
+  snippets/ca-process-carousel.liquid, shared with sections/ca-process.liquid
+  (intro with the carousel under it). The carousel styles live here.
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div
+    class="ca-process spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+    style="{% render 'spacing-style', settings: section.settings %}"
+  >
+    {%- render 'contrast-override',
+      background_color: section.settings.background_color,
+      text_color: section.settings.text_color,
+      section_id: section.id
+    -%}
+    {%- render 'ca-process-carousel', blocks: section.blocks, label: section.settings.label -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .ca-process__carousel {
+    --ca-process-gap: 20px;
+    --ca-process-active: min(56vw, 780px);
+    --ca-process-idle: min(29vw, 400px);
+    display: block;
+    outline-offset: 4px;
+  }
+
+  .ca-process__viewport {
+    width: 100%;
+    max-width: var(--page-width, 1440px);
+    margin-inline: auto;
+    padding-inline: var(--page-margin, 24px);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .ca-process__carousel.is-enhanced .ca-process__viewport {
+    overflow: visible;
+  }
+
+  .ca-process__track {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ca-process-gap);
+    min-height: 260px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ca-process__step {
+    flex: 0 0 var(--ca-process-idle);
+    cursor: pointer;
+    transition: flex-basis 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ca-process__step.is-active {
+    flex-basis: var(--ca-process-active);
+    cursor: default;
+  }
+
+  .ca-process__label {
+    margin-block-end: 24px;
+    padding-block-end: 24px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+    transition: border-color 0.3s ease;
+  }
+
+  .ca-process__step.is-active .ca-process__label {
+    border-block-end-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-process__text {
+    margin: 0;
+    font-size: var(--ca-fs-24);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    /* 0.55 keeps idle steps readable (>= 4.5:1 on the grey section; 0.3 was 2.1:1) */
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    transition: font-size 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+  }
+
+  .ca-process__step.is-active .ca-process__text {
+    font-size: var(--ca-fs-48);
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-process__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-start: 40px;
+  }
+
+  .ca-process__carousel:not(.is-enhanced) .ca-process__controls {
+    display: none;
+  }
+
+  .ca-process__arrows {
+    display: flex;
+  }
+
+  .ca-process__arrow {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .ca-process__arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .ca-process__dots {
+    display: flex;
+    gap: 0;
+  }
+
+  .ca-process__dot {
+    /* 24px hit target (WCAG 2.5.8); the visible dot is the ::before */
+    position: relative;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .ca-process__dot::before {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgb(var(--color-foreground-rgb) / 0.2);
+    transform: translate(-50%, -50%);
+    transition: background-color 0.2s ease;
+  }
+
+  .ca-process__dot.is-active::before {
+    background-color: rgb(var(--color-foreground-rgb));
+  }
+
+  /* Narrow/touch: native swipeable scroller (class set by ca-process.js). */
+  .ca-process__carousel.is-scroll .ca-process__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: var(--page-margin, 24px);
+  }
+
+  .ca-process__carousel.is-scroll .ca-process__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ca-process__carousel.is-scroll .ca-process__track {
+    transform: none !important;
+    transition: none;
+    width: max-content;
+    /* room so the last step can snap to the start edge */
+    padding-inline-end: calc(100vw - var(--ca-process-active) - 2 * var(--page-margin, 24px));
+  }
+
+  .ca-process__carousel.is-scroll .ca-process__step {
+    flex: 0 0 var(--ca-process-active);
+    min-width: var(--ca-process-active);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-process__track,
+    .ca-process__step,
+    .ca-process__text {
+      transition: none;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-process__carousel {
+      --ca-process-active: 78vw;
+      --ca-process-idle: 52vw;
+    }
+
+    .ca-process__track {
+      min-height: 220px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-process__carousel {
+      --ca-process-gap: 16px;
+      --ca-process-active: 80vw;
+      --ca-process-idle: 56vw;
+    }
+
+    .ca-process__step.is-active .ca-process__text {
+      font-size: 1.75rem;
+    }
+
+    .ca-process__text {
+      font-size: 1.125rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Process carousel",
+  "tag": "section",
+  "class": "ca-process-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "label", "label": "Carousel name", "info": "Read by screen readers. Not shown on the page.", "default": "Process" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Art direction" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Your brand, translated into a store customers remember and trust" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Process carousel", "category": "Conspire", "blocks": [{ "type": "step" }, { "type": "step" }, { "type": "step" }] }
+  ]
+}
+{% endschema %}
