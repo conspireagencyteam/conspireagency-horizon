@@ -366,7 +366,11 @@ were built (2026-11-10), so each is a dev-only template on any published work ar
 carries no `hub_*` metafields: `/blogs/work/zia-tile?view=preview-b2b&preview_theme_id=<id>` and
 `?view=preview-food`. The draft copy and the Files images sit in the section fallbacks
 ("Use the article's ..." off), with dev-only copies of the hero and the article body that read
-the title, lead and questions from settings. Not committed, like the others.
+the title, lead and questions from settings. Not committed, like the others. In a template
+file a `metaobject_list` setting (the hero and proof Clients, the testimonial Quotes) takes
+record handles (`zia-tile`, `body-bio`, `bodybio`), not GIDs: with GIDs the section renders
+no cards and no error, which is how the 2026-11-09 preview lost its hero cards, proof grid
+and testimonial.
 
 Section stylesheets are bundled into `compiled_assets/styles.css`, and any change to how
 the article body renders should re-run the containment check
