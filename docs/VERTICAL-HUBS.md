@@ -38,16 +38,19 @@ mocks' copy and the apps strip's copy can still be changed per article (see the 
 |---|---|---|---|
 | 1 Hero (black) | `ca-hub-hero` | `title` (H1); `summary` (lead); `custom.hub_eyebrow`; `custom.hub_pills`; `custom.hub_clients` (the first three with a `work_preview` become the floating store cards) | eyebrow, lead, pills, Clients settings |
 | 2 Some examples of our work | `ca-work-grid` ("Use the article's clients" on, eyebrow "Some examples of our work") | `custom.hub_clients`: ordered list of `client` metaobjects; `custom.hub_client_years` and `custom.hub_client_captions`, aligned by position | the Clients list, Years labels, Card captions |
-| 3 The mocks ("How tile and paint are bought", "How wholesale accounts buy") | `ca-hub-mock` x7, of which a hub shows the ones it has a heading for. Tile and paint: `trade`, `calculator`, `samples`, `checkout`. B2B and wholesale: `trade`, `company`, `quickorder`, `quote`. Sides right, left, right, left on both | `custom.hub_mocks_eyebrow` (the chapter eyebrow) and `custom.hub_mocks_heading` (the plain chapter statement); per mock `custom.hub_mock_<variant>_heading`, `_text`, `_caption`, `_eyebrow` and `_points` (the bullets) | intro eyebrow and statement, eyebrow, heading, text, bullets (blocks), app link, caption |
+| 2a Client stories ("What we worked on") | `ca-hub-stories` ("Use the article's stories" on) | `custom.hub_stories`: ordered list of `hub_story` metaobjects; `custom.hub_stories_eyebrow`, `custom.hub_stories_heading` | the chapter eyebrow and statement, and the `story` blocks |
+| 2b What we set up, and what we build | `ca-hub-setup` ("Use the article's content" on) | `custom.hub_setup_heading`; `custom.hub_setup` (rich text: one heading and one paragraph per item, up to four) | the statement and the `item` blocks |
+| 3 How tile and paint are bought | `ca-hub-mock` x4 (`trade`, `calculator`, `samples`, `checkout`; sides right, left, right, left) | `custom.hub_mocks_heading` (the plain chapter statement); per mock `custom.hub_mock_<variant>_heading`, `_text`, `_caption` | intro eyebrow and statement, eyebrow, heading, text, bullets (blocks), app link, caption |
 | 4 Buyer questions | `ca-article-body` (headings shown, FAQ schema on) | `body`: H2 per question, 60 to 120 words under each | none (the body is the page) |
 | 5 Testimonial | `ca-testimonials` ("Use the article's quote" on) | `custom.quote`: one `quote` metaobject | the Quotes list; with neither, the block is omitted |
-| 6 Apps | `ca-apps-cards` | none | the four `app` blocks in the template (name, line, page link, documentation link, thumbnail) |
+| 6 Apps | `ca-apps-cards` | optional: `custom.hub_apps_heading`, `custom.hub_apps_text`, `custom.hub_apps` (which cards to show) | the `app` blocks in the template (name, line, page link, documentation link, thumbnail) and the section's statement and lede |
 | 7 How we work with you | `ca-hub-offers` | `custom.hub_fractional`, `custom.hub_build` (the per-page paragraphs); name, eyebrow, price line and link from the two `offer` metaobject entries (`fractional-shopify-teams`, `the-conspire-build`), named by handle on the blocks | the blocks' Paragraph (then the entry's blurb), video, poster and media settings; the closing Pricing link |
 | 8 Form | `ca-booking` | `custom.hub_form_heading`, `custom.hub_form_text` | the panel heading and text settings |
 | SEO | theme head | `global.title_tag`, `global.description_tag` | title; summary |
 
 Backgrounds down the page: hero `#0d110d` (white text, transparent header, the case-study
-hero treatment), proof `#ffffff`, the four mocks `#f2f2f2` (one chapter), questions
+hero treatment), proof `#ffffff`, the client stories `#f2f2f2`, the setup passage `#ffffff`,
+the four mocks `#f2f2f2` (one chapter), questions
 `#ffffff`, testimonial `#0d110d`, apps `#f2f2f2`, offers `#ffffff`, booking `#f2f2f2`.
 
 ### The hero cards
@@ -74,12 +77,58 @@ a list aligned with `hub_clients` by position; `6+` shows that label, `0` or `no
 the name, same alignment. The tile hub hides the label for BSD Haus (a build, not a
 retainer) and Portola Paints (ended).
 
+### Client stories (2026-11-10)
+
+Danny, 2026-11-10, on the first B2B and wholesale hub: a hub is led by client stories with real
+screenshots of the client's Shopify store, not by recreated app screens ("comes off very much
+like an app landing page"). A new hub therefore carries stories and leaves the mock headings
+unset; the tile and paint hub keeps its four mocks and has no stories, so nothing changed for it.
+
+`sections/ca-hub-stories.liquid` renders one chapter: the intro row (eyebrow and statement),
+then one row per story through `snippets/ca-hub-story.liquid`: a copy column (number and
+client name as the eyebrow, an H3, a muted "who" line, the story, an optional "What changed"
+line, an optional case-study link) beside one to three captures. The captures sit on alternate
+sides down the page (right, left, right). The first image is the main screen; the second
+overlaps its lower right corner and the third its upper left (a capture's own heading is
+usually top left, so the overlay stays off it). A portrait capture taller than 5:6 is cropped
+from the top to 5:6. On a phone the captures come first, then the copy. A story with no
+images renders as copy only. With no stories from either source the section renders nothing.
+
+The `hub_story` metaobject (not created on the store yet; create it before the first hub
+article that uses stories, storefront access on, publishable entries set ACTIVE):
+
+| Field | Type | Notes |
+|---|---|---|
+| `name` | single line text | Client name. Never breaks across lines. |
+| `who` | single line text | One line: what the brand is and who it sells to. |
+| `heading` | single line text | The story's H3, plain and direct. |
+| `text` | rich text | One paragraph, 75 to 95 words, no bold. Links allowed. Name an app only where this client uses it, as ours, linked once. |
+| `outcome` | single line text | Optional. Only a published, sourced result; the row is omitted when blank. |
+| `link` | url | Optional. The case study; leave blank until it is published. |
+| `link_label` | single line text | "Read the Zia Tile case study". |
+| `screens` | list of files (images) | One to three real captures of the client's store, in Files, each with its own alt. First is the main screen. No recreated UI, no signed-in customer data, no staff names or photos, no dated promo bars. |
+| `caption` | single line text | Optional, under the captures. |
+
+Real captures on a hub are the exception to the usual "never a live capture" rule for case
+studies (Danny, 2026-11-10); they still need the client's agreement before the hub publishes.
+
+`sections/ca-hub-setup.liquid` is the short text chapter after the stories: a statement and up
+to four items in a row (two columns on a tablet, one on a phone), each a number, a small
+heading and two or three sentences. `custom.hub_setup` is one rich text value with a heading
+and a paragraph per item; the section splits it at the headings. No images, no app names.
+
+The apps strip can be quietened per article (`sections/ca-apps-cards.liquid`):
+`custom.hub_apps_heading` and `custom.hub_apps_text` replace the statement and the lede, and
+`custom.hub_apps` limits the cards to the listed apps (a card matches by its block id in the
+template, `wholesale`, `wishlist`, `drafts`, `bonde`, `calculator`, or by its handleized name).
+With none of the three set the strip is unchanged, as it is on the two live hubs and on
+`/pages/best-shopify-apps`.
+
 ### The mocks
 
 `sections/ca-hub-mock.liquid` follows `ca-app-wholesale-mock`: a copy column beside a static,
 `aria-hidden` recreation of a storefront screen; every meaningful statement is in the copy.
-Seven variants, one per section instance (2026-11-09: `company`, `quickorder` and `quote`
-added for the B2B and wholesale hub, which reuses `trade` as its first):
+Four variants, one per section instance:
 
 - `trade`: the storefront trade application (the fields of the App Store listing's form,
   filled for Retail Co. and Marcus Reed) and, overlapping it, the outcome card: approved into
@@ -98,33 +147,8 @@ added for the B2B and wholesale hub, which reuses `trade` as its first):
   with the LTL pallet freight quoted for the address, Net 30 payment terms, the order
   summary, the draft-order-invoice line. No Shopify logo, no Shop Pay mark; the bar reads
   yourstore.com.
-- `company`: a signed-in B2B company account in the customer account's look. The account
-  bar ("Marcus Reed · Retail Co.", location switcher on Portland, OR), the company card with
-  the Gold tier pill (price list, payment terms, tax, locations, buyers, account rep), "Your
-  prices" with the list price struck through beside the account price, and, overlapping the
-  page, "Recent orders" with a Reorder button on each. The spec's "Company: Retail Co." row
-  is the card's title.
-- `quickorder`: a storefront quick order page for one collection. Title, the price-list
-  sub-line, "Reorder #1042", the table (Product, SKU, Case pack, Your price, Cases as a
-  stepper, Line total; the zero row dimmed), the footer ("15 cases · Subtotal $2,358.00",
-  "Minimum order $500.00 met", Add 15 cases to cart, Add to Project) and, overlapping it,
-  the Add to Project panel of B2B Wishlist Project Planner as the `calculator` variant draws
-  it. In a narrow card (phones, small desktops) SKU, case pack and price fold under the
-  product name.
-- `quote`: the customer account's "Quotes and invoices" page with one quote open, in the
-  checkout variant's two-pane rhythm: the document list (Q-1058 selected, two invoices) and
-  the quote (prepared by the rep, valid for 30 days, ship to, payment terms, line items,
-  subtotal, freight, tax exempt, total, the rep's note, Review and pay, Download PDF). No
-  separate approve step is shown.
 
-The three wholesale variants share one invented order, and the figures agree: generic
-tabletop products sold by the case on the Gold tier price list at 40% off list (Stoneware
-Mug $216.00 to $129.60, Oak Serving Board $270.00 to $162.00, Linen Napkin $480.00 to
-$288.00); the quick order is 6 + 4 + 3 + 2 = 15 cases, $2,358.00; the quote is that order
-plus $145.00 freight, $2,503.00. Second location Seattle, WA; account rep Dana Cole. Product
-swatches are CSS gradients, never images.
-
-The older mock data is the set already on the live app pages (Retail Co., Marcus Reed,
+Mock data is the set already on the live app pages (Retail Co., Marcus Reed,
 marcus@retailco.com, Portland OR, resale-certificate.pdf, Gold tier, Net 30, Pale Calcite
 Zellige Hex, Mineral Sage 4x4); the paint product is generic ("Interior eggshell, Chalk").
 The figures agree with each other: $96.00 a box at 2.3 sq ft, 24 sq ft at 15% overage is
@@ -133,30 +157,9 @@ No em dash anywhere in a mock.
 
 A mock section renders nothing when it has no heading from either source, so the shared
 template shows the mocks only on an article that carries `custom.hub_mock_<variant>_heading`
-(or when the theme editor sets the fallback). The template lists the section instances in
-the order trade, company, quickorder, quote, calculator, samples, checkout; a hub never
-carries headings for both sets, so each shows its own four in order (the unused instances
-leave an empty section wrapper and nothing else). The supplements hub therefore has no mocks
+(or when the theme editor sets the fallback). The supplements hub therefore has no mocks
 until its own variants exist (a subscription portal and Bonde are a later pass; they would be
 new variants of the same section).
-
-Per-article overrides of the shared template wording (2026-11-09). The chapter eyebrow and
-the bullets used to be template settings only, in tile wording. Each now has a metafield
-that wins when set and falls back to the template value when not, so the tile hub needs
-nothing:
-
-- `custom.hub_mocks_eyebrow` replaces the chapter eyebrow ("How tile and paint are
-  bought") on the section instance that carries the intro.
-- `custom.hub_mock_<variant>_eyebrow` replaces a mock's own eyebrow ("Trade program").
-- `custom.hub_mock_<variant>_points` replaces a mock's bullet blocks with the list's
-  entries, in order. With no list the template's blocks show; the `company`, `quickorder`
-  and `quote` instances have no blocks, so they show bullets only when the list is set.
-
-The B2B and wholesale hub must set `hub_mocks_eyebrow`, `hub_mock_trade_eyebrow` and
-`hub_mock_trade_points`, because the `trade` instance's template wording is the tile hub's.
-The app link under each mock stays a template setting (B2B Onboarding & Wholesale, B2B
-Wishlist Project Planner, Draft Order Invoices & Quotes; none on `company`, which shows
-Shopify's native B2B).
 
 ### How we work with you: the `offer` metaobjects
 
@@ -197,13 +200,18 @@ type given (see "Setting the content"). `custom.quote` already has a definition.
 | `custom.hub_clients` | `list.metaobject_reference` (type `client`) | The proof cards and the hero cards, in display order. Each client needs a `client` metaobject with `work_preview`, `featured_site_media` or `featured_site_image`, and `case_study_reference` to a published case study (unpublished: the card is omitted). |
 | `custom.hub_client_years` | `list.single_line_text_field` | Optional. One entry per client in `hub_clients`, same order: `6+` shows the label, `0` or `none` hides it. Omit to show every record's own years. |
 | `custom.hub_client_captions` | `list.single_line_text_field` | Optional. One line per client, same order, shown under the name. |
+| `custom.hub_stories` | `list.metaobject_reference` (type `hub_story`) | The client stories, in display order (see "Client stories"). Omit on a hub that uses the mocks. |
+| `custom.hub_stories_eyebrow` | `single_line_text_field` | Optional. The chapter eyebrow ("What we worked on" in the template). |
+| `custom.hub_stories_heading` | `single_line_text_field` | The chapter statement over the stories, `<strong>` on the emphasised sentence. |
+| `custom.hub_setup_heading` | `single_line_text_field` | The statement over the setup passage, `<strong>` on the emphasised sentence. |
+| `custom.hub_setup` | `rich_text_field` | Up to four items, each a heading followed by one paragraph. Links allowed, no bold. Omit to omit the section. |
+| `custom.hub_apps_heading` | `single_line_text_field` | Optional. Replaces the apps strip statement ("<strong>Three apps</strong> that came out of this work."). |
+| `custom.hub_apps_text` | `multi_line_text_field` | Optional. Replaces the apps strip lede. |
+| `custom.hub_apps` | `list.single_line_text_field` | Optional. The cards to show, by block id or handleized app name. |
 | `custom.hub_mocks_heading` | `single_line_text_field` | The chapter statement over the mocks, short and plain, `<strong>` on the emphasised sentence ("<strong>Tile, paint and home goods are not bought like other products.</strong> Your Shopify store has to sell the way your customers plan a room."). |
-| `custom.hub_mocks_eyebrow` | `single_line_text_field` | Optional. The chapter eyebrow over the mocks ("How wholesale accounts buy"). Omit to keep the template's ("How tile and paint are bought"). |
-| `custom.hub_mock_<variant>_heading` (`trade`, `calculator`, `samples`, `checkout`, `company`, `quickorder`, `quote`) | `single_line_text_field` | The H2 beside each mock. A mock with no heading is not rendered. |
-| `custom.hub_mock_<variant>_eyebrow` | `single_line_text_field` | Optional. The eyebrow over a mock's heading ("Applications"). Omit to keep the template's. |
-| `custom.hub_mock_<variant>_points` | `list.single_line_text_field` | Optional. The bullets under a mock's paragraph, three or four short lines, plain text. Omit to keep the template's blocks. |
-| `custom.hub_mock_<variant>_text` | `rich_text_field` (or `multi_line_text_field`) | One paragraph, 60 to 80 words, naming the app as ours with its page linked (the samples and company columns name no app). |
-| `custom.hub_mock_<variant>_caption` | `single_line_text_field` | Optional caption under the copy ("Shown with example data."). |
+| `custom.hub_mock_trade_heading`, `..._calculator_heading`, `..._samples_heading`, `..._checkout_heading` | `single_line_text_field` | The H2 beside each mock. |
+| `custom.hub_mock_trade_text`, `..._calculator_text`, `..._samples_text`, `..._checkout_text` | `rich_text_field` (or `multi_line_text_field`) | One paragraph, 60 to 80 words, naming the app as ours with its page linked (the samples column names no app). The bullets under it stay in the template's blocks. |
+| `custom.hub_mock_trade_caption`, `..._calculator_caption`, `..._samples_caption`, `..._checkout_caption` | `single_line_text_field` | Optional caption under the copy ("Shown with example data."). |
 | `body` | article field | The buyer questions. One `<h2>` per question (3 to 5), phrased as the buyer asks it, followed by one or two `<p>` of 60 to 120 words naming a client where true. Links allowed. An optional `<p>` before the first `<h2>` renders as the lede. No `<h1>`, no `<div>` or `<section>` wrappers, no `<strong>`, `<b>` or `<em>`, no em dashes. The headings feed the sticky question list and the FAQPage structured data. |
 | `custom.hub_fractional` | `rich_text_field` (or `multi_line_text_field`) | The Fractional Shopify Teams paragraph for this vertical, no price in it (the price line comes from the `offer` entry). Omit to show the entry's neutral blurb. |
 | `custom.hub_build` | `rich_text_field` (or `multi_line_text_field`) | The Conspire Build paragraph for this vertical, same rule. |
@@ -322,18 +330,9 @@ access on. `custom.quote` exists already.
 | Hub mock calculator heading / text / caption | `hub_mock_calculator_*` | same |
 | Hub mock samples heading / text / caption | `hub_mock_samples_*` | same |
 | Hub mock checkout heading / text / caption | `hub_mock_checkout_*` | same |
-| Hub mock company heading / text / caption | `hub_mock_company_heading`, `hub_mock_company_text`, `hub_mock_company_caption` | same |
-| Hub mock quick order heading / text / caption | `hub_mock_quickorder_heading`, `hub_mock_quickorder_text`, `hub_mock_quickorder_caption` | same |
-| Hub mock quote heading / text / caption | `hub_mock_quote_heading`, `hub_mock_quote_text`, `hub_mock_quote_caption` | same |
-| Hub mocks eyebrow | `hub_mocks_eyebrow` | Single line text |
-| Hub mock eyebrow, one per variant | `hub_mock_trade_eyebrow`, `hub_mock_calculator_eyebrow`, `hub_mock_samples_eyebrow`, `hub_mock_checkout_eyebrow`, `hub_mock_company_eyebrow`, `hub_mock_quickorder_eyebrow`, `hub_mock_quote_eyebrow` | Single line text |
-| Hub mock points, one per variant | `hub_mock_trade_points`, `hub_mock_calculator_points`, `hub_mock_samples_points`, `hub_mock_checkout_points`, `hub_mock_company_points`, `hub_mock_quickorder_points`, `hub_mock_quote_points` | Single line text, list of values |
-
-None of the 2026-11-09 keys (the three new variants' heading, text and caption, and every
-`_eyebrow` and `_points` key) has a definition on the store yet. The B2B and wholesale hub
-needs the nine heading, text and caption definitions for `company`, `quickorder` and
-`quote`, `hub_mocks_eyebrow`, and the `_eyebrow` and `_points` pair for `trade`, `company`,
-`quickorder` and `quote`; the tile-only pairs are optional.
+| Hub stories / eyebrow / heading | `hub_stories`, `hub_stories_eyebrow`, `hub_stories_heading` | Metaobject reference, Hub story, list of entries / Single line text / Single line text |
+| Hub setup heading / items | `hub_setup_heading`, `hub_setup` | Single line text / Rich text |
+| Hub apps heading / text / cards | `hub_apps_heading`, `hub_apps_text`, `hub_apps` | Single line text / Multi-line text / Single line text, list of values |
 | Hub fractional paragraph | `hub_fractional` | Rich text |
 | Hub build paragraph | `hub_build` | Rich text |
 | Hub form heading | `hub_form_heading` | Single line text |
@@ -362,12 +361,12 @@ still hold the old copy, and the BSD Haus quote record carries an em dash and a 
 value). They live only on the development theme and are not committed; the copies are kept
 in the session scratchpad for re-pushing.
 
-The B2B and wholesale hub had no article when its mocks were built (2026-11-09), so its
-preview is `?view=preview-b2b` on any published work article that carries no `hub_*`
-metafields (`/blogs/work/zia-tile?view=preview-b2b&preview_theme_id=<id>`): a dev-only
-template with the draft copy in the section fallbacks and the `override_key`s blank, plus
-dev-only copies of the hero and the article body that read the title, lead and questions
-from settings. Not committed, like the others.
+The B2B and wholesale hub and the food and beverage hub had no article when their previews
+were built (2026-11-10), so each is a dev-only template on any published work article that
+carries no `hub_*` metafields: `/blogs/work/zia-tile?view=preview-b2b&preview_theme_id=<id>` and
+`?view=preview-food`. The draft copy and the Files images sit in the section fallbacks
+("Use the article's ..." off), with dev-only copies of the hero and the article body that read
+the title, lead and questions from settings. Not committed, like the others.
 
 Section stylesheets are bundled into `compiled_assets/styles.css`, and any change to how
 the article body renders should re-run the containment check
@@ -384,6 +383,9 @@ item down to the clipped element, or the column overflows under its neighbour.
   published case study; BodyBio never first or alone; years hidden where the engagement is a
   build or has ended.
 - Mock copy names each app as ours and links its page; no price, no hour count.
+- Stories: real captures only, each with an alt, none showing customer data, staff or a dated
+  promotion; an outcome line only where a published source states it; the client has agreed
+  to be featured; the case-study link is set only when that case study is published.
 - The two `offer` entries carry the current brief prices; a price change goes to the brief
   first, then to Content > Metaobjects > Offer, never to a template.
 - No em dashes anywhere, including the quote record; no bold in the body or the rich text

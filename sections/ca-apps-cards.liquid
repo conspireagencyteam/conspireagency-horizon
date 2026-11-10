@@ -14,24 +14,56 @@
     text_color: section.settings.text_color,
     section_id: section.id
   -%}
+  {%- comment -%}
+    A vertical hub article can quieten the strip: custom.hub_apps_heading and
+    custom.hub_apps_text replace the statement and the lede, and custom.hub_apps (a list
+    of block ids or handleized app names, for example b2b-onboarding-wholesale) limits
+    the cards to those apps, in the template's order. Without them nothing changes.
+  {%- endcomment -%}
+  {%- liquid
+    assign apps_heading = section.settings.heading
+    assign apps_intro = section.settings.intro
+    assign apps_only = blank
+    if article != blank
+      if article.metafields.custom.hub_apps_heading.value != blank
+        assign apps_heading = article.metafields.custom.hub_apps_heading.value
+      endif
+      if article.metafields.custom.hub_apps_text.value != blank
+        assign apps_intro = article.metafields.custom.hub_apps_text.value | newline_to_br | prepend: '<p>' | append: '</p>'
+      endif
+      if article.metafields.custom.hub_apps.value != blank
+        assign apps_only = article.metafields.custom.hub_apps.value
+      endif
+    endif
+    assign app_number = 0
+  -%}
   <div class="ca-inner">
-    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+    {%- if section.settings.eyebrow != blank or apps_heading != blank -%}
       {%- render 'ca-intro',
         eyebrow: section.settings.eyebrow,
-        heading: section.settings.heading,
+        heading: apps_heading,
         start: 6,
         class: 'ca-appcards__intro'
       -%}
     {%- endif -%}
-    {%- if section.settings.intro != blank -%}
-      <div class="ca-grid ca-appcards__lede"><div class="ca-appcards__lede-text">{{ section.settings.intro }}</div></div>
+    {%- if apps_intro != blank -%}
+      <div class="ca-grid ca-appcards__lede"><div class="ca-appcards__lede-text">{{ apps_intro }}</div></div>
     {%- endif -%}
     {%- if section.blocks.size > 0 -%}
       <ol class="ca-appcards__list" role="list">
         {%- for block in section.blocks -%}
+          {%- liquid
+            if apps_only != blank
+              assign app_handle = block.settings.name | handleize
+              unless apps_only contains block.id or apps_only contains app_handle
+                continue
+              endunless
+            endif
+            assign app_number = app_number | plus: 1
+          -%}
           <li class="ca-appcards__card" {{ block.shopify_attributes }}>
             <div class="ca-appcards__copy">
-              <p class="ca-eyebrow ca-appcards__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</p>
+              <p class="ca-eyebrow ca-appcards__num">{{ app_number | prepend: '0' | slice: -2, 2 }}</p>
               <h3 class="ca-appcards__name">
                 {%- if block.settings.page_link != blank -%}
                   <a href="{{ block.settings.page_link }}">{{ block.settings.name }}</a>

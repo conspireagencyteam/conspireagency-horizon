@@ -1,0 +1,168 @@
+{%- comment -%}
+  ca-hub-setup.liquid: "What we set up, and what we build": a short text chapter for a
+  vertical hub, after the client stories. A statement and up to four items, each a small
+  heading over two or three sentences. No images.
+
+  From the article: custom.hub_setup_heading (single line, <strong> on the emphasised
+  sentence) replaces the statement, and custom.hub_setup (rich text: one heading and one
+  paragraph per item) replaces the "item" blocks. With no items from either source the
+  section renders nothing.
+{%- endcomment -%}
+
+{%- liquid
+  assign heading = section.settings.heading
+  assign items_html = blank
+  if article != blank and section.settings.article_setup
+    if article.metafields.custom.hub_setup_heading.value != blank
+      assign heading = article.metafields.custom.hub_setup_heading.value
+    endif
+    if article.metafields.custom.hub_setup.value != blank
+      capture items_html
+        echo article.metafields.custom.hub_setup | metafield_tag
+      endcapture
+    endif
+  endif
+
+  assign has_items = false
+  if items_html != blank or section.blocks.size > 0
+    assign has_items = true
+  endif
+-%}
+
+{%- if has_items -%}
+<div
+  class="ca-hsetup spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank or heading != blank -%}
+      {%- render 'ca-intro',
+        eyebrow: section.settings.eyebrow,
+        heading: heading,
+        start: 6,
+        class: 'ca-hsetup__intro'
+      -%}
+    {%- endif -%}
+
+    {%- if items_html != blank -%}
+      {%- comment -%} Rich text arrives flat (heading, paragraph, heading, paragraph); split it into one card per heading. {%- endcomment -%}
+      {%- liquid
+        assign flat = items_html | replace: '<h2', '<h3' | replace: '</h2>', '</h3>' | replace: '<h4', '<h3' | replace: '</h4>', '</h3>'
+        assign parts = flat | split: '<h3'
+        assign count = parts.size | minus: 1
+      -%}
+      <div class="ca-hsetup__grid" style="--ca-hsetup-count: {{ count | at_most: 4 | at_least: 1 }};">
+        {%- for part in parts -%}
+          {%- if forloop.first -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign pieces = part | split: '</h3>'
+            assign label = pieces[0] | split: '>' | last | strip_html
+            assign body = pieces[1]
+            assign n = forloop.index | minus: 1
+          -%}
+          <article class="ca-hsetup__item">
+            <p class="ca-eyebrow ca-hsetup__num" aria-hidden="true">{% if n < 10 %}0{% endif %}{{ n }}</p>
+            <h3 class="ca-hsetup__label">{{ label }}</h3>
+            <div class="ca-hsetup__text">{{ body }}</div>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="ca-hsetup__grid" style="--ca-hsetup-count: {{ section.blocks.size | at_most: 4 }};">
+        {%- for block in section.blocks -%}
+          <article class="ca-hsetup__item" {{ block.shopify_attributes }}>
+            <p class="ca-eyebrow ca-hsetup__num" aria-hidden="true">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</p>
+            <h3 class="ca-hsetup__label">{{ block.settings.label }}</h3>
+            <div class="ca-hsetup__text">{{ block.settings.text }}</div>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+
+{% stylesheet %}
+  .ca-hsetup { background-color: var(--color-background); }
+
+  .ca-hsetup__intro { margin-block-end: 80px; }
+
+  .ca-hsetup__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ca-hsetup-count, 4), minmax(0, 1fr));
+    gap: 48px 24px;
+  }
+
+  .ca-hsetup__num {
+    margin-block-end: 24px;
+    padding-block-end: 16px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-hsetup__label {
+    margin: 0 0 16px;
+    font-size: var(--ca-fs-24);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .ca-hsetup__text {
+    font-size: var(--ca-fs-18);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  .ca-hsetup__text a { color: inherit; text-underline-offset: 0.15em; }
+  .ca-hsetup__text > :first-child { margin-block-start: 0; }
+  .ca-hsetup__text > :last-child { margin-block-end: 0; }
+
+  @media screen and (max-width: 1199px) {
+    .ca-hsetup__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-hsetup__intro { margin-block-end: 48px; }
+    .ca-hsetup__grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hub setup and build",
+  "tag": "section",
+  "class": "ca-hub-setup-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "checkbox", "id": "article_setup", "label": "Use the article's content", "info": "custom.hub_setup_heading replaces the statement; custom.hub_setup (rich text, one heading and one paragraph per item) replaces the blocks.", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Statement", "info": "Bold marks the emphasised sentence." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Heading" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    { "name": "Hub setup and build", "category": "Conspire", "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }, { "type": "item" }] }
+  ]
+}
+{% endschema %}

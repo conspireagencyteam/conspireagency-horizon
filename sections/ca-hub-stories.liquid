@@ -1,0 +1,321 @@
+{%- comment -%}
+  ca-hub-stories.liquid: "What we worked on": a chapter of client stories for a vertical
+  hub. One story per client: the client's name, a plain heading, who the brand sells to,
+  what we worked on, an optional outcome line and case-study link, beside one to three real
+  captures of the client's Shopify store. No recreated UI: every image is a Files image of
+  the client's own store.
+
+  Stories come from the article: custom.hub_stories is a list of `hub_story` metaobjects
+  (name, who, heading, text, outcome, link, link_label, screens, caption). With no list on
+  the article the section's "story" blocks are the fallback (the dev previews, the theme
+  editor). With neither, the section renders nothing, so the shared hub template shows the
+  chapter only on an article that carries stories.
+
+  custom.hub_stories_eyebrow and custom.hub_stories_heading replace the chapter eyebrow
+  and statement. A story with no screens still renders (copy across the row).
+{%- endcomment -%}
+
+{%- liquid
+  assign stories = blank
+  if article != blank and section.settings.article_stories and article.metafields.custom.hub_stories.value != blank
+    assign stories = article.metafields.custom.hub_stories.value
+  endif
+
+  assign intro_eyebrow = section.settings.eyebrow
+  assign intro_heading = section.settings.heading
+  if article != blank and section.settings.article_stories
+    if article.metafields.custom.hub_stories_eyebrow.value != blank
+      assign intro_eyebrow = article.metafields.custom.hub_stories_eyebrow.value
+    endif
+    if article.metafields.custom.hub_stories_heading.value != blank
+      assign intro_heading = article.metafields.custom.hub_stories_heading.value
+    endif
+  endif
+
+  assign has_stories = false
+  if stories != blank or section.blocks.size > 0
+    assign has_stories = true
+  endif
+-%}
+
+{%- if has_stories -%}
+<div
+  class="ca-hstories spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if intro_eyebrow != blank or intro_heading != blank -%}
+      {%- render 'ca-intro',
+        eyebrow: intro_eyebrow,
+        heading: intro_heading,
+        start: 6,
+        class: 'ca-hstories__intro'
+      -%}
+    {%- endif -%}
+
+    <div class="ca-hstories__list">
+      {%- if stories != blank -%}
+        {%- for story in stories -%}
+          {%- liquid
+            assign side = 'right'
+            assign odd = forloop.index | modulo: 2
+            if odd == 0
+              assign side = 'left'
+            endif
+            assign screens = story.screens.value
+            assign story_text = blank
+            if story.text.value != blank
+              capture story_text
+                echo story.text | metafield_tag
+              endcapture
+            endif
+          -%}
+          {%- render 'ca-hub-story',
+            name: story.name.value,
+            who: story.who.value,
+            heading: story.heading.value,
+            text: story_text,
+            outcome: story.outcome.value,
+            outcome_label: section.settings.outcome_label,
+            link_url: story.link.value,
+            link_label: story.link_label.value,
+            image_1: screens[0],
+            image_2: screens[1],
+            image_3: screens[2],
+            caption: story.caption.value,
+            side: side,
+            index: forloop.index
+          -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign side = 'right'
+            assign odd = forloop.index | modulo: 2
+            if odd == 0
+              assign side = 'left'
+            endif
+          -%}
+          {%- render 'ca-hub-story',
+            name: block.settings.name,
+            who: block.settings.who,
+            heading: block.settings.heading,
+            text: block.settings.text,
+            outcome: block.settings.outcome,
+            outcome_label: section.settings.outcome_label,
+            link_url: block.settings.link_url,
+            link_label: block.settings.link_label,
+            image_1: block.settings.image_1,
+            image_2: block.settings.image_2,
+            image_3: block.settings.image_3,
+            caption: block.settings.caption,
+            side: side,
+            index: forloop.index,
+            attrs: block.shopify_attributes
+          -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% stylesheet %}
+  .ca-hstories { background-color: var(--color-background); }
+
+  .ca-hstories__intro { margin-block-end: 96px; }
+
+  .ca-hstories__list {
+    display: grid;
+    gap: 136px;
+  }
+
+  .ca-hstory {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 40px;
+    align-items: center;
+  }
+
+  .ca-hstory__copy { grid-column: 1 / span 5; }
+  .ca-hstory__media { grid-column: 7 / span 6; min-width: 0; }
+  .ca-hstory--left .ca-hstory__copy { grid-column: 8 / span 5; order: 2; }
+  .ca-hstory--left .ca-hstory__media { grid-column: 1 / span 6; order: 1; }
+  .ca-hstory--shots-0 .ca-hstory__copy { grid-column: 1 / span 8; }
+
+  .ca-hstory__client {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-block-end: 24px;
+    padding-block-end: 16px;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-hstory__num { color: rgb(var(--color-foreground-rgb) / 0.35); }
+  .ca-hstory__name { color: rgb(var(--color-foreground-rgb)); white-space: nowrap; }
+
+  .ca-hstory__heading {
+    margin: 0 0 20px;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .ca-hstory__who {
+    margin: 0 0 20px;
+    font-size: var(--ca-fs-18);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    color: var(--ca-muted);
+  }
+
+  .ca-hstory__text { color: var(--ca-soft); }
+  .ca-hstory__text a { color: inherit; text-underline-offset: 0.15em; }
+
+  .ca-hstory__outcome {
+    display: grid;
+    gap: 8px;
+    margin: 28px 0 0;
+    padding-block-start: 20px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-hstory__outcome-text {
+    font-size: var(--ca-fs-20);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-hstory__link-row { margin: 28px 0 0; }
+  .ca-hstory__link { color: inherit; text-underline-offset: 0.15em; }
+
+  /* The captures: a main screen with one or two smaller ones overlapping its corners. */
+  .ca-hstory__stack {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+  }
+
+  .ca-hstory__shot {
+    grid-row: 1;
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgb(13 17 13 / 0.12);
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 30px 60px -30px rgb(13 17 13 / 0.35);
+  }
+
+  .ca-hstory__shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .ca-hstory__shot--tall img {
+    aspect-ratio: 5 / 6;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .ca-hstory__shot--main { grid-column: 1 / -1; }
+
+  .ca-hstory--shots-2 .ca-hstory__stack,
+  .ca-hstory--shots-3 .ca-hstory__stack { padding-block-end: 9%; }
+  .ca-hstory--shots-3 .ca-hstory__stack { padding-block-start: 7%; }
+
+  .ca-hstory--shots-2 .ca-hstory__shot--main,
+  .ca-hstory--shots-3 .ca-hstory__shot--main { grid-column: 1 / span 11; }
+
+  .ca-hstory__shot--over {
+    grid-column: 8 / span 5;
+    align-self: end;
+    z-index: 2;
+    transform: translateY(22%);
+  }
+
+  .ca-hstory__shot--top {
+    grid-column: 1 / span 5;
+    align-self: start;
+    z-index: 2;
+    transform: translateY(-28%);
+  }
+
+  .ca-hstory--shots-3 .ca-hstory__shot--main { grid-column: 2 / span 10; }
+
+  .ca-hstory__caption {
+    margin: 20px 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ca-muted);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-hstories__intro { margin-block-end: 56px; }
+    .ca-hstories__list { gap: 88px; }
+
+    .ca-hstory__copy,
+    .ca-hstory__media,
+    .ca-hstory--left .ca-hstory__copy,
+    .ca-hstory--left .ca-hstory__media,
+    .ca-hstory--shots-0 .ca-hstory__copy {
+      grid-column: 1 / -1;
+      order: 0;
+    }
+
+    .ca-hstory__media,
+    .ca-hstory--left .ca-hstory__media { order: -1; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hub client stories",
+  "tag": "section",
+  "class": "ca-hub-stories-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "checkbox", "id": "article_stories", "label": "Use the article's stories", "info": "custom.hub_stories on the article (a list of hub_story entries) wins over the blocks below; custom.hub_stories_eyebrow and custom.hub_stories_heading replace the two settings here.", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Chapter eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Chapter statement", "info": "Bold marks the emphasised sentence." },
+    { "type": "text", "id": "outcome_label", "label": "Outcome label", "default": "What changed" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 200, "step": 2, "unit": "px", "default": 136 }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Client name" },
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "text", "id": "who", "label": "Who they are and who they sell to" },
+        { "type": "richtext", "id": "text", "label": "Story" },
+        { "type": "text", "id": "outcome", "label": "Outcome line", "info": "Only a published, sourced result. Leave blank to omit the row." },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link_url", "label": "Link" },
+        { "type": "image_picker", "id": "image_1", "label": "Main capture" },
+        { "type": "image_picker", "id": "image_2", "label": "Second capture (overlaps the lower corner)" },
+        { "type": "image_picker", "id": "image_3", "label": "Third capture (overlaps the upper corner)" },
+        { "type": "text", "id": "caption", "label": "Caption" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Hub client stories", "category": "Conspire", "blocks": [{ "type": "story" }] }
+  ]
+}
+{% endschema %}

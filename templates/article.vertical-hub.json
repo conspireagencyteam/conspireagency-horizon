@@ -83,66 +83,6 @@
         "padding-block-end": 48
       }
     },
-    "bought_company": {
-      "type": "ca-hub-mock",
-      "settings": {
-        "variant": "company",
-        "mock_side": "left",
-        "intro_eyebrow": "",
-        "intro_heading": "",
-        "eyebrow": "Company accounts",
-        "heading": "",
-        "text": "",
-        "link_label": "",
-        "link_url": "",
-        "caption": "",
-        "override_key": "hub_mock_company",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "padding-block-start": 48,
-        "padding-block-end": 48
-      }
-    },
-    "bought_quickorder": {
-      "type": "ca-hub-mock",
-      "settings": {
-        "variant": "quickorder",
-        "mock_side": "right",
-        "intro_eyebrow": "",
-        "intro_heading": "",
-        "eyebrow": "Reordering",
-        "heading": "",
-        "text": "",
-        "link_label": "B2B Wishlist Project Planner",
-        "link_url": "/pages/b2b-wishlist-project-planner",
-        "caption": "",
-        "override_key": "hub_mock_quickorder",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "padding-block-start": 48,
-        "padding-block-end": 48
-      }
-    },
-    "bought_quote": {
-      "type": "ca-hub-mock",
-      "settings": {
-        "variant": "quote",
-        "mock_side": "left",
-        "intro_eyebrow": "",
-        "intro_heading": "",
-        "eyebrow": "Quotes and invoices",
-        "heading": "",
-        "text": "",
-        "link_label": "Draft Order Invoices & Quotes",
-        "link_url": "/pages/draft-order-invoices",
-        "caption": "",
-        "override_key": "hub_mock_quote",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "padding-block-start": 48,
-        "padding-block-end": 80
-      }
-    },
     "bought_calculator": {
       "type": "ca-hub-mock",
       "blocks": {
@@ -620,15 +560,39 @@
         "panel_heading_key": "hub_form_heading",
         "panel_text_key": "hub_form_text"
       }
+    },
+    "stories": {
+      "type": "ca-hub-stories",
+      "settings": {
+        "article_stories": true,
+        "eyebrow": "What we worked on",
+        "heading": "",
+        "outcome_label": "What changed",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 136
+      }
+    },
+    "setup": {
+      "type": "ca-hub-setup",
+      "settings": {
+        "article_setup": true,
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
     }
   },
   "order": [
     "hero",
     "proof",
+    "stories",
+    "setup",
     "bought_trade",
-    "bought_company",
-    "bought_quickorder",
-    "bought_quote",
     "bought_calculator",
     "bought_samples",
     "bought_checkout",
