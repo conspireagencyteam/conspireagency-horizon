@@ -134,6 +134,29 @@
         "padding-block-end": 80
       }
     },
+    "pricing": {
+      "type": "ca-build-pricing",
+      "settings": {
+        "anchor_id": "",
+        "eyebrow": "Pricing, scoped line by line",
+        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.</strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.</strong>",
+        "button_label": "Schedule a Call",
+        "button_link": "#book-a-call",
+        "min_amount": "$15k",
+        "min_caption": "Starting point",
+        "mid_amount": "$25-45k",
+        "mid_caption": "Where most builds land",
+        "max_amount": "$100k+",
+        "max_caption": "Full scope",
+        "axis_start": "6 weeks",
+        "axis_end": "12 weeks",
+        "accent_color": "#ff4d00",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
     "clients": {
       "type": "ca-work-grid",
       "settings": {
@@ -187,29 +210,6 @@
         "text_color": "",
         "padding-block-start": 80,
         "padding-block-end": 0
-      }
-    },
-    "pricing": {
-      "type": "ca-build-pricing",
-      "settings": {
-        "anchor_id": "",
-        "eyebrow": "Pricing, scoped line by line",
-        "heading": "Every Conspire Build is scoped <strong>line by line: page templates, migration, app development, integrations.</strong> The starting point covers <strong>the full six-phase process, and scope moves it up the range.</strong>",
-        "button_label": "Schedule a Call",
-        "button_link": "#book-a-call",
-        "min_amount": "$15k",
-        "min_caption": "Starting point",
-        "mid_amount": "$25-45k",
-        "mid_caption": "Where most builds land",
-        "max_amount": "$100k+",
-        "max_caption": "Full scope",
-        "axis_start": "6 weeks",
-        "axis_end": "12 weeks",
-        "accent_color": "#ff4d00",
-        "background_color": "#0d110d",
-        "text_color": "#ffffff",
-        "padding-block-start": 80,
-        "padding-block-end": 80
       }
     },
     "growth": {
@@ -509,10 +509,10 @@
   "order": [
     "hero",
     "process",
+    "pricing",
     "migrations",
     "clients",
     "more",
-    "pricing",
     "growth",
     "fit",
     "testimonials",
