@@ -560,11 +560,38 @@
         "panel_heading_key": "hub_form_heading",
         "panel_text_key": "hub_form_text"
       }
+    },
+    "stories": {
+      "type": "ca-hub-stories",
+      "settings": {
+        "article_stories": true,
+        "eyebrow": "What we worked on",
+        "heading": "",
+        "outcome_label": "What changed",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 96,
+        "padding-block-end": 136
+      }
+    },
+    "setup": {
+      "type": "ca-hub-setup",
+      "settings": {
+        "article_setup": true,
+        "eyebrow": "How we approach it",
+        "heading": "",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
     }
   },
   "order": [
     "hero",
     "proof",
+    "stories",
+    "setup",
     "bought_trade",
     "bought_calculator",
     "bought_samples",
