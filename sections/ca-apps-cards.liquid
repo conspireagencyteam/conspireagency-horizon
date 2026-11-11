@@ -18,12 +18,14 @@
     A vertical hub article can quieten the strip: custom.hub_apps_heading and
     custom.hub_apps_text replace the statement and the lede, and custom.hub_apps (a list
     of block ids or handleized app names, for example b2b-onboarding-wholesale) limits
-    the cards to those apps, in the template's order. Without them nothing changes.
+    the cards to those apps, in the template's order. custom.hub_apps_lines (a list aligned
+    with the cards shown, by position) replaces each card's line. Without them nothing changes.
   {%- endcomment -%}
   {%- liquid
     assign apps_heading = section.settings.heading
     assign apps_intro = section.settings.intro
     assign apps_only = blank
+    assign apps_lines = blank
     if article != blank
       if article.metafields.custom.hub_apps_heading.value != blank
         assign apps_heading = article.metafields.custom.hub_apps_heading.value
@@ -33,6 +35,9 @@
       endif
       if article.metafields.custom.hub_apps.value != blank
         assign apps_only = article.metafields.custom.hub_apps.value
+      endif
+      if article.metafields.custom.hub_apps_lines.value != blank
+        assign apps_lines = article.metafields.custom.hub_apps_lines.value
       endif
     endif
     assign app_number = 0
@@ -60,6 +65,13 @@
               endunless
             endif
             assign app_number = app_number | plus: 1
+            assign app_tagline = block.settings.tagline
+            if apps_lines != blank
+              assign app_line_index = app_number | minus: 1
+              if apps_lines[app_line_index] != blank
+                assign app_tagline = apps_lines[app_line_index]
+              endif
+            endif
           -%}
           <li class="ca-appcards__card" {{ block.shopify_attributes }}>
             <div class="ca-appcards__copy">
@@ -71,8 +83,8 @@
                   {{ block.settings.name }}
                 {%- endif -%}
               </h3>
-              {%- if block.settings.tagline != blank -%}
-                <p class="ca-appcards__tagline">{{ block.settings.tagline }}</p>
+              {%- if app_tagline != blank -%}
+                <p class="ca-appcards__tagline">{{ app_tagline }}</p>
               {%- endif -%}
               {%- if block.settings.description != blank -%}
                 <div class="ca-appcards__desc">{{ block.settings.description }}</div>

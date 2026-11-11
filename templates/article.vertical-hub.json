@@ -578,7 +578,7 @@
       "type": "ca-hub-setup",
       "settings": {
         "article_setup": true,
-        "eyebrow": "",
+        "eyebrow": "How we approach it",
         "heading": "",
         "background_color": "#ffffff",
         "text_color": "",

@@ -90,12 +90,14 @@ client name as the eyebrow, an H3, a muted "who" line, the story, an optional "W
 line, an optional case-study link) beside one to three captures. The captures sit on alternate
 sides down the page (right, left, right). The first image is the main screen; the second
 overlaps its lower right corner and the third its upper left (a capture's own heading is
-usually top left, so the overlay stays off it). A portrait capture taller than 5:6 is cropped
+usually top left, so the overlay stays off it). A file list can be looped in Liquid but not
+indexed (`screens.value[0]` is nil), so the section picks the first three in a loop and uses
+each file's `preview_image`. A portrait capture taller than 5:6 is cropped
 from the top to 5:6. On a phone the captures come first, then the copy. A story with no
 images renders as copy only. With no stories from either source the section renders nothing.
 
-The `hub_story` metaobject (not created on the store yet; create it before the first hub
-article that uses stories, storefront access on, publishable entries set ACTIVE):
+The `hub_story` metaobject (`gid://shopify/MetaobjectDefinition/47629598901`, created
+2026-11-11, storefront access on, publishable; an entry must be ACTIVE to render):
 
 | Field | Type | Notes |
 |---|---|---|
@@ -104,7 +106,7 @@ article that uses stories, storefront access on, publishable entries set ACTIVE)
 | `heading` | single line text | The story's H3, plain and direct. |
 | `text` | rich text | One paragraph, 75 to 95 words, no bold. Links allowed. Name an app only where this client uses it, as ours, linked once. |
 | `outcome` | single line text | Optional. Only a published, sourced result; the row is omitted when blank. |
-| `link` | url | Optional. The case study; leave blank until it is published. |
+| `link` | single line text | Optional. The case study as a path (`/blogs/work/zia-tile`); leave blank until it is published. |
 | `link_label` | single line text | "Read the Zia Tile case study". |
 | `screens` | list of files (images) | One to three real captures of the client's store, in Files, each with its own alt. First is the main screen. No recreated UI, no signed-in customer data, no staff names or photos, no dated promo bars. |
 | `caption` | single line text | Optional, under the captures. |
@@ -115,12 +117,16 @@ studies (Danny, 2026-11-10); they still need the client's agreement before the h
 `sections/ca-hub-setup.liquid` is the short text chapter after the stories: a statement and up
 to four items in a row (two columns on a tablet, one on a phone), each a number, a small
 heading and two or three sentences. `custom.hub_setup` is one rich text value with a heading
-and a paragraph per item; the section splits it at the headings. No images, no app names.
+and a paragraph per item; the section drops the rich text wrapper div and splits it at the
+headings (any level). The eyebrow ("How we approach it") is a template setting. No images, no
+app names.
 
 The apps strip can be quietened per article (`sections/ca-apps-cards.liquid`):
 `custom.hub_apps_heading` and `custom.hub_apps_text` replace the statement and the lede, and
 `custom.hub_apps` limits the cards to the listed apps (a card matches by its block id in the
 template, `wholesale`, `wishlist`, `drafts`, `bonde`, `calculator`, or by its handleized name).
+`custom.hub_apps_lines` replaces each shown card's line, aligned with the cards shown by
+position (the template's lines are the tile hub's wording).
 With none of the three set the strip is unchanged, as it is on the two live hubs and on
 `/pages/best-shopify-apps`.
 
@@ -208,6 +214,7 @@ type given (see "Setting the content"). `custom.quote` already has a definition.
 | `custom.hub_apps_heading` | `single_line_text_field` | Optional. Replaces the apps strip statement ("<strong>Three apps</strong> that came out of this work."). |
 | `custom.hub_apps_text` | `multi_line_text_field` | Optional. Replaces the apps strip lede. |
 | `custom.hub_apps` | `list.single_line_text_field` | Optional. The cards to show, by block id or handleized app name. |
+| `custom.hub_apps_lines` | `list.single_line_text_field` | Optional. One line per card shown, in the order shown. |
 | `custom.hub_mocks_heading` | `single_line_text_field` | The chapter statement over the mocks, short and plain, `<strong>` on the emphasised sentence ("<strong>Tile, paint and home goods are not bought like other products.</strong> Your Shopify store has to sell the way your customers plan a room."). |
 | `custom.hub_mock_trade_heading`, `..._calculator_heading`, `..._samples_heading`, `..._checkout_heading` | `single_line_text_field` | The H2 beside each mock. |
 | `custom.hub_mock_trade_text`, `..._calculator_text`, `..._samples_text`, `..._checkout_text` | `rich_text_field` (or `multi_line_text_field`) | One paragraph, 60 to 80 words, naming the app as ours with its page linked (the samples column names no app). The bullets under it stay in the template's blocks. |
@@ -265,7 +272,10 @@ until both exist; it can be named in the body.
 Read-only checks and all writes go through `shopify store execute -s conspireagency.myshopify.com`
 (mutations need `--allow-mutations`; variables go in `--variable-file`). Article IDs:
 tile and paint `gid://shopify/Article/611812966581`, supplements
-`gid://shopify/Article/611793928373`.
+`gid://shopify/Article/611793928373`, B2B and wholesale
+`gid://shopify/Article/617013215413` (the first hub on stories; its six `hub_story` entries
+have the handles `b2b-<client>`). The stories, setup and apps keys have had definitions on the
+store since 2026-11-11.
 
 Metafields, one call per article:
 
@@ -332,7 +342,7 @@ access on. `custom.quote` exists already.
 | Hub mock checkout heading / text / caption | `hub_mock_checkout_*` | same |
 | Hub stories / eyebrow / heading | `hub_stories`, `hub_stories_eyebrow`, `hub_stories_heading` | Metaobject reference, Hub story, list of entries / Single line text / Single line text |
 | Hub setup heading / items | `hub_setup_heading`, `hub_setup` | Single line text / Rich text |
-| Hub apps heading / text / cards | `hub_apps_heading`, `hub_apps_text`, `hub_apps` | Single line text / Multi-line text / Single line text, list of values |
+| Hub apps heading / text / cards / lines | `hub_apps_heading`, `hub_apps_text`, `hub_apps`, `hub_apps_lines` | Single line text / Multi-line text / Single line text, list of values (both) |
 | Hub fractional paragraph | `hub_fractional` | Rich text |
 | Hub build paragraph | `hub_build` | Rich text |
 | Hub form heading | `hub_form_heading` | Single line text |

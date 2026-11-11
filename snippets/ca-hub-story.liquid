@@ -30,6 +30,9 @@
     assign shots = shots | plus: 1
   endif
   assign default_alt = name | append: ' Shopify store'
+  assign alt_1 = image_1.alt | default: default_alt
+  assign alt_2 = image_2.alt | default: default_alt
+  assign alt_3 = image_3.alt | default: default_alt
 -%}
 <article class="ca-hstory ca-hstory--{{ side }} ca-hstory--shots-{{ shots }}" {{ attrs }}>
   <div class="ca-hstory__copy">
@@ -62,17 +65,17 @@
       <div class="ca-hstory__stack">
         {%- if image_1 != blank -%}
           <figure class="ca-hstory__shot ca-hstory__shot--main">
-            {{- image_1 | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 800, 1200, 1600', sizes: '(min-width: 990px) 44vw, 92vw', alt: image_1.alt | default: default_alt -}}
+            {{- image_1 | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 800, 1200, 1600', sizes: '(min-width: 990px) 44vw, 92vw', alt: alt_1 -}}
           </figure>
         {%- endif -%}
         {%- if image_2 != blank -%}
           <figure class="ca-hstory__shot ca-hstory__shot--over{% if image_2.aspect_ratio < 0.85 %} ca-hstory__shot--tall{% endif %}">
-            {{- image_2 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 480, 700, 900', sizes: '(min-width: 990px) 20vw, 42vw', alt: image_2.alt | default: default_alt -}}
+            {{- image_2 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 480, 700, 900', sizes: '(min-width: 990px) 20vw, 42vw', alt: alt_2 -}}
           </figure>
         {%- endif -%}
         {%- if image_3 != blank -%}
           <figure class="ca-hstory__shot ca-hstory__shot--top{% if image_3.aspect_ratio < 0.85 %} ca-hstory__shot--tall{% endif %}">
-            {{- image_3 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 480, 700, 900', sizes: '(min-width: 990px) 18vw, 40vw', alt: image_3.alt | default: default_alt -}}
+            {{- image_3 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 480, 700, 900', sizes: '(min-width: 990px) 18vw, 40vw', alt: alt_3 -}}
           </figure>
         {%- endif -%}
       </div>

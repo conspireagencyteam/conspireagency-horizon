@@ -67,12 +67,30 @@
             if odd == 0
               assign side = 'left'
             endif
-            assign screens = story.screens.value
+            comment
+              A file list can be looped but not indexed, so the first three are picked out here.
+              A Files image arrives as media; its preview_image is the image object.
+            endcomment
+            assign shot_1 = blank
+            assign shot_2 = blank
+            assign shot_3 = blank
+            for screen in story.screens.value limit: 3
+              assign shot = screen.preview_image | default: screen
+              case forloop.index
+                when 1
+                  assign shot_1 = shot
+                when 2
+                  assign shot_2 = shot
+                when 3
+                  assign shot_3 = shot
+              endcase
+            endfor
             assign story_text = blank
             if story.text.value != blank
               capture story_text
                 echo story.text | metafield_tag
               endcapture
+              assign story_text = story_text | remove: '<div class="metafield-rich_text_field">' | remove: '</div>' | strip
             endif
           -%}
           {%- render 'ca-hub-story',
@@ -84,9 +102,9 @@
             outcome_label: section.settings.outcome_label,
             link_url: story.link.value,
             link_label: story.link_label.value,
-            image_1: screens[0],
-            image_2: screens[1],
-            image_3: screens[2],
+            image_1: shot_1,
+            image_2: shot_2,
+            image_3: shot_3,
             caption: story.caption.value,
             side: side,
             index: forloop.index

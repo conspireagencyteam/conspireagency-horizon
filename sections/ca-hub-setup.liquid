@@ -50,9 +50,10 @@
     {%- endif -%}
 
     {%- if items_html != blank -%}
-      {%- comment -%} Rich text arrives flat (heading, paragraph, heading, paragraph); split it into one card per heading. {%- endcomment -%}
+      {%- comment -%} Rich text arrives flat inside one wrapper div (heading, paragraph, heading, paragraph); drop the wrapper and split it into one card per heading. {%- endcomment -%}
       {%- liquid
-        assign flat = items_html | replace: '<h2', '<h3' | replace: '</h2>', '</h3>' | replace: '<h4', '<h3' | replace: '</h4>', '</h3>'
+        assign flat = items_html | remove: '<div class="metafield-rich_text_field">' | remove: '</div>'
+        assign flat = flat | replace: '<h1', '<h3' | replace: '</h1>', '</h3>' | replace: '<h2', '<h3' | replace: '</h2>', '</h3>' | replace: '<h4', '<h3' | replace: '</h4>', '</h3>' | replace: '<h5', '<h3' | replace: '</h5>', '</h3>' | replace: '<h6', '<h3' | replace: '</h6>', '</h3>'
         assign parts = flat | split: '<h3'
         assign count = parts.size | minus: 1
       -%}
