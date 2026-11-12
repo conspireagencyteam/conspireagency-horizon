@@ -1,0 +1,247 @@
+{%- comment -%}
+  ca-ai-chapter.liquid: one chapter of the AI page (templates/page.ai.json).
+
+  A chapter is a run of "act" blocks. Each act is a tall scroll track with its copy
+  pinned beside the drawing; while the act is under the middle of the viewport the
+  particle field (assets/ca-ai.js, canvas in ca-ai-opening) plays that act's part of
+  the story. The pairing is by name: an act renders data-ai-scene="<variant>-<n>",
+  and the script knows what brain-1, manager-2 and the rest look like.
+
+    brain    1 missing connections   2 everything connected   3 retrieval
+    manager  1 a release walked      2 a quiet failure        3 at rest
+    healing  1 found                 2 fixed                  3 verified
+    close    the field returns to the sphere; copy centred, optional button
+
+  A fourth act in a chapter replays that chapter's third drawing. All meaning is in
+  the copy here; the drawing is decorative.
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = section.settings.variant | default: 'brain'
+  assign chapter_label = section.settings.chapter | strip
+  assign number = section.settings.number | strip
+-%}
+
+<div class="ca-ai-chapter ca-ai-chapter--{{ variant }} ca-invert">
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign heading_tag = 'h3'
+      if forloop.first
+        assign heading_tag = 'h2'
+      endif
+    -%}
+    <div
+      class="ca-ai-act"
+      data-ai-scene="{{ variant }}-{{ forloop.index }}"
+      style="--ai-length: {{ block.settings.length | default: 220 }};"
+      {{ block.shopify_attributes }}
+    >
+      <div class="ca-ai-act__pin">
+        <div class="ca-inner">
+          <div class="ca-ai-act__copy">
+            {%- if chapter_label != blank -%}
+              <p class="ca-eyebrow ca-ai-act__eyebrow">
+                {%- if number != blank -%}<span class="ca-ai-act__num">{{ number }}</span>{%- endif -%}
+                <span>{{ chapter_label }}</span>
+              </p>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              <{{ heading_tag }} class="ca-ai-act__heading">{{ block.settings.heading }}</{{ heading_tag }}>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="ca-ai-act__text">{{ block.settings.text }}</div>
+            {%- endif -%}
+            {%- if block.settings.button_label != blank -%}
+              <a class="button size-style ca-ai-act__button" href="{{ block.settings.button_link | default: '#book-a-call' }}">{{ block.settings.button_label }}</a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endfor -%}
+</div>
+
+{% stylesheet %}
+  .ca-ai-chapter {
+    --color-background: #0d110d;
+    --color-foreground: #f2f2f2;
+    --color-foreground-rgb: 242 242 242;
+    color: var(--color-foreground);
+  }
+
+  .ca-ai-act {
+    position: relative;
+    height: calc(var(--ai-length, 220) * 1vh);
+    height: calc(var(--ai-length, 220) * 1svh);
+  }
+
+  .ca-ai-act__pin {
+    position: sticky;
+    inset-block-start: 0;
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    height: 100svh;
+  }
+
+  .ca-ai-act__copy {
+    width: min(100%, 31rem);
+  }
+
+  /* With the field running, an act's copy fades with its place in the scroll. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__copy {
+    opacity: var(--ai-show, 0);
+    transform: translateY(calc((1 - var(--ai-show, 0)) * 14px));
+  }
+
+  .ca-ai-act__eyebrow {
+    display: flex;
+    gap: 12px;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+  }
+
+  .ca-ai-act__num {
+    color: var(--ca-ai-accent, #ff4d00);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ca-ai-act__heading {
+    margin: 22px 0 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight, 400);
+    font-size: var(--ca-fs-36, clamp(1.625rem, 2.5vw, 2.25rem));
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .ca-ai-act__text {
+    margin-block-start: 20px;
+    font-size: var(--ca-fs-18, 1.125rem);
+    line-height: 1.5;
+    color: rgb(var(--color-foreground-rgb) / 0.74);
+    text-wrap: pretty;
+  }
+
+  .ca-ai-act__text p {
+    margin: 0;
+  }
+
+  .ca-ai-act__text p + p {
+    margin-block-start: 0.8em;
+  }
+
+  .ca-ai-act__button {
+    margin-block-start: 30px;
+  }
+
+  /* The closing act: centred over the sphere. */
+  /* The sphere sits where it did on the first screen, so the copy rests under it. */
+  .ca-ai-chapter--close .ca-ai-act__pin {
+    align-items: flex-end;
+    padding-block-end: clamp(48px, 9vh, 104px);
+  }
+
+  .ca-ai-chapter--close .ca-ai-act__copy {
+    width: min(100%, 56rem);
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .ca-ai-chapter--close .ca-ai-act__eyebrow {
+    justify-content: center;
+  }
+
+  .ca-ai-chapter--close .ca-ai-act__heading {
+    font-size: var(--ca-fs-48, clamp(2rem, 3.4vw, 3rem));
+    line-height: 1.06;
+  }
+
+  .ca-ai-chapter--close .ca-ai-act__text {
+    max-width: 40ch;
+    margin-inline: auto;
+  }
+
+  @media screen and (max-width: 989px) {
+    /* The drawing sits above; the copy rests at the foot of the screen on a scrim. */
+    .ca-ai-act__pin {
+      align-items: flex-end;
+      padding-block-end: 64px;
+    }
+
+    .ca-ai-chapter:not(.ca-ai-chapter--close) .ca-ai-act__pin::before {
+      content: "";
+      position: absolute;
+      inset: 42% 0 0;
+      background: linear-gradient(rgb(13 17 13 / 0), rgb(13 17 13 / 0.86) 34%, #0d110d 70%);
+      pointer-events: none;
+    }
+
+    .ca-ai-act__copy {
+      position: relative;
+      width: 100%;
+    }
+
+    .ca-ai-act__heading {
+      margin-block-start: 14px;
+    }
+
+    .ca-ai-act__text {
+      margin-block-start: 12px;
+      font-size: 1rem;
+    }
+
+    .ca-ai-chapter--close .ca-ai-act__pin {
+      padding-block-end: 56px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AI page chapter",
+  "tag": "section",
+  "class": "ca-ai-chapter-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Drawing",
+      "options": [
+        { "value": "brain", "label": "The business brain" },
+        { "value": "manager", "label": "The AI site manager" },
+        { "value": "healing", "label": "Self-healing software" },
+        { "value": "close", "label": "Closing (the sphere returns)" }
+      ],
+      "default": "brain"
+    },
+    { "type": "text", "id": "number", "label": "Chapter number", "default": "01" },
+    { "type": "text", "id": "chapter", "label": "Chapter name", "default": "The business brain" }
+  ],
+  "blocks": [
+    {
+      "type": "act",
+      "name": "Act",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "richtext", "id": "text", "label": "Text" },
+        {
+          "type": "range",
+          "id": "length",
+          "label": "Scroll length",
+          "info": "In screen heights. Longer gives the drawing more time.",
+          "min": 140,
+          "max": 360,
+          "step": 10,
+          "default": 220
+        },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link", "info": "Left empty, the button goes to the booking form." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "AI page chapter", "category": "Conspire", "blocks": [{ "type": "act" }, { "type": "act" }, { "type": "act" }] }]
+}
+{% endschema %}
