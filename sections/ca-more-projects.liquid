@@ -50,6 +50,7 @@
         assign skip_urls = skip_urls | append: skipped.case_study_reference.value | replace: 'https://www.conspireagency.com', '' | replace: 'https://conspireagency.com', '' | append: '|'
       endfor
       assign skip_handles = section.settings.exclude_handles | remove: ' ' | prepend: ',' | append: ','
+      assign unlinked_handles = section.settings.unlinked_handles | remove: ' ' | prepend: ',' | append: ','
       assign has_entries = false
       if clients.count > 0 or blog.articles_count > 0
         assign has_entries = true
@@ -124,14 +125,23 @@
             <span class="ca-more__sep" aria-hidden="true">&nbsp;/ </span>
           {%- endif -%}
           {%- assign printed = printed | plus: 1 -%}
-          <a class="ca-more__item" href="{{ article.url }}">
+          {%- capture inner -%}
             <span class="ca-more__name">{{ name }}</span>
             {%- if article.metafields.custom.banner_video.value != blank -%}
               {%- render 'ca-preview-video', video: article.metafields.custom.banner_video.value, class: 'ca-more__preview' -%}
             {%- elsif article.image != blank -%}
               {{- article.image | image_url: width: 600 | image_tag: class: 'ca-more__preview', loading: 'lazy', alt: name, widths: '300, 600', sizes: '300px' -}}
             {%- endif -%}
-          </a>
+          {%- endcapture -%}
+          {%- comment -%}
+            An article listed under "Names without a link" shows its name and
+            hover preview but does not link to the case study.
+          {%- endcomment -%}
+          {%- if unlinked_handles contains handle_needle -%}
+            <span class="ca-more__item">{{ inner | strip }}</span>
+          {%- else -%}
+            <a class="ca-more__item" href="{{ article.url }}">{{ inner | strip }}</a>
+          {%- endif -%}
         {%- endfor -%}
       </ca-more-projects>
     {%- elsif request.design_mode -%}
@@ -249,6 +259,7 @@
     { "type": "blog", "id": "blog", "label": "Blog", "info": "Lists every article after the clients above." },
     { "type": "metaobject_list", "id": "exclude_clients", "label": "Skip clients", "info": "Articles that are these clients' case studies are left out. Pick the clients featured in the grid above.", "metaobject_type": "client", "limit": 30 },
     { "type": "text", "id": "exclude_handles", "label": "Skip article handles", "info": "Comma separated" },
+    { "type": "text", "id": "unlinked_handles", "label": "Names without a link", "info": "Article handles, comma separated. The name and its hover preview show, but it does not link to the case study." },
     {
       "type": "select",
       "id": "image_field",
