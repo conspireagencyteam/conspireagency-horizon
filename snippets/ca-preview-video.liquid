@@ -5,7 +5,8 @@
   Storefront Liquid only lists the 1080p MP4, but Shopify also encodes 480p
   and 720p renditions at predictable URLs (`.HD-1080p-7.2Mbps-` becomes
   `.SD-480p-1.5Mbps-` / `.HD-720p-4.5Mbps-`, with lower bitrates for quieter
-  uploads). The guesses go first as <source>s; if one 404s the browser moves
+  uploads: 1.0 and 0.9 at 480p, 2.1 and 1.6 at 720p). The guesses go first as
+  <source>s; if one 404s the browser moves
   on to the next, and the real 1080p URL is always last, so the worst case is
   the full-size file.
 
@@ -41,19 +42,24 @@
 
   assign guess_a = blank
   assign guess_b = blank
+  assign guess_c = blank
   assign sd_a = blank
   assign sd_b = blank
+  assign sd_c = blank
   assign parts = src | split: '.HD-1080p-'
   if parts.size == 2
     assign tail = parts[1] | split: 'Mbps-' | last
     assign sd_a = parts[0] | append: '.SD-480p-1.5Mbps-' | append: tail
     assign sd_b = parts[0] | append: '.SD-480p-1.0Mbps-' | append: tail
+    assign sd_c = parts[0] | append: '.SD-480p-0.9Mbps-' | append: tail
     if quality == 'hd'
       assign guess_a = parts[0] | append: '.HD-720p-4.5Mbps-' | append: tail
       assign guess_b = parts[0] | append: '.HD-720p-2.1Mbps-' | append: tail
+      assign guess_c = parts[0] | append: '.HD-720p-1.6Mbps-' | append: tail
     else
       assign guess_a = sd_a
       assign guess_b = sd_b
+      assign guess_c = sd_c
     endif
   endif
   assign poster_w = poster_width | default: 800
@@ -76,9 +82,11 @@
       {%- if quality == 'hd' -%}
         <source src="{{ sd_a }}" type="video/mp4" media="(hover: none)">
         <source src="{{ sd_b }}" type="video/mp4" media="(hover: none)">
+        <source src="{{ sd_c }}" type="video/mp4" media="(hover: none)">
       {%- endif -%}
       <source src="{{ guess_a }}" type="video/mp4">
       <source src="{{ guess_b }}" type="video/mp4">
+      <source src="{{ guess_c }}" type="video/mp4">
     {%- endif -%}
     <source src="{{ src }}" type="video/mp4">
   </video>
