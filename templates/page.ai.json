@@ -1,0 +1,303 @@
+{
+  "sections": {
+    "opening": {
+      "type": "ca-ai-opening",
+      "settings": {
+        "eyebrow": "AI business intelligence and consulting for eCommerce brands",
+        "heading": "A brain for your business.",
+        "text": "One memory for everything your team, your store, your code and your marketing platforms know.",
+        "enter_sound_label": "Enter with sound",
+        "enter_silent_label": "Enter without sound",
+        "scroll_label": "Scroll",
+        "sound_on_label": "Sound on",
+        "sound_off_label": "Sound off",
+        "audio_url": "",
+        "example_label": "Example",
+        "auto_on_label": "Autoplay on",
+        "auto_off_label": "Autoplay off"
+      }
+    },
+    "brain": {
+      "type": "ca-ai-chapter",
+      "blocks": {
+        "act_1": {
+          "type": "act",
+          "settings": {
+            "heading": "The answer is already inside your business, in places that never meet.",
+            "text": "<p>Part of it is in a Slack thread, part in a release, part in an ad account, part in last week's call.</p>",
+            "length": 150
+          }
+        },
+        "act_2": {
+          "type": "act",
+          "settings": {
+            "heading": "Connect everything, and the answer is in there somewhere.",
+            "text": "<p>Every email, thread, call, task, release and store metric, in one memory. Now all of it has to be read, every time someone asks.</p>",
+            "length": 150
+          }
+        },
+        "act_3": {
+          "type": "act",
+          "settings": {
+            "heading": "So the brain files by meaning, and goes straight to what matters.",
+            "text": "<p>A question lands on the few records that answer it, and comes back as one answer with its sources.</p>",
+            "length": 150
+          }
+        }
+      },
+      "block_order": [
+        "act_1",
+        "act_2",
+        "act_3"
+      ],
+      "settings": {
+        "variant": "brain",
+        "number": "01",
+        "chapter": "The business brain"
+      }
+    },
+    "manager": {
+      "type": "ca-ai-chapter",
+      "blocks": {
+        "act_1": {
+          "type": "act",
+          "settings": {
+            "heading": "Every release, walked through the way a shopper would.",
+            "text": "<p>On desktop and on a phone, after each release. A failure that is confirmed is rolled back.</p>",
+            "length": 150
+          }
+        },
+        "act_2": {
+          "type": "act",
+          "settings": {
+            "heading": "It looks for the failures that look fine.",
+            "text": "<p>A collection that quietly stops showing one product. A filter that returns the wrong ones. A checkout with no shipping rates. Each is checked again before anyone is told.</p>",
+            "length": 150
+          }
+        },
+        "act_3": {
+          "type": "act",
+          "settings": {
+            "heading": "And it knows what never to touch.",
+            "text": "<p>What was checked, what was caught and what became of it sit in one view.</p>",
+            "length": 150,
+            "never": "Pay for an order\nSubmit a real form\nSign in to your admin",
+            "never_label": "Never"
+          }
+        }
+      },
+      "block_order": [
+        "act_1",
+        "act_2",
+        "act_3"
+      ],
+      "settings": {
+        "variant": "manager",
+        "number": "02",
+        "chapter": "The AI site manager"
+      }
+    },
+    "healing": {
+      "type": "ca-ai-chapter",
+      "blocks": {
+        "act_1": {
+          "type": "act",
+          "settings": {
+            "heading": "When something breaks behind your store, it is found first.",
+            "text": "<p>Errors are picked up from the systems your orders depend on, not from a customer writing in.</p>",
+            "length": 150
+          }
+        },
+        "act_2": {
+          "type": "act",
+          "settings": {
+            "heading": "Diagnosed, fixed, reviewed and merged.",
+            "text": "<p>A second reviewer reads every fix before it ships. People set the rules for what may merge on its own.</p>",
+            "length": 150
+          }
+        },
+        "act_3": {
+          "type": "act",
+          "settings": {
+            "heading": "Then verified, the same way a release is.",
+            "text": "<p>Security moves at the same pace. When a critical vulnerability was announced in October, our own systems were patched the next day.</p>",
+            "length": 150
+          }
+        }
+      },
+      "block_order": [
+        "act_1",
+        "act_2",
+        "act_3"
+      ],
+      "settings": {
+        "variant": "healing",
+        "number": "03",
+        "chapter": "Self-healing software"
+      }
+    },
+    "close": {
+      "type": "ca-ai-chapter",
+      "blocks": {
+        "act_1": {
+          "type": "act",
+          "settings": {
+            "heading": "Know what is happening across your business, and have it handled.",
+            "text": "<p>We set this up around your store, your team and your tools, then run it with you.</p>",
+            "length": 170,
+            "button_label": "Book a call",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "act_1"
+      ],
+      "settings": {
+        "variant": "close",
+        "number": "",
+        "chapter": ""
+      }
+    },
+    "booking": {
+      "type": "ca-booking",
+      "blocks": {
+        "photo_G6Nfg6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/placeholer-level.jpg"
+          }
+        },
+        "photo_94gPph": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2025-06-11_at_2.06.42_PM.png"
+          }
+        },
+        "photo_T4K9MH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/portola-paints-work-preview.jpg"
+          }
+        },
+        "photo_UxzwFi": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/hustler-hollywood-work-preview.jpg"
+          }
+        },
+        "photo_jgP7TN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/natures-answer-work-preview.jpg"
+          }
+        },
+        "photo_Pq7AJH": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto.jpg"
+          }
+        },
+        "photo_r9wB3D": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-2.png"
+          }
+        },
+        "photo_zWEgCX": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-banner-1.png"
+          }
+        },
+        "photo_MmjPJM": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-main-image.png"
+          }
+        },
+        "photo_hNyFPQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/kinto-work-preview.jpg"
+          }
+        },
+        "photo_DehCiJ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-main-image.png"
+          }
+        },
+        "photo_AVrjVg": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/cml-work-preview.jpg"
+          }
+        },
+        "photo_JMcnVB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-web-teams.png"
+          }
+        },
+        "photo_TJbQtN": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ziatile-main-image.png"
+          }
+        },
+        "photo_7XUxFp": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/zia-tile-work-preview.png"
+          }
+        },
+        "photo_ir8P8n": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/bodybio-main-image.png"
+          }
+        }
+      },
+      "block_order": [
+        "photo_G6Nfg6",
+        "photo_94gPph",
+        "photo_T4K9MH",
+        "photo_UxzwFi",
+        "photo_jgP7TN",
+        "photo_Pq7AJH",
+        "photo_r9wB3D",
+        "photo_zWEgCX",
+        "photo_MmjPJM",
+        "photo_hNyFPQ",
+        "photo_DehCiJ",
+        "photo_AVrjVg",
+        "photo_JMcnVB",
+        "photo_TJbQtN",
+        "photo_7XUxFp",
+        "photo_ir8P8n"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "background_color": "#0d110d",
+        "text_color": "#f2f2f2",
+        "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "calendly_height": 700,
+        "montage_background": "#171b17",
+        "padding-block-start": 40,
+        "padding-block-end": 80,
+        "panel_heading": "See it on your own store.",
+        "panel_text": "Pick a time and we will walk through what a brain, a site manager and self-healing software would look like for your business."
+      }
+    }
+  },
+  "order": [
+    "opening",
+    "brain",
+    "manager",
+    "healing",
+    "close",
+    "booking"
+  ]
+}
