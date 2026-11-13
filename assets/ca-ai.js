@@ -27,7 +27,7 @@ function start(root) {
   const debug = (window.__caAi = { frames: 0, ms: 0, scene: '', form: '' });
   if (!gl) {
     html.classList.add('ca-ai-static');
-    html.classList.remove('ca-ai-gated');
+    html.classList.remove('ca-ai-gated', 'ca-ai-returning');
     return;
   }
   html.classList.add('ca-ai-live');
@@ -118,9 +118,10 @@ function start(root) {
         radius * Math.sin(phi) * Math.sin(theta),
         radius * Math.cos(phi),
         ORANGE,
-        0.52,
+        0.8,
         0,
-        0.8 + r() * 0.8
+        // Fine grain: most of the cloud is drawn at about a pixel.
+        0.42 + r() * 0.5
       );
     }
     return f;
@@ -600,7 +601,7 @@ function start(root) {
     points = program(POINT_VS, POINT_FS);
     linesProg = program(LINE_VS, LINE_FS);
   } catch (error) {
-    html.classList.remove('ca-ai-live', 'ca-ai-gated');
+    html.classList.remove('ca-ai-live', 'ca-ai-gated', 'ca-ai-returning');
     html.classList.add('ca-ai-static');
     return;
   }
@@ -791,6 +792,7 @@ function start(root) {
     let rect = null;
     for (let i = 0; i < stops.length; i++) {
       const r = stops[i].el.getBoundingClientRect();
+      stops[i].h = r.height;
       if (i === 0 || mid >= r.top) {
         current = i;
         rect = r;
@@ -1319,6 +1321,11 @@ function start(root) {
 
   /* How long each act's story takes to play, in seconds. */
   const STORY = { brain: [5.5, 7.5, 8], manager: [6.5, 7, 3.4], healing: [4.5, 7, 4.5] };
+  /* The share of each story after which nothing more happens on screen, and how
+     long the act then rests before the page moves on (enough to read its last
+     line, no longer). */
+  const DONE = { brain: [0.64, 1, 0.95], manager: [1, 0.9, 0.75], healing: [0.82, 0.94, 0.9] };
+  const REST = { brain: [1.5, 0.6, 1.2], manager: [0.6, 1.1, 1], healing: [0.8, 0.9, 1] };
   let playing = -1;
 
   /* Scrolling starts things; it does not have to finish them. Two helpers:
@@ -1342,6 +1349,7 @@ function start(root) {
   };
   const getTop = (el) => (el ? el.scrollTop : window.scrollY);
   const setTop = (el, y) => (el ? (el.scrollTop = y) : window.scrollTo(0, y));
+  /* ms left out: the time follows the distance, about a second a screen. */
   function glide(target, ms) {
     const s = stops[target];
     if (!s || !s.el) return;
@@ -1350,6 +1358,7 @@ function start(root) {
     const from = getTop(el);
     const delta = r.top + r.height * 0.5 - window.innerHeight * 0.5;
     if (Math.abs(delta) < 2) return;
+    if (ms == null) ms = clamp(900 + (Math.abs(delta) / window.innerHeight) * 1050, 1100, 2500);
     // The theme scrolls smoothly on its own; this drive supplies the easing itself.
     const style = (el || document.documentElement).style;
     pilot.drive = { el, from, delta, start: performance.now(), ms, style, was: style.scrollBehavior };
@@ -1384,7 +1393,8 @@ function start(root) {
     const d = pilot.drive;
     if (!d) return;
     const k = clamp((now - d.start) / d.ms);
-    const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    // A sine: it never rushes the middle, where the drawing is changing shape.
+    const e = 0.5 - 0.5 * Math.cos(Math.PI * k);
     setTop(d.el, d.from + d.delta * e);
     if (k >= 1) release();
   }
@@ -1399,11 +1409,11 @@ function start(root) {
         if (pilot.dir > 0 && p > 0.6) target = 1;
       } else if (p < pin - 0.004) target = pilot.dir > 0 ? index : index - 1;
       else if (p > 1 - pin + 0.004) target = pilot.dir > 0 ? (index < last ? index + 1 : -1) : index;
-      if (target > 0) return glide(target, 950);
+      if (target > 0) return glide(target);
     }
     const next = stops[index + 1];
-    const hold = stop.opener ? 0 : 2.2;
-    if (pilot.on && index > 0 && next && next.chapter === stop.chapter && doneFor > hold && idle > 1400 && !document.hidden) glide(index + 1, 1500);
+    const rest = stop.opener ? 0 : (REST[stop.name] || [])[stop.act - 1] || 1;
+    if (pilot.on && index > 0 && next && next.chapter === stop.chapter && doneFor > rest && idle > 1100 && !document.hidden) glide(index + 1, 2600);
   }
   if (pilotAllowed) {
     const hands = () => {
@@ -1483,22 +1493,19 @@ function start(root) {
     steer(now);
     const { index, p, pin, inside } = locate();
     const stop = stops[index] || { name: 'open', act: 1, form: 'sphere', el: null };
-    const before = stops[index - 1] || stop;
-    const changing = before.form !== stop.form;
-    // A title card and its first act share a drawing; it only moves aside.
-    const moving = changing || before.centred !== stop.centred;
-    // The drawing changes while a stop arrives; its story plays while the copy is pinned.
-    // The drawing changes while a stop arrives. Its story is not scrubbed by the
-    // scroll: once the stop has arrived it plays through on the clock.
-    const t = !moving ? 1 : reduced ? (p > 0.12 ? 1 : 0) : stop.opener ? smooth(p, 0.1, 0.72) : smooth(p, 0, pin + (changing ? 0.05 : 0));
+    const next = stops[index + 1];
     if (index !== playing) {
       const old = stops[playing];
       if (old) {
         old.at = null;
         if (old.el) old.el.classList.remove('is-on');
       }
+      // Everything further down starts from the beginning when it is reached.
+      for (let i = index + 2; i < stops.length; i++) stops[i].u = 0;
       playing = index;
     }
+    // A stop's story is not scrubbed by the scroll: once the stop has arrived
+    // it plays through on the clock.
     if (stop.el && stop.at == null && p >= pin - 0.05 && p <= 1 - pin + 0.05) {
       stop.at = clock;
       stop.el.classList.add('is-on');
@@ -1507,20 +1514,56 @@ function start(root) {
     const length = (STORY[stop.name] || [])[stop.act - 1] || 0;
     const lead = stop.lead || 0.55;
     const u = stop.opener || !length ? 0 : reduced ? 0.9 : clamp((since - lead) / length);
-    // Done: the story has played out (a title card: it has been up long enough to read).
-    const doneFor = since < 0 ? -1 : stop.opener ? since - 2.3 : length ? since - lead - length : since - 2;
+    stop.u = u;
+    // Done: nothing more will happen on screen (a title card: it has been up long enough to read).
+    const doneFor = since < 0 ? -1 : stop.opener ? since - 1.9 : length ? since - lead - length * ((DONE[stop.name] || [])[stop.act - 1] || 1) : since - 2;
 
-    // The stop before holds its last frame while the field leaves it.
-    if (changing && SCENES[before.name]) SCENES[before.name](before.act, 1, time);
+    /* The drawing changes over the whole stretch between two stops at rest: it
+       starts as the one above lets go of its copy and ends as the one below
+       takes hold of its own, so the handover is one long move, not a switch at
+       the line between them. (a, b) is the pair on screen, T how far along. */
+    const half = window.innerHeight * 0.5;
+    const pinOf = (s) => Math.min(0.45, half / Math.max(1, s.h || half * 2));
+    const exitAt = (s) => (s.opener || s.name === 'open' ? 0.6 : 1 - pinOf(s));
+    const enterBy = (s, changes) => (s.opener ? 0.42 : pinOf(s) + (changes ? 0.05 : 0));
+    const span = (s) => s.h || half * 2;
+    let a = stops[index - 1] || stop;
+    let b = stop;
+    let T = 1;
+    if (reduced) T = p > 0.12 ? 1 : 0;
+    else if (next && p > exitAt(stop)) {
+      a = stop;
+      b = next;
+      const d1 = (1 - exitAt(a)) * span(a);
+      T = clamp(((p - exitAt(a)) * span(a)) / (d1 + enterBy(b, a.form !== b.form) * span(b)));
+    } else if (a !== b) {
+      const d1 = (1 - exitAt(a)) * span(a);
+      T = clamp((d1 + p * span(b)) / (d1 + enterBy(b, a.form !== b.form) * span(b)));
+    }
+    // The stop below is at its beginning until the one above starts to leave.
+    if (next && a !== stop) next.u = 0;
+    const changing = a.form !== b.form;
+    // A title card and its first act share a drawing; it only moves aside.
+    const moving = changing || a.centred !== b.centred;
+    const t = moving ? T : 1;
+
+    // The other half of the pair holds the state it was last seen in. The stop
+    // under the middle of the screen writes last: where two stops share a
+    // drawing, its state is the one shown.
+    const other = a === stop ? b : a;
+    if (changing && other !== stop && SCENES[other.name]) {
+      SCENES[other.name](other.act, other.u == null ? (other === a ? 1 : 0) : other.u, time);
+      if (other.opener) setState(GLF[other.form].state, POINTER, 0);
+    }
     const out = (SCENES[stop.name] || SCENES.open)(stop.act, u, time);
     // A title card shows the drawing at rest: nothing walks across it yet.
     if (stop.opener) setState(GLF[stop.form].state, POINTER, 0);
-    for (const key of new Set([before.form, stop.form])) upload(GLF[key].state);
+    for (const key of new Set([a.form, b.form])) upload(GLF[key].state);
     upload(linkState);
 
     const breath = 1 + Math.sin(time * 0.3) * 0.03;
-    const from = placement(before.form, time, before.centred || before.name === 'close');
-    const to = placement(stop.form, time, stop.centred || stop.name === 'close');
+    const from = placement(a.form, time, a.centred || a.name === 'close');
+    const to = placement(b.form, time, b.centred || b.name === 'close');
     // Under a chapter title the field steps back.
     const titled = (s, at) => (s && s.opener && !reduced ? smooth(at, 0.08, 0.3) * (1 - smooth(at, 0.74, 0.94)) : 0);
     const title = titled(stop, p);
@@ -1529,17 +1572,17 @@ function start(root) {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     // Links belong to the brain alone: they fade with it.
-    const brainFrom = isBrain(before.form);
-    const brainTo = isBrain(stop.form);
+    const brainFrom = isBrain(a.form);
+    const brainTo = isBrain(b.form);
     if (brainFrom || brainTo) {
-      const a = brainFrom ? before.form : stop.form;
-      const b = brainTo ? stop.form : before.form;
+      const la = brainFrom ? a.form : b.form;
+      const lb = brainTo ? b.form : a.form;
       const alpha = (brainFrom && brainTo ? 1 : brainTo ? smooth(t, 0.7, 1) : 1 - smooth(t, 0, 0.25)) * dim;
       gl.useProgram(linesProg.p);
       gl.bindVertexArray(lineVao);
-      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf[a]);
+      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf[la]);
       gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf[b]);
+      gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf[lb]);
       gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
       const pa = brainFrom ? from : to;
       const pb = brainTo ? to : from;
@@ -1560,8 +1603,8 @@ function start(root) {
 
     gl.useProgram(points.p);
     gl.bindVertexArray(pointVao);
-    bindForm(0, 2, 4, GLF[before.form]);
-    bindForm(1, 3, 5, GLF[stop.form]);
+    bindForm(0, 2, 4, GLF[a.form]);
+    bindForm(1, 3, 5, GLF[b.form]);
     const U = points.u;
     gl.uniform1f(U.uT, t);
     gl.uniform1f(U.uStagger, changing && !(brainFrom && brainTo) ? 1 : 0);
@@ -1574,28 +1617,30 @@ function start(root) {
     gl.uniform4f(U.uXfTo, to.angle, to.scale, to.x, to.y);
     gl.uniform1f(U.uTiltFrom, from.tilt);
     gl.uniform1f(U.uTiltTo, to.tilt);
-    gl.uniform3fv(U.uPtrFrom, pointer[before.form]);
-    gl.uniform3fv(U.uPtrTo, pointer[stop.form]);
+    gl.uniform3fv(U.uPtrFrom, pointer[a.form]);
+    gl.uniform3fv(U.uPtrTo, pointer[b.form]);
     gl.uniformMatrix4fv(U.uProj, false, proj);
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, GLF[before.form].state.tex);
+    gl.bindTexture(gl.TEXTURE_2D, GLF[a.form].state.tex);
     gl.uniform1i(U.uStateFrom, 0);
     gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, GLF[stop.form].state.tex);
+    gl.bindTexture(gl.TEXTURE_2D, GLF[b.form].state.tex);
     gl.uniform1i(U.uStateTo, 1);
     gl.drawArrays(gl.POINTS, 0, N);
 
     // Labels arrive once the shape has, and leave before it does. While the
     // drawing is still moving they follow it.
     const tt = t * t * (3 - 2 * t);
-    const at = moving && !changing ? { angle: to.angle, tilt: to.tilt, scale: lerp(from.scale, to.scale, tt), x: lerp(from.x, to.x, tt), y: lerp(from.y, to.y, tt) } : to;
-    // The copy lets go as its act unpins and is gone a fifth of a screen later,
-    // so the stretch with nothing beside the drawing stays short.
-    const leaving = smooth(p, 1 - pin - 0.02, 1 - pin + 0.09);
-    const strength = stop.opener ? 0 : (changing ? smooth(t, 0.85, 1) : 1) * (1 - leaving);
+    const own = stop === b ? to : from;
+    const at = moving && !changing ? { angle: to.angle, tilt: to.tilt, scale: lerp(from.scale, to.scale, tt), x: lerp(from.x, to.x, tt), y: lerp(from.y, to.y, tt) } : own;
+    // The copy lets go as its act unpins and fades over the next third of a
+    // screen; the next act's copy is already on its way in by then.
+    const leaving = smooth(p, 1 - pin - 0.02, 1 - pin + 0.2);
+    // The labels in the drawing go sooner: they belong to a shape that is about to change.
+    const strength = stop.opener ? 0 : (changing && stop === b ? smooth(t, 0.85, 1) : 1) * (1 - smooth(p, 1 - pin - 0.02, 1 - pin + 0.08));
     drawOverlay(out, at, breath, strength);
     if (!stop.opener) drawInst(stop, out.inst);
-    const copyShow = stop.opener || stop.name === 'open' ? 0 : smooth(p, pin - 0.17, pin - 0.03) * (1 - leaving);
+    const copyShow = stop.opener || stop.name === 'open' ? 0 : smooth(p, pin - 0.26, pin - 0.03) * (1 - leaving);
     drawWire(stop, out.link, at, breath, strength * copyShow);
     drawRail(index, p);
     const nextStop = stops[index + 1];
@@ -1625,7 +1670,7 @@ function start(root) {
       if (!mine) continue;
       if (s.opener) css.setProperty('--ai-drift', (p - 0.5).toFixed(3));
       else {
-        css.setProperty('--ai-shift', (1 - smooth(p, pin - 0.17, pin) - leaving).toFixed(3));
+        css.setProperty('--ai-shift', (1 - smooth(p, pin - 0.26, pin) - leaving).toFixed(3));
         css.setProperty('--ai-u', u.toFixed(3));
       }
     }
@@ -1706,6 +1751,8 @@ function start(root) {
       const on = toggle.getAttribute('aria-pressed') !== 'true';
       if (on) sound.on();
       else sound.off();
+      // Either way the choice is made: the first screen stops offering it.
+      html.classList.remove('ca-ai-returning');
       setToggle(on);
     });
   }
@@ -1739,7 +1786,7 @@ function start(root) {
   const designMode = !!(window.Shopify && window.Shopify.designMode);
   const gateNeeded = !reduced && !entered && !designMode && root.getBoundingClientRect().top > -40 && !location.hash;
   const enter = (withSound) => {
-    html.classList.remove('ca-ai-gated');
+    html.classList.remove('ca-ai-gated', 'ca-ai-returning');
     html.classList.add('ca-ai-entered');
     try {
       sessionStorage.setItem('ca-ai-entered', '1');
@@ -1749,14 +1796,16 @@ function start(root) {
     if (withSound) sound.on();
     setToggle(!!withSound);
   };
-  if (gateNeeded) {
-    html.classList.add('ca-ai-gated');
-    root.querySelectorAll('[data-ai-enter]').forEach((button) => {
-      button.addEventListener('click', () => enter(button.dataset.aiEnter === 'sound'));
-    });
-  } else {
+  root.querySelectorAll('[data-ai-enter]').forEach((button) => {
+    button.addEventListener('click', () => enter(button.dataset.aiEnter === 'sound'));
+  });
+  if (gateNeeded) html.classList.add('ca-ai-gated');
+  else {
+    // No gate (a return visit, or reduced motion): the page is open, and the
+    // first screen still offers the sound, which cannot start without a click.
     html.classList.remove('ca-ai-gated');
     html.classList.add('ca-ai-entered');
+    html.classList.toggle('ca-ai-returning', !designMode && !!root.dataset.audioSrc);
     setToggle(false);
   }
 }

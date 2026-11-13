@@ -8,7 +8,9 @@
        breathing cloud with two buttons, "with sound" and "without". Until one is
        pressed the page does not scroll. The gate is added by script: with no
        script, under reduced motion, or on a return visit in the same session,
-       the page simply opens.
+       the page simply opens. In the last two cases the "with sound" button is
+       still offered on the first screen, by itself and without holding the page,
+       because sound can never resume without a click.
     3. The sound and autoplay toggles, the scroll cue shown when a chapter has
        played out, the label layer the script positions over the canvas, and the
        chapter rail the script builds down the left edge on wide screens (one
@@ -41,8 +43,12 @@
     var seen = false;
     try { seen = sessionStorage.getItem('ca-ai-entered') === '1'; } catch (e) {}
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (seen || reduced || location.hash || (window.Shopify && Shopify.designMode)) return;
     var html = document.documentElement;
+    if (location.hash || (window.Shopify && Shopify.designMode)) return;
+    if (seen || reduced) {
+      html.classList.add('ca-ai-returning');
+      return;
+    }
     html.classList.add('ca-ai-gated');
     setTimeout(function () {
       if (!window.__caAi) html.classList.remove('ca-ai-gated');
@@ -242,8 +248,18 @@
     margin-block-start: 30px;
   }
 
-  .ca-ai-gated .ca-ai-hero__gate {
+  .ca-ai-gated .ca-ai-hero__gate,
+  .ca-ai-live.ca-ai-returning .ca-ai-hero__gate {
     display: flex;
+  }
+
+  /* A return visit: the page is open, so only the offer of sound remains. */
+  .ca-ai-returning .ca-ai-hero__gate [data-ai-enter="silent"] {
+    display: none;
+  }
+
+  .ca-ai-returning .ca-ai-hero__hint {
+    margin-block-start: 26px;
   }
 
   .ca-ai-hero__hint {
