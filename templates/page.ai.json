@@ -12,7 +12,9 @@
         "sound_on_label": "Sound on",
         "sound_off_label": "Sound off",
         "audio_url": "",
-        "example_label": "Example"
+        "example_label": "Example",
+        "auto_on_label": "Autoplay on",
+        "auto_off_label": "Autoplay off"
       }
     },
     "brain": {
@@ -23,7 +25,7 @@
           "settings": {
             "heading": "The answer is already inside your business, in places that never meet.",
             "text": "<p>Part of it is in a Slack thread, part in a release, part in an ad account, part in last week's call.</p>",
-            "length": 260
+            "length": 150
           }
         },
         "act_2": {
@@ -31,7 +33,7 @@
           "settings": {
             "heading": "Connect everything, and the answer is in there somewhere.",
             "text": "<p>Every email, thread, call, task, release and store metric, in one memory. Now all of it has to be read, every time someone asks.</p>",
-            "length": 280
+            "length": 150
           }
         },
         "act_3": {
@@ -39,7 +41,7 @@
           "settings": {
             "heading": "So the brain files by meaning, and goes straight to what matters.",
             "text": "<p>A question lands on the few records that answer it, and comes back as one answer with its sources.</p>",
-            "length": 320
+            "length": 150
           }
         }
       },
@@ -62,7 +64,7 @@
           "settings": {
             "heading": "Every release, walked through the way a shopper would.",
             "text": "<p>On desktop and on a phone, after each release. A failure that is confirmed is rolled back.</p>",
-            "length": 280
+            "length": 150
           }
         },
         "act_2": {
@@ -70,7 +72,7 @@
           "settings": {
             "heading": "It looks for the failures that look fine.",
             "text": "<p>A collection that quietly stops showing one product. A filter that returns the wrong ones. A checkout with no shipping rates. Each is checked again before anyone is told.</p>",
-            "length": 280
+            "length": 150
           }
         },
         "act_3": {
@@ -78,7 +80,7 @@
           "settings": {
             "heading": "And it knows what never to touch.",
             "text": "<p>What was checked, what was caught and what became of it sit in one view.</p>",
-            "length": 230,
+            "length": 150,
             "never": "Pay for an order\nSubmit a real form\nSign in to your admin",
             "never_label": "Never"
           }
@@ -103,7 +105,7 @@
           "settings": {
             "heading": "When something breaks behind your store, it is found first.",
             "text": "<p>Errors are picked up from the systems your orders depend on, not from a customer writing in.</p>",
-            "length": 240
+            "length": 150
           }
         },
         "act_2": {
@@ -111,7 +113,7 @@
           "settings": {
             "heading": "Diagnosed, fixed, reviewed and merged.",
             "text": "<p>A second reviewer reads every fix before it ships. People set the rules for what may merge on its own.</p>",
-            "length": 280
+            "length": 150
           }
         },
         "act_3": {
@@ -119,7 +121,7 @@
           "settings": {
             "heading": "Then verified, the same way a release is.",
             "text": "<p>Security moves at the same pace. When a critical vulnerability was announced in October, our own systems were patched the next day.</p>",
-            "length": 240
+            "length": 150
           }
         }
       },
@@ -142,7 +144,7 @@
           "settings": {
             "heading": "Know what is happening across your business, and have it handled.",
             "text": "<p>We set this up around your store, your team and your tools, then run it with you.</p>",
-            "length": 180,
+            "length": 170,
             "button_label": "Book a call",
             "button_link": ""
           }

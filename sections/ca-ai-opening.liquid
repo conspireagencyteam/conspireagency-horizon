@@ -9,8 +9,9 @@
        pressed the page does not scroll. The gate is added by script: with no
        script, under reduced motion, or on a return visit in the same session,
        the page simply opens.
-    3. The sound toggle, the label layer the script positions over the canvas, and
-       the chapter rail the script builds down the left edge on wide screens.
+    3. The sound and autoplay toggles, the scroll cue shown when a chapter has
+       played out, the label layer the script positions over the canvas, and the
+       chapter rail the script builds down the left edge on wide screens.
 
   The canvas and every label are decorative and aria-hidden; the meaning is in the
   copy. The page is dark from here to the footer, so this section also gives the
@@ -77,18 +78,34 @@
     </div>
   </div>
 
-  <button
-    type="button"
-    class="ca-ai__sound"
-    data-ai-sound
-    data-on="{{ section.settings.sound_on_label | escape }}"
-    data-off="{{ section.settings.sound_off_label | escape }}"
-    aria-pressed="false"
-    hidden
-  >
-    <span class="ca-ai__sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span data-ai-sound-label>{{ section.settings.sound_off_label }}</span>
-  </button>
+  <p class="ca-ai__cue" data-ai-cue aria-hidden="true">{{ section.settings.scroll_label }}</p>
+
+  <div class="ca-ai__controls">
+    <button
+      type="button"
+      class="ca-ai__control ca-ai__auto"
+      data-ai-auto
+      data-on="{{ section.settings.auto_on_label | escape }}"
+      data-off="{{ section.settings.auto_off_label | escape }}"
+      aria-pressed="true"
+      hidden
+    >
+      <span class="ca-ai__auto-icon" aria-hidden="true"></span>
+      <span data-ai-auto-label>{{ section.settings.auto_on_label }}</span>
+    </button>
+    <button
+      type="button"
+      class="ca-ai__control ca-ai__sound"
+      data-ai-sound
+      data-on="{{ section.settings.sound_on_label | escape }}"
+      data-off="{{ section.settings.sound_off_label | escape }}"
+      aria-pressed="false"
+      hidden
+    >
+      <span class="ca-ai__sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span data-ai-sound-label>{{ section.settings.sound_off_label }}</span>
+    </button>
+  </div>
 </div>
 
 {% stylesheet %}
@@ -246,11 +263,20 @@
     display: none;
   }
 
-  /* ---- Sound toggle ---- */
-  .ca-ai__sound {
+  /* ---- Autoplay and sound toggles ---- */
+  .ca-ai__controls {
     position: fixed;
     inset: auto 20px 20px auto;
     z-index: 5;
+    display: flex;
+    gap: 8px;
+  }
+
+  .ca-ai-gated .ca-ai__controls {
+    display: none;
+  }
+
+  .ca-ai__control {
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -268,17 +294,75 @@
     cursor: pointer;
   }
 
-  .ca-ai__sound[hidden] {
+  .ca-ai__control[hidden] {
     display: none;
   }
 
-  .ca-ai__sound:hover {
+  .ca-ai__control:hover {
     border-color: rgb(242 242 242 / 0.5);
   }
 
-  .ca-ai__sound:focus-visible {
+  .ca-ai__control:focus-visible {
     outline: 2px solid #f2f2f2;
     outline-offset: 3px;
+  }
+
+  /* Two bars while it plays on its own, a triangle once it is paused. */
+  .ca-ai__auto-icon {
+    box-sizing: border-box;
+    width: 8px;
+    height: 10px;
+    border-inline: 2px solid var(--ca-ai-accent, #ff4d00);
+  }
+
+  .ca-ai__auto[aria-pressed="false"] .ca-ai__auto-icon {
+    width: 0;
+    height: 0;
+    border-block: 5px solid transparent;
+    border-inline: 8px solid currentColor;
+    border-inline-end-width: 0;
+  }
+
+  /* ---- The cue under a chapter's last act ---- */
+  .ca-ai__cue {
+    position: fixed;
+    inset: auto auto 22px 50%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    translate: -50% 8px;
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(242 242 242 / 0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, translate 0.5s ease;
+  }
+
+  .ca-ai__cue::after {
+    content: "";
+    width: 1px;
+    height: 26px;
+    background: linear-gradient(rgb(242 242 242 / 0.7), rgb(242 242 242 / 0));
+    animation: ca-ai-cue 1.8s ease-in-out infinite;
+  }
+
+  .ca-ai__cue.is-shown {
+    opacity: 1;
+    translate: -50% 0;
+  }
+
+  @keyframes ca-ai-cue {
+    0% { transform: scaleY(0); transform-origin: top; }
+    55% { transform: scaleY(1); transform-origin: top; }
+    56% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
   }
 
   .ca-ai__sound-bars {
@@ -471,9 +555,31 @@
       align-self: stretch;
     }
 
-    .ca-ai__sound {
+    .ca-ai__controls {
       inset: auto 12px 12px auto;
-      padding: 8px 12px;
+      gap: 6px;
+    }
+
+    .ca-ai__control {
+      gap: 8px;
+      padding: 8px 11px;
+      font-size: 0.6875rem;
+    }
+
+    .ca-ai__cue {
+      inset: auto auto 18px 16px;
+      flex-direction: row;
+      translate: 0 8px;
+    }
+
+    .ca-ai__cue.is-shown {
+      translate: 0 0;
+    }
+
+    .ca-ai__cue::after {
+      width: 22px;
+      height: 1px;
+      animation: none;
     }
 
     .ca-ai-chip {
@@ -490,6 +596,10 @@
     .ca-ai__sound[aria-pressed="true"] .ca-ai__sound-bars i {
       animation: none;
       height: 10px;
+    }
+
+    .ca-ai__cue::after {
+      animation: none;
     }
   }
 {% endstylesheet %}
@@ -508,6 +618,13 @@
     { "type": "text", "id": "enter_sound_label", "label": "With sound button", "default": "Enter with sound" },
     { "type": "text", "id": "enter_silent_label", "label": "Without sound button", "default": "Enter without sound" },
     { "type": "text", "id": "scroll_label", "label": "Scroll hint", "default": "Scroll" },
+    { "type": "header", "content": "Autoplay" },
+    {
+      "type": "paragraph",
+      "content": "Each act plays through by itself and moves on to the next act of its chapter. This toggle lets a visitor stop that."
+    },
+    { "type": "text", "id": "auto_on_label", "label": "Toggle label while it plays", "default": "Autoplay on" },
+    { "type": "text", "id": "auto_off_label", "label": "Toggle label when stopped", "default": "Autoplay off" },
     { "type": "header", "content": "Sound" },
     { "type": "text", "id": "sound_on_label", "label": "Toggle label when playing", "default": "Sound on" },
     { "type": "text", "id": "sound_off_label", "label": "Toggle label when silent", "default": "Sound off" },

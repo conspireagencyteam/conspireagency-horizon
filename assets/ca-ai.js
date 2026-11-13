@@ -765,6 +765,8 @@ function start(root) {
     el.dataset.aiSplit = '1';
     el.setAttribute('aria-label', text);
     el.style.setProperty('--n', words.length);
+    const act = el.closest('[data-ai-scene]');
+    if (act) act.style.setProperty('--n', words.length);
     el.replaceChildren(
       ...words.flatMap((word, i) => {
         const span = document.createElement('span');
@@ -793,9 +795,10 @@ function start(root) {
     }
     const p = rect ? clamp((mid - rect.top) / Math.max(1, rect.height)) : 0;
     // pin: the share of the stop spent arriving (and again leaving). Between the
-    // two its content is pinned to the screen; q runs 0 to 1 across that stretch.
+    // two its content is pinned to the screen.
     const pin = rect ? Math.min(0.45, (window.innerHeight * 0.5) / Math.max(1, rect.height)) : 0.25;
-    return { index: current, p, pin, q: clamp((p - pin) / (1 - 2 * pin)) };
+    // inside: the middle of the screen is still within this stop, not below the last one.
+    return { index: current, p, pin, inside: !!rect && mid <= rect.bottom };
   }
 
   /* State writers. vis and glow are 0 to 1; tint mixes toward white (0), alert
@@ -1246,6 +1249,127 @@ function start(root) {
     }
   }
 
+  /* ------------------------------------------------------------- autopilot */
+
+  /* How long each act's story takes to play, in seconds. */
+  const STORY = { brain: [5.5, 7.5, 6.5], manager: [6.5, 7, 4], healing: [4.5, 7, 4.5] };
+  let playing = -1;
+
+  /* Scrolling starts things; it does not have to finish them. Two helpers:
+     - settle: if the visitor stops between two stops, glide to the one they were
+       heading for, so nothing is ever left half-arrived;
+     - advance: when an act's story has played and the visitor is idle, carry on
+       to the next stop of the same chapter. A chapter ends on its last act and
+       waits for a scroll.
+     Any wheel, touch or key takes the page back at once. Never under reduced
+     motion, in the theme editor or behind the enter gate. */
+  const pilotAllowed = !reduced && !(window.Shopify && window.Shopify.designMode);
+  const pilot = { on: true, drive: null, moved: 0, dir: 1, top: 0, touching: false };
+  try {
+    pilot.on = sessionStorage.getItem('ca-ai-auto') !== '0';
+  } catch (error) {
+    pilot.on = true;
+  }
+  const scrollerEl = () => {
+    const pw = document.querySelector('.page-wrapper');
+    return pw && pw.scrollHeight > pw.clientHeight + 5 && getComputedStyle(pw).overflowY !== 'visible' ? pw : null;
+  };
+  const getTop = (el) => (el ? el.scrollTop : window.scrollY);
+  const setTop = (el, y) => (el ? (el.scrollTop = y) : window.scrollTo(0, y));
+  function glide(target, ms) {
+    const s = stops[target];
+    if (!s || !s.el) return;
+    const el = scrollerEl();
+    const r = s.el.getBoundingClientRect();
+    const from = getTop(el);
+    const delta = r.top + r.height * 0.5 - window.innerHeight * 0.5;
+    if (Math.abs(delta) < 2) return;
+    // The theme scrolls smoothly on its own; this drive supplies the easing itself.
+    const style = (el || document.documentElement).style;
+    pilot.drive = { el, from, delta, start: performance.now(), ms, style, was: style.scrollBehavior };
+    style.scrollBehavior = 'auto';
+  }
+  function release() {
+    if (!pilot.drive) return;
+    pilot.drive.style.scrollBehavior = pilot.drive.was;
+    pilot.drive = null;
+  }
+  function steer(now) {
+    const d = pilot.drive;
+    if (!d) return;
+    const k = clamp((now - d.start) / d.ms);
+    const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    setTop(d.el, d.from + d.delta * e);
+    if (k >= 1) release();
+  }
+  function autopilot(now, index, p, pin, stop, doneFor) {
+    if (!pilotAllowed || pilot.drive || pilot.touching || pastEnd || html.classList.contains('ca-ai-gated')) return;
+    const idle = now - pilot.moved;
+    const last = stops.length - 1;
+    if (idle > 420) {
+      let target = -1;
+      if (index === 0) {
+        // A nudge down from the first screen is enough to begin.
+        if (pilot.dir > 0 && p > 0.6) target = 1;
+      } else if (p < pin - 0.004) target = pilot.dir > 0 ? index : index - 1;
+      else if (p > 1 - pin + 0.004) target = pilot.dir > 0 ? (index < last ? index + 1 : -1) : index;
+      if (target > 0) return glide(target, 950);
+    }
+    const next = stops[index + 1];
+    const hold = stop.opener ? 0 : 2.2;
+    if (pilot.on && index > 0 && next && next.chapter === stop.chapter && doneFor > hold && idle > 1400 && !document.hidden) glide(index + 1, 1500);
+  }
+  if (pilotAllowed) {
+    const hands = () => {
+      release();
+      pilot.moved = performance.now();
+    };
+    window.addEventListener('wheel', hands, { passive: true });
+    window.addEventListener('mousedown', hands, { passive: true });
+    window.addEventListener('keydown', (event) => {
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ', 'Tab'].includes(event.key)) hands();
+    });
+    window.addEventListener(
+      'touchstart',
+      () => {
+        pilot.touching = true;
+        hands();
+      },
+      { passive: true }
+    );
+    for (const type of ['touchend', 'touchcancel']) {
+      window.addEventListener(
+        type,
+        () => {
+          pilot.touching = false;
+          pilot.moved = performance.now();
+        },
+        { passive: true }
+      );
+    }
+    document.addEventListener(
+      'scroll',
+      () => {
+        const top = getTop(scrollerEl());
+        if (!pilot.drive) {
+          if (Math.abs(top - pilot.top) > 0.5) pilot.dir = top > pilot.top ? 1 : -1;
+          pilot.moved = performance.now();
+        }
+        pilot.top = top;
+      },
+      { capture: true, passive: true }
+    );
+  }
+
+  /* The cue under a chapter's last act: its story has played, the scroll is yours. */
+  const cue = root.querySelector('[data-ai-cue]');
+  let cueOn = false;
+  function drawCue(on) {
+    if (!cue || on === cueOn) return;
+    cueOn = on;
+    cue.classList.toggle('is-shown', on);
+  }
+
   /* ------------------------------------------------------------------ frame */
 
   let running = false;
@@ -1270,15 +1394,34 @@ function start(root) {
     const time = reduced ? 20 : clock;
     const started = performance.now();
 
-    const { index, p, pin, q } = locate();
+    steer(now);
+    const { index, p, pin, inside } = locate();
     const stop = stops[index] || { name: 'open', act: 1, form: 'sphere', el: null };
     const before = stops[index - 1] || stop;
     const changing = before.form !== stop.form;
     // A title card and its first act share a drawing; it only moves aside.
     const moving = changing || before.centred !== stop.centred;
     // The drawing changes while a stop arrives; its story plays while the copy is pinned.
+    // The drawing changes while a stop arrives. Its story is not scrubbed by the
+    // scroll: once the stop has arrived it plays through on the clock.
     const t = !moving ? 1 : reduced ? (p > 0.12 ? 1 : 0) : stop.opener ? smooth(p, 0.1, 0.72) : smooth(p, 0, pin + (changing ? 0.05 : 0));
-    const u = stop.opener ? 0 : reduced ? 0.9 : clamp((q - 0.08) / 0.78);
+    if (index !== playing) {
+      const old = stops[playing];
+      if (old) {
+        old.at = null;
+        if (old.el) old.el.classList.remove('is-on');
+      }
+      playing = index;
+    }
+    if (stop.el && stop.at == null && p >= pin - 0.05 && p <= 1 - pin + 0.05) {
+      stop.at = clock;
+      stop.el.classList.add('is-on');
+    }
+    const since = stop.at == null ? -1 : clock - stop.at;
+    const length = (STORY[stop.name] || [])[stop.act - 1] || 0;
+    const u = stop.opener || !length ? 0 : reduced ? 0.9 : clamp((since - 0.5) / length);
+    // Done: the story has played out (a title card: it has been up long enough to read).
+    const doneFor = since < 0 ? -1 : stop.opener ? since - 2.3 : length ? since - 0.5 - length : since - 2;
 
     // The stop before holds its last frame while the field leaves it.
     if (changing && SCENES[before.name]) SCENES[before.name](before.act, 1, time);
@@ -1368,9 +1511,13 @@ function start(root) {
     const copyShow = stop.opener || stop.name === 'open' ? 0 : smooth(p, pin - 0.17, pin - 0.03) * (1 - leaving);
     drawWire(stop, out.link, at, breath, strength * copyShow);
     drawRail(index, p);
+    const nextStop = stops[index + 1];
+    drawCue(!reduced && !pilot.drive && !stop.opener && stop.name !== 'open' && stop.name !== 'close' && !!nextStop && nextStop.chapter !== stop.chapter && doneFor > 0.6 && leaving < 0.05);
+    if (inside) autopilot(now, index, p, pin, stop, doneFor);
 
-    // Each stop's copy follows its place in the scroll: it arrives, its statement
-    // lights word by word, the supporting text follows, and it leaves upward.
+    // Each stop's copy follows its place in the scroll: it arrives and it leaves
+    // upward. What happens inside it (the statement lighting word by word, the
+    // supporting text, the readout) runs on the clock once the stop is on.
     for (let i = 0; i < stops.length; i++) {
       const s = stops[i];
       if (s.name === 'open') continue;
@@ -1382,7 +1529,7 @@ function start(root) {
         key = 'o' + show.toFixed(3) + p.toFixed(3);
       } else if (mine) {
         show = copyShow;
-        key = 'a' + p.toFixed(4);
+        key = 'a' + p.toFixed(4) + u.toFixed(3);
       }
       if (s.key === key) continue;
       s.key = key;
@@ -1392,12 +1539,12 @@ function start(root) {
       if (s.opener) css.setProperty('--ai-drift', (p - 0.5).toFixed(3));
       else {
         css.setProperty('--ai-shift', (1 - smooth(p, pin - 0.17, pin) - leaving).toFixed(3));
-        css.setProperty('--ai-read', clamp((p - pin + 0.04) / ((1 - 2 * pin) * 0.3 + 0.04)).toFixed(3));
-        css.setProperty('--ai-more', smooth(q, 0.1, 0.28).toFixed(3));
         css.setProperty('--ai-u', u.toFixed(3));
       }
     }
 
+    debug.u = u;
+    debug.driving = !!pilot.drive;
     debug.frames++;
     debug.ms = debug.ms * 0.95 + (performance.now() - started) * 0.05;
     debug.scene = stop.name + '-' + stop.act;
@@ -1474,6 +1621,26 @@ function start(root) {
       else sound.off();
       setToggle(on);
     });
+  }
+
+  const autoToggle = root.querySelector('[data-ai-auto]');
+  if (autoToggle && pilotAllowed) {
+    const show = () => {
+      autoToggle.hidden = false;
+      autoToggle.setAttribute('aria-pressed', pilot.on ? 'true' : 'false');
+      autoToggle.querySelector('[data-ai-auto-label]').textContent = pilot.on ? autoToggle.dataset.on : autoToggle.dataset.off;
+    };
+    autoToggle.addEventListener('click', () => {
+      pilot.on = !pilot.on;
+      if (!pilot.on) release();
+      try {
+        sessionStorage.setItem('ca-ai-auto', pilot.on ? '1' : '0');
+      } catch (error) {
+        /* private mode: the choice lasts for this page view */
+      }
+      show();
+    });
+    show();
   }
 
   let entered = false;
