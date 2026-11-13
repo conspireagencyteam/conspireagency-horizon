@@ -4,7 +4,7 @@
       "type": "ca-ai-opening",
       "settings": {
         "eyebrow": "AI business intelligence and consulting for eCommerce brands",
-        "heading": "A brain for your business.",
+        "heading": "A Brain for your business.",
         "text": "One memory for everything your team, your store, your code and your marketing platforms know. An all-knowing AI for your business.",
         "enter_sound_label": "Enter with sound",
         "enter_silent_label": "Enter without sound",
@@ -39,7 +39,7 @@
         "act_3": {
           "type": "act",
           "settings": {
-            "heading": "The brain's neural network gets straight to the answer.",
+            "heading": "The Brain's neural network gets straight to the answer.",
             "text": "<p>It jumps intelligently between records from different sources to gather the right context, then gives one answer with its sources.</p>",
             "length": 150
           }
@@ -53,7 +53,7 @@
       "settings": {
         "variant": "brain",
         "number": "01",
-        "chapter": "The business brain"
+        "chapter": "The Business Brain"
       }
     },
     "manager": {
@@ -288,7 +288,7 @@
         "padding-block-start": 40,
         "padding-block-end": 80,
         "panel_heading": "See it on your own store.",
-        "panel_text": "Pick a time and we will walk through what a brain, a site manager and self-healing software would look like for your business."
+        "panel_text": "Pick a time and we will walk through what a Brain, a site manager and self-healing software would look like for your business."
       }
     }
   },
