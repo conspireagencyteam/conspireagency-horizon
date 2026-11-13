@@ -1278,7 +1278,7 @@ function start(root) {
     const moving = changing || before.centred !== stop.centred;
     // The drawing changes while a stop arrives; its story plays while the copy is pinned.
     const t = !moving ? 1 : reduced ? (p > 0.12 ? 1 : 0) : stop.opener ? smooth(p, 0.1, 0.72) : smooth(p, 0, pin + (changing ? 0.05 : 0));
-    const u = stop.opener ? 0 : reduced ? 0.9 : clamp((q - 0.1) / 0.72);
+    const u = stop.opener ? 0 : reduced ? 0.9 : clamp((q - 0.08) / 0.78);
 
     // The stop before holds its last frame while the field leaves it.
     if (changing && SCENES[before.name]) SCENES[before.name](before.act, 1, time);
@@ -1359,11 +1359,13 @@ function start(root) {
     // drawing is still moving they follow it.
     const tt = t * t * (3 - 2 * t);
     const at = moving && !changing ? { angle: to.angle, tilt: to.tilt, scale: lerp(from.scale, to.scale, tt), x: lerp(from.x, to.x, tt), y: lerp(from.y, to.y, tt) } : to;
-    const leaving = smooth(q, 0.9, 1);
+    // The copy lets go as its act unpins and is gone a fifth of a screen later,
+    // so the stretch with nothing beside the drawing stays short.
+    const leaving = smooth(p, 1 - pin - 0.02, 1 - pin + 0.09);
     const strength = stop.opener ? 0 : (changing ? smooth(t, 0.85, 1) : 1) * (1 - leaving);
     drawOverlay(out, at, breath, strength);
     if (!stop.opener) drawInst(stop, out.inst);
-    const copyShow = stop.opener || stop.name === 'open' ? 0 : smooth(p, pin - 0.1, pin - 0.01) * (1 - leaving);
+    const copyShow = stop.opener || stop.name === 'open' ? 0 : smooth(p, pin - 0.17, pin - 0.03) * (1 - leaving);
     drawWire(stop, out.link, at, breath, strength * copyShow);
     drawRail(index, p);
 
@@ -1389,7 +1391,7 @@ function start(root) {
       if (!mine) continue;
       if (s.opener) css.setProperty('--ai-drift', (p - 0.5).toFixed(3));
       else {
-        css.setProperty('--ai-shift', (1 - smooth(p, pin - 0.1, pin) - leaving).toFixed(3));
+        css.setProperty('--ai-shift', (1 - smooth(p, pin - 0.17, pin) - leaving).toFixed(3));
         css.setProperty('--ai-read', clamp((p - pin + 0.04) / ((1 - 2 * pin) * 0.3 + 0.04)).toFixed(3));
         css.setProperty('--ai-more', smooth(q, 0.1, 0.28).toFixed(3));
         css.setProperty('--ai-u', u.toFixed(3));
