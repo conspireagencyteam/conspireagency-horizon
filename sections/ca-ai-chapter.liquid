@@ -18,6 +18,13 @@
   of the chapter by itself (assets/ca-ai.js, "autopilot"). A chapter ends on its
   last act and waits for a scroll.
 
+  With the script running nothing in the story travels up the screen. Every
+  title card and act is fixed in the same place and the scroll only decides
+  which one shows: the chapter label stays, the statement and text swap, and a
+  readout that carries on into the next act (the question, the pipeline) stays
+  where it is. The tall tracks remain as the scroll's length. Without the script,
+  and under reduced motion, the acts read down the page as ordinary pinned sections.
+
   An act is one statement (its words light in turn when it arrives), a short
   supporting text, and a readout the script fills and drives from the same clock
   as the drawing: a question being asked, a checklist, a pipeline. The
@@ -89,12 +96,14 @@
                 </span>
               </p>
             {%- endif -%}
-            {%- if block.settings.heading != blank -%}
-              <{{ heading_tag }} class="ca-ai-act__heading" data-ai-say>{{ block.settings.heading }}</{{ heading_tag }}>
-            {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <div class="ca-ai-act__text">{{ block.settings.text }}</div>
-            {%- endif -%}
+            <div class="ca-ai-act__lead">
+              {%- if block.settings.heading != blank -%}
+                <{{ heading_tag }} class="ca-ai-act__heading" data-ai-say>{{ block.settings.heading }}</{{ heading_tag }}>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class="ca-ai-act__text">{{ block.settings.text }}</div>
+              {%- endif -%}
+            </div>
             {%- if block.settings.never != blank -%}
               {%- assign never_items = block.settings.never | newline_to_br | split: '<br />' -%}
               <ul class="ca-ai-never" role="list">
@@ -215,10 +224,46 @@
     width: min(100%, 35rem);
   }
 
-  /* With the field running, an act's copy arrives from below and leaves upward. */
+  /* ---- In place ----
+     With the field running, title cards and acts do not scroll: each is fixed
+     over the same spot and the script fades its parts by where the scroll is.
+     Acts of one chapter are given one height and one statement height (--ai-tall,
+     --ai-lead, measured by the script), so their labels and readouts coincide. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-opener__pin,
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__pin {
+    position: fixed;
+    inset: 0 0 auto;
+    width: 100%;
+    pointer-events: none;
+  }
+
   .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__copy {
+    min-height: var(--ai-tall, 0px);
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .is-here .ca-ai-act__copy {
+    pointer-events: auto;
+  }
+
+  /* The chapter label holds from act to act; it only fades at a chapter's ends. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__eyebrow {
+    opacity: var(--ai-head, 0);
+  }
+
+  /* The statement and its text are what swap. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__lead {
+    min-height: var(--ai-lead, 0px);
     opacity: var(--ai-show, 0);
-    transform: translateY(calc(var(--ai-shift, 0) * 22px));
+    transform: translateY(calc(var(--ai-shift, 0) * 12px));
+  }
+
+  /* The readout (and a list or button in its place) follows its own measure: it
+     arrives after the text, and stays put when the next act carries it on. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-inst,
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-never,
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__button {
+    opacity: var(--ai-read, 0);
+    transform: translateY(calc((1 - var(--ai-read, 0)) * 10px));
   }
 
   /* The site's eyebrow. The chapter numeral beside it is the title card's, small. */
@@ -297,8 +342,14 @@
     transform: scaleX(var(--ai-u, 0));
   }
 
+  /* The statement and its text. The space under the chapter label is the
+     wrapper's: the theme zeroes the top margin of a first child. */
+  .ca-ai-act__lead {
+    margin-block-start: 26px;
+  }
+
   .ca-ai-act__heading {
-    margin: 26px 0 0;
+    margin: 0;
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight, 400);
     font-size: clamp(2rem, 3.75vw, 3.5rem);
@@ -328,30 +379,18 @@
     text-wrap: pretty;
   }
 
-  /* After the statement: the supporting text, then the readout, each rising a
-     little into place. Nothing below them moves; their room is already kept. */
-  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__text,
-  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-inst,
-  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-never,
-  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__button {
+  /* After the statement, the supporting text rises a little into place. Nothing
+     below it moves; its room is already kept. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__text {
     opacity: 0;
     transform: translateY(10px);
   }
 
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__text,
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-inst,
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-never,
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__button {
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__text {
     --ai-after: calc(var(--n, 8) * 55ms + 220ms);
     opacity: 1;
     transform: none;
     transition: opacity 0.8s ease var(--ai-after), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--ai-after);
-  }
-
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-inst,
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-never,
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__button {
-    --ai-after: calc(var(--n, 8) * 55ms + 480ms);
   }
 
   .ca-ai-act__text p {
@@ -749,8 +788,11 @@
     text-align: center;
   }
 
-  .ca-ai-chapter--close .ca-ai-act__heading {
+  .ca-ai-chapter--close .ca-ai-act__lead {
     margin-block-start: 0;
+  }
+
+  .ca-ai-chapter--close .ca-ai-act__heading {
     font-size: clamp(2.25rem, 4.2vw, 3.875rem);
     line-height: 1.02;
   }
@@ -775,8 +817,11 @@
       padding-block-start: var(--ca-header-height, 64px);
     }
 
-    .ca-ai-act__heading {
+    .ca-ai-chapter:not(.ca-ai-chapter--close) .ca-ai-act__lead {
       margin-block-start: 18px;
+    }
+
+    .ca-ai-act__heading {
       font-size: clamp(1.75rem, 3.1vw, 2.75rem);
     }
 
@@ -798,6 +843,11 @@
       align-items: flex-end;
       /* Clear of the toggles and the site's floating pill in the corner. */
       padding-block-end: 86px;
+    }
+
+    /* One scrim, the current act's: the acts are stacked now. */
+    .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__pin::before {
+      opacity: var(--ai-head, 0);
     }
 
     .ca-ai-chapter:not(.ca-ai-chapter--close) .ca-ai-act__pin::before {
@@ -826,8 +876,11 @@
       font-size: max(17rem, 44vw);
     }
 
-    .ca-ai-act__heading {
+    .ca-ai-chapter:not(.ca-ai-chapter--close) .ca-ai-act__lead {
       margin-block-start: 14px;
+    }
+
+    .ca-ai-act__heading {
       font-size: clamp(1.75rem, 7.6vw, 2.5rem);
     }
 
