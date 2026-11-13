@@ -284,7 +284,7 @@ function start(root) {
       }
     }
     const scan = nodes.map((_, k) => k).sort(() => r() - 0.5).slice(0, 46);
-    return { forms, nodes, edges, lines, targets, pathEdges, pathNodes, maxDepth, scan };
+    return { forms, nodes, edges, lines, targets, pathEdges, pathNodes, maxDepth, scan, entry };
   }
 
   /* A store in outline: a desktop window and a phone, each a set of regions the
@@ -478,7 +478,7 @@ function start(root) {
     layout(location=4) in vec2 aMetaFrom;
     layout(location=5) in vec2 aMetaTo;
     layout(location=6) in vec4 aSeed;
-    uniform float uT, uStagger, uTime, uBreath, uCamZ, uPx;
+    uniform float uT, uStagger, uTime, uBreath, uCamZ, uPx, uDim;
     uniform vec4 uXfFrom, uXfTo;
     uniform float uTiltFrom, uTiltTo;
     uniform vec3 uPtrFrom, uPtrTo;
@@ -525,7 +525,7 @@ function start(root) {
       gl_Position = uProj * mv;
       float px = size * uPx / -mv.z;
       // A point thinner than a pixel is drawn as one pixel, proportionally fainter.
-      alpha *= min(1.0, px * px);
+      alpha *= min(1.0, px * px) * uDim;
       gl_PointSize = max(1.0, px);
       vCol = vec4(c * alpha, alpha);
     }`;
@@ -698,16 +698,18 @@ function start(root) {
 
   /* Where each formation sits: beside the copy on a wide screen, above it on a
      narrow one. Returns angle, scale, x, y and tilt. */
-  function placement(form, time) {
+  function placement(form, time, centred) {
     const halfW = (CAM_Z / F) * aspect;
     const wide = aspect > 0.95;
     if (form === 'sphere') {
-      return { angle: time * 0.117, scale: wide ? 1.3 : 1.0, x: 0, y: wide ? 0.55 : 0.75, tilt: 0 };
+      // At the close it rides a little higher, clear of the last statement.
+      return { angle: time * 0.117, scale: wide ? (centred ? 1.2 : 1.3) : 1.0, x: 0, y: wide ? (centred ? 0.82 : 0.55) : centred ? 0.9 : 0.75, tilt: 0 };
     }
     // The drawing's own column: the right 56% of a wide screen, the top of a narrow one.
-    const cx = wide ? halfW * 0.4 : 0;
-    const cy = wide ? 0 : 0.8;
-    const room = wide ? halfW * 1.12 : halfW * 1.84;
+    // Under a chapter title it sits in the middle of the screen instead.
+    const cx = wide && !centred ? halfW * 0.4 : 0;
+    const cy = wide || centred ? 0 : 0.9;
+    const room = wide ? halfW * (centred ? 1.3 : 1.12) : halfW * 1.84;
     if (form === 'store') {
       const scale = Math.min(room / 3.35, 1.8);
       return { angle: -0.2 + Math.sin(time * 0.23) * 0.13, scale, x: cx - 0.145 * scale, y: cy + 0.1 * scale, tilt: -0.05 };
@@ -715,7 +717,7 @@ function start(root) {
     if (form === 'lattice') {
       return { angle: 0.35 + Math.sin(time * 0.11) * 0.3, scale: Math.min(room / 4.5, 1.25), x: cx, y: cy, tilt: 0.3 };
     }
-    return { angle: time * 0.045, scale: Math.min(room / 3.4, 1.05), x: cx, y: cy + (wide ? 0.4 : 0), tilt: 0.2 };
+    return { angle: time * 0.045, scale: Math.min(room / 3.4, 1.18), x: cx, y: cy, tilt: 0.2 };
   }
   function project(local, place, breath) {
     let [x, y, z] = local;
@@ -742,11 +744,37 @@ function start(root) {
   function measure() {
     stops = [...document.querySelectorAll('[data-ai-scene]')].map((el) => {
       const [name, n] = (el.dataset.aiScene || 'open').split('-');
+      // Stop 0 of a chapter is its title card: the chapter's first drawing, at rest, centred.
+      const opener = n === '0';
       const index = Math.max(1, parseInt(n || '1', 10));
       const forms = SCENE_FORM[name];
       const form = Array.isArray(forms) ? forms[Math.min(index, forms.length) - 1] : forms || 'sphere';
-      return { el, name, act: Math.min(index, 3), form };
+      const say = el.querySelector('[data-ai-say]');
+      if (say) splitWords(say);
+      return { el, name, act: Math.min(index, 3), form, opener, centred: opener, inst: el.querySelector('[data-ai-inst]'), chapter: el.closest('[data-ai-chapter]') };
     });
+    buildRail();
+  }
+  /* A statement becomes one span per word, so each can light in turn. The whole
+     sentence stays the heading's accessible name. */
+  function splitWords(el) {
+    if (el.dataset.aiSplit || reduced) return;
+    const text = el.textContent.replace(/\s+/g, ' ').trim();
+    if (!text || el.children.length) return;
+    const words = text.split(' ');
+    el.dataset.aiSplit = '1';
+    el.setAttribute('aria-label', text);
+    el.style.setProperty('--n', words.length);
+    el.replaceChildren(
+      ...words.flatMap((word, i) => {
+        const span = document.createElement('span');
+        span.className = 'ca-ai-w';
+        span.setAttribute('aria-hidden', 'true');
+        span.style.setProperty('--i', i);
+        span.textContent = word;
+        return i ? [' ', span] : [span];
+      })
+    );
   }
   /* Positions are read from the viewport each frame, never from a scroll offset:
      on wide screens the theme scrolls .page-wrapper, on phones the window. */
@@ -763,7 +791,11 @@ function start(root) {
       }
       if (i === stops.length - 1) pastEnd = r.bottom < -40;
     }
-    return { index: current, p: rect ? clamp((mid - rect.top) / Math.max(1, rect.height)) : 0 };
+    const p = rect ? clamp((mid - rect.top) / Math.max(1, rect.height)) : 0;
+    // pin: the share of the stop spent arriving (and again leaving). Between the
+    // two its content is pinned to the screen; q runs 0 to 1 across that stretch.
+    const pin = rect ? Math.min(0.45, (window.innerHeight * 0.5) / Math.max(1, rect.height)) : 0.25;
+    return { index: current, p, pin, q: clamp((p - pin) / (1 - 2 * pin)) };
   }
 
   /* State writers. vis and glow are 0 to 1; tint mixes toward white (0), alert
@@ -786,6 +818,7 @@ function start(root) {
 
   const QUESTION = 'Why did checkout conversion dip last week?';
   const SOURCE_LABELS = ['Call', 'Slack thread', 'Release', 'Ad change', 'Store metric'];
+  const PIPELINE = ['Found', 'Diagnosed', 'Fix written', 'Reviewed', 'Merged', 'Verified'];
 
   /* Each scene writes the state of its formation for progress u (0 to 1) and
      returns what the overlay should show. */
@@ -801,12 +834,13 @@ function start(root) {
       const s = GLF.b1.state;
       const K = brain.nodes.length;
       fillState(s, K + 1, 1);
-      const out = { labels: [], ask: null, lines: 1 };
+      const out = { labels: [], inst: null };
       const E = brain.edges.length;
+      const ask = (typed, tone, status, sources) => ({ kind: 'prompt', typed, tone, status, sources });
       if (act === 1) {
         brain.edges.forEach((e, k) => setState(linkState, k, e.intra ? 0.5 * smooth(u, 0, 0.3) : 0));
         GROUP.forEach((g, k) => out.labels.push({ key: 'g' + k, at: g.centre, form: 'b1', text: g.label, alpha: smooth(u, 0.05, 0.25), dy: -1 }));
-        out.ask = { q: smooth(u, 0.3, 0.45), text: u > 0.6 ? 'No clear answer. The reasons sit in four places that have never met.' : '', kind: 'thin' };
+        out.inst = ask(clamp((u - 0.06) / 0.42), u > 0.62 ? 'thin' : u > 0.5 ? 'reading' : '', u > 0.62 ? 'No clear answer. ' + GROUP.length + ' sources, 0 links between them.' : u > 0.5 ? 'Looking' : '');
       } else if (act === 2) {
         const reveal = u / 0.34;
         brain.edges.forEach((e, k) => setState(linkState, k, e.intra ? 0.5 : 0.5 * smooth(reveal, e.order * 0.8, e.order * 0.8 + 0.2)));
@@ -822,8 +856,11 @@ function start(root) {
           pointer.b2 = mixPoint(a, b, f);
           setState(s, POINTER, 1, 0.6);
         }
-        const read = Math.floor(scan * 1180) + (u > 0.3 ? 1 : 0);
-        out.ask = { q: 1, text: u > 0.3 ? 'Reading everything, in order. ' + fmt.format(read) + ' of 48,000 records.' : 'Everything is connected now.', kind: 'reading' };
+        // The readout counts what the drawing shows: its links, then its records.
+        let joined = 0;
+        for (const e of brain.edges) if (e.intra || reveal >= e.order * 0.8 + 0.1) joined++;
+        if (u > 0.3) out.link = { at: pointer.b2, alpha: 1 };
+        out.inst = ask(1, 'reading', u > 0.3 ? 'Reading everything, in order. ' + fmt.format(Math.min(steps, k) + 1) + ' of ' + fmt.format(K) + ' records.' : 'Connecting. ' + fmt.format(joined) + ' of ' + fmt.format(E) + ' links.');
       } else {
         const q = clamp((u - 0.1) / 0.5);
         const front = q * (brain.maxDepth + 0.6);
@@ -847,12 +884,12 @@ function start(root) {
           const d = brain.pathNodes.get(n);
           out.labels.push({ key: 't' + k, at: brain.nodes[n].b3, form: 'b3', text: SOURCE_LABELS[k], alpha: smooth(front, d, d + 0.5), dy: k % 2 ? 1 : -1 });
         });
-        out.ask = {
-          q: 1,
-          text: u > 0.66 ? 'A release on Tuesday moved the shipping estimate out of view on phones. Support heard about it on Wednesday. Ad spend followed the same product on Thursday.' : u > 0.1 ? 'Going straight to what matters.' : '',
-          kind: u > 0.66 ? 'answer' : 'reading',
-          sources: u > 0.66 ? SOURCE_LABELS : null,
-        };
+        out.link = { at: brain.nodes[brain.entry].b3, alpha: smooth(u, 0.06, 0.16) };
+        const found = brain.targets.slice(0, SOURCE_LABELS.length).filter((n) => front >= brain.pathNodes.get(n)).length;
+        out.inst =
+          u > 0.66
+            ? ask(1, 'answer', 'A release on Tuesday moved the shipping estimate out of view on phones. Support heard about it on Wednesday. Ad spend followed the same product on Thursday.', SOURCE_LABELS)
+            : ask(1, 'reading', u > 0.1 ? 'Going straight to what matters. ' + found + ' of ' + SOURCE_LABELS.length + ' sources.' : 'Filed by meaning.');
       }
       return out;
     },
@@ -881,15 +918,18 @@ function start(root) {
         setState(s, R.checkout, drawer);
         // The drawer slides over the last tile.
         setState(s, R.tileD, lerp(1, 0.2, drawer));
+        out.inst = { kind: 'rows', layout: 'path', rows: [] };
         steps.forEach((step, j) => {
           const on = j === k && u < 1 ? smooth(f, 0, 0.25) * (1 - smooth(f, 0.75, 1)) : 0;
           const done = j < k || u >= 1 ? 1 : j === k ? smooth(f, 0.75, 1) : 0;
+          out.inst.rows.push({ k: step.text, state: done > 0.5 ? 'ok' : j === k && u > 0 ? 'on' : 'idle' });
           for (const id of step.ids) if (id !== R.cart || drawer > 0) lit(id, on, done);
           out.labels.push({ key: 's' + j, at: step.tag, form: 'store', text: step.text + (done > 0.5 ? ', passed' : ''), alpha: Math.max(on, done * 0.85), dy: 0, ok: done > 0.5 });
         });
         const prev = steps[Math.max(0, k - 1)].at;
         pointer.store = mixPoint(k === 0 ? [-1.3, 0.75, 0.2] : prev, steps[k].at, smooth(f, 0, 0.3)).map((v, j) => (j === 2 ? v + 0.05 : v));
         setState(s, POINTER, 1 - smooth(u, 0.94, 1), 0.7);
+        out.link = { at: pointer.store, alpha: smooth(u, 0, 0.05) * (1 - smooth(u, 0.94, 1)), row: k };
       } else if (act === 2) {
         const calm = 1 - smooth(u, 0, 0.12);
         for (const id of [R.nav, R.hero, R.tileB, R.pNav, R.pHero, R.pTiles, R.pButton]) lit(id, 0, calm);
@@ -898,14 +938,27 @@ function start(root) {
         const gone = smooth(u, 0.14, 0.3);
         const found = smooth(u, 0.46, 0.52);
         const again = u > 0.56 && u < 0.72 ? 0.5 + 0.5 * Math.sin((u - 0.56) * 78) : 1;
-        const fixed = smooth(u, 0.8, 0.9);
-        const tileVis = lerp(lerp(1, 0.07, gone), 1, Math.max(found * 0.55 * again, fixed));
-        setState(s, R.tileD, tileVis, found * (1 - fixed) * 0.8 * again + fixed * 0.25, Math.max(found, fixed), fixed > 0.5 ? 2 : 1);
+        // It ends reported, not repaired: the outline stays marked.
+        const told = smooth(u, 0.8, 0.9);
+        const tileVis = lerp(lerp(1, 0.07, gone), 1, found * 0.55 * again);
+        setState(s, R.tileD, tileVis, found * lerp(0.8, 0.4, told) * again, found, 1);
         const sweep = smooth(u, 0.3, 0.5);
         pointer.store = [lerp(-1.0, 0.54, sweep), -0.56, 0.05];
         setState(s, POINTER, smooth(u, 0.28, 0.32) * (1 - smooth(u, 0.52, 0.58)), 0.7);
-        const text = fixed > 0.5 ? 'Fixed' : u > 0.72 ? 'Confirmed' : u > 0.56 ? 'Checked again' : 'One product is missing';
-        out.labels.push({ key: 'fail', at: c[R.tileD], form: 'store', text, alpha: found, dy: 1, ok: fixed > 0.5, alert: fixed <= 0.5 });
+        const text = told > 0.5 ? 'Reported' : u > 0.72 ? 'Confirmed' : u > 0.56 ? 'Checked again' : 'One product is missing';
+        out.labels.push({ key: 'fail', at: c[R.tileD], form: 'store', text, alpha: found, dy: 1, alert: true });
+        const seen = found > 0.5;
+        out.link = { at: c[R.tileD], alpha: found, row: told > 0.5 ? 3 : u > 0.72 ? 2 : u > 0.56 ? 1 : 0, alert: true };
+        out.inst = {
+          kind: 'rows',
+          layout: 'list',
+          rows: [
+            { k: 'Collection', v: seen ? '3 of 4 products' : u > 0.3 ? 'Checking' : '4 of 4 products', state: seen ? 'alert' : u > 0.3 ? 'on' : 'idle' },
+            { k: 'Checked again', v: u > 0.72 ? '3 of 4 products' : '', state: u > 0.72 ? 'alert' : u > 0.56 ? 'on' : 'idle', a: smooth(u, 0.53, 0.58) },
+            { k: 'Confirmed', v: '', state: 'done', a: smooth(u, 0.72, 0.76) },
+            { k: 'Reported', v: '', state: 'done', a: smooth(u, 0.82, 0.88) },
+          ],
+        };
       } else {
         // At rest: a slow pass over the page, top to bottom, on its own clock.
         const order = [R.nav, R.hero, R.tileA, R.tileB, R.tileC, R.tileD];
@@ -921,6 +974,7 @@ function start(root) {
           ['Twice weekly', c[R.tileB]],
           ['Weekly', c[R.nav]],
         ].forEach(([text, at], j) => out.labels.push({ key: 'c' + j, at, form: 'store', text, alpha: smooth(u, 0.1 + j * 0.12, 0.25 + j * 0.12), dy: j === 2 ? -1 : 1 }));
+        out.inst = { kind: 'none' };
       }
       return out;
     },
@@ -933,6 +987,12 @@ function start(root) {
       const b = L.broken;
       const bAt = L.nodes[b];
       const flicker = 0.55 + 0.45 * Math.sin(time * 9) * Math.sin(time * 2.3);
+      // done: how many of the six steps are behind us; the next one is under way.
+      const pipeline = (done, active) => ({
+        kind: 'rows',
+        layout: 'pipeline',
+        rows: PIPELINE.map((k, j) => ({ k, state: j < done ? (j === PIPELINE.length - 1 ? 'ok' : 'done') : j === done && active ? 'on' : 'idle' })),
+      });
       const breakEdges = (amount) => {
         for (const [, e] of L.adj[b]) setState(s, L.edgeId(e), lerp(1, 0.12 + 0.1 * flicker, amount));
       };
@@ -949,6 +1009,8 @@ function start(root) {
           if (g > 0) setState(s, L.nodeId(n), 1, g, g * 0.6, 0);
         });
         out.labels.push({ key: 'err', at: bAt, form: 'lattice', text: u > 0.5 ? 'Found' : 'Error', alpha: hurt, dy: -1, alert: true });
+        out.inst = pipeline(u > 0.5 ? 1 : 0, hurt > 0.3 && u <= 0.5);
+        out.link = { at: bAt, alpha: hurt, row: 0, alert: u <= 0.5 };
       } else if (act === 2) {
         const travel = clamp(u / 0.36) * L.trace.length;
         const k = Math.min(L.trace.length - 1, Math.floor(travel));
@@ -969,6 +1031,9 @@ function start(root) {
         });
         const text = u > 0.86 ? 'Merged' : u > 0.7 ? 'Reviewed' : u > 0.5 ? 'Fix written' : u > 0.36 ? 'Diagnosed' : 'Tracing';
         out.labels.push({ key: 'fix', at: bAt, form: 'lattice', text, alpha: 1, dy: -1 });
+        const done = u > 0.86 ? 5 : u > 0.7 ? 4 : u > 0.5 ? 3 : u > 0.36 ? 2 : 1;
+        out.inst = pipeline(done, u <= 0.86);
+        out.link = { at: bAt, alpha: 1, row: Math.min(done, 4) };
       } else {
         const wave = clamp(u / 0.6) * (L.far + 1.5);
         L.nodes.forEach((_, n) => {
@@ -977,6 +1042,8 @@ function start(root) {
           if (g > 0) setState(s, L.nodeId(n), 1, g * 0.6, g * 0.85, 2);
         });
         out.labels.push({ key: 'ok', at: bAt, form: 'lattice', text: 'Verified', alpha: smooth(u, 0.05, 0.2), dy: -1, ok: true });
+        out.inst = pipeline(u > 0.55 ? 6 : 5, true);
+        out.link = { at: bAt, alpha: smooth(u, 0.05, 0.2), row: 5, ok: u > 0.55 };
       }
       return out;
     },
@@ -986,11 +1053,6 @@ function start(root) {
 
   const layer = root.querySelector('[data-ai-labels]');
   const chips = new Map();
-  const ask = layer ? layer.querySelector('[data-ai-ask]') : null;
-  const askQ = ask ? ask.querySelector('[data-ai-ask-q]') : null;
-  const askA = ask ? ask.querySelector('[data-ai-ask-a]') : null;
-  const askS = ask ? ask.querySelector('[data-ai-ask-sources]') : null;
-  let askKey = '';
 
   function drawOverlay(out, place, breath, strength) {
     if (!layer) return;
@@ -1013,23 +1075,175 @@ function start(root) {
       el.style.transform = `translate(${x.toFixed(1)}px, ${(y + (l.dy || 0) * 26).toFixed(1)}px) translate(-50%, -50%)`;
     }
     for (const [key, el] of chips) if (!used.has(key)) el.style.opacity = '0';
-    if (!ask) return;
-    const a = out.ask;
-    ask.style.opacity = a ? (a.q * strength).toFixed(3) : '0';
-    if (!a) return;
-    const key = a.kind + '|' + a.text;
-    if (key === askKey) return;
-    askKey = key;
-    askQ.textContent = QUESTION;
-    askA.textContent = a.text;
-    ask.dataset.kind = a.kind;
-    askS.replaceChildren(
-      ...(a.sources || []).map((text) => {
-        const li = document.createElement('li');
-        li.textContent = text;
-        return li;
-      })
-    );
+  }
+
+  /* -------------------------------------------------------------- readouts */
+
+  /* Each act carries a readout beside its statement, driven by the same scene
+     state as the drawing. Built once per act, then only touched where it changed. */
+  const make = (tag, className, parent) => {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (parent) parent.appendChild(el);
+    return el;
+  };
+  const write = (el, text) => {
+    if (el.textContent !== text) el.textContent = text;
+  };
+  const mark = (el, key, value) => {
+    if (el.dataset[key] !== value) el.dataset[key] = value;
+  };
+  function drawInst(stop, spec) {
+    const host = stop.inst;
+    if (!host || !spec) return;
+    if (spec.kind === 'none') {
+      if (host.firstChild) host.replaceChildren();
+      stop.ui = null;
+      return;
+    }
+    let ui = stop.ui;
+    if (!ui || ui.kind !== spec.kind || ui.layout !== spec.layout) {
+      host.replaceChildren();
+      ui = stop.ui = { kind: spec.kind, layout: spec.layout };
+      if (spec.kind === 'prompt') {
+        ui.box = make('div', 'ca-ai-prompt', host);
+        write(make('p', 'ca-ai-prompt__label', ui.box), root.dataset.exampleLabel || 'Example');
+        const field = (ui.field = make('p', 'ca-ai-prompt__field', ui.box));
+        ui.q = make('span', '', field);
+        make('i', 'ca-ai-prompt__caret', field);
+        ui.status = make('p', 'ca-ai-prompt__status', ui.box);
+        ui.sources = make('ul', 'ca-ai-prompt__sources', ui.box);
+      } else {
+        ui.list = make('ul', 'ca-ai-rows', host);
+        ui.list.dataset.layout = spec.layout;
+        ui.rows = spec.rows.map(() => {
+          const li = make('li', '', ui.list);
+          return { li, k: make('span', 'ca-ai-rows__k', li), rule: make('span', 'ca-ai-rows__rule', li), v: make('span', 'ca-ai-rows__v', li), a: -1 };
+        });
+      }
+    }
+    if (spec.kind === 'prompt') {
+      const chars = Math.round(clamp(spec.typed) * QUESTION.length);
+      write(ui.q, QUESTION.slice(0, chars));
+      mark(ui.box, 'typed', chars >= QUESTION.length ? 'done' : 'typing');
+      mark(ui.box, 'tone', spec.tone || '');
+      write(ui.status, spec.status || '');
+      const want = spec.sources ? spec.sources.join('|') : '';
+      if (ui.sourceKey !== want) {
+        ui.sourceKey = want;
+        ui.sources.replaceChildren(...(spec.sources || []).map((text) => Object.assign(document.createElement('li'), { textContent: text })));
+      }
+      return;
+    }
+    spec.rows.forEach((row, j) => {
+      const r = ui.rows[j];
+      if (!r) return;
+      write(r.k, row.k);
+      write(r.v, row.v || '');
+      mark(r.li, 'state', row.state || 'idle');
+      const alpha = row.a === undefined ? 1 : Math.round(clamp(row.a) * 100) / 100;
+      if (r.a !== alpha) {
+        r.a = alpha;
+        r.li.style.opacity = alpha;
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------ wire */
+
+  /* One hairline from the readout's live row to the spot in the drawing it is
+     describing, so the two halves of the screen read as one thing. Wide screens. */
+  const SVG = 'http://www.w3.org/2000/svg';
+  const wire = (() => {
+    const svg = document.createElementNS(SVG, 'svg');
+    svg.setAttribute('class', 'ca-ai-wire');
+    svg.setAttribute('aria-hidden', 'true');
+    const path = document.createElementNS(SVG, 'path');
+    const dot = document.createElementNS(SVG, 'circle');
+    const ring = document.createElementNS(SVG, 'circle');
+    dot.setAttribute('r', '2.5');
+    ring.setAttribute('r', '7');
+    ring.setAttribute('class', 'ca-ai-wire__ring');
+    svg.append(path, dot, ring);
+    root.appendChild(svg);
+    return { svg, path, dot, ring, alpha: -1 };
+  })();
+  function drawWire(stop, link, place, breath, strength) {
+    let alpha = 0;
+    const ui = stop && stop.ui;
+    if (link && ui && W >= 990 && strength > 0.01 && link.alpha > 0.01) {
+      const from = ui.kind === 'prompt' ? ui.field : ui.layout === 'path' ? ui.list : ui.rows[link.row || 0] && ui.rows[link.row || 0].li;
+      if (from) {
+        const r = from.getBoundingClientRect();
+        const host = stop.inst.getBoundingClientRect();
+        const [x, y] = project(link.at, place, breath);
+        // Leave from the right-hand end of the row, level with its marker.
+        const x0 = host.right + 14;
+        const y0 = ui.layout === 'path' ? r.top + 4.5 : ui.kind === 'prompt' ? r.top + r.height / 2 : r.top + Math.min(r.height / 2, 9);
+        const x1 = Math.min(x0 + 46, x - 30);
+        if (x > x0 + 40) {
+          alpha = link.alpha * strength;
+          // Stop short of the target: the ring marks it.
+          const d = Math.hypot(x - x1, y - y0) || 1;
+          const ex = x - ((x - x1) / d) * 7;
+          const ey = y - ((y - y0) / d) * 7;
+          wire.path.setAttribute('d', `M${x0.toFixed(1)} ${y0.toFixed(1)}H${x1.toFixed(1)}L${ex.toFixed(1)} ${ey.toFixed(1)}`);
+          wire.dot.setAttribute('cx', x0.toFixed(1));
+          wire.dot.setAttribute('cy', y0.toFixed(1));
+          wire.ring.setAttribute('cx', x.toFixed(1));
+          wire.ring.setAttribute('cy', y.toFixed(1));
+          const tone = link.alert ? 'alert' : link.ok ? 'ok' : '';
+          if (wire.svg.dataset.tone !== tone) wire.svg.dataset.tone = tone;
+        }
+      }
+    }
+    alpha = Math.round(alpha * 100) / 100;
+    if (alpha !== wire.alpha) {
+      wire.alpha = alpha;
+      wire.svg.style.opacity = alpha;
+    }
+  }
+
+  /* ------------------------------------------------------------------ rail */
+
+  /* One mark per chapter down the left edge; the current one fills as it is read. */
+  let rail = null;
+  function buildRail() {
+    if (rail) rail.el.remove();
+    rail = null;
+    const chapters = [...new Set(stops.map((s) => s.chapter).filter((c) => c && c.dataset.number))];
+    if (chapters.length < 2) return;
+    const el = make('ol', 'ca-ai-rail', root);
+    el.setAttribute('aria-hidden', 'true');
+    rail = {
+      el,
+      shown: false,
+      items: chapters.map((chapter) => {
+        const li = make('li', '', el);
+        write(make('span', 'ca-ai-rail__n', li), chapter.dataset.number);
+        make('i', 'ca-ai-rail__track', li);
+        return { li, chapter, f: -1, count: stops.filter((s) => s.chapter === chapter).length, first: stops.findIndex((s) => s.chapter === chapter) };
+      }),
+    };
+  }
+  function drawRail(index, p) {
+    if (!rail) return;
+    const stop = stops[index];
+    const first = rail.items[0];
+    const lastItem = rail.items[rail.items.length - 1];
+    const shown = !!stop && index >= first.first && index < lastItem.first + lastItem.count && !(index === first.first && p < 0.12);
+    if (shown !== rail.shown) {
+      rail.shown = shown;
+      rail.el.classList.toggle('is-shown', shown);
+    }
+    for (const item of rail.items) {
+      const f = Math.round(clamp((index - item.first + p) / item.count) * 500) / 500;
+      if (f === item.f) continue;
+      item.f = f;
+      item.li.style.setProperty('--f', f);
+      item.li.classList.toggle('is-active', f > 0 && f < 1);
+      item.li.classList.toggle('is-done', f >= 1);
+    }
   }
 
   /* ------------------------------------------------------------------ frame */
@@ -1056,22 +1270,31 @@ function start(root) {
     const time = reduced ? 20 : clock;
     const started = performance.now();
 
-    const { index, p } = locate();
+    const { index, p, pin, q } = locate();
     const stop = stops[index] || { name: 'open', act: 1, form: 'sphere', el: null };
     const before = stops[index - 1] || stop;
     const changing = before.form !== stop.form;
-    const t = !changing ? 1 : reduced ? (p > 0.12 ? 1 : 0) : smooth(p, 0.02, 0.3);
-    const u = reduced ? 0.9 : clamp((p - 0.26) / 0.52);
+    // A title card and its first act share a drawing; it only moves aside.
+    const moving = changing || before.centred !== stop.centred;
+    // The drawing changes while a stop arrives; its story plays while the copy is pinned.
+    const t = !moving ? 1 : reduced ? (p > 0.12 ? 1 : 0) : stop.opener ? smooth(p, 0.1, 0.72) : smooth(p, 0, pin + (changing ? 0.05 : 0));
+    const u = stop.opener ? 0 : reduced ? 0.9 : clamp((q - 0.1) / 0.72);
 
     // The stop before holds its last frame while the field leaves it.
     if (changing && SCENES[before.name]) SCENES[before.name](before.act, 1, time);
     const out = (SCENES[stop.name] || SCENES.open)(stop.act, u, time);
+    // A title card shows the drawing at rest: nothing walks across it yet.
+    if (stop.opener) setState(GLF[stop.form].state, POINTER, 0);
     for (const key of new Set([before.form, stop.form])) upload(GLF[key].state);
     upload(linkState);
 
     const breath = 1 + Math.sin(time * 0.3) * 0.03;
-    const from = placement(before.form, time);
-    const to = placement(stop.form, time);
+    const from = placement(before.form, time, before.centred || before.name === 'close');
+    const to = placement(stop.form, time, stop.centred || stop.name === 'close');
+    // Under a chapter title the field steps back.
+    const titled = (s, at) => (s && s.opener && !reduced ? smooth(at, 0.08, 0.3) * (1 - smooth(at, 0.74, 0.94)) : 0);
+    const title = titled(stop, p);
+    const dim = 1 - title * 0.5;
 
     gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -1081,7 +1304,7 @@ function start(root) {
     if (brainFrom || brainTo) {
       const a = brainFrom ? before.form : stop.form;
       const b = brainTo ? stop.form : before.form;
-      const alpha = brainFrom && brainTo ? 1 : brainTo ? smooth(t, 0.7, 1) : 1 - smooth(t, 0, 0.25);
+      const alpha = (brainFrom && brainTo ? 1 : brainTo ? smooth(t, 0.7, 1) : 1 - smooth(t, 0, 0.25)) * dim;
       gl.useProgram(linesProg.p);
       gl.bindVertexArray(lineVao);
       gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf[a]);
@@ -1111,7 +1334,8 @@ function start(root) {
     bindForm(1, 3, 5, GLF[stop.form]);
     const U = points.u;
     gl.uniform1f(U.uT, t);
-    gl.uniform1f(U.uStagger, brainFrom && brainTo ? 0 : 1);
+    gl.uniform1f(U.uStagger, changing && !(brainFrom && brainTo) ? 1 : 0);
+    gl.uniform1f(U.uDim, dim);
     gl.uniform1f(U.uTime, time);
     gl.uniform1f(U.uBreath, breath);
     gl.uniform1f(U.uCamZ, CAM_Z);
@@ -1131,18 +1355,44 @@ function start(root) {
     gl.uniform1i(U.uStateTo, 1);
     gl.drawArrays(gl.POINTS, 0, N);
 
-    // Labels arrive once the shape has, and leave before it does.
-    const strength = (changing ? smooth(t, 0.85, 1) : 1) * (1 - smooth(p, 0.9, 0.99));
-    drawOverlay(out, to, breath, strength);
+    // Labels arrive once the shape has, and leave before it does. While the
+    // drawing is still moving they follow it.
+    const tt = t * t * (3 - 2 * t);
+    const at = moving && !changing ? { angle: to.angle, tilt: to.tilt, scale: lerp(from.scale, to.scale, tt), x: lerp(from.x, to.x, tt), y: lerp(from.y, to.y, tt) } : to;
+    const leaving = smooth(q, 0.9, 1);
+    const strength = stop.opener ? 0 : (changing ? smooth(t, 0.85, 1) : 1) * (1 - leaving);
+    drawOverlay(out, at, breath, strength);
+    if (!stop.opener) drawInst(stop, out.inst);
+    const copyShow = stop.opener || stop.name === 'open' ? 0 : smooth(p, pin - 0.1, pin - 0.01) * (1 - leaving);
+    drawWire(stop, out.link, at, breath, strength * copyShow);
+    drawRail(index, p);
 
-    // Each act's copy fades with its place in the scroll.
+    // Each stop's copy follows its place in the scroll: it arrives, its statement
+    // lights word by word, the supporting text follows, and it leaves upward.
     for (let i = 0; i < stops.length; i++) {
       const s = stops[i];
       if (s.name === 'open') continue;
-      const own = i === index ? smooth(p, 0.05, 0.2) * (1 - smooth(p, 0.82, 0.95)) : 0;
-      if (s.shown !== own) {
-        s.shown = own;
-        s.el.style.setProperty('--ai-show', own.toFixed(3));
+      const mine = i === index;
+      let show = 0;
+      let key = '0';
+      if (mine && s.opener) {
+        show = title;
+        key = 'o' + show.toFixed(3) + p.toFixed(3);
+      } else if (mine) {
+        show = copyShow;
+        key = 'a' + p.toFixed(4);
+      }
+      if (s.key === key) continue;
+      s.key = key;
+      const css = s.el.style;
+      css.setProperty('--ai-show', show.toFixed(3));
+      if (!mine) continue;
+      if (s.opener) css.setProperty('--ai-drift', (p - 0.5).toFixed(3));
+      else {
+        css.setProperty('--ai-shift', (1 - smooth(p, pin - 0.1, pin) - leaving).toFixed(3));
+        css.setProperty('--ai-read', clamp((p - pin + 0.04) / ((1 - 2 * pin) * 0.3 + 0.04)).toFixed(3));
+        css.setProperty('--ai-more', smooth(q, 0.1, 0.28).toFixed(3));
+        css.setProperty('--ai-u', u.toFixed(3));
       }
     }
 
@@ -1180,6 +1430,15 @@ function start(root) {
     if (reduced) still();
   });
   document.addEventListener('visibilitychange', play);
+  // In the theme editor a section is re-rendered on every edit: read the stops again.
+  for (const type of ['shopify:section:load', 'shopify:section:unload', 'shopify:section:reorder']) {
+    document.addEventListener(type, () =>
+      requestAnimationFrame(() => {
+        measure();
+        if (reduced) still();
+      })
+    );
+  }
   // Scroll does not bubble, and the scroller differs by breakpoint: listen in capture.
   const onScroll = (fn) => document.addEventListener('scroll', fn, { capture: true, passive: true });
   if (reduced) {

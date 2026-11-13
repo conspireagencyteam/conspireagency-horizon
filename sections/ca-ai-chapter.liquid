@@ -1,34 +1,64 @@
 {%- comment -%}
   ca-ai-chapter.liquid: one chapter of the AI page (templates/page.ai.json).
 
-  A chapter is a run of "act" blocks. Each act is a tall scroll track with its copy
-  pinned beside the drawing; while the act is under the middle of the viewport the
-  particle field (assets/ca-ai.js, canvas in ca-ai-opening) plays that act's part of
-  the story. The pairing is by name: an act renders data-ai-scene="<variant>-<n>",
-  and the script knows what brain-1, manager-2 and the rest look like.
+  A chapter is a title card followed by a run of "act" blocks. Each is a tall scroll
+  track with its content pinned; while it is under the middle of the viewport the
+  particle field (assets/ca-ai.js, canvas in ca-ai-opening) plays that part of the
+  story. The pairing is by name: the title card renders data-ai-scene="<variant>-0",
+  an act renders data-ai-scene="<variant>-<n>", and the script knows what brain-1,
+  manager-2 and the rest look like.
 
     brain    1 missing connections   2 everything connected   3 retrieval
     manager  1 a release walked      2 a quiet failure        3 at rest
     healing  1 found                 2 fixed                  3 verified
     close    the field returns to the sphere; copy centred, optional button
 
-  A fourth act in a chapter replays that chapter's third drawing. All meaning is in
-  the copy here; the drawing is decorative.
+  An act is one statement (its words light as the visitor scrolls), a short
+  supporting text, and a readout the script fills and drives from the same scroll
+  position as the drawing: a question being asked, a checklist, a pipeline. The
+  readout only describes what the drawing is doing, it is aria-hidden, and it is
+  absent without the script. All meaning is in the copy here.
+
+  A fourth act in a chapter replays that chapter's third drawing.
 {%- endcomment -%}
 
 {%- liquid
   assign variant = section.settings.variant | default: 'brain'
   assign chapter_label = section.settings.chapter | strip
   assign number = section.settings.number | strip
+  assign has_opener = false
+  if variant != 'close' and chapter_label != blank
+    assign has_opener = true
+  endif
 -%}
 
-<div class="ca-ai-chapter ca-ai-chapter--{{ variant }} ca-invert">
+<div
+  class="ca-ai-chapter ca-ai-chapter--{{ variant }} ca-invert"
+  data-ai-chapter="{{ variant }}"
+  data-number="{{ number | escape }}"
+  data-name="{{ chapter_label | escape }}"
+>
+  {%- if has_opener -%}
+    <div class="ca-ai-opener" data-ai-scene="{{ variant }}-0">
+      <div class="ca-ai-opener__pin">
+        <div class="ca-ai-opener__inner">
+          {%- if number != blank -%}
+            <span class="ca-ai-opener__num" aria-hidden="true">{{ number }}</span>
+          {%- endif -%}
+          <h2 class="ca-ai-opener__title">{{ chapter_label }}</h2>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
   {%- for block in section.blocks -%}
     {%- liquid
       assign heading_tag = 'h3'
-      if forloop.first
-        assign heading_tag = 'h2'
-      endif
+      unless has_opener
+        if forloop.first
+          assign heading_tag = 'h2'
+        endif
+      endunless
     -%}
     <div
       class="ca-ai-act"
@@ -40,17 +70,35 @@
         <div class="ca-inner">
           <div class="ca-ai-act__copy">
             {%- if chapter_label != blank -%}
-              <p class="ca-eyebrow ca-ai-act__eyebrow">
+              <p class="ca-ai-act__eyebrow">
                 {%- if number != blank -%}<span class="ca-ai-act__num">{{ number }}</span>{%- endif -%}
                 <span>{{ chapter_label }}</span>
+                <span class="ca-ai-act__count" aria-hidden="true">{{ forloop.index }} / {{ forloop.length }}</span>
               </p>
             {%- endif -%}
             {%- if block.settings.heading != blank -%}
-              <{{ heading_tag }} class="ca-ai-act__heading">{{ block.settings.heading }}</{{ heading_tag }}>
+              <{{ heading_tag }} class="ca-ai-act__heading" data-ai-say>{{ block.settings.heading }}</{{ heading_tag }}>
             {%- endif -%}
             {%- if block.settings.text != blank -%}
               <div class="ca-ai-act__text">{{ block.settings.text }}</div>
             {%- endif -%}
+            {%- if block.settings.never != blank -%}
+              {%- assign never_items = block.settings.never | newline_to_br | split: '<br />' -%}
+              <ul class="ca-ai-never" role="list">
+                {%- for item in never_items -%}
+                  {%- assign line = item | strip -%}
+                  {%- if line != blank -%}
+                    <li style="--i: {{ forloop.index0 }};">
+                      <span class="ca-ai-never__k">{{ line | escape }}</span>
+                      <span class="ca-ai-never__v">{{ block.settings.never_label | default: 'Never' | escape }}</span>
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+            {%- unless variant == 'close' -%}
+              <div class="ca-ai-inst" data-ai-inst aria-hidden="true"></div>
+            {%- endunless -%}
             {%- if block.settings.button_label != blank -%}
               <a class="button size-style ca-ai-act__button" href="{{ block.settings.button_link | default: '#book-a-call' }}">{{ block.settings.button_label }}</a>
             {%- endif -%}
@@ -66,9 +114,76 @@
     --color-background: #0d110d;
     --color-foreground: #f2f2f2;
     --color-foreground-rgb: 242 242 242;
+    --ca-ai-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --ca-ai-ok: #a8f0b6;
+    --ca-ai-alert: #ff8f7d;
     color: var(--color-foreground);
   }
 
+  /* ---- Chapter title card ---- */
+  .ca-ai-opener {
+    position: relative;
+    height: 170vh;
+    height: 170svh;
+  }
+
+  .ca-ai-opener__pin {
+    position: sticky;
+    inset-block-start: 0;
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .ca-ai-opener__inner {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    padding-inline: var(--page-margin, 24px);
+    text-align: center;
+  }
+
+  .ca-ai-opener__inner > * {
+    grid-area: 1 / 1;
+  }
+
+  .ca-ai-opener__num {
+    font-family: var(--font-heading--family);
+    font-size: clamp(13rem, 44vw, 40rem);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(var(--color-foreground-rgb) / 0.3);
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+  }
+
+  .ca-ai-opener__title {
+    margin: 0;
+    max-width: 14ch;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight, 400);
+    font-size: clamp(2.75rem, 7.4vw, 7rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-opener__inner {
+    opacity: var(--ai-show, 0);
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-opener__num {
+    transform: translateY(calc(var(--ai-drift, 0) * -9vh)) scale(calc(1 + var(--ai-drift, 0) * 0.06));
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-opener__title {
+    transform: translateY(calc(var(--ai-drift, 0) * 5vh));
+  }
+
+  /* ---- An act ---- */
   .ca-ai-act {
     position: relative;
     height: calc(var(--ai-length, 220) * 1vh);
@@ -85,18 +200,25 @@
   }
 
   .ca-ai-act__copy {
-    width: min(100%, 31rem);
+    width: min(100%, 35rem);
   }
 
-  /* With the field running, an act's copy fades with its place in the scroll. */
+  /* With the field running, an act's copy arrives from below and leaves upward. */
   .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__copy {
     opacity: var(--ai-show, 0);
-    transform: translateY(calc((1 - var(--ai-show, 0)) * 14px));
+    transform: translateY(calc(var(--ai-shift, 0) * 22px));
   }
 
   .ca-ai-act__eyebrow {
     display: flex;
+    align-items: baseline;
     gap: 12px;
+    margin: 0;
+    font-family: var(--ca-ai-mono);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.62);
   }
 
@@ -105,22 +227,39 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .ca-ai-act__count {
+    margin-inline-start: auto;
+    color: rgb(var(--color-foreground-rgb) / 0.4);
+    font-variant-numeric: tabular-nums;
+  }
+
   .ca-ai-act__heading {
-    margin: 22px 0 0;
+    margin: 26px 0 0;
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight, 400);
-    font-size: var(--ca-fs-36, clamp(1.625rem, 2.5vw, 2.25rem));
-    line-height: 1.12;
-    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 3.75vw, 3.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
     text-wrap: balance;
   }
 
+  /* The statement is split into words by the script; each lights in turn as the
+     act scrolls. --ai-read runs 0 to 1, --i is the word's place, --n the count. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-w {
+    opacity: clamp(0.2, calc((var(--ai-read, 0) * (var(--n, 1) + 3) - var(--i, 0)) / 3), 1);
+  }
+
   .ca-ai-act__text {
-    margin-block-start: 20px;
+    max-width: 30rem;
+    margin-block-start: 22px;
     font-size: var(--ca-fs-18, 1.125rem);
-    line-height: 1.5;
-    color: rgb(var(--color-foreground-rgb) / 0.74);
+    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
     text-wrap: pretty;
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__text {
+    opacity: var(--ai-more, 0);
   }
 
   .ca-ai-act__text p {
@@ -128,33 +267,347 @@
   }
 
   .ca-ai-act__text p + p {
-    margin-block-start: 0.8em;
+    margin-block-start: 0.7em;
   }
 
   .ca-ai-act__button {
     margin-block-start: 30px;
   }
 
-  /* The closing act: centred over the sphere. */
-  /* The sphere sits where it did on the first screen, so the copy rests under it. */
+  /* ---- Readouts ---- */
+  .ca-ai-inst {
+    display: none;
+    max-width: 30rem;
+    margin-block-start: 30px;
+    padding-block-start: 18px;
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.16);
+    font-family: var(--ca-ai-mono);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ca-ai-live .ca-ai-inst:not(:empty) {
+    display: block;
+  }
+
+  .ca-ai-inst p {
+    margin: 0;
+  }
+
+  .ca-ai-inst ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A question, asked. */
+  .ca-ai-prompt__label {
+    color: rgb(var(--color-foreground-rgb) / 0.45);
+  }
+
+  .ca-ai-prompt__field {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    margin-block-start: 10px !important;
+    padding: 12px 16px;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.22);
+    border-radius: 12px;
+    background: rgb(13 17 13 / 0.55);
+    font-family: var(--font-body--family, inherit);
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    color: var(--color-foreground);
+  }
+
+  .ca-ai-prompt__caret {
+    display: inline-block;
+    width: 2px;
+    height: 1.15em;
+    margin-inline-start: 2px;
+    vertical-align: text-bottom;
+    background: var(--ca-ai-accent, #ff4d00);
+    animation: ca-ai-caret 1s steps(2, start) infinite;
+  }
+
+  .ca-ai-prompt[data-typed="done"] .ca-ai-prompt__caret {
+    display: none;
+  }
+
+  @keyframes ca-ai-caret {
+    to { visibility: hidden; }
+  }
+
+  .ca-ai-prompt__status {
+    display: flex;
+    gap: 10px;
+    min-height: 1.35em;
+    margin-block-start: 14px !important;
+  }
+
+  .ca-ai-prompt__status::before {
+    content: "";
+    flex: none;
+    width: 6px;
+    height: 6px;
+    margin-block-start: 0.4em;
+    border-radius: 50%;
+    background: rgb(var(--color-foreground-rgb) / 0.35);
+  }
+
+  .ca-ai-prompt__status:empty::before {
+    display: none;
+  }
+
+  .ca-ai-prompt[data-tone="reading"] .ca-ai-prompt__status::before {
+    background: var(--ca-ai-accent, #ff4d00);
+    animation: ca-ai-pulse 1.1s ease-in-out infinite;
+  }
+
+  .ca-ai-prompt[data-tone="thin"] .ca-ai-prompt__status::before {
+    background: var(--ca-ai-alert);
+  }
+
+  .ca-ai-prompt[data-tone="answer"] .ca-ai-prompt__status::before {
+    background: var(--ca-ai-ok);
+  }
+
+  .ca-ai-prompt[data-tone="answer"] .ca-ai-prompt__status {
+    font-family: var(--font-body--family, inherit);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    letter-spacing: 0;
+    text-transform: none;
+    color: rgb(var(--color-foreground-rgb) / 0.92);
+  }
+
+  .ca-ai-prompt[data-tone="answer"] .ca-ai-prompt__status::before {
+    margin-block-start: 0.55em;
+  }
+
+  @keyframes ca-ai-pulse {
+    50% { opacity: 0.25; }
+  }
+
+  .ca-ai-prompt__sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ca-ai-prompt__sources:not(:empty) {
+    margin-block-start: 14px !important;
+  }
+
+  .ca-ai-prompt__sources li {
+    padding: 4px 9px;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.24);
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    color: rgb(var(--color-foreground-rgb) / 0.82);
+  }
+
+  /* Rows: a checklist, a log, a pipeline. One marker, four states. */
+  .ca-ai-rows li {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-inline-start: 20px;
+    transition: color 0.25s ease;
+  }
+
+  .ca-ai-rows li + li {
+    margin-block-start: 9px;
+  }
+
+  .ca-ai-rows li::before {
+    content: "";
+    position: absolute;
+    inset: 0.32em auto auto 0;
+    width: 7px;
+    height: 7px;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.4);
+    border-radius: 50%;
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .ca-ai-rows .ca-ai-rows__v {
+    margin-inline-start: auto;
+    text-align: end;
+  }
+
+  .ca-ai-rows .ca-ai-rows__rule {
+    flex: 1;
+    align-self: center;
+    height: 1px;
+    min-width: 12px;
+    background: rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .ca-ai-rows li:has(.ca-ai-rows__v:empty) .ca-ai-rows__rule {
+    visibility: hidden;
+  }
+
+  .ca-ai-rows li[data-state="on"] {
+    color: var(--color-foreground);
+  }
+
+  .ca-ai-rows li[data-state="on"]::before {
+    border-color: var(--ca-ai-accent, #ff4d00);
+    background: var(--ca-ai-accent, #ff4d00);
+    box-shadow: 0 0 0 4px rgb(255 77 0 / 0.22);
+  }
+
+  .ca-ai-rows li[data-state="ok"] {
+    color: var(--ca-ai-ok);
+  }
+
+  .ca-ai-rows li[data-state="ok"]::before {
+    border-color: var(--ca-ai-ok);
+    background: var(--ca-ai-ok);
+  }
+
+  .ca-ai-rows li[data-state="done"] {
+    color: rgb(var(--color-foreground-rgb) / 0.86);
+  }
+
+  .ca-ai-rows li[data-state="done"]::before {
+    border-color: rgb(var(--color-foreground-rgb) / 0.86);
+    background: rgb(var(--color-foreground-rgb) / 0.86);
+  }
+
+  .ca-ai-rows li[data-state="alert"] {
+    color: var(--ca-ai-alert);
+  }
+
+  .ca-ai-rows li[data-state="alert"]::before {
+    border-color: var(--ca-ai-alert);
+    background: var(--ca-ai-alert);
+  }
+
+  /* A walk: the stops sit on one line, left to right. */
+  .ca-ai-rows[data-layout="path"] {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+
+  .ca-ai-rows[data-layout="path"] li {
+    display: block;
+    margin: 0;
+    padding: 18px 8px 0 0;
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+  }
+
+  .ca-ai-rows[data-layout="path"] li::before {
+    inset: 0 auto auto 0;
+  }
+
+  .ca-ai-rows[data-layout="path"] li::after {
+    content: "";
+    position: absolute;
+    inset: 4px 4px auto 13px;
+    height: 1px;
+    background: rgb(var(--color-foreground-rgb) / 0.16);
+  }
+
+  .ca-ai-rows[data-layout="path"] li:last-child::after {
+    display: none;
+  }
+
+  .ca-ai-rows[data-layout="path"] li[data-state="ok"]::after {
+    background: rgb(168 240 182 / 0.5);
+  }
+
+  .ca-ai-rows[data-layout="path"] .ca-ai-rows__rule,
+  .ca-ai-rows[data-layout="path"] .ca-ai-rows__v {
+    display: none;
+  }
+
+  /* A pipeline: the steps hang from one vertical line. */
+  .ca-ai-rows[data-layout="pipeline"] li + li::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1.03em + 2px) auto auto 4px;
+    width: 1px;
+    height: calc(1.35em - 4px);
+    background: rgb(var(--color-foreground-rgb) / 0.18);
+  }
+
+  /* What it never does: real copy, struck through, one line at a time. */
+  .ca-ai-never {
+    max-width: 30rem;
+    margin: 30px 0 0;
+    padding: 18px 0 0;
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.16);
+    list-style: none;
+    font-family: var(--ca-ai-mono);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .ca-ai-never li {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .ca-ai-never li + li {
+    margin-block-start: 9px;
+  }
+
+  .ca-ai-never li::after {
+    content: "";
+    order: 1;
+    flex: 1;
+    align-self: center;
+    height: 1px;
+    min-width: 12px;
+    background: rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .ca-ai-never__k {
+    color: rgb(var(--color-foreground-rgb) / 0.86);
+    text-decoration: line-through;
+    text-decoration-color: rgb(255 143 125 / 0.8);
+  }
+
+  .ca-ai-never__v {
+    order: 2;
+    color: var(--ca-ai-alert);
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-never li {
+    opacity: clamp(0, calc(var(--ai-u, 0) * 7 - var(--i, 0) * 1.2), 1);
+  }
+
+  /* The closing act: the sphere sits where it did on the first screen, so the
+     copy rests under it. */
   .ca-ai-chapter--close .ca-ai-act__pin {
     align-items: flex-end;
     padding-block-end: clamp(48px, 9vh, 104px);
   }
 
   .ca-ai-chapter--close .ca-ai-act__copy {
-    width: min(100%, 56rem);
+    width: min(100%, 60rem);
     margin-inline: auto;
     text-align: center;
   }
 
-  .ca-ai-chapter--close .ca-ai-act__eyebrow {
-    justify-content: center;
-  }
-
   .ca-ai-chapter--close .ca-ai-act__heading {
-    font-size: var(--ca-fs-48, clamp(2rem, 3.4vw, 3rem));
-    line-height: 1.06;
+    margin-block-start: 0;
+    font-size: clamp(2.25rem, 4.2vw, 3.875rem);
+    line-height: 1.02;
   }
 
   .ca-ai-chapter--close .ca-ai-act__text {
@@ -162,18 +615,50 @@
     margin-inline: auto;
   }
 
+  @media screen and (min-width: 990px) {
+    /* Room for the chapter rail (built by the script, see ca-ai-opening). */
+    .ca-ai-chapter:not(.ca-ai-chapter--close) .ca-ai-act__copy {
+      /* The drawing owns the right 56% of the screen: the copy never runs under it. */
+      width: min(35rem, 100%, 45vw - 88px);
+      margin-inline-start: 76px;
+    }
+  }
+
+  /* A short, wide window: the tallest act still has to clear the header. */
+  @media screen and (min-width: 990px) and (max-height: 820px) {
+    .ca-ai-act__pin {
+      padding-block-start: var(--ca-header-height, 64px);
+    }
+
+    .ca-ai-act__heading {
+      margin-block-start: 18px;
+      font-size: clamp(1.75rem, 3.1vw, 2.75rem);
+    }
+
+    .ca-ai-act__text {
+      margin-block-start: 16px;
+      font-size: 1rem;
+    }
+
+    .ca-ai-inst,
+    .ca-ai-never {
+      margin-block-start: 20px;
+      padding-block-start: 14px;
+    }
+  }
+
   @media screen and (max-width: 989px) {
     /* The drawing sits above; the copy rests at the foot of the screen on a scrim. */
     .ca-ai-act__pin {
       align-items: flex-end;
-      padding-block-end: 64px;
+      padding-block-end: 60px;
     }
 
     .ca-ai-chapter:not(.ca-ai-chapter--close) .ca-ai-act__pin::before {
       content: "";
       position: absolute;
-      inset: 42% 0 0;
-      background: linear-gradient(rgb(13 17 13 / 0), rgb(13 17 13 / 0.86) 34%, #0d110d 70%);
+      inset: 30% 0 0;
+      background: linear-gradient(rgb(13 17 13 / 0), rgb(13 17 13 / 0.86) 30%, #0d110d 62%);
       pointer-events: none;
     }
 
@@ -182,17 +667,70 @@
       width: 100%;
     }
 
+    .ca-ai-act__eyebrow {
+      font-size: 0.6875rem;
+    }
+
+    .ca-ai-opener__num {
+      font-size: max(17rem, 44vw);
+    }
+
     .ca-ai-act__heading {
       margin-block-start: 14px;
+      font-size: clamp(1.75rem, 7.6vw, 2.5rem);
     }
 
     .ca-ai-act__text {
       margin-block-start: 12px;
-      font-size: 1rem;
+      font-size: 0.9375rem;
+      line-height: 1.4;
+    }
+
+    .ca-ai-inst {
+      margin-block-start: 16px;
+      padding-block-start: 12px;
+      font-size: 0.6875rem;
+    }
+
+    .ca-ai-prompt__field {
+      min-height: 44px;
+      padding: 9px 12px;
+      font-size: 0.9375rem;
+    }
+
+    .ca-ai-prompt__status {
+      margin-block-start: 10px !important;
+    }
+
+    .ca-ai-prompt[data-tone="answer"] .ca-ai-prompt__status {
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+
+    .ca-ai-prompt__sources {
+      display: none;
+    }
+
+    .ca-ai-rows li + li,
+    .ca-ai-never li + li {
+      margin-block-start: 6px;
+    }
+
+    .ca-ai-never {
+      margin-block-start: 16px;
+      padding-block-start: 12px;
+      font-size: 0.6875rem;
     }
 
     .ca-ai-chapter--close .ca-ai-act__pin {
       padding-block-end: 56px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-ai-prompt__caret,
+    .ca-ai-prompt__status::before {
+      animation: none !important;
     }
   }
 {% endstylesheet %}
@@ -237,6 +775,13 @@
           "step": 10,
           "default": 220
         },
+        {
+          "type": "textarea",
+          "id": "never",
+          "label": "Struck-through list",
+          "info": "Optional. One line each, shown crossed out under the text (what the checks never do)."
+        },
+        { "type": "text", "id": "never_label", "label": "Struck-through list tag", "default": "Never" },
         { "type": "text", "id": "button_label", "label": "Button label" },
         { "type": "url", "id": "button_link", "label": "Button link", "info": "Left empty, the button goes to the booking form." }
       ]

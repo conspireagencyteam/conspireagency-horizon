@@ -21,25 +21,25 @@
         "act_1": {
           "type": "act",
           "settings": {
-            "heading": "The answer is already inside your business. It is spread across places that never meet.",
-            "text": "<p>A dip in conversion has a cause. Part of it is in a Slack thread, part in a release, part in an ad account, part in last week's call.</p><p>No one person holds all of it. Neither does an AI that was only shown one of them.</p>",
-            "length": 220
+            "heading": "The answer is already inside your business, in places that never meet.",
+            "text": "<p>Part of it is in a Slack thread, part in a release, part in an ad account, part in last week's call.</p>",
+            "length": 260
           }
         },
         "act_2": {
           "type": "act",
           "settings": {
             "heading": "Connect everything, and the answer is in there somewhere.",
-            "text": "<p>Every email, thread, call, task, release and store metric, in one memory.</p><p>That solves the first problem and creates the second: reading all of it, in order, every time someone asks.</p>",
-            "length": 240
+            "text": "<p>Every email, thread, call, task, release and store metric, in one memory. Now all of it has to be read, every time someone asks.</p>",
+            "length": 280
           }
         },
         "act_3": {
           "type": "act",
           "settings": {
             "heading": "So the brain files by meaning, and goes straight to what matters.",
-            "text": "<p>Records settle beside what they are about, not where they were written.</p><p>A question lands on the few that answer it, across your team, your store, your code and your marketing platforms, and comes back as one answer with its sources.</p>",
-            "length": 280
+            "text": "<p>A question lands on the few records that answer it, and comes back as one answer with its sources.</p>",
+            "length": 320
           }
         }
       },
@@ -60,25 +60,27 @@
         "act_1": {
           "type": "act",
           "settings": {
-            "heading": "Every release is walked through the way a shopper would.",
-            "text": "<p>After each release, your store is exercised on desktop and on a phone, the way a shopper moves through it.</p><p>A failure that is confirmed is rolled back.</p>",
-            "length": 240
+            "heading": "Every release, walked through the way a shopper would.",
+            "text": "<p>On desktop and on a phone, after each release. A failure that is confirmed is rolled back.</p>",
+            "length": 280
           }
         },
         "act_2": {
           "type": "act",
           "settings": {
             "heading": "It looks for the failures that look fine.",
-            "text": "<p>A collection that quietly stops showing one product. A filter that returns the wrong ones. A checkout that no longer offers shipping rates.</p><p>Each has a known right answer, checked daily to weekly, and checked again before anyone is told.</p>",
-            "length": 240
+            "text": "<p>A collection that quietly stops showing one product. A filter that returns the wrong ones. A checkout with no shipping rates. Each is checked again before anyone is told.</p>",
+            "length": 280
           }
         },
         "act_3": {
           "type": "act",
           "settings": {
             "heading": "And it knows what never to touch.",
-            "text": "<p>These checks never pay for an order, never submit a real form and never sign in to your admin.</p><p>What was checked, what was caught and what became of it sit in one view.</p>",
-            "length": 180
+            "text": "<p>What was checked, what was caught and what became of it sit in one view.</p>",
+            "length": 230,
+            "never": "Pay for an order\nSubmit a real form\nSign in to your admin",
+            "never_label": "Never"
           }
         }
       },
@@ -100,24 +102,24 @@
           "type": "act",
           "settings": {
             "heading": "When something breaks behind your store, it is found first.",
-            "text": "<p>Errors in the systems your orders depend on are picked up from the systems themselves, not from a customer writing in.</p>",
-            "length": 200
+            "text": "<p>Errors are picked up from the systems your orders depend on, not from a customer writing in.</p>",
+            "length": 240
           }
         },
         "act_2": {
           "type": "act",
           "settings": {
             "heading": "Diagnosed, fixed, reviewed and merged.",
-            "text": "<p>The cause is traced and a fix is written. A second reviewer reads it before it ships.</p><p>People set the rules for what may merge on its own. The work no longer waits for a free afternoon.</p>",
-            "length": 240
+            "text": "<p>A second reviewer reads every fix before it ships. People set the rules for what may merge on its own.</p>",
+            "length": 280
           }
         },
         "act_3": {
           "type": "act",
           "settings": {
             "heading": "Then verified, the same way a release is.",
-            "text": "<p>Every fix is checked on the live store after it lands.</p><p>Security moves at the same pace. When a critical vulnerability was announced in October, our own systems were patched the next day.</p>",
-            "length": 200
+            "text": "<p>Security moves at the same pace. When a critical vulnerability was announced in October, our own systems were patched the next day.</p>",
+            "length": 240
           }
         }
       },
@@ -140,7 +142,7 @@
           "settings": {
             "heading": "Know what is happening across your business, and have it handled.",
             "text": "<p>We set this up around your store, your team and your tools, then run it with you.</p>",
-            "length": 170,
+            "length": 180,
             "button_label": "Book a call",
             "button_link": ""
           }

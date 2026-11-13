@@ -9,7 +9,8 @@
        pressed the page does not scroll. The gate is added by script: with no
        script, under reduced motion, or on a return visit in the same session,
        the page simply opens.
-    3. The sound toggle and the label layer the script positions over the canvas.
+    3. The sound toggle, the label layer the script positions over the canvas, and
+       the chapter rail the script builds down the left edge on wide screens.
 
   The canvas and every label are decorative and aria-hidden; the meaning is in the
   copy. The page is dark from here to the footer, so this section also gives the
@@ -52,17 +53,11 @@
   class="ca-ai ca-invert ca-allow-transparent-header ca-under-header"
   data-ca-ai
   data-audio-src="{{ audio_src }}"
+  data-example-label="{{ section.settings.example_label | escape }}"
 >
   <canvas class="ca-ai__canvas" data-ai-canvas aria-hidden="true"></canvas>
 
-  <div class="ca-ai__labels" data-ai-labels aria-hidden="true">
-    <div class="ca-ai-ask" data-ai-ask>
-      <p class="ca-ai-ask__eyebrow">{{ section.settings.example_label }}</p>
-      <p class="ca-ai-ask__q" data-ai-ask-q></p>
-      <p class="ca-ai-ask__a" data-ai-ask-a></p>
-      <ul class="ca-ai-ask__sources" data-ai-ask-sources></ul>
-    </div>
-  </div>
+  <div class="ca-ai__labels" data-ai-labels aria-hidden="true"></div>
 
   <div class="ca-ai-hero" data-ai-scene="open">
     <div class="ca-inner ca-ai-hero__inner">
@@ -188,8 +183,16 @@
     text-align: center;
   }
 
+  .ca-ai-hero__eyebrow,
+  .ca-ai-hero__hint {
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+  }
+
   .ca-ai-hero__eyebrow {
-    max-width: 34ch;
+    max-width: 44ch;
     color: rgb(var(--color-foreground-rgb) / 0.62);
   }
 
@@ -347,77 +350,115 @@
     color: rgb(242 242 242 / 0.5);
   }
 
-  .ca-ai-ask {
-    position: absolute;
-    inset: auto auto clamp(20px, 3.5vh, 40px) 70%;
-    width: min(470px, 40vw);
-    translate: -50% 0;
-    padding: 18px 20px 20px;
-    border: 1px solid rgb(242 242 242 / 0.16);
-    border-radius: 14px;
-    background: rgb(13 17 13 / 0.7);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    color: #f2f2f2;
+  /* ---- The wire from a readout to the drawing (wide screens) ---- */
+  .ca-ai-wire {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    overflow: visible;
+    pointer-events: none;
     opacity: 0;
+    /* Pale, not orange: it has to read across every drawing, the orange lattice included. */
+    color: #f2f2f2;
   }
 
-  .ca-ai-ask p {
-    margin: 0;
+  .ca-ai-wire[data-tone="alert"] {
+    color: #ff8f7d;
   }
 
-  .ca-ai-ask__eyebrow {
-    font-size: 0.6875rem;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: rgb(242 242 242 / 0.5);
+  .ca-ai-wire[data-tone="ok"] {
+    color: #a8f0b6;
   }
 
-  .ca-ai-ask__q {
-    margin-block-start: 8px !important;
-    font-family: var(--font-heading--family);
-    font-size: 1.0625rem;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
+  .ca-ai-wire path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-opacity: 0.6;
+    stroke-dasharray: 1 4;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
   }
 
-  .ca-ai-ask__a {
-    min-height: 1.4em;
-    margin-block-start: 10px !important;
-    font-size: 0.875rem;
-    line-height: 1.45;
-    color: rgb(242 242 242 / 0.66);
+  .ca-ai-wire circle {
+    fill: currentColor;
   }
 
-  .ca-ai-ask[data-kind="answer"] .ca-ai-ask__a {
-    color: rgb(242 242 242 / 0.92);
+  .ca-ai-wire .ca-ai-wire__ring {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
   }
 
-  .ca-ai-ask[data-kind="reading"] .ca-ai-ask__a {
-    font-variant-numeric: tabular-nums;
-  }
-
-  .ca-ai-ask__sources {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+  /* ---- Chapter rail (wide screens) ---- */
+  .ca-ai-rail {
+    position: fixed;
+    inset: 50% auto auto max(var(--page-margin, 40px), calc((100vw - var(--page-width, 1440px)) / 2 + var(--page-margin, 40px)));
+    z-index: 2;
+    display: none;
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-
-  .ca-ai-ask__sources:not(:empty) {
-    margin-block-start: 14px;
-  }
-
-  .ca-ai-ask__sources li {
-    padding: 4px 9px;
-    border: 1px solid rgb(242 242 242 / 0.22);
-    border-radius: 999px;
+    translate: 0 -50%;
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     font-size: 0.6875rem;
+    line-height: 1;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgb(242 242 242 / 0.8);
+    font-variant-numeric: tabular-nums;
+    color: rgb(242 242 242 / 0.38);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  .ca-ai-rail.is-shown {
+    opacity: 1;
+  }
+
+  .ca-ai-rail li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding-block-end: 10px;
+    transition: color 0.3s ease;
+  }
+
+  .ca-ai-rail li.is-active {
+    color: #f2f2f2;
+  }
+
+  .ca-ai-rail li.is-done {
+    color: rgb(242 242 242 / 0.62);
+  }
+
+  .ca-ai-rail__track {
+    position: relative;
+    display: block;
+    width: 1px;
+    height: 54px;
+    background: rgb(242 242 242 / 0.16);
+  }
+
+  .ca-ai-rail__track::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ca-ai-accent, #ff4d00);
+    transform: scaleY(var(--f, 0));
+    transform-origin: top;
+  }
+
+  .ca-ai-rail li.is-done .ca-ai-rail__track::after {
+    background: rgb(242 242 242 / 0.5);
+  }
+
+  @media screen and (min-width: 990px) {
+    .ca-ai-live .ca-ai-rail {
+      display: block;
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -433,27 +474,6 @@
     .ca-ai__sound {
       inset: auto 12px 12px auto;
       padding: 8px 12px;
-    }
-
-    .ca-ai-ask {
-      inset: calc(var(--ca-header-height, 64px) + 10px) 14px auto 14px;
-      width: auto;
-      translate: none;
-      z-index: 1;
-      background: rgb(13 17 13 / 0.9);
-      padding: 12px 14px 14px;
-    }
-
-    .ca-ai-ask__q {
-      font-size: 0.9375rem;
-    }
-
-    .ca-ai-ask__a {
-      font-size: 0.8125rem;
-    }
-
-    .ca-ai-ask__sources {
-      display: none;
     }
 
     .ca-ai-chip {
@@ -497,8 +517,8 @@
       "label": "Audio file URL",
       "info": "Optional. Replaces the theme's own ambient track."
     },
-    { "type": "header", "content": "Brain example card" },
-    { "type": "text", "id": "example_label", "label": "Card label", "default": "Example" }
+    { "type": "header", "content": "Brain example question" },
+    { "type": "text", "id": "example_label", "label": "Label above the question", "default": "Example" }
   ],
   "presets": [{ "name": "AI page opening", "category": "Conspire" }]
 }
