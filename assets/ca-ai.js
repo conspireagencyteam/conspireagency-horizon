@@ -750,19 +750,22 @@ function start(root) {
       const forms = SCENE_FORM[name];
       const form = Array.isArray(forms) ? forms[Math.min(index, forms.length) - 1] : forms || 'sphere';
       const say = el.querySelector('[data-ai-say]');
-      if (say) splitWords(say);
-      return { el, name, act: Math.min(index, 3), form, opener, centred: opener, inst: el.querySelector('[data-ai-inst]'), chapter: el.closest('[data-ai-chapter]') };
+      const words = say ? splitWords(say) : 0;
+      // lead: the statement lights first (55 ms a word, as in the stylesheet), then the story starts.
+      return { el, name, act: Math.min(index, 3), form, opener, centred: opener, lead: 0.55 + words * 0.055, inst: el.querySelector('[data-ai-inst]'), chapter: el.closest('[data-ai-chapter]') };
     });
     buildRail();
+    bindBars();
   }
   /* A statement becomes one span per word, so each can light in turn. The whole
      sentence stays the heading's accessible name. */
   function splitWords(el) {
-    if (el.dataset.aiSplit || reduced) return;
+    if (el.dataset.aiSplit) return Number(el.dataset.aiSplit);
+    if (reduced) return 0;
     const text = el.textContent.replace(/\s+/g, ' ').trim();
-    if (!text || el.children.length) return;
+    if (!text || el.children.length) return 0;
     const words = text.split(' ');
-    el.dataset.aiSplit = '1';
+    el.dataset.aiSplit = String(words.length);
     el.setAttribute('aria-label', text);
     el.style.setProperty('--n', words.length);
     const act = el.closest('[data-ai-scene]');
@@ -777,6 +780,7 @@ function start(root) {
         return i ? [' ', span] : [span];
       })
     );
+    return words.length;
   }
   /* Positions are read from the viewport each frame, never from a scroll offset:
      on wide screens the theme scrolls .page-wrapper, on phones the window. */
@@ -820,6 +824,7 @@ function start(root) {
   const mixPoint = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
 
   const QUESTION = 'Why did checkout conversion dip last week?';
+  const ANSWER = 'A release on Tuesday moved the shipping estimate out of view on phones. Support heard about it on Wednesday. Ad spend followed the same product on Thursday.';
   const SOURCE_LABELS = ['Call', 'Slack thread', 'Release', 'Ad change', 'Store metric'];
   const PIPELINE = ['Found', 'Diagnosed', 'Fix written', 'Reviewed', 'Merged', 'Verified'];
 
@@ -839,7 +844,8 @@ function start(root) {
       fillState(s, K + 1, 1);
       const out = { labels: [], inst: null };
       const E = brain.edges.length;
-      const ask = (typed, tone, status, sources) => ({ kind: 'prompt', typed, tone, status, sources });
+      // more: { answer, said, sources, cited }: the answer and its sources, and how far each has arrived (0 to 1).
+      const ask = (typed, tone, status, more) => ({ kind: 'prompt', typed, tone, status, ...more });
       if (act === 1) {
         brain.edges.forEach((e, k) => setState(linkState, k, e.intra ? 0.5 * smooth(u, 0, 0.3) : 0));
         GROUP.forEach((g, k) => out.labels.push({ key: 'g' + k, at: g.centre, form: 'b1', text: g.label, alpha: smooth(u, 0.05, 0.25), dy: -1 }));
@@ -889,10 +895,11 @@ function start(root) {
         });
         out.link = { at: brain.nodes[brain.entry].b3, alpha: smooth(u, 0.06, 0.16) };
         const found = brain.targets.slice(0, SOURCE_LABELS.length).filter((n) => front >= brain.pathNodes.get(n)).length;
-        out.inst =
-          u > 0.66
-            ? ask(1, 'answer', 'A release on Tuesday moved the shipping estimate out of view on phones. Support heard about it on Wednesday. Ad spend followed the same product on Thursday.', SOURCE_LABELS)
-            : ask(1, 'reading', u > 0.1 ? 'Going straight to what matters. ' + found + ' of ' + SOURCE_LABELS.length + ' sources.' : 'Filed by meaning.');
+        // The answer is in the readout from the start, unseen, so its room is kept:
+        // it arrives a word at a time, then each source after it.
+        const answered = u > 0.6;
+        const status = answered ? 'Answered from ' + SOURCE_LABELS.length + ' sources.' : u > 0.1 ? 'Going straight to what matters. ' + found + ' of ' + SOURCE_LABELS.length + ' sources.' : 'Filed by meaning.';
+        out.inst = ask(1, answered ? 'answer' : 'reading', status, { answer: ANSWER, said: clamp((u - 0.62) / 0.2), sources: SOURCE_LABELS, cited: clamp((u - 0.82) / 0.13) });
       }
       return out;
     },
@@ -1114,8 +1121,12 @@ function start(root) {
         const field = (ui.field = make('p', 'ca-ai-prompt__field', ui.box));
         ui.q = make('span', '', field);
         make('i', 'ca-ai-prompt__caret', field);
-        ui.status = make('p', 'ca-ai-prompt__status', ui.box);
+        // A div: the theme hides an empty p, and this line has to keep its room while empty.
+        ui.status = make('div', 'ca-ai-prompt__status', ui.box);
+        ui.answer = make('p', 'ca-ai-prompt__answer', ui.box);
         ui.sources = make('ul', 'ca-ai-prompt__sources', ui.box);
+        ui.words = [];
+        ui.cites = [];
       } else {
         ui.list = make('ul', 'ca-ai-rows', host);
         ui.list.dataset.layout = spec.layout;
@@ -1129,13 +1140,43 @@ function start(root) {
       const chars = Math.round(clamp(spec.typed) * QUESTION.length);
       write(ui.q, QUESTION.slice(0, chars));
       mark(ui.box, 'typed', chars >= QUESTION.length ? 'done' : 'typing');
-      mark(ui.box, 'tone', spec.tone || '');
-      write(ui.status, spec.status || '');
-      const want = spec.sources ? spec.sources.join('|') : '';
-      if (ui.sourceKey !== want) {
-        ui.sourceKey = want;
-        ui.sources.replaceChildren(...(spec.sources || []).map((text) => Object.assign(document.createElement('li'), { textContent: text })));
+      // A status that only counts up is rewritten in place. A different one dips
+      // out and comes back as the new line, with its marker.
+      const status = spec.status || '';
+      const phase = (spec.tone || '') + status.replace(/[\d,]+/g, '#');
+      const at = performance.now();
+      if (ui.phase === undefined || reduced) ui.phase = phase;
+      else if (phase !== ui.phase && !ui.swap) {
+        ui.swap = at;
+        ui.status.classList.add('is-changing');
       }
+      if (ui.swap && at - ui.swap > 170) {
+        ui.swap = 0;
+        ui.phase = phase;
+        ui.status.classList.remove('is-changing');
+      }
+      if (!ui.swap) {
+        mark(ui.box, 'tone', spec.tone || '');
+        write(ui.status, status);
+      }
+      // The answer and its sources are in place from the start and only shown
+      // in turn, so the readout never changes height.
+      const reveal = (key, list, host, items, share, build) => {
+        const want = items.join('|');
+        if (ui[key + 'Key'] !== want) {
+          ui[key + 'Key'] = want;
+          ui[key + 'In'] = 0;
+          ui[list] = items.map(build);
+          host.replaceChildren(...ui[list].flat());
+        }
+        const n = Math.round(clamp(share || 0) * ui[list].length);
+        if (n === ui[key + 'In']) return;
+        ui[list].forEach((parts, j) => parts[parts.length - 1].classList.toggle('is-in', j < n));
+        ui[key + 'In'] = n;
+      };
+      const el = (tag, text) => Object.assign(document.createElement(tag), { textContent: text });
+      reveal('answer', 'words', ui.answer, spec.answer ? spec.answer.split(' ') : [], spec.said, (word, j) => (j ? [' ', el('span', word)] : [el('span', word)]));
+      reveal('source', 'cites', ui.sources, spec.sources || [], spec.cited, (text) => [el('li', text)]);
       return;
     }
     spec.rows.forEach((row, j) => {
@@ -1209,25 +1250,47 @@ function start(root) {
 
   /* ------------------------------------------------------------------ rail */
 
-  /* One mark per chapter down the left edge; the current one fills as it is read. */
+  /* One bar per chapter down the left edge; the current one fills as it plays.
+     Each is a button that goes to its chapter and names it on hover or focus. */
   let rail = null;
   function buildRail() {
     if (rail) rail.el.remove();
     rail = null;
-    const chapters = [...new Set(stops.map((s) => s.chapter).filter((c) => c && c.dataset.number))];
+    const chapters = [...new Set(stops.map((s) => s.chapter).filter((c) => c && c.dataset.name && stops.some((s) => s.chapter === c && s.opener)))];
     if (chapters.length < 2) return;
-    const el = make('ol', 'ca-ai-rail', root);
-    el.setAttribute('aria-hidden', 'true');
+    const el = make('nav', 'ca-ai-rail', root);
+    el.setAttribute('aria-label', root.dataset.railLabel || 'Chapters');
+    const list = make('ol', '', el);
     rail = {
       el,
       shown: false,
       items: chapters.map((chapter) => {
-        const li = make('li', '', el);
-        write(make('span', 'ca-ai-rail__n', li), chapter.dataset.number);
-        make('i', 'ca-ai-rail__track', li);
-        return { li, chapter, f: -1, count: stops.filter((s) => s.chapter === chapter).length, first: stops.findIndex((s) => s.chapter === chapter) };
+        const li = make('li', '', list);
+        const button = make('button', '', li);
+        button.type = 'button';
+        button.setAttribute('aria-label', chapter.dataset.name);
+        make('i', 'ca-ai-rail__track', button);
+        const name = make('span', 'ca-ai-rail__name', button);
+        name.setAttribute('aria-hidden', 'true');
+        write(name, chapter.dataset.name);
+        const first = stops.findIndex((s) => s.chapter === chapter);
+        button.addEventListener('click', () => goTo(first));
+        return { li, button, chapter, f: -1, count: stops.filter((s) => s.chapter === chapter).length, first };
       }),
     };
+  }
+  /* The bars beside an act's eyebrow go to that act (pointer only: they are a
+     shortcut, the acts are all reachable by scrolling). */
+  function bindBars() {
+    stops.forEach((stop) => {
+      if (!stop.chapter || stop.opener || !stop.el) return;
+      const first = stops.findIndex((s) => s.chapter === stop.chapter && !s.opener);
+      stop.el.querySelectorAll('.ca-ai-act__count i').forEach((bar, j) => {
+        if (bar.dataset.aiBound) return;
+        bar.dataset.aiBound = '1';
+        bar.addEventListener('click', () => goTo(first + j));
+      });
+    });
   }
   function drawRail(index, p) {
     if (!rail) return;
@@ -1244,15 +1307,18 @@ function start(root) {
       if (f === item.f) continue;
       item.f = f;
       item.li.style.setProperty('--f', f);
-      item.li.classList.toggle('is-active', f > 0 && f < 1);
+      const active = f > 0 && f < 1;
+      item.li.classList.toggle('is-active', active);
       item.li.classList.toggle('is-done', f >= 1);
+      if (active) item.button.setAttribute('aria-current', 'true');
+      else item.button.removeAttribute('aria-current');
     }
   }
 
   /* ------------------------------------------------------------- autopilot */
 
   /* How long each act's story takes to play, in seconds. */
-  const STORY = { brain: [5.5, 7.5, 6.5], manager: [6.5, 7, 4], healing: [4.5, 7, 4.5] };
+  const STORY = { brain: [5.5, 7.5, 8], manager: [6.5, 7, 3.4], healing: [4.5, 7, 4.5] };
   let playing = -1;
 
   /* Scrolling starts things; it does not have to finish them. Two helpers:
@@ -1288,6 +1354,26 @@ function start(root) {
     const style = (el || document.documentElement).style;
     pilot.drive = { el, from, delta, start: performance.now(), ms, style, was: style.scrollBehavior };
     style.scrollBehavior = 'auto';
+  }
+  /* A click on the rail or on an act's bar: go there. The further it is, the
+     longer the glide, within reason. Without the autopilot it is a plain jump. */
+  function goTo(index) {
+    const s = stops[index];
+    if (!s || !s.el) return;
+    const r = s.el.getBoundingClientRect();
+    const delta = r.top + r.height * 0.5 - window.innerHeight * 0.5;
+    if (!pilotAllowed) {
+      const el = scrollerEl();
+      const style = (el || document.documentElement).style;
+      const was = style.scrollBehavior;
+      style.scrollBehavior = 'auto';
+      setTop(el, getTop(el) + delta);
+      style.scrollBehavior = was;
+      return;
+    }
+    release();
+    pilot.dir = delta < 0 ? -1 : 1;
+    glide(index, clamp(700 + (Math.abs(delta) / window.innerHeight) * 260, 900, 2400));
   }
   function release() {
     if (!pilot.drive) return;
@@ -1419,9 +1505,10 @@ function start(root) {
     }
     const since = stop.at == null ? -1 : clock - stop.at;
     const length = (STORY[stop.name] || [])[stop.act - 1] || 0;
-    const u = stop.opener || !length ? 0 : reduced ? 0.9 : clamp((since - 0.5) / length);
+    const lead = stop.lead || 0.55;
+    const u = stop.opener || !length ? 0 : reduced ? 0.9 : clamp((since - lead) / length);
     // Done: the story has played out (a title card: it has been up long enough to read).
-    const doneFor = since < 0 ? -1 : stop.opener ? since - 2.3 : length ? since - 0.5 - length : since - 2;
+    const doneFor = since < 0 ? -1 : stop.opener ? since - 2.3 : length ? since - lead - length : since - 2;
 
     // The stop before holds its last frame while the field leaves it.
     if (changing && SCENES[before.name]) SCENES[before.name](before.act, 1, time);

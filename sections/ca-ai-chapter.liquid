@@ -127,7 +127,6 @@
     --color-background: #0d110d;
     --color-foreground: #f2f2f2;
     --color-foreground-rgb: 242 242 242;
-    --ca-ai-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     --ca-ai-ok: #a8f0b6;
     --ca-ai-alert: #ff8f7d;
     color: var(--color-foreground);
@@ -222,44 +221,64 @@
     transform: translateY(calc(var(--ai-shift, 0) * 22px));
   }
 
+  /* The site's eyebrow. The chapter numeral beside it is the title card's, small. */
   .ca-ai-act__eyebrow {
     display: flex;
-    align-items: baseline;
-    gap: 12px;
+    align-items: center;
+    gap: 14px;
     margin: 0;
-    font-family: var(--ca-ai-mono);
-    font-size: 0.75rem;
-    line-height: 1.3;
-    letter-spacing: 0.08em;
+    font-family: var(--font-h6--family);
+    font-weight: var(--font-h6--weight);
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.62);
   }
 
   .ca-ai-act__num {
-    color: var(--ca-ai-accent, #ff4d00);
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight, 400);
+    font-size: 2.25rem;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(var(--color-foreground-rgb) / 0.55);
   }
 
   /* The chapter's acts as bars: played, playing (it fills as the story runs), to come. */
   .ca-ai-act__count {
     display: flex;
     align-self: center;
-    gap: 4px;
     margin-inline-start: auto;
   }
 
+  /* Each bar is a wider, taller target than it looks: with the script running, a
+     click goes to its act. */
   .ca-ai-act__count i {
     position: relative;
-    width: 26px;
-    height: 2px;
-    overflow: hidden;
-    background: rgb(var(--color-foreground-rgb) / 0.18);
+    width: 30px;
+    height: 22px;
   }
 
+  .ca-ai-live .ca-ai-act__count i {
+    cursor: pointer;
+  }
+
+  .ca-ai-act__count i::before,
   .ca-ai-act__count i::after {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: 10px 2px;
+    background: rgb(var(--color-foreground-rgb) / 0.18);
+    transition: background-color 0.2s ease;
+  }
+
+  .ca-ai-live .ca-ai-act__count i:hover::before {
+    background: rgb(var(--color-foreground-rgb) / 0.4);
+  }
+
+  .ca-ai-act__count i::after {
     background: rgb(var(--color-foreground-rgb) / 0.8);
     transform: scaleX(0);
     transform-origin: left;
@@ -297,7 +316,7 @@
 
   .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-w {
     opacity: 1;
-    transition: opacity 0.55s ease calc(var(--i, 0) * 70ms + 150ms);
+    transition: opacity 0.6s ease calc(var(--i, 0) * 55ms + 120ms);
   }
 
   .ca-ai-act__text {
@@ -309,13 +328,30 @@
     text-wrap: pretty;
   }
 
-  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__text {
+  /* After the statement: the supporting text, then the readout, each rising a
+     little into place. Nothing below them moves; their room is already kept. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__text,
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-inst,
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-never,
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-act__button {
     opacity: 0;
+    transform: translateY(10px);
   }
 
-  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__text {
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__text,
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-inst,
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-never,
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__button {
+    --ai-after: calc(var(--n, 8) * 55ms + 220ms);
     opacity: 1;
-    transition: opacity 0.7s ease calc(var(--n, 8) * 70ms + 350ms);
+    transform: none;
+    transition: opacity 0.8s ease var(--ai-after), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--ai-after);
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-inst,
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-never,
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-act__button {
+    --ai-after: calc(var(--n, 8) * 55ms + 480ms);
   }
 
   .ca-ai-act__text p {
@@ -337,11 +373,9 @@
     margin-block-start: 30px;
     padding-block-start: 18px;
     border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.16);
-    font-family: var(--ca-ai-mono);
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
     line-height: 1.35;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    letter-spacing: -0.01em;
     color: rgb(var(--color-foreground-rgb) / 0.62);
     font-variant-numeric: tabular-nums;
   }
@@ -360,8 +394,15 @@
     list-style: none;
   }
 
-  /* A question, asked. */
+  /* A question, asked. Field, one status line, then (where there is one) the
+     answer and its sources. The answer's room is kept from the start, so nothing
+     moves when it arrives. */
   .ca-ai-prompt__label {
+    font-family: var(--font-h6--family);
+    font-weight: var(--font-h6--weight);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.45);
   }
 
@@ -374,11 +415,8 @@
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.22);
     border-radius: 12px;
     background: rgb(13 17 13 / 0.55);
-    font-family: var(--font-body--family, inherit);
     font-size: 1.0625rem;
     line-height: 1.3;
-    letter-spacing: -0.01em;
-    text-transform: none;
     color: var(--color-foreground);
   }
 
@@ -405,6 +443,14 @@
     gap: 10px;
     min-height: 1.35em;
     margin-block-start: 14px !important;
+    font-size: 0.875rem;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Between two statuses the line dips out and back, it never swaps under the eye. */
+  .ca-ai-prompt__status.is-changing {
+    opacity: 0;
+    transition-duration: 0.16s;
   }
 
   .ca-ai-prompt__status::before {
@@ -412,9 +458,10 @@
     flex: none;
     width: 6px;
     height: 6px;
-    margin-block-start: 0.4em;
+    margin-block-start: 0.45em;
     border-radius: 50%;
     background: rgb(var(--color-foreground-rgb) / 0.35);
+    transition: background-color 0.3s ease;
   }
 
   .ca-ai-prompt__status:empty::before {
@@ -434,39 +481,60 @@
     background: var(--ca-ai-ok);
   }
 
-  .ca-ai-prompt[data-tone="answer"] .ca-ai-prompt__status {
-    font-family: var(--font-body--family, inherit);
-    font-size: 0.9375rem;
-    line-height: 1.45;
-    letter-spacing: 0;
-    text-transform: none;
-    color: rgb(var(--color-foreground-rgb) / 0.92);
-  }
-
-  .ca-ai-prompt[data-tone="answer"] .ca-ai-prompt__status::before {
-    margin-block-start: 0.55em;
-  }
-
   @keyframes ca-ai-pulse {
     50% { opacity: 0.25; }
+  }
+
+  .ca-ai-prompt__answer {
+    margin-block-start: 10px !important;
+    font-size: 1rem;
+    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.92);
+    text-wrap: pretty;
+  }
+
+  .ca-ai-prompt__answer:empty,
+  .ca-ai-prompt__sources:empty {
+    display: none;
+  }
+
+  /* The answer arrives a word at a time; each source after it, in turn. */
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-prompt__answer span {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-prompt__answer span.is-in {
+    opacity: 1;
+    transition-duration: 0.5s;
   }
 
   .ca-ai-prompt__sources {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-  }
-
-  .ca-ai-prompt__sources:not(:empty) {
-    margin-block-start: 14px !important;
+    margin-block-start: 16px !important;
   }
 
   .ca-ai-prompt__sources li {
-    padding: 4px 9px;
+    padding: 6px 12px;
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.24);
     border-radius: 999px;
-    font-size: 0.6875rem;
-    color: rgb(var(--color-foreground-rgb) / 0.82);
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    color: rgb(var(--color-foreground-rgb) / 0.86);
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-prompt__sources li {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-prompt__sources li.is-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
   /* Rows: a checklist, a log, a pipeline. One marker, four states. */
@@ -476,7 +544,7 @@
     align-items: baseline;
     gap: 12px;
     padding-inline-start: 20px;
-    transition: color 0.25s ease;
+    transition: color 0.35s ease, opacity 0.35s ease;
   }
 
   .ca-ai-rows li + li {
@@ -486,7 +554,7 @@
   .ca-ai-rows li::before {
     content: "";
     position: absolute;
-    inset: 0.32em auto auto 0;
+    inset: 0.42em auto auto 0;
     width: 7px;
     height: 7px;
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.4);
@@ -559,8 +627,7 @@
     display: block;
     margin: 0;
     padding: 18px 8px 0 0;
-    font-size: 0.6875rem;
-    letter-spacing: 0.04em;
+    font-size: 0.8125rem;
   }
 
   .ca-ai-rows[data-layout="path"] li::before {
@@ -592,24 +659,23 @@
   .ca-ai-rows[data-layout="pipeline"] li + li::after {
     content: "";
     position: absolute;
-    inset: calc(-1.03em + 2px) auto auto 4px;
+    inset: calc(-0.93em + 2px) auto auto 4px;
     width: 1px;
-    height: calc(1.35em - 4px);
+    height: calc(1.35em - 3px);
     background: rgb(var(--color-foreground-rgb) / 0.18);
   }
 
-  /* What it never does: real copy, struck through, one line at a time. */
+  /* What it never does: real copy. Each line arrives, is struck through, and
+     then gets its tag, one after the other on the clock. */
   .ca-ai-never {
     max-width: 30rem;
     margin: 30px 0 0;
     padding: 18px 0 0;
     border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.16);
     list-style: none;
-    font-family: var(--ca-ai-mono);
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
     line-height: 1.35;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    letter-spacing: -0.01em;
   }
 
   .ca-ai-never li {
@@ -619,7 +685,7 @@
   }
 
   .ca-ai-never li + li {
-    margin-block-start: 9px;
+    margin-block-start: 10px;
   }
 
   .ca-ai-never li::after {
@@ -634,8 +700,7 @@
 
   .ca-ai-never__k {
     color: rgb(var(--color-foreground-rgb) / 0.86);
-    text-decoration: line-through;
-    text-decoration-color: rgb(255 143 125 / 0.8);
+    background: linear-gradient(rgb(255 143 125 / 0.85), rgb(255 143 125 / 0.85)) no-repeat 0 56% / 100% 1px;
   }
 
   .ca-ai-never__v {
@@ -644,7 +709,31 @@
   }
 
   .ca-ai-live:not(.ca-ai-reduced) .ca-ai-never li {
-    opacity: clamp(0, calc(var(--ai-u, 0) * 7 - var(--i, 0) * 1.2), 1);
+    --ai-line: calc(var(--n, 8) * 55ms + 700ms + var(--i, 0) * 520ms);
+    opacity: 0;
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-never__k {
+    background-size: 0% 1px;
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .ca-ai-never__v {
+    opacity: 0;
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-never li {
+    opacity: 1;
+    transition: opacity 0.6s ease var(--ai-line);
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-never__k {
+    background-size: 100% 1px;
+    transition: background-size 0.55s cubic-bezier(0.6, 0, 0.2, 1) calc(var(--ai-line) + 380ms);
+  }
+
+  .ca-ai-live:not(.ca-ai-reduced) .is-on .ca-ai-never__v {
+    opacity: 1;
+    transition: opacity 0.4s ease calc(var(--ai-line) + 800ms);
   }
 
   /* The closing act: the sphere sits where it did on the first screen, so the
@@ -724,7 +813,12 @@
     }
 
     .ca-ai-act__eyebrow {
+      gap: 10px;
       font-size: 0.6875rem;
+    }
+
+    .ca-ai-act__num {
+      font-size: 1.625rem;
     }
 
     .ca-ai-opener__num {
@@ -745,7 +839,11 @@
     .ca-ai-inst {
       margin-block-start: 16px;
       padding-block-start: 12px;
-      font-size: 0.6875rem;
+      font-size: 0.8125rem;
+    }
+
+    .ca-ai-rows[data-layout="path"] li {
+      font-size: 0.75rem;
     }
 
     .ca-ai-prompt__field {
@@ -758,7 +856,12 @@
       margin-block-start: 10px !important;
     }
 
-    .ca-ai-prompt[data-tone="answer"] .ca-ai-prompt__status {
+    .ca-ai-prompt__status {
+      font-size: 0.75rem;
+    }
+
+    .ca-ai-prompt__answer {
+      margin-block-start: 6px !important;
       font-size: 0.8125rem;
       line-height: 1.4;
     }
@@ -775,7 +878,7 @@
     .ca-ai-never {
       margin-block-start: 16px;
       padding-block-start: 12px;
-      font-size: 0.6875rem;
+      font-size: 0.8125rem;
     }
 
     .ca-ai-chapter--close .ca-ai-act__pin {
