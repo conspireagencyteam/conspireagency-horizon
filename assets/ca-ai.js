@@ -140,6 +140,32 @@ function start(root) {
       const th = c * 2.399963;
       centres.push([Math.cos(th) * rad * 1.25, y * 1.05, Math.sin(th) * rad * 1.25]);
     }
+    /* Layout two is a block: every record in one place, in rows, in the order it
+       arrived (the sources mixed), with one thread running through them in
+       reading order. Its own seed, so the other two layouts stay as they were. */
+    const COLS = 8;
+    const ROWS = 5;
+    const LAYERS = 4;
+    const slotOf = (() => {
+      const rb = rng(29);
+      const slots = Array.from({ length: K }, (_, k) => k);
+      for (let k = K - 1; k > 0; k--) {
+        const j = Math.floor(rb() * (k + 1));
+        [slots[k], slots[j]] = [slots[j], slots[k]];
+      }
+      return slots;
+    })();
+    const slotAt = (slot) => {
+      // Back and forth along each row, each layer and the block itself, so the
+      // next record in reading order is always the one beside it.
+      const layer = Math.floor(slot / (COLS * ROWS));
+      const inLayer = slot % (COLS * ROWS);
+      const rowRaw = Math.floor(inLayer / COLS);
+      const row = layer % 2 ? ROWS - 1 - rowRaw : rowRaw;
+      const colRaw = inLayer % COLS;
+      const col = (rowRaw + layer * ROWS) % 2 ? COLS - 1 - colRaw : colRaw;
+      return [(col - (COLS - 1) / 2) * 0.37, ((ROWS - 1) / 2 - row) * 0.4, ((LAYERS - 1) / 2 - layer) * 0.46];
+    };
     for (let i = 0; i < K; i++) {
       const group = i % 4;
       const cluster = i < CLUSTERS ? i : Math.floor(r() * CLUSTERS);
@@ -147,10 +173,11 @@ function start(root) {
       const w = hub ? 2.3 : 0.6 + r() * r() * 1.3;
       const g = GROUP[group].centre;
       const b1 = [g[0] + gauss(r) * 0.3, g[1] + gauss(r) * 0.24, g[2] + gauss(r) * 0.3];
-      const rr = Math.cbrt(r()) * 1.5;
-      const t2 = r() * Math.PI * 2;
-      const p2 = Math.acos(2 * r() - 1);
-      const b2 = [rr * Math.sin(p2) * Math.cos(t2), rr * Math.sin(p2) * Math.sin(t2) * 0.85, rr * Math.cos(p2)];
+      // Three draws kept (and unused) so the first and third layouts keep their seed.
+      r();
+      r();
+      r();
+      const b2 = slotAt(slotOf[i]);
       const cc = centres[cluster];
       const b3 = hub ? cc.slice() : [cc[0] + gauss(r) * 0.2, cc[1] + gauss(r) * 0.2, cc[2] + gauss(r) * 0.2];
       nodes.push({ group, cluster, hub, w, b1, b2, b3 });
@@ -212,10 +239,8 @@ function start(root) {
     for (; i < body; i++) {
       const g = GROUP[Math.floor(r() * 4)].centre;
       put(forms.b1, i, g[0] + gauss(r) * 0.62, g[1] + gauss(r) * 0.5, g[2] + gauss(r) * 0.6, DUST, 0.16, 0, 1);
-      const rr = Math.cbrt(r()) * 2.1;
-      const t = r() * Math.PI * 2;
-      const p = Math.acos(2 * r() - 1);
-      put(forms.b2, i, rr * Math.sin(p) * Math.cos(t), rr * Math.sin(p) * Math.sin(t) * 0.8, rr * Math.cos(p), DUST, 0.14, 0, 1);
+      // The block's dust fills a box a little larger than the rows.
+      put(forms.b2, i, (r() * 2 - 1) * 1.62, (r() * 2 - 1) * 1.1, (r() * 2 - 1) * 0.98, DUST, 0.1, 0, 1);
       const cc = centres[Math.floor(r() * CLUSTERS)];
       put(forms.b3, i, cc[0] + gauss(r) * 0.48, cc[1] + gauss(r) * 0.44, cc[2] + gauss(r) * 0.48, DUST, 0.15, 0, 1);
     }
@@ -223,16 +248,28 @@ function start(root) {
     putPointer(forms.b2, r);
     putPointer(forms.b3, r);
 
-    // Lines: two vertices per edge, a position set per layout.
+    // Lines: two vertices per edge, a position set per layout. After the graph's
+    // links come the segments of the block's thread, record to record in reading order.
     const E = edges.length;
-    const lines = { count: E * 2, pos: {}, col: new Uint8Array(E * 8), id: new Float32Array(E * 2) };
+    const order = Array.from({ length: K }, (_, k) => k).sort((x, y) => slotOf[x] - slotOf[y]);
+    const C = K - 1;
+    const lines = { count: (E + C) * 2, pos: {}, col: new Uint8Array((E + C) * 8), id: new Float32Array((E + C) * 2) };
     for (const key of ['b1', 'b2', 'b3']) {
-      const arr = new Float32Array(E * 6);
+      const arr = new Float32Array((E + C) * 6);
       edges.forEach((e, k) => {
         arr.set(nodes[e.a][key], k * 6);
         arr.set(nodes[e.b][key], k * 6 + 3);
       });
+      for (let k = 0; k < C; k++) {
+        arr.set(nodes[order[k]][key], (E + k) * 6);
+        arr.set(nodes[order[k + 1]][key], (E + k) * 6 + 3);
+      }
       lines.pos[key] = arr;
+    }
+    for (let k = E; k < E + C; k++) {
+      lines.col.set([226, 226, 226, 120, 226, 226, 226, 120], k * 8);
+      lines.id[k * 2] = k;
+      lines.id[k * 2 + 1] = k;
     }
     edges.forEach((e, k) => {
       const c = SURFACE[e.surface];
@@ -284,8 +321,9 @@ function start(root) {
         n = a;
       }
     }
-    const scan = nodes.map((_, k) => k).sort(() => r() - 0.5).slice(0, 46);
-    return { forms, nodes, edges, lines, targets, pathEdges, pathNodes, maxDepth, scan, entry };
+    // The reader comes in from outside the block and gets this far before it runs out of room.
+    const first = nodes[order[0]].b2;
+    return { forms, nodes, edges, lines, targets, pathEdges, pathNodes, maxDepth, entry, order, thread: C, limit: 61, outside: [first[0] - 1.1, first[1] + 0.25, first[2] + 0.5] };
   }
 
   /* A store in outline: a desktop window and a phone, each a set of regions the
@@ -718,6 +756,9 @@ function start(root) {
     if (form === 'lattice') {
       return { angle: 0.35 + Math.sin(time * 0.11) * 0.3, scale: Math.min(room / 4.5, 1.25), x: cx, y: cy, tilt: 0.3 };
     }
+    if (form === 'b2') {
+      return { angle: -0.6 + Math.sin(time * 0.13) * 0.2, scale: Math.min(room / 3.5, 1.12), x: cx, y: cy, tilt: 0.34 };
+    }
     return { angle: time * 0.045, scale: Math.min(room / 3.4, 1.18), x: cx, y: cy, tilt: 0.2 };
   }
   function project(local, place, breath) {
@@ -846,6 +887,8 @@ function start(root) {
       fillState(s, K + 1, 1);
       const out = { labels: [], inst: null };
       const E = brain.edges.length;
+      // The block's thread is only ever drawn in the second act.
+      for (let j = 0; j < brain.thread; j++) setState(linkState, E + j, 0);
       // more: { answer, said, sources, cited }: the answer and its sources, and how far each has arrived (0 to 1).
       const ask = (typed, tone, status, more) => ({ kind: 'prompt', typed, tone, status, ...more });
       if (act === 1) {
@@ -853,25 +896,33 @@ function start(root) {
         GROUP.forEach((g, k) => out.labels.push({ key: 'g' + k, at: g.centre, form: 'b1', text: g.label, alpha: smooth(u, 0.05, 0.25), dy: -1 }));
         out.inst = ask(clamp((u - 0.06) / 0.42), u > 0.62 ? 'thin' : u > 0.5 ? 'reading' : '', u > 0.62 ? 'No clear answer. ' + GROUP.length + ' sources, 0 links between them.' : u > 0.5 ? 'Looking' : '');
       } else if (act === 2) {
-        const reveal = u / 0.34;
-        brain.edges.forEach((e, k) => setState(linkState, k, e.intra ? 0.5 : 0.5 * smooth(reveal, e.order * 0.8, e.order * 0.8 + 0.2)));
-        const scan = clamp((u - 0.3) / 0.7);
-        const steps = brain.scan.length - 1;
-        const at = scan * steps;
-        const k = Math.floor(at);
-        const f = smooth(at - k, 0.25, 0.75);
-        if (u > 0.3) {
-          for (let j = 0; j <= k; j++) setState(s, brain.scan[j] + 1, 1, j === k ? 1 - f * 0.6 : 0.12, 0.5, 0);
-          const a = brain.nodes[brain.scan[k]].b2;
-          const b = brain.nodes[brain.scan[Math.min(steps, k + 1)]].b2;
-          pointer.b2 = mixPoint(a, b, f);
-          setState(s, POINTER, 1, 0.6);
+        // Everything in one block, on one thread. Then a reader from outside,
+        // one record at a time, until it runs out of room well short of the end.
+        for (let k = 0; k < E; k++) setState(linkState, k, 0);
+        const drawn = (u / 0.2) * (brain.thread + 6);
+        for (let j = 0; j < brain.thread; j++) setState(linkState, E + j, 0.6 * smooth(drawn, j, j + 6));
+        const last = brain.limit - 1;
+        const at = clamp((u - 0.25) / 0.55) * last;
+        const k = Math.min(last, Math.floor(at));
+        const f = k >= last ? 0 : smooth(at - k, 0.2, 0.8);
+        const full = u > 0.8;
+        const over = smooth(u, 0.8, 0.9);
+        if (u > 0.2) {
+          const here = brain.nodes[brain.order[k]].b2;
+          if (u < 0.25) pointer.b2 = mixPoint(brain.outside, here, smooth(u, 0.2, 0.25));
+          else {
+            for (let j = 0; j <= k; j++) setState(s, brain.order[j] + 1, 1, j === k ? 1 - f * 0.6 : 0.12 + over * 0.2, full ? over * 0.7 : 0.5, full ? 1 : 0);
+            pointer.b2 = mixPoint(here, brain.nodes[brain.order[Math.min(last, k + 1)]].b2, f);
+          }
+          setState(s, POINTER, 1, 0.6, over, 1);
+          out.link = { at: pointer.b2, alpha: 1, alert: full };
         }
-        // The readout counts what the drawing shows: its links, then its records.
-        let joined = 0;
-        for (const e of brain.edges) if (e.intra || reveal >= e.order * 0.8 + 0.1) joined++;
-        if (u > 0.3) out.link = { at: pointer.b2, alpha: 1 };
-        out.inst = ask(1, 'reading', u > 0.3 ? 'Reading everything, in order. ' + fmt.format(Math.min(steps, k) + 1) + ' of ' + fmt.format(K) + ' records.' : 'Connecting. ' + fmt.format(joined) + ' of ' + fmt.format(E) + ' links.');
+        const status = full
+          ? 'Out of room at ' + brain.limit + ' of ' + fmt.format(K) + ' records. Still no clear answer.'
+          : u > 0.25
+            ? 'Reading everything, in order. ' + fmt.format(k + 1) + ' of ' + fmt.format(K) + ' records.'
+            : 'One place, in the order it arrived. ' + fmt.format(Math.min(K, Math.round(clamp(u / 0.2) * K))) + ' of ' + fmt.format(K) + ' records.';
+        out.inst = ask(1, full ? 'thin' : 'reading', status);
       } else {
         const q = clamp((u - 0.1) / 0.5);
         const front = q * (brain.maxDepth + 0.6);
@@ -1324,8 +1375,8 @@ function start(root) {
   /* The share of each story after which nothing more happens on screen, and how
      long the act then rests before the page moves on (enough to read its last
      line, no longer). */
-  const DONE = { brain: [0.64, 1, 0.95], manager: [1, 0.9, 0.75], healing: [0.82, 0.94, 0.9] };
-  const REST = { brain: [1.5, 0.6, 1.2], manager: [0.6, 1.1, 1], healing: [0.8, 0.9, 1] };
+  const DONE = { brain: [0.64, 0.9, 0.95], manager: [1, 0.9, 0.75], healing: [0.82, 0.94, 0.9] };
+  const REST = { brain: [1.5, 1.6, 1.2], manager: [0.6, 1.1, 1], healing: [0.8, 0.9, 1] };
   let playing = -1;
 
   /* Scrolling starts things; it does not have to finish them. Two helpers:
@@ -1558,6 +1609,17 @@ function start(root) {
     const out = (SCENES[stop.name] || SCENES.open)(stop.act, u, time);
     // A title card shows the drawing at rest: nothing walks across it yet.
     if (stop.opener) setState(GLF[stop.form].state, POINTER, 0);
+    // The graph's links belong to the first and third layouts, the thread to the
+    // block: each fades as the field leaves its layout, so neither is ever
+    // stretched across the other's shape.
+    if (changing && (a.form === 'b2' || b.form === 'b2')) {
+      const toBlock = b.form === 'b2';
+      const graph = toBlock ? 1 - smooth(t, 0, 0.45) : smooth(t, 0.55, 1);
+      const thread = toBlock ? smooth(t, 0.75, 1) : 1 - smooth(t, 0, 0.25);
+      const E = brain.edges.length;
+      const d = linkState.data;
+      for (let k = 0; k < E + brain.thread; k++) d[k * 4] = Math.round(d[k * 4] * (k < E ? graph : thread));
+    }
     for (const key of new Set([a.form, b.form])) upload(GLF[key].state);
     upload(linkState);
 
