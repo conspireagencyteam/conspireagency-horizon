@@ -287,7 +287,18 @@
     inset: auto 20px 20px auto;
     z-index: 5;
     display: flex;
+    align-items: center;
     gap: 8px;
+    transition: inset-inline-end 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* The site's floating "Let's Talk" pill (ca-header) owns the bottom-right
+     corner once it shows. The toggles then sit beside it, level with it; the
+     script measures the pill (--ca-ai-float-w and -h). */
+  body:has([data-ca-header-float][data-visible]) .ca-ai__controls {
+    inset-block-end: calc(20px + env(safe-area-inset-bottom, 0px));
+    inset-inline-end: calc(20px + env(safe-area-inset-right, 0px) + var(--ca-ai-float-w, 150px) + 10px);
+    min-height: var(--ca-ai-float-h, 0px);
   }
 
   .ca-ai-gated .ca-ai__controls {
@@ -622,6 +633,25 @@
       gap: 8px;
       padding: 8px 11px;
       font-size: 0.75rem;
+    }
+
+    /* Beside the floating pill there is only room for the icons on a phone.
+       The labels stay for screen readers. */
+    body:has([data-ca-header-float][data-visible]) .ca-ai__control {
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+    }
+
+    body:has([data-ca-header-float][data-visible]) .ca-ai__control > [data-ai-auto-label],
+    body:has([data-ca-header-float][data-visible]) .ca-ai__control > [data-ai-sound-label] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .ca-ai__cue {

@@ -1738,6 +1738,20 @@ function start(root) {
 
   /* ---------------------------------------------------------- gate and sound */
 
+  /* The site's floating "Let's Talk" pill shares the corner with the toggles:
+     its size is handed to the stylesheet, which moves them beside it. */
+  const floatPill = document.querySelector('[data-ca-header-float]');
+  if (floatPill) {
+    const sizeFloat = () => {
+      const w = floatPill.offsetWidth;
+      if (!w) return;
+      root.style.setProperty('--ca-ai-float-w', w + 'px');
+      root.style.setProperty('--ca-ai-float-h', floatPill.offsetHeight + 'px');
+    };
+    sizeFloat();
+    if ('ResizeObserver' in window) new ResizeObserver(sizeFloat).observe(floatPill);
+  }
+
   const sound = createSound(root.dataset.audioSrc);
   const toggle = root.querySelector('[data-ai-sound]');
   const setToggle = (on) => {
