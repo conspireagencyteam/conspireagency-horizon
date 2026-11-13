@@ -5,7 +5,7 @@
       "settings": {
         "eyebrow": "AI business intelligence and consulting for eCommerce brands",
         "heading": "A brain for your business.",
-        "text": "One memory for everything your team, your store, your code and your marketing platforms know. Superintelligent AI for your team that knows everything in your business.",
+        "text": "One memory for everything your team, your store, your code and your marketing platforms know. An all-knowing AI for your business.",
         "enter_sound_label": "Enter with sound",
         "enter_silent_label": "Enter without sound",
         "scroll_label": "Scroll",
@@ -39,8 +39,8 @@
         "act_3": {
           "type": "act",
           "settings": {
-            "heading": "The brain files everything by meaning, and goes straight to the answer.",
-            "text": "<p>A question lands on the few records that answer it, and comes back as one answer with its sources.</p>",
+            "heading": "The brain's neural network gets straight to the answer.",
+            "text": "<p>It jumps intelligently between records from different sources to gather the right context, then gives one answer with its sources.</p>",
             "length": 150
           }
         }
