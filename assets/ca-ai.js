@@ -720,6 +720,8 @@ function start(root) {
     W = canvas.clientWidth || window.innerWidth;
     H = canvas.clientHeight || window.innerHeight;
     aspect = W / H;
+    const head = document.querySelector('.ca-header');
+    headBottom = clamp(head ? head.getBoundingClientRect().bottom : 64, 40, 150);
     dpr = Math.min(window.devicePixelRatio || 1, phone ? 1.5 : 2);
     if (W * H * dpr * dpr > 5200000) dpr = Math.sqrt(5200000 / (W * H));
     canvas.width = Math.round(W * dpr);
@@ -737,7 +739,25 @@ function start(root) {
 
   /* Where each formation sits: beside the copy on a wide screen, above it on a
      narrow one. Returns angle, scale, x, y and tilt. */
-  function placement(form, time, centred) {
+  /* How tall each drawing is at scale 1, labels included (world units). */
+  const TALL = { b1: 2.9, b2: 2.4, b3: 3.0, store: 2.0, lattice: 2.4 };
+  /* On a narrow screen the copy sits at the foot and its height differs act by
+     act, so the drawing takes the band that is left between the header and the
+     copy: clear is that band in pixels ({ top, bottom }), from clearOf. */
+  let headBottom = 64;
+  function clearOf(s) {
+    if (!s || !s.copy || !s.pin || aspect > 0.95) return null;
+    const h = s.copy.offsetHeight;
+    const pinH = s.pin.offsetHeight;
+    if (!h || !pinH) return null;
+    const key = W + 'x' + pinH;
+    if (s.padKey !== key) {
+      s.padKey = key;
+      s.pad = parseFloat(getComputedStyle(s.pin).paddingBottom) || 0;
+    }
+    return { top: headBottom + 14, bottom: pinH - s.pad - h - 24 };
+  }
+  function placement(form, time, centred, clear) {
     const halfW = (CAM_Z / F) * aspect;
     const wide = aspect > 0.95;
     if (form === 'sphere') {
@@ -747,19 +767,32 @@ function start(root) {
     // The drawing's own column: the right 56% of a wide screen, the top of a narrow one.
     // Under a chapter title it sits in the middle of the screen instead.
     const cx = wide && !centred ? halfW * 0.4 : 0;
-    const cy = wide || centred ? 0 : 0.9;
+    let cy = wide || centred ? 0 : 0.9;
     const room = wide ? halfW * (centred ? 1.3 : 1.12) : halfW * 1.84;
+    // fit: the largest scale at which the drawing still clears the copy below it.
+    let fit = 9;
+    if (!wide && !centred && clear) {
+      const unit = H / ((2 * CAM_Z) / F);
+      cy = (H / 2 - (clear.top + clear.bottom) / 2) / unit;
+      fit = Math.max(0, clear.bottom - clear.top) / unit / (TALL[form] || 2.6);
+    }
+    // Never below six tenths of its full size: on a very short screen the
+    // drawing tucks a little behind the copy's scrim instead of shrinking away.
+    const size = (byWidth, cap) => {
+      const full = Math.min(byWidth, cap);
+      return Math.max(Math.min(full, fit), full * 0.6);
+    };
     if (form === 'store') {
-      const scale = Math.min(room / 3.35, 1.8);
+      const scale = size(room / 3.35, 1.8);
       return { angle: -0.2 + Math.sin(time * 0.23) * 0.13, scale, x: cx - 0.145 * scale, y: cy + 0.1 * scale, tilt: -0.05 };
     }
     if (form === 'lattice') {
-      return { angle: 0.35 + Math.sin(time * 0.11) * 0.3, scale: Math.min(room / 4.5, 1.25), x: cx, y: cy, tilt: 0.3 };
+      return { angle: 0.35 + Math.sin(time * 0.11) * 0.3, scale: size(room / 4.5, 1.25), x: cx, y: cy, tilt: 0.3 };
     }
     if (form === 'b2') {
-      return { angle: -0.6 + Math.sin(time * 0.13) * 0.2, scale: Math.min(room / 3.5, 1.12), x: cx, y: cy, tilt: 0.34 };
+      return { angle: -0.6 + Math.sin(time * 0.13) * 0.2, scale: size(room / 3.5, 1.12), x: cx, y: cy, tilt: 0.34 };
     }
-    return { angle: time * 0.045, scale: Math.min(room / 3.4, 1.18), x: cx, y: cy, tilt: 0.2 };
+    return { angle: time * 0.045, scale: size(room / 3.4, 1.18), x: cx, y: cy, tilt: 0.2 };
   }
   function project(local, place, breath) {
     let [x, y, z] = local;
@@ -783,6 +816,7 @@ function start(root) {
 
   const SCENE_FORM = { open: 'sphere', brain: ['b1', 'b2', 'b3'], manager: ['store'], healing: ['lattice'], close: ['sphere'] };
   let stops = [];
+  let primed = false;
   function measure() {
     stops = [...document.querySelectorAll('[data-ai-scene]')].map((el) => {
       const [name, n] = (el.dataset.aiScene || 'open').split('-');
@@ -794,8 +828,9 @@ function start(root) {
       const say = el.querySelector('[data-ai-say]');
       const words = say ? splitWords(say) : 0;
       // lead: the statement lights first (55 ms a word, as in the stylesheet), then the story starts.
-      return { el, name, act: Math.min(index, 3), form, opener, centred: opener, lead: 0.55 + words * 0.055, inst: el.querySelector('[data-ai-inst]'), chapter: el.closest('[data-ai-chapter]') };
+      return { el, name, act: Math.min(index, 3), form, opener, centred: opener, lead: 0.55 + words * 0.055, inst: el.querySelector('[data-ai-inst]'), copy: el.querySelector('.ca-ai-act__copy'), pin: el.querySelector('.ca-ai-act__pin'), chapter: el.closest('[data-ai-chapter]') };
     });
+    primed = false;
     buildRail();
     bindBars();
   }
@@ -1539,6 +1574,15 @@ function start(root) {
     last = now;
     if (!reduced) clock += dt;
     const time = reduced ? 20 : clock;
+    // Every act's readout is built before it is first seen, so its copy already
+    // has its full height when the drawing is placed against it.
+    if (!primed) {
+      primed = true;
+      for (const s of stops) {
+        if (!s.inst || s.opener || !SCENES[s.name]) continue;
+        drawInst(s, SCENES[s.name](s.act, 0, time).inst);
+      }
+    }
     const started = performance.now();
 
     steer(now);
@@ -1624,8 +1668,8 @@ function start(root) {
     upload(linkState);
 
     const breath = 1 + Math.sin(time * 0.3) * 0.03;
-    const from = placement(a.form, time, a.centred || a.name === 'close');
-    const to = placement(b.form, time, b.centred || b.name === 'close');
+    const from = placement(a.form, time, a.centred || a.name === 'close', clearOf(a));
+    const to = placement(b.form, time, b.centred || b.name === 'close', clearOf(b));
     // Under a chapter title the field steps back.
     const titled = (s, at) => (s && s.opener && !reduced ? smooth(at, 0.08, 0.3) * (1 - smooth(at, 0.74, 0.94)) : 0);
     const title = titled(stop, p);
@@ -1897,6 +1941,49 @@ function createSound(src) {
   let loading = null;
   let timer = 0;
   let wanted = false;
+  let keeper = null;
+
+  /* iOS treats Web Audio as ambient sound and mutes it with the ring/silent
+     switch. The visitor pressed a button for this sound, so it is declared as
+     playback, the way a video they started is. Where the audio session cannot
+     be set (iOS before 16.4), a silent looping audio element does the same job. */
+  const appleTouch = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  function playback(active) {
+    try {
+      if (navigator.audioSession) {
+        navigator.audioSession.type = active ? 'playback' : 'auto';
+        return;
+      }
+    } catch (error) {
+      /* fall through to the element */
+    }
+    if (!appleTouch) return;
+    if (active) {
+      if (!keeper) {
+        // Half a second of silence, 8 kHz mono, built here.
+        const samples = 4000;
+        const bytes = new Uint8Array(44 + samples).fill(128);
+        const view = new DataView(bytes.buffer);
+        const tag = (at, text) => [...text].forEach((ch, k) => view.setUint8(at + k, ch.charCodeAt(0)));
+        tag(0, 'RIFF');
+        view.setUint32(4, 36 + samples, true);
+        tag(8, 'WAVEfmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, 8000, true);
+        view.setUint32(28, 8000, true);
+        view.setUint16(32, 1, true);
+        view.setUint16(34, 8, true);
+        tag(36, 'data');
+        view.setUint32(40, samples, true);
+        keeper = new Audio(URL.createObjectURL(new Blob([bytes], { type: 'audio/wav' })));
+        keeper.loop = true;
+        keeper.setAttribute('playsinline', '');
+      }
+      keeper.play().catch(() => {});
+    } else if (keeper) keeper.pause();
+  }
 
   function schedule(at) {
     const source = ctx.createBufferSource();
@@ -1921,6 +2008,8 @@ function createSound(src) {
   async function on() {
     wanted = true;
     if (!src) return;
+    // Inside the click, before anything is awaited.
+    playback(true);
     if (!ctx) {
       const Ctx = window.AudioContext || window.webkitAudioContext;
       if (!Ctx) return;
@@ -1949,13 +2038,20 @@ function createSound(src) {
     if (!ctx) return;
     fade(0, 0.6);
     window.setTimeout(() => {
-      if (!wanted && ctx.state === 'running') ctx.suspend();
+      if (wanted) return;
+      if (ctx.state === 'running') ctx.suspend();
+      playback(false);
     }, 700);
   }
   document.addEventListener('visibilitychange', () => {
     if (!ctx || !wanted) return;
-    if (document.hidden) ctx.suspend();
-    else ctx.resume();
+    if (document.hidden) {
+      ctx.suspend();
+      if (keeper) keeper.pause();
+    } else {
+      ctx.resume();
+      if (keeper) keeper.play().catch(() => {});
+    }
   });
   return { on, off };
 }
