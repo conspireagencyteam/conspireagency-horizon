@@ -747,6 +747,8 @@ function start(root) {
   let headBottom = 64;
   function clearOf(s) {
     if (!s || !s.copy || !s.pin || aspect > 0.95) return null;
+    // With the acts fixed in place the copy's top is simply where it is.
+    if (!reduced) return { top: headBottom + 14, bottom: s.copy.getBoundingClientRect().top - 24 };
     const h = s.copy.offsetHeight;
     const pinH = s.pin.offsetHeight;
     if (!h || !pinH) return null;
@@ -817,6 +819,23 @@ function start(root) {
   const SCENE_FORM = { open: 'sphere', brain: ['b1', 'b2', 'b3'], manager: ['store'], healing: ['lattice'], close: ['sphere'] };
   let stops = [];
   let primed = false;
+  /* The acts of a chapter sit on top of one another, so they are given one
+     height and one statement height: the chapter label, the readout and (on a
+     phone) the top of the copy then coincide from act to act. */
+  function level() {
+    const chapters = [...new Set(stops.map((s) => s.chapter).filter(Boolean))];
+    for (const c of chapters) {
+      c.style.removeProperty('--ai-lead');
+      c.style.removeProperty('--ai-tall');
+    }
+    if (reduced) return;
+    for (const c of chapters) {
+      const acts = stops.filter((s) => s.chapter === c && s.copy);
+      if (!acts.length) continue;
+      c.style.setProperty('--ai-lead', Math.max(...acts.map((s) => (s.leadEl ? s.leadEl.offsetHeight : 0))) + 'px');
+      c.style.setProperty('--ai-tall', Math.max(...acts.map((s) => s.copy.offsetHeight)) + 'px');
+    }
+  }
   function measure() {
     stops = [...document.querySelectorAll('[data-ai-scene]')].map((el) => {
       const [name, n] = (el.dataset.aiScene || 'open').split('-');
@@ -828,7 +847,7 @@ function start(root) {
       const say = el.querySelector('[data-ai-say]');
       const words = say ? splitWords(say) : 0;
       // lead: the statement lights first (55 ms a word, as in the stylesheet), then the story starts.
-      return { el, name, act: Math.min(index, 3), form, opener, centred: opener, lead: 0.55 + words * 0.055, inst: el.querySelector('[data-ai-inst]'), copy: el.querySelector('.ca-ai-act__copy'), pin: el.querySelector('.ca-ai-act__pin'), chapter: el.closest('[data-ai-chapter]') };
+      return { el, name, act: Math.min(index, 3), form, opener, centred: opener, lead: 0.55 + words * 0.055, inst: el.querySelector('[data-ai-inst]'), copy: el.querySelector('.ca-ai-act__copy'), leadEl: el.querySelector('.ca-ai-act__lead'), pin: el.querySelector('.ca-ai-act__pin'), chapter: el.closest('[data-ai-chapter]') };
     });
     primed = false;
     buildRail();
@@ -1415,8 +1434,8 @@ function start(root) {
   let playing = -1;
 
   /* Scrolling starts things; it does not have to finish them. Two helpers:
-     - settle: if the visitor stops between two stops, glide to the one they were
-       heading for, so nothing is ever left half-arrived;
+     - settle: a scroll away from a stop goes on to the next one in that direction
+       (or back to the one it left), so nothing is ever left half-arrived;
      - advance: when an act's story has played and the visitor is idle, carry on
        to the next stop of the same chapter. A chapter ends on its last act and
        waits for a scroll.
@@ -1488,13 +1507,18 @@ function start(root) {
     if (!pilotAllowed || pilot.drive || pilot.touching || pastEnd || html.classList.contains('ca-ai-gated')) return;
     const idle = now - pilot.moved;
     const last = stops.length - 1;
-    if (idle > 420) {
+    if (idle > 300) {
+      // Nothing travels on screen now, so a scroll has no effect of its own: one
+      // deliberate scroll (a few dozen pixels past where the stop rests) means
+      // "the next one" or "the one before", and the page goes there. A scroll
+      // back the other way returns to the stop it left.
+      const STEP = 0.03;
       let target = -1;
       if (index === 0) {
         // A nudge down from the first screen is enough to begin.
         if (pilot.dir > 0 && p > 0.6) target = 1;
-      } else if (p < pin - 0.004) target = pilot.dir > 0 ? index : index - 1;
-      else if (p > 1 - pin + 0.004) target = pilot.dir > 0 ? (index < last ? index + 1 : -1) : index;
+      } else if (p < 0.5 - STEP) target = pilot.dir > 0 ? index : index - 1;
+      else if (p > 0.5 + STEP) target = pilot.dir > 0 ? (index < last ? index + 1 : -1) : index;
       if (target > 0) return glide(target);
     }
     const next = stops[index + 1];
@@ -1581,7 +1605,11 @@ function start(root) {
       for (const s of stops) {
         if (!s.inst || s.opener || !SCENES[s.name]) continue;
         drawInst(s, SCENES[s.name](s.act, 0, time).inst);
+        // sig: what kind of readout this act has. Two acts in a row with the same
+        // one share it: it stays on screen between them.
+        s.sig = s.ui ? s.ui.kind + ':' + (s.ui.layout || '') : '';
       }
+      level();
     }
     const started = performance.now();
 
@@ -1593,10 +1621,13 @@ function start(root) {
       const old = stops[playing];
       if (old) {
         old.at = null;
-        if (old.el) old.el.classList.remove('is-on');
+        if (old.el) old.el.classList.remove('is-on', 'is-here');
       }
       // Everything further down starts from the beginning when it is reached.
       for (let i = index + 2; i < stops.length; i++) stops[i].u = 0;
+      // Arriving from the act beside it with the same readout: the readout is already there.
+      stop.kept = !!old && Math.abs(playing - index) === 1 && old.chapter === stop.chapter && !!stop.sig && old.sig === stop.sig;
+      if (stop.el) stop.el.classList.add('is-here');
       playing = index;
     }
     // A stop's story is not scrubbed by the scroll: once the stop has arrived
@@ -1746,33 +1777,52 @@ function start(root) {
     const strength = stop.opener ? 0 : (changing && stop === b ? smooth(t, 0.85, 1) : 1) * (1 - smooth(p, 1 - pin - 0.02, 1 - pin + 0.08));
     drawOverlay(out, at, breath, strength);
     if (!stop.opener) drawInst(stop, out.inst);
-    const copyShow = stop.opener || stop.name === 'open' ? 0 : smooth(p, pin - 0.26, pin - 0.03) * (1 - leaving);
-    drawWire(stop, out.link, at, breath, strength * copyShow);
+    // An act's parts, each on its own measure. The statement and text swap with
+    // every act. The chapter label holds while the act beside it is of the same
+    // chapter. The readout holds while the act beside it carries the same one,
+    // and otherwise arrives after the text and leaves with it.
+    const acting = !stop.opener && stop.name !== 'open';
+    const arrive = smooth(p, pin - 0.26, pin - 0.03);
+    const beside = (o) => !!o && !o.opener && !!o.copy && o.chapter === stop.chapter;
+    const carries = (o) => beside(o) && !!stop.sig && o.sig === stop.sig;
+    const prevStop = stops[index - 1];
+    const copyShow = acting ? arrive * (1 - leaving) : 0;
+    const headShow = acting ? (beside(prevStop) ? 1 : arrive) * (beside(next) ? 1 : 1 - leaving) : 0;
+    const revealAt = lead - 0.07;
+    const revealed = stop.kept ? 1 : since < 0 ? 0 : smooth(since, revealAt, revealAt + 0.8);
+    const readShow = acting ? (reduced ? 1 : revealed) * (carries(prevStop) ? 1 : arrive) * (carries(next) ? 1 : 1 - leaving) : 0;
+    drawWire(stop, out.link, at, breath, strength * readShow);
     drawRail(index, p);
     const nextStop = stops[index + 1];
     drawCue(!reduced && !pilot.drive && !stop.opener && stop.name !== 'open' && stop.name !== 'close' && !!nextStop && nextStop.chapter !== stop.chapter && doneFor > 0.6 && leaving < 0.05);
     if (inside) autopilot(now, index, p, pin, stop, doneFor);
 
-    // Each stop's copy follows its place in the scroll: it arrives and it leaves
-    // upward. What happens inside it (the statement lighting word by word, the
-    // supporting text, the readout) runs on the clock once the stop is on.
+    // Only the stop under the middle of the screen shows; every other one is
+    // faded out where it stands. What happens inside it (the statement lighting
+    // word by word, the supporting text) runs on the clock once the stop is on.
     for (let i = 0; i < stops.length; i++) {
       const s = stops[i];
       if (s.name === 'open') continue;
       const mine = i === index;
       let show = 0;
+      let head = 0;
+      let read = 0;
       let key = '0';
       if (mine && s.opener) {
         show = title;
         key = 'o' + show.toFixed(3) + p.toFixed(3);
       } else if (mine) {
         show = copyShow;
-        key = 'a' + p.toFixed(4) + u.toFixed(3);
+        head = headShow;
+        read = readShow;
+        key = 'a' + p.toFixed(4) + u.toFixed(3) + read.toFixed(2);
       }
       if (s.key === key) continue;
       s.key = key;
       const css = s.el.style;
       css.setProperty('--ai-show', show.toFixed(3));
+      css.setProperty('--ai-head', head.toFixed(3));
+      css.setProperty('--ai-read', read.toFixed(3));
       if (!mine) continue;
       if (s.opener) css.setProperty('--ai-drift', (p - 0.5).toFixed(3));
       else {
@@ -1812,8 +1862,11 @@ function start(root) {
 
   measure();
   resize();
+  // Web fonts change the copy's heights once they arrive.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => primed && level());
   window.addEventListener('resize', () => {
     resize();
+    if (primed) level();
     if (reduced) still();
   });
   document.addEventListener('visibilitychange', play);
