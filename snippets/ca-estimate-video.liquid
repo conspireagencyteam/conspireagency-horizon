@@ -1,0 +1,20 @@
+{%- comment -%}
+  A click-to-play YouTube poster for the estimate flow's result screens, on the
+  site's <ca-lite-video> (defined in sections/ca-article-header.liquid, bundled
+  site-wide): the player only loads when someone asks for it.
+  Params: id (YouTube id), title.
+{%- endcomment -%}
+{%- liquid
+  assign vid = id | strip | escape
+  assign vtitle = title | default: 'Video' | escape
+-%}
+<ca-lite-video class="ca-estimate__video" data-video-id="{{ vid }}" data-title="{{ vtitle }}">
+  <button type="button" class="ca-estimate__video-poster" aria-label="Play video: {{ vtitle }}" data-yt-play>
+    <img
+      src="https://i.ytimg.com/vi/{{ vid }}/maxresdefault.jpg"
+      width="1280" height="720" alt="{{ vtitle }}" loading="lazy"
+      onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/{{ vid }}/hqdefault.jpg'"
+    >
+    <span class="ca-estimate__video-play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3.5v17l14-8.5z"/></svg>{{ vtitle }}</span>
+  </button>
+</ca-lite-video>

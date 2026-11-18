@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "estimate": {
+      "type": "ca-estimate",
+      "settings": {
+        "mode": "call",
+        "eyebrow": "Book a call",
+        "heading": "A few questions, then pick a time.",
+        "text": "Two minutes now saves the first half of the call. We read your store, ask what goes into the estimate, and bring a ballpark to the call."
+      }
+    }
+  },
+  "order": ["estimate"]
+}

@@ -98,6 +98,14 @@
       }
       {%- endunless -%}
 
+      // The estimate flow (sections/ca-estimate.liquid) announces a finished ballpark request (the
+      // "Get a ballpark estimate" path, with the brand's details). A booking inside the flow is the
+      // Calendly embed's own and is reported below, not here.
+      document.addEventListener("ca:estimate-lead", function () {
+        oaiq("measure", "lead_created", { type: "customer_action" });
+        reportLead("estimate");
+      });
+
       // Calendly inline widgets announce bookings via postMessage
       window.addEventListener("message", function (e) {
         if (e.origin === "https://calendly.com" && e.data && e.data.event === "calendly.event_scheduled") {
