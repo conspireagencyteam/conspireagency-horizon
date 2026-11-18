@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "estimate": {
+      "type": "ca-estimate",
+      "settings": {
+        "mode": "estimate",
+        "eyebrow": "Ballpark estimate",
+        "heading": "What would your build cost?",
+        "text": "Answer a few questions about your store. You'll get a price range and a timeline, worked out the way we price every Conspire Build."
+      }
+    }
+  },
+  "order": ["estimate"]
+}

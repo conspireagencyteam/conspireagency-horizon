@@ -1,0 +1,632 @@
+{%- comment -%}
+  ca-estimate.liquid — the build-estimate flow (Danny, 2026-11-17/18).
+
+  Two pages use it: /pages/book-a-call (mode "call") and /pages/estimate (mode
+  "estimate"). The questions are not in this file: assets/ca-estimate.js loads
+  them from the brain (GET <api>/api/public/estimate/config), renders one step
+  at a time, saves every step there, and shows one of the three results below.
+  The brain decides who qualifies and works out the ballpark; this section
+  only holds the words around it, which stay editable in the theme editor.
+
+    call:     brand -> the business -> pick a time (Calendly) -> products and
+              pages -> everything else -> "You're booked"
+    estimate: brand -> the business -> products and pages -> everything else
+              -> your details -> "Your ballpark" (with the calendar to confirm)
+    either:   a brand that does not qualify sees "Not a fit" after the
+              business step, and no calendar.
+
+  The Calendly embed is the site's existing <ca-calendly> (sections/ca-booking.liquid),
+  so Calendly's own Meta integration keeps sending its booking event. The page
+  has no ca-booking section of its own (one Calendly embed per page).
+{%- endcomment -%}
+
+{%- liquid
+  assign api_base = section.settings.api_base | default: 'https://projects.conspireagency.com' | strip
+  assign mode = section.settings.mode | default: 'call'
+  assign calendly_url = section.settings.calendly_url | default: 'https://calendly.com/d/crbh-5vt-9jc/website-strategy-intro-call' | strip
+-%}
+
+<div class="ca-estimate spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}" style="{% render 'spacing-style', settings: section.settings %}">
+  {% render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  %}
+  <div class="ca-inner">
+    <ca-estimate
+      class="ca-estimate__app"
+      data-mode="{{ mode }}"
+      data-api="{{ api_base | escape }}"
+      data-calendly="{{ calendly_url | escape }}"
+    >
+      <header class="ca-estimate__head" data-head>
+        {%- if section.settings.eyebrow != blank -%}<p class="ca-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.heading != blank -%}<h1 class="ca-estimate__title">{{ section.settings.heading }}</h1>{%- endif -%}
+        {%- if section.settings.text != blank -%}<p class="ca-estimate__lede">{{ section.settings.text }}</p>{%- endif -%}
+      </header>
+
+      <div class="ca-estimate__progress" data-progress hidden>
+        <p class="ca-eyebrow ca-estimate__count" data-count></p>
+        <div class="ca-estimate__track" aria-hidden="true"><span class="ca-estimate__bar" data-bar></span></div>
+      </div>
+
+      <div class="ca-estimate__stage" data-stage>
+        <p class="ca-estimate__loading">Loading the questions…</p>
+      </div>
+      <p class="ca-estimate__status" role="status" aria-live="polite" data-status></p>
+
+      {%- comment -%} Result: booked (call path). {%- endcomment -%}
+      <div class="ca-estimate__result" data-result="booked" hidden>
+        <div class="ca-estimate__result-head">
+          <p class="ca-eyebrow">{{ section.settings.booked_eyebrow }}</p>
+          <h2 class="ca-statement ca-statement--xl" tabindex="-1" data-result-heading>{{ section.settings.booked_heading }}</h2>
+          <p class="ca-estimate__when" data-booked-time></p>
+          {%- if section.settings.booked_text != blank -%}<p class="ca-estimate__lede">{{ section.settings.booked_text }}</p>{%- endif -%}
+        </div>
+        {%- if section.settings.expect_video_id != blank -%}
+          {% render 'ca-estimate-video', id: section.settings.expect_video_id, title: section.settings.expect_video_title %}
+        {%- endif -%}
+        {% render 'ca-estimate-ballpark', settings: section.settings %}
+        {%- if section.settings.process_video_id != blank -%}
+          <div class="ca-estimate__block">
+            <p class="ca-eyebrow">{{ section.settings.process_heading }}</p>
+            {% render 'ca-estimate-video', id: section.settings.process_video_id, title: section.settings.process_video_title %}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Result: the ballpark (estimate path), with the calendar to confirm it. {%- endcomment -%}
+      <div class="ca-estimate__result" data-result="estimate" hidden>
+        <div class="ca-estimate__result-head">
+          <p class="ca-eyebrow">{{ section.settings.estimate_eyebrow }}</p>
+          <h2 class="ca-statement ca-statement--xl" tabindex="-1" data-result-heading>{{ section.settings.estimate_heading }}</h2>
+        </div>
+        {% render 'ca-estimate-ballpark', settings: section.settings %}
+        <div class="ca-estimate__block" data-confirm>
+          <h3 class="ca-estimate__subhead">{{ section.settings.confirm_heading }}</h3>
+          {%- if section.settings.confirm_text != blank -%}<p class="ca-estimate__lede">{{ section.settings.confirm_text }}</p>{%- endif -%}
+          <div class="ca-estimate__calendar" data-calendar></div>
+        </div>
+        <div class="ca-estimate__block" data-confirmed hidden>
+          <h3 class="ca-estimate__subhead">{{ section.settings.booked_heading | strip_html }}</h3>
+          <p class="ca-estimate__when" data-booked-time></p>
+          {%- if section.settings.booked_text != blank -%}<p class="ca-estimate__lede">{{ section.settings.booked_text }}</p>{%- endif -%}
+        </div>
+        {%- if section.settings.process_video_id != blank -%}
+          <div class="ca-estimate__block">
+            <p class="ca-eyebrow">{{ section.settings.process_heading }}</p>
+            {% render 'ca-estimate-video', id: section.settings.process_video_id, title: section.settings.process_video_title %}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Result: not a fit. {%- endcomment -%}
+      <div class="ca-estimate__result" data-result="notfit" hidden>
+        <div class="ca-estimate__result-head">
+          <p class="ca-eyebrow">{{ section.settings.notfit_eyebrow }}</p>
+          <h2 class="ca-statement ca-statement--xl" tabindex="-1" data-result-heading>{{ section.settings.notfit_heading }}</h2>
+          <div class="ca-estimate__reasons" data-reasons></div>
+        </div>
+        {%- if section.settings.notfit_video_id != blank -%}
+          {% render 'ca-estimate-video', id: section.settings.notfit_video_id, title: section.settings.notfit_video_title %}
+        {%- endif -%}
+        {%- if section.settings.notfit_text != blank -%}<div class="ca-estimate__rte ca-rte">{{ section.settings.notfit_text }}</div>{%- endif -%}
+        {%- if section.settings.notfit_contact != blank -%}<div class="ca-estimate__fine ca-rte">{{ section.settings.notfit_contact }}</div>{%- endif -%}
+      </div>
+
+      <noscript>
+        <p class="ca-estimate__lede">
+          This page needs JavaScript. You can also <a href="{{ calendly_url | escape }}">book a call directly</a>.
+        </p>
+      </noscript>
+    </ca-estimate>
+  </div>
+</div>
+
+{%- comment -%}
+  The floating "Let's Talk" pill would sit over the step's buttons on phones,
+  and this page is already the way to talk. A {% style %} block (not the
+  bundled stylesheet) so it applies only on pages with this section.
+{%- endcomment -%}
+{%- style -%}
+  .ca-header__float { display: none !important; }
+{%- endstyle -%}
+
+<script src="{{ 'ca-estimate.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% stylesheet %}
+  .ca-estimate {
+    background-color: var(--color-background);
+  }
+
+  .ca-estimate__app {
+    display: block;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .ca-estimate__head {
+    margin-block-end: 48px;
+  }
+
+  .ca-estimate__title {
+    margin: 16px 0 0;
+    font-size: var(--ca-fs-48);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-estimate__lede {
+    margin: 16px 0 0;
+    max-width: 620px;
+    font-size: var(--ca-fs-18);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  .ca-estimate__progress {
+    margin-block-end: 32px;
+  }
+
+  .ca-estimate__count {
+    margin: 0 0 12px;
+  }
+
+  .ca-estimate__track {
+    height: 2px;
+    background-color: var(--ca-hairline);
+    overflow: hidden;
+  }
+
+  .ca-estimate__bar {
+    display: block;
+    width: var(--ca-estimate-progress, 0%);
+    height: 100%;
+    background-color: rgb(var(--color-foreground-rgb));
+    transition: width 0.35s ease;
+  }
+
+  .ca-estimate__loading {
+    color: var(--ca-muted);
+  }
+
+  .ca-estimate__step.ca-form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .ca-estimate__step-title {
+    margin: 0;
+    font-size: var(--ca-fs-32);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    outline: none;
+  }
+
+  .ca-estimate__banner {
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--ca-hairline-strong);
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+  }
+
+  .ca-estimate__q {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .ca-estimate__q > legend {
+    margin-block-end: 14px;
+    padding: 0;
+    font-size: var(--ca-fs-20);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-estimate__choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ca-estimate__choice {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .ca-estimate__choice input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .ca-estimate__choice span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 8px 16px;
+    border: 1px solid var(--ca-hairline-strong);
+    border-radius: 100px;
+    font-size: var(--ca-fs-18);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .ca-estimate__choice:hover span {
+    border-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-estimate__choice input:checked + span {
+    border-color: rgb(var(--color-foreground-rgb));
+    background-color: rgb(var(--color-foreground-rgb));
+    color: var(--color-background);
+  }
+
+  .ca-estimate__choice input:focus-visible + span {
+    outline: 2px solid rgb(var(--color-foreground-rgb));
+    outline-offset: 3px;
+  }
+
+  .ca-estimate__check {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+    cursor: pointer;
+  }
+
+  .ca-estimate__check input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-estimate .ca-field__label {
+    font-size: var(--ca-fs-20);
+    line-height: 1.35;
+  }
+
+  .ca-estimate__help {
+    margin: 10px 0 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ca-muted);
+  }
+
+  .ca-estimate__error {
+    margin: 10px 0 0;
+    font-size: 1rem;
+    color: #b3261e;
+  }
+
+  .ca-estimate__pages {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-estimate__page {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 24px;
+    padding: 14px 0;
+    border-block-end: 1px solid var(--ca-hairline);
+  }
+
+  .ca-estimate__page-name {
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+  }
+
+  .ca-estimate__page-path {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--ca-muted);
+  }
+
+  .ca-estimate__page .ca-estimate__choices {
+    gap: 6px;
+  }
+
+  .ca-estimate__page .ca-estimate__choice span {
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 1rem;
+  }
+
+  .ca-estimate__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+  }
+
+  .ca-estimate__nav-side {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 24px;
+  }
+
+  .ca-estimate__link {
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+    font: inherit;
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+  }
+
+  .ca-estimate__link:hover {
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-estimate button.ca-button[disabled] {
+    opacity: 0.5;
+    cursor: progress;
+  }
+
+  .ca-estimate__status {
+    min-height: 1.5em;
+    margin: 24px 0 0;
+    color: var(--ca-muted);
+  }
+
+  .ca-estimate__status--error {
+    color: #b3261e;
+  }
+
+  .ca-estimate__calendar {
+    min-height: 700px;
+    margin-block-start: 24px;
+    background-color: #fff;
+  }
+
+  .ca-estimate__result {
+    display: grid;
+    gap: 48px;
+  }
+
+  .ca-estimate__result[hidden] {
+    display: none;
+  }
+
+  .ca-estimate__result-head .ca-statement {
+    margin: 16px 0 0;
+    outline: none;
+  }
+
+  .ca-estimate__when {
+    margin: 16px 0 0;
+    font-size: var(--ca-fs-24);
+    letter-spacing: -0.03em;
+  }
+
+  .ca-estimate__when:empty {
+    display: none;
+  }
+
+  .ca-estimate__block {
+    display: grid;
+    gap: 16px;
+  }
+
+  .ca-estimate__block[hidden] {
+    display: none;
+  }
+
+  .ca-estimate__subhead {
+    margin: 0;
+    font-size: var(--ca-fs-32);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-estimate__range {
+    margin: 4px 0 0;
+    font-size: var(--ca-fs-48);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ca-estimate__weeks {
+    margin: 0;
+    font-size: var(--ca-fs-24);
+    letter-spacing: -0.03em;
+    color: var(--ca-soft);
+  }
+
+  .ca-estimate__scope-wrap {
+    margin-block-start: 16px;
+  }
+
+  .ca-estimate__scope {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-estimate__scope li {
+    padding: 12px 0;
+    border-block-end: 1px solid var(--ca-hairline);
+    font-size: var(--ca-fs-18);
+    letter-spacing: -0.02em;
+  }
+
+  .ca-estimate__fine {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ca-muted);
+  }
+
+  .ca-estimate__reasons p {
+    margin: 16px 0 0;
+    font-size: var(--ca-fs-18);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-estimate__video {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: #0d110d;
+  }
+
+  .ca-estimate__video iframe,
+  .ca-estimate__video-poster,
+  .ca-estimate__video-poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .ca-estimate__video-poster {
+    position: relative;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .ca-estimate__video-poster img {
+    object-fit: cover;
+  }
+
+  .ca-estimate__video-play {
+    position: absolute;
+    inset-block-end: 24px;
+    inset-inline-start: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px 10px 14px;
+    border-radius: 100px;
+    background-color: #ffffff;
+    color: #0d110d;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-estimate__head {
+      margin-block-end: 32px;
+    }
+
+    .ca-estimate__step.ca-form {
+      gap: 32px;
+    }
+
+    .ca-estimate__nav {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+
+    .ca-estimate__nav .ca-button {
+      justify-content: space-between;
+    }
+
+    .ca-estimate__nav-side {
+      justify-content: space-between;
+    }
+
+    .ca-estimate__calendar {
+      min-height: 960px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-estimate__bar,
+    .ca-estimate__choice span {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Estimate flow",
+  "tag": "section",
+  "class": "ca-estimate-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Path",
+      "info": "Book a call: the calendar comes right after the qualifying step. Get a ballpark estimate: the calendar is offered with the result.",
+      "options": [
+        { "value": "call", "label": "Book a call" },
+        { "value": "estimate", "label": "Get a ballpark estimate" }
+      ],
+      "default": "call"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Book a call" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "A few questions, then pick a time." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Two minutes now saves the first half of the call. We read your store, ask what goes into the estimate, and bring a ballpark to the call." },
+    { "type": "header", "content": "You're booked" },
+    { "type": "text", "id": "booked_eyebrow", "label": "Eyebrow", "default": "You're booked" },
+    { "type": "inline_richtext", "id": "booked_heading", "label": "Heading", "default": "See you on the call. <strong>Here's what to expect.</strong>" },
+    { "type": "textarea", "id": "booked_text", "label": "Text", "default": "We'll walk through your store together, confirm the scope and answer what a ballpark can't. Calendly has sent the invite; forward it to anyone who should join." },
+    { "type": "text", "id": "expect_video_id", "label": "What to expect video (YouTube ID)", "info": "Optional. Shown above the ballpark." },
+    { "type": "text", "id": "expect_video_title", "label": "What to expect video title", "default": "What to expect on your call" },
+    { "type": "header", "content": "The ballpark" },
+    { "type": "text", "id": "ballpark_heading", "label": "Heading", "default": "Your ballpark" },
+    { "type": "textarea", "id": "ballpark_note", "label": "Note under the range", "default": "Worked out from your answers, the way we price every Conspire Build. We confirm it on the call once we've been through your store page by page." },
+    { "type": "text", "id": "scope_heading", "label": "Scope heading", "default": "What the range covers" },
+    { "type": "text", "id": "unpriced_prefix", "label": "Before what is left for the call", "default": "Scoped on the call:" },
+    { "type": "header", "content": "Your ballpark (estimate path)" },
+    { "type": "text", "id": "estimate_eyebrow", "label": "Eyebrow", "default": "Ballpark estimate" },
+    { "type": "inline_richtext", "id": "estimate_heading", "label": "Heading", "default": "Here's where your build lands." },
+    { "type": "text", "id": "confirm_heading", "label": "Calendar heading", "default": "Book a call to confirm it" },
+    { "type": "textarea", "id": "confirm_text", "label": "Calendar text", "default": "Thirty minutes with our team. We'll go through your store and turn the ballpark into a scope." },
+    { "type": "header", "content": "Process video" },
+    { "type": "text", "id": "process_heading", "label": "Heading", "default": "How a build runs" },
+    { "type": "text", "id": "process_video_id", "label": "YouTube ID", "default": "iarfNgaclWQ" },
+    { "type": "text", "id": "process_video_title", "label": "Title", "default": "How Conspire builds a Shopify store" },
+    { "type": "header", "content": "Not a fit" },
+    { "type": "text", "id": "notfit_eyebrow", "label": "Eyebrow", "default": "Thanks for the detail" },
+    { "type": "inline_richtext", "id": "notfit_heading", "label": "Heading", "default": "We might not be the right fit yet." },
+    { "type": "richtext", "id": "notfit_text", "label": "What can help", "default": "<p>Our Shopify apps cover a lot of what brands ask us for, without a build: <a href=\"/pages/b2b-onboarding-wholesale\">wholesale and trade accounts</a>, <a href=\"/pages/b2b-wishlist-project-planner\">wishlists and project planning</a>, <a href=\"/pages/draft-order-invoices\">invoices and quotes</a> and <a href=\"https://getbonde.com\">subscriptions and bundles</a>. Our <a href=\"https://portal.conspireagency.com/compliance-check\">free accessibility and privacy check</a> shows where your store stands today.</p>" },
+    { "type": "richtext", "id": "notfit_contact", "label": "If we read it wrong", "default": "<p>Think we read this wrong? <a href=\"/pages/contact\">Tell us more</a> and we'll take a look.</p>" },
+    { "type": "text", "id": "notfit_video_id", "label": "Video (YouTube ID)", "info": "Optional." },
+    { "type": "text", "id": "notfit_video_title", "label": "Video title", "default": "Where to start" },
+    { "type": "header", "content": "Connections" },
+    { "type": "text", "id": "api_base", "label": "Brain address", "default": "https://projects.conspireagency.com", "info": "Where the questions and answers live. Change only to test against another server." },
+    { "type": "text", "id": "calendly_url", "label": "Calendly URL", "default": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-intro-call" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#F2F2F2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text", "default": "#0D110D" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 200, "step": 2, "unit": "px", "default": 120 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 200, "step": 2, "unit": "px", "default": 120 }
+  ],
+  "presets": [{ "name": "Estimate flow", "category": "Conspire" }]
+}
+{% endschema %}

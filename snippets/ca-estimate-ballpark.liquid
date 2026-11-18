@@ -1,0 +1,17 @@
+{%- comment -%}
+  The ballpark block of the estimate flow's results. Hidden until
+  assets/ca-estimate.js fills it from the brain's answer (a range, weeks, the
+  scope in plain words, what is left for the call). The brain decides whether a
+  number is shown at all. Params: settings (the section's).
+{%- endcomment -%}
+<div class="ca-estimate__block" data-ballpark hidden>
+  <p class="ca-eyebrow">{{ settings.ballpark_heading }}</p>
+  <p class="ca-estimate__range" data-range></p>
+  <p class="ca-estimate__weeks" data-weeks></p>
+  {%- if settings.ballpark_note != blank -%}<p class="ca-estimate__fine">{{ settings.ballpark_note }}</p>{%- endif -%}
+  <div class="ca-estimate__scope-wrap">
+    <p class="ca-eyebrow">{{ settings.scope_heading }}</p>
+    <ul class="ca-estimate__scope" data-scope></ul>
+  </div>
+  <p class="ca-estimate__fine" data-unpriced data-prefix="{{ settings.unpriced_prefix | escape }}" hidden></p>
+</div>
