@@ -12,8 +12,12 @@
 
 const STORAGE_PREFIX = 'ca-estimate:v1:';
 const STORAGE_DAYS = 14;
-const POLL_MS = 1500;
-const SCAN_WAIT_MS = 12000;
+const POLL_MS = 1000;
+// The store read takes about two seconds and starts when the first step is saved. The business step
+// waits only for the platform ("Are you moving to Shopify?"); the products and pages steps start from
+// the whole read and show a "Reading your store" panel while it finishes, never longer than this.
+const PLATFORM_WAIT_MS = 10000;
+const SCAN_WAIT_MS = 20000;
 
 // The site's Calendly event ("Website Strategy Intro Call") asks five questions, in this
 // order: website, monthly revenue, monthly ad spend, notes, budget goal (a dropdown).
@@ -70,6 +74,14 @@ function productBand(n) {
   return '2000_plus';
 }
 
+function hostOf(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch (e) {
+    return '';
+  }
+}
+
 function whenText(iso) {
   if (!iso) return '';
   try {
@@ -107,6 +119,7 @@ class CaEstimate extends HTMLElement {
   disconnectedCallback() {
     window.removeEventListener('message', this.onMessage);
     clearTimeout(this.pollTimer);
+    clearTimeout(this.readingTimer);
   }
 
   // ── Talking to the brain ──────────────────────────────────────────────────
@@ -198,7 +211,8 @@ class CaEstimate extends HTMLElement {
     if (cond.any) return cond.any.some((c) => this.holds(c));
     if (cond.all) return cond.all.every((c) => this.holds(c));
     const scan = this.request && this.request.scan;
-    if (cond.scan === 'not_shopify') return Boolean(scan && scan.state === 'done' && scan.platform === 'other' && !this.answers.noStore);
+    // The platform arrives as soon as the home page is read, before the rest of the scan.
+    if (cond.scan === 'not_shopify') return Boolean(scan && scan.platform === 'other' && !this.answers.noStore);
     if (cond.scan === 'has_pages') return Boolean(scan && scan.pages && scan.pages.length && !this.answers.noStore);
     const v = this.answers[cond.q];
     if ('is' in cond) return (v === true) === cond.is;
@@ -213,6 +227,7 @@ class CaEstimate extends HTMLElement {
   // ── Moving between steps ─────────────────────────────────────────────────
 
   go(stepId, opts = {}) {
+    if (this.readingFor && this.readingFor !== stepId) this.stopReading();
     this.current = stepId;
     this.dirty = false;
     this.setStatus('');
@@ -231,6 +246,7 @@ class CaEstimate extends HTMLElement {
       if (this.head) this.head.hidden = stepId !== 'brand';
       this.setProgress(stepId);
       if (stepId === 'calendar') this.renderCalendar();
+      else if (this.mustRead(stepId)) this.renderReading(stepId);
       else this.renderStep(stepId);
     }
     if (window.gtag) window.gtag('event', 'estimate_step', { step: stepId, path: this.path });
@@ -254,10 +270,12 @@ class CaEstimate extends HTMLElement {
     this.querySelector('[data-bar]').style.setProperty('--ca-estimate-progress', `${Math.round(((i + 1) / (steps.length + 1)) * 100)}%`);
   }
 
-  setStatus(text, error = false) {
+  /** quiet: for screen readers only, when the page already shows it (a spinner, a panel). */
+  setStatus(text, error = false, quiet = false) {
     if (!this.statusEl) return;
     this.statusEl.textContent = text || '';
     this.statusEl.classList.toggle('ca-estimate__status--error', Boolean(error));
+    this.statusEl.classList.toggle('ca-estimate__status--quiet', Boolean(quiet) && !error);
   }
 
   previousStep(stepId) {
@@ -452,9 +470,21 @@ class CaEstimate extends HTMLElement {
     return out;
   }
 
-  busy(form, on) {
+  /** The step's button while a save, or a short wait on the store, is under way: a spinner in its chip. */
+  busy(form, on, label) {
     const btn = form && form.querySelector('button[type="submit"]');
-    if (btn) btn.disabled = on;
+    if (!btn) return;
+    btn.disabled = on;
+    btn.classList.toggle('is-busy', on);
+    if (on) btn.setAttribute('aria-busy', 'true');
+    else btn.removeAttribute('aria-busy');
+    if (on && label) {
+      if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+      btn.textContent = label;
+    } else if (!on && btn.dataset.label) {
+      btn.textContent = btn.dataset.label;
+      delete btn.dataset.label;
+    }
   }
 
   async submit(stepId, form) {
@@ -465,7 +495,7 @@ class CaEstimate extends HTMLElement {
       if (stepId === 'business') {
         const shown = () => this.visible(this.stepDef('business')).map((q) => q.id).join(',');
         const before = shown();
-        const waited = await this.waitForScan();
+        const waited = await this.waitForPlatform(form);
         // Only a question the scan added ("Are you moving to Shopify?") stops the step here.
         if (waited && shown() !== before) {
           this.renderStep('business');
@@ -565,24 +595,94 @@ class CaEstimate extends HTMLElement {
         const before = this.current ? this.signatureOf(this.current) : '';
         this.take(got.data.request);
         const onStep = this.current && !['calendar', 'booked', 'estimate', 'notfit'].includes(this.current);
-        if (onStep && this.signatureOf(this.current) !== before && !this.pending) this.renderStep(this.current, document.activeElement && document.activeElement.id);
+        if (this.readingFor && this.readingFor === this.current) {
+          if (!this.scanRunning()) this.doneReading(this.current);
+        } else if (onStep && this.signatureOf(this.current) !== before && !this.pending) {
+          this.renderStep(this.current, document.activeElement && document.activeElement.id);
+        }
       }
       this.pollScan();
     }, POLL_MS);
   }
 
-  /** Before the business step is saved: give the scan a few seconds, so "Are you moving to Shopify?" can appear. */
-  async waitForScan() {
-    if (!this.scanRunning()) return false;
-    this.setStatus('Reading your store…');
-    const until = Date.now() + SCAN_WAIT_MS;
-    while (Date.now() < until && this.scanRunning()) {
+  platformKnown() {
+    return Boolean(this.request && this.request.scan && this.request.scan.platform);
+  }
+
+  async refresh() {
+    const got = await this.call('GET', `/api/public/estimate/requests/${this.token}`);
+    if (got.ok && got.data.request) this.take(got.data.request);
+  }
+
+  /**
+   * Before the business step is saved: the platform decides whether "Are you moving to Shopify?" is
+   * asked. It is usually known within a second or two of the first step; the button says what it waits on.
+   */
+  async waitForPlatform(form) {
+    if (!this.scanRunning() || this.platformKnown()) return false;
+    this.busy(form, true, 'Checking your store');
+    this.setStatus('Checking which platform your store is on.', false, true);
+    const until = Date.now() + PLATFORM_WAIT_MS;
+    while (Date.now() < until && this.scanRunning() && !this.platformKnown()) {
       await new Promise((r) => setTimeout(r, POLL_MS));
-      const got = await this.call('GET', `/api/public/estimate/requests/${this.token}`);
-      if (got.ok && got.data.request) this.take(got.data.request);
+      await this.refresh();
     }
     this.setStatus('');
     return true;
+  }
+
+  /** The products and pages steps start from what the store read finds. */
+  mustRead(stepId) {
+    return (stepId === 'products' || stepId === 'everything') && this.scanRunning() && !this.answers.noStore && !this.readGaveUp;
+  }
+
+  /** The read is still going when the brand reaches a step that starts from it: say so, plainly. */
+  renderReading(stepId) {
+    const step = this.stepDef(stepId);
+    const scan = (this.request && this.request.scan) || {};
+    const host = hostOf(scan.origin) || hostOf(this.answers.storeUrl) || 'your store';
+    const panel = h(
+      'div',
+      { class: 'ca-estimate__step ca-estimate__reading' },
+      h('h2', { class: 'ca-estimate__step-title', tabindex: '-1', text: step ? step.title : 'Your store' }),
+      h(
+        'div',
+        { class: 'ca-estimate__reading-card' },
+        h('span', { class: 'ca-estimate__spinner', 'aria-hidden': 'true' }),
+        h(
+          'div',
+          { class: 'ca-estimate__reading-copy' },
+          h('p', { class: 'ca-estimate__reading-title', text: `Reading ${host}` }),
+          h('p', { class: 'ca-estimate__reading-text', text: 'Counting your products and pages, so these questions start from what you have. A few seconds.' }),
+        ),
+      ),
+    );
+    this.stage.replaceChildren(panel);
+    this.stage.setAttribute('aria-busy', 'true');
+    this.setStatus(`Reading ${host}. This takes a few seconds.`, false, true);
+    this.readingFor = stepId;
+    clearTimeout(this.readingTimer);
+    this.readingTimer = setTimeout(() => this.doneReading(stepId, true), SCAN_WAIT_MS);
+    this.pollTries = 0;
+    this.pollScan();
+  }
+
+  stopReading() {
+    clearTimeout(this.readingTimer);
+    this.readingFor = null;
+    this.stage.removeAttribute('aria-busy');
+  }
+
+  /** The read has landed (or is taking too long): show the step with whatever it found. */
+  doneReading(stepId, gaveUp = false) {
+    if (this.readingFor !== stepId) return;
+    this.stopReading();
+    if (gaveUp) this.readGaveUp = true;
+    this.setStatus('');
+    if (this.current !== stepId) return;
+    this.renderStep(stepId);
+    const title = this.querySelector('.ca-estimate__step-title');
+    if (title) title.focus({ preventScroll: true });
   }
 
   // ── The calendar ─────────────────────────────────────────────────────────

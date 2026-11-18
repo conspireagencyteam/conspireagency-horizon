@@ -387,6 +387,83 @@
     cursor: progress;
   }
 
+  /* Saving, or waiting on the store: the arrow chip turns into a spinner and the button stays solid. */
+  .ca-estimate button.ca-button.is-busy {
+    opacity: 1;
+  }
+
+  .ca-estimate button.ca-button.is-busy::before {
+    box-sizing: border-box;
+    border: 2px solid rgb(var(--color-foreground-rgb) / 0.2);
+    border-top-color: rgb(var(--color-foreground-rgb));
+    border-radius: 50%;
+    background: none;
+    -webkit-mask: none;
+    mask: none;
+    animation: ca-estimate-chip-spin 0.8s linear infinite;
+  }
+
+  .ca-estimate__reading {
+    display: grid;
+    gap: 40px;
+  }
+
+  .ca-estimate__reading-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 28px;
+    border: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-estimate__spinner {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--ca-hairline-strong);
+    border-top-color: rgb(var(--color-foreground-rgb));
+    border-radius: 50%;
+    animation: ca-estimate-spin 0.8s linear infinite;
+  }
+
+  .ca-estimate__reading-copy {
+    min-width: 0;
+    padding-top: 3px;
+  }
+
+  .ca-estimate__reading-title {
+    margin: 0;
+    font-size: var(--ca-fs-20);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+
+  .ca-estimate__reading-text {
+    margin: 6px 0 0;
+    max-width: 560px;
+    font-size: var(--ca-fs-18);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  @keyframes ca-estimate-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes ca-estimate-chip-spin {
+    from {
+      transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+      transform: translateY(-50%) rotate(360deg);
+    }
+  }
+
   .ca-estimate__status {
     min-height: 1.5em;
     margin: 24px 0 0;
@@ -395,6 +472,17 @@
 
   .ca-estimate__status--error {
     color: #b3261e;
+  }
+
+  /* Said for screen readers only: the spinner or the reading panel already shows it. */
+  .ca-estimate__status--quiet {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .ca-estimate__calendar {
@@ -561,10 +649,27 @@
     }
   }
 
+  @media screen and (max-width: 749px) {
+    .ca-estimate__reading-card {
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .ca-estimate__spinner {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ca-estimate__bar,
     .ca-estimate__choice span {
       transition: none;
+    }
+
+    .ca-estimate__spinner,
+    .ca-estimate button.ca-button.is-busy::before {
+      animation-duration: 2.4s;
     }
   }
 {% endstylesheet %}
