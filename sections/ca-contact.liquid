@@ -5,7 +5,8 @@
   eyebrow right; then the inquiry form (two thirds) beside a sidebar with a
   client quote card and a featured case study.
 
-  The form is Shopify's native contact form. Field names are unchanged from the
+  Since 2026-11-20 the form posts to the brain (see the script under the form);
+  Shopify's native contact form below is the fallback. Field names are unchanged from the
   previous theme's contact form, so inbox filters and any reporting built on
   those labels keep working, and the consent-gated lead tracking
   (snippets/ca-lead-tracking) still fires on the ?contact_posted=true redirect.
@@ -65,7 +66,11 @@
           <p class="ca-eyebrow ca-contact__bar">{{ section.settings.bar_caption }}</p>
         {%- endif -%}
 
-        {%- form 'contact', id: form_id, class: 'ca-form' -%}
+        {%- form 'contact', id: form_id, class: 'ca-form', data-ca-api: section.settings.api_base, data-ca-success: section.settings.success_text -%}
+          <div class="ca-sr-only" aria-hidden="true">
+            <label for="ContactModernWebsite">Leave this empty</label>
+            <input id="ContactModernWebsite" type="text" name="ca_leave_empty" tabindex="-1" autocomplete="off" value="">
+          </div>
           <input type="hidden" name="contact[Submitted On]" value="{{ 'now' | date: '%B %d, %Y at %I:%M %p' }}">
           <input type="hidden" name="contact[First Referrer]" value="" data-ca-first-touch="referrer">
           <input type="hidden" name="contact[Landing Page]" value="" data-ca-first-touch="landing">
@@ -111,6 +116,73 @@
           </div>
         {%- endform -%}
       </div>
+
+      {%- comment -%}
+        Posts the form to the brain (POST <api_base>/api/public/contact, docs/CONTACT-FORM.md in
+        the brain repo), which stores the message, checks it for spam, makes the lead and emails
+        hello@. On success it reloads with ?contact_posted=true, so the lead tracking in
+        snippets/ca-lead-tracking fires exactly as it did for Shopify's form. If the brain cannot
+        be reached (network, 5xx, 429), the same form submits to Shopify as before, so a message is
+        never lost. Without JavaScript the form is Shopify's.
+      {%- endcomment -%}
+      <script>
+        (function () {
+          var form = document.getElementById({{ form_id | json }});
+          if (!form || !window.fetch) return;
+          var api = (form.getAttribute('data-ca-api') || '').replace(/\/$/, '');
+
+          function status(text, isError) {
+            var old = form.querySelector('.ca-form__status');
+            if (old) old.remove();
+            var el = document.createElement(isError ? 'div' : 'p');
+            el.className = 'ca-form__status' + (isError ? ' ca-form__status--error' : '');
+            el.setAttribute('role', isError ? 'alert' : 'status');
+            el.textContent = text;
+            form.insertBefore(el, form.querySelector('.ca-field'));
+            return el;
+          }
+
+          if (window.location.search.indexOf('contact_posted=true') !== -1 && !form.querySelector('.ca-form__status')) {
+            status(form.getAttribute('data-ca-success') || 'Thanks for reaching out.', false);
+          }
+          if (!api) return;
+
+          form.addEventListener('submit', function (e) {
+            if (form.getAttribute('data-ca-fallback')) return;
+            e.preventDefault();
+            var button = form.querySelector('[type="submit"]');
+            if (button) button.disabled = true;
+            var fields = {};
+            new FormData(form).forEach(function (value, key) {
+              var m = key.match(/^contact\[(.+)\]$/);
+              if (m) fields[m[1]] = String(value);
+            });
+            var honeypot = form.querySelector('input[name="ca_leave_empty"]');
+            var fallback = function () {
+              form.setAttribute('data-ca-fallback', '1');
+              HTMLFormElement.prototype.submit.call(form);
+            };
+            fetch(api + '/api/public/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fields: fields, page: window.location.pathname, website: honeypot ? honeypot.value : '' })
+            }).then(function (res) {
+              if (res.ok) {
+                window.location.href = window.location.pathname + '?contact_posted=true';
+                return;
+              }
+              if (res.status === 400) {
+                return res.json().catch(function () { return {}; }).then(function (j) {
+                  var errors = j.errors ? Object.keys(j.errors).map(function (k) { return j.errors[k]; }) : [];
+                  status(errors.length ? errors.join(' ') : (j.error || 'Some fields need a look.'), true);
+                  if (button) button.disabled = false;
+                });
+              }
+              fallback();
+            }).catch(fallback);
+          });
+        })();
+      </script>
 
       <aside class="ca-contact__aside">
         {%- if section.settings.quote != blank -%}
@@ -317,6 +389,7 @@
     { "type": "text", "id": "bar_caption", "label": "Caption above the form", "default": "Conspire · New inquiry" },
     { "type": "text", "id": "note", "label": "Note beside the button", "default": "What you share here shapes the first call. We don't use it for anything else." },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Send Message" },
+    { "type": "text", "id": "api_base", "label": "Brain address", "default": "https://projects.conspireagency.com", "info": "Where messages are sent (the lead board and the email to hello@). Leave empty to use Shopify's own form." },
     { "type": "textarea", "id": "success_text", "label": "Success message", "default": "Thanks for reaching out. A senior member of the team will reply within one business day." },
     { "type": "header", "content": "Dropdown options", "info": "One per line" },
     { "type": "textarea", "id": "role_options", "label": "Your role", "default": "Founder / CEO\nCMO / Head of Marketing\nHead of Ecommerce / Digital\nCTO / Head of Engineering / IT\nOps / Supply chain\nAgency / Partner\nOther" },
