@@ -5,9 +5,9 @@
       "settings": {
         "layout": "app",
         "eyebrow": "",
-        "heading": "<p>Grow your B2B program. From onboarding to pricing.</p>",
+        "heading": "<p>Wholesale onboarding for Shopify. Every buyer approved, every document on file.</p>",
         "heading_tag": "h1",
-        "lede": "<p>Sign-up forms, one-click approvals, and tailored wholesale pricing for the Shopify store you already run. Works on every plan, alongside Shopify's native B2B.</p>",
+        "lede": "<p>Publish your own wholesale application, collect resale certificates and business licenses, and approve buyers in one click. The app creates the Shopify B2B company for you and keeps it in sync.</p>",
         "proof": "Free plan available · 21-day free trial · Built by a Shopify Premier Partner",
         "rating_value": "5.0",
         "rating_count": 3,
@@ -33,15 +33,15 @@
       "type": "ca-app-wholesale-mock",
       "settings": {
         "variant": "pricing",
-        "mock_side": "right",
-        "eyebrow": "How it looks",
-        "heading": "Your buyers log in. Their prices are already there.",
-        "text": "<p>Add wholesale pricing to the store you already have. Your B2B customers simply log in and shop with their tailored prices: percentage discounts, variant-level price lists, and volume breaks, all through the standard Shopify checkout. And now that Shopify's native B2B is on every plan, Conspire adds what it's missing: sign-up forms, application approvals, and customer onboarding.</p>",
+        "mock_side": "left",
+        "eyebrow": "Wholesale pricing",
+        "heading": "Approved buyers log in. Their prices are already there.",
+        "text": "<p>Once a buyer is approved, they shop your existing store with their own prices: percentage discounts, variant-level price lists and volume breaks, all through the standard Shopify checkout.</p>",
         "caption": "",
-        "background_color": "",
         "text_color": "",
         "padding-block-start": 96,
-        "padding-block-end": 96
+        "padding-block-end": 96,
+        "background_color": "#f2f2f2"
       }
     },
     "approval": {
@@ -80,12 +80,11 @@
       ],
       "settings": {
         "variant": "approval",
-        "mock_side": "left",
-        "eyebrow": "Works with Shopify B2B - on every plan",
+        "mock_side": "right",
+        "eyebrow": "Built for Shopify B2B",
         "heading": "Shopify gave every store B2B. This app gives it an onboarding flow.",
         "text": "<p>Shopify's native B2B now ships company profiles, catalogs, and payment terms on every plan, with only a generic request form to get buyers in. Publish your own sign-up form, collect the business details and documents you need, approve in one click, and the app creates the Shopify company, contact and location for you and keeps them in sync.</p>",
         "caption": "A buyer applies on your storefront. You review the documents, approve in one click, and the company lands in Shopify B2B with its locations, catalog and payment terms.",
-        "background_color": "#f2f2f2",
         "text_color": "",
         "padding-block-start": 96,
         "padding-block-end": 96
@@ -203,21 +202,21 @@
         "f1",
         "f2",
         "f3",
+        "f12",
+        "f10",
+        "f13",
+        "f11",
         "f4",
         "f5",
         "f6",
-        "f7",
         "f8",
         "f9",
-        "f10",
-        "f11",
-        "f12",
-        "f13"
+        "f7"
       ],
       "settings": {
         "eyebrow": "Features",
         "heading": "Everything a B2B program needs",
-        "intro": "From your first sign-up form to variant-level price lists, B2B Onboarding & Wholesale covers the whole wholesale workflow.",
+        "intro": "From the first application to the documents on every account, B2B Onboarding & Wholesale runs the onboarding side of your wholesale program, with pricing tools for the buyers you approve.",
         "columns": "4",
         "background_color": "",
         "text_color": "",
@@ -238,15 +237,15 @@
         "s2": {
           "type": "step",
           "settings": {
-            "label": "02 · Create your tiers and pricing",
-            "text": "Set up customer discount groups with percentage discounts, custom price lists, and volume breaks. Publish a sign-up form to start taking applications."
+            "label": "02 · Publish your application form",
+            "text": "Choose the business details and documents you need, such as a resale certificate or business license, and add the form to your store."
           }
         },
         "s3": {
           "type": "step",
           "settings": {
             "label": "03 · Approve buyers and start selling",
-            "text": "Approve applications from the dashboard. Customers log in, see their pricing, and check out through the standard Shopify checkout."
+            "text": "Review each application and its documents, then approve in one click. The app creates the Shopify company, and the buyer logs in and checks out through the standard Shopify checkout."
           }
         }
       },
@@ -295,14 +294,14 @@
           "type": "item",
           "settings": {
             "question": "Do I need Shopify Plus?",
-            "answer": "<p>No. The app works on any Shopify plan. Wholesale customers log in to your existing store, see their tailored pricing, and check out through the standard Shopify checkout, no Plus features required.</p>"
+            "answer": "<p>No. Wholesale customers log in to your existing store, see their tailored pricing, and check out through the standard Shopify checkout.</p>"
           }
         },
         "q3": {
           "type": "item",
           "settings": {
             "question": "How does wholesale onboarding work?",
-            "answer": "<p>Publish a sign-up form built with the drag-and-drop form builder, collecting the business details and documents you need. Applications land in the approval dashboard, where you approve or reject in one click and get email notifications when new applications arrive. Approved buyers are assigned to a discount tier and can start ordering immediately.</p>"
+            "answer": "<p>Publish a sign-up form built with the drag-and-drop form builder, collecting the business details and documents you need. Applications land in the approval dashboard, where you review the documents, approve or reject in one click, and get email notifications when new applications arrive. Approval creates the Shopify company and assigns the buyer to their tier, so they can start ordering immediately.</p>"
           }
         },
         "q4": {
@@ -335,9 +334,9 @@
         }
       },
       "block_order": [
+        "q3",
         "q1",
         "q2",
-        "q3",
         "q4",
         "q5",
         "q6",
@@ -367,7 +366,7 @@
         "eyebrow": "Get started",
         "heading": "<p>Launch your wholesale program</p>",
         "heading_tag": "h2",
-        "lede": "<p>Install B2B Onboarding & Wholesale and give your B2B buyers the pricing they expect, on the store you already run.</p>",
+        "lede": "<p>Install B2B Onboarding & Wholesale and bring every wholesale buyer in through your own application, with their documents on file.</p>",
         "proof": "Free plan available · 21-day free trial",
         "rating_value": "",
         "rating_count": 0,
@@ -510,8 +509,8 @@
   },
   "order": [
     "hero",
-    "pricing",
     "approval",
+    "pricing",
     "features",
     "process",
     "team",
