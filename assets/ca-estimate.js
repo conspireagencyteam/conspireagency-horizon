@@ -832,7 +832,8 @@ if (!customElements.get('ca-calendly')) {
         const init = () => {
           if (!window.Calendly) return;
           this.replaceChildren();
-          window.Calendly.initInlineWidget({ url: this.dataset.url, parentElement: this, resize: true });
+          const url = window.caFirstTouchUrl ? window.caFirstTouchUrl(this.dataset.url) : this.dataset.url;
+          window.Calendly.initInlineWidget({ url, parentElement: this, resize: true });
         };
         if (window.Calendly) return init();
         let script = document.querySelector('script[data-ca-calendly]');

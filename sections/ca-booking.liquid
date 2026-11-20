@@ -490,7 +490,8 @@
         this.replaceChildren();
         // resize: the iframe follows the scheduler's content height instead of
         // a fixed 700px, so it can be centred in the column (see .ca-booking__embed).
-        window.Calendly.initInlineWidget({ url: this.dataset.url, parentElement: this, resize: true });
+        const url = window.caFirstTouchUrl ? window.caFirstTouchUrl(this.dataset.url) : this.dataset.url;
+        window.Calendly.initInlineWidget({ url, parentElement: this, resize: true });
       };
       if (window.Calendly) return init();
       let script = document.querySelector('script[data-ca-calendly]');

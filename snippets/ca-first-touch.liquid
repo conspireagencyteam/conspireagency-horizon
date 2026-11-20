@@ -1,0 +1,88 @@
+{%- comment -%}
+  ca-first-touch.liquid — remembers how a visitor first reached the site, so the
+  contact form can say where a lead came from.
+
+  On the first page view (and again after 30 days) it stores, in this browser
+  only: the referring site's host (chatgpt.com, claude.ai, google.com...), the
+  landing path and the utm_source / utm_medium / utm_campaign of that visit.
+  ChatGPT adds utm_source=chatgpt.com to the links it shows, so an AI visit is
+  recorded even when the app sends no referrer. Nothing is sent anywhere until
+  the visitor submits a form that carries the hidden fields
+  (data-ca-first-touch="referrer|landing|utm"), which this fills on submit, or
+  books through a Calendly embed, which gets it as utm parameters
+  (window.caFirstTouchUrl).
+
+  Rendered once from snippets/ca-head.liquid.
+{%- endcomment -%}
+<script>
+  (function () {
+    var KEY = "ca_first_touch";
+    var MAX_AGE = 30 * 24 * 60 * 60 * 1000;
+
+    function read() {
+      try {
+        var v = JSON.parse(localStorage.getItem(KEY) || "null");
+        if (v && v.t && Date.now() - v.t < MAX_AGE) return v;
+      } catch (e) {}
+      return null;
+    }
+
+    function referrerHost() {
+      try {
+        if (!document.referrer) return "";
+        var host = new URL(document.referrer).hostname.replace(/^www\./, "");
+        return host === window.location.hostname.replace(/^www\./, "") ? "" : host;
+      } catch (e) {
+        return "";
+      }
+    }
+
+    var touch = read();
+    if (!touch) {
+      var params = new URLSearchParams(window.location.search);
+      var utm = ["utm_source", "utm_medium", "utm_campaign"]
+        .map(function (k) { return params.get(k) ? k.replace("utm_", "") + "=" + params.get(k).slice(0, 80) : ""; })
+        .filter(Boolean)
+        .join("; ");
+      touch = {
+        t: Date.now(),
+        referrer: referrerHost() || "none",
+        landing: window.location.pathname,
+        utm: utm || "none",
+        source: params.get("utm_source") || "",
+        medium: params.get("utm_medium") || "",
+        campaign: params.get("utm_campaign") || ""
+      };
+      try { localStorage.setItem(KEY, JSON.stringify(touch)); } catch (e) {}
+    }
+
+    // The Calendly embeds (ca-booking, ca-estimate) pass the first touch on as utm
+    // parameters, which Calendly stores on the booking and the brain copies to the
+    // lead (sales_calendly_events.utm_*, sales_leads.source). A campaign tag from the
+    // first visit wins; otherwise the source is the referring host (or "direct").
+    window.caFirstTouchUrl = function (url) {
+      try {
+        var u = new URL(url);
+        if (u.searchParams.get("utm_source")) return url;
+        u.searchParams.set("utm_source", (touch.source || (touch.referrer !== "none" ? touch.referrer : "direct")).slice(0, 80));
+        u.searchParams.set("utm_medium", (touch.medium || (touch.referrer !== "none" ? "referral" : "none")).slice(0, 80));
+        if (touch.campaign) u.searchParams.set("utm_campaign", touch.campaign.slice(0, 80));
+        u.searchParams.set("utm_content", ("lp:" + touch.landing).slice(0, 80));
+        // URLSearchParams writes spaces as "+", which Calendly keeps literally in
+        // prefilled answers; it needs %20 (a real plus is already %2B).
+        return u.toString().replace(/\+/g, "%20");
+      } catch (e) {
+        return url;
+      }
+    };
+
+    document.addEventListener("submit", function (e) {
+      var form = e.target;
+      if (!form || !form.querySelectorAll) return;
+      form.querySelectorAll("[data-ca-first-touch]").forEach(function (input) {
+        var field = input.getAttribute("data-ca-first-touch");
+        if (touch[field]) input.value = touch[field];
+      });
+    }, true);
+  })();
+</script>
