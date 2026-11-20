@@ -10,6 +10,12 @@
   those labels keep working, and the consent-gated lead tracking
   (snippets/ca-lead-tracking) still fires on the ?contact_posted=true redirect.
   Option lists are editable in the section settings, one per line.
+
+  Three hidden fields (First Referrer, Landing Page, First UTM) are filled on
+  submit by snippets/ca-first-touch, so the submission can tell an AI or
+  search visit from a typed address even when "How did you hear about us?" is
+  left blank. That question names each AI assistant on its own (2026-11-20)
+  so ChatGPT and Claude leads can be counted apart.
 {%- endcomment -%}
 
 {%- liquid
@@ -61,6 +67,9 @@
 
         {%- form 'contact', id: form_id, class: 'ca-form' -%}
           <input type="hidden" name="contact[Submitted On]" value="{{ 'now' | date: '%B %d, %Y at %I:%M %p' }}">
+          <input type="hidden" name="contact[First Referrer]" value="" data-ca-first-touch="referrer">
+          <input type="hidden" name="contact[Landing Page]" value="" data-ca-first-touch="landing">
+          <input type="hidden" name="contact[First UTM]" value="" data-ca-first-touch="utm">
 
           {%- if form.posted_successfully? -%}
             <p class="ca-form__status" role="status">{{ section.settings.success_text }}</p>
@@ -316,7 +325,7 @@
     { "type": "textarea", "id": "timeline_options", "label": "Timeline", "default": "Live as soon as possible\nThis quarter\nNext 6 months\nExploring / planning" },
     { "type": "textarea", "id": "revenue_options", "label": "Annual eCommerce revenue", "default": "Under $3M\n$3M to $8M\n$8M to $15M\n$15M to $50M\n$50M+" },
     { "type": "textarea", "id": "spend_options", "label": "Monthly paid media spend", "default": "Under $50K/month\n$50K to $150K/month\n$150K to $500K/month\n$500K to $1M/month\n$1M+/month" },
-    { "type": "textarea", "id": "source_options", "label": "How did you hear about us", "default": "Shopify referral\nSearch\nAI assistant (ChatGPT, Perplexity)\nReferral / word of mouth\nSocial\nEvent\nOther" },
+    { "type": "textarea", "id": "source_options", "label": "How did you hear about us", "default": "ChatGPT\nClaude\nPerplexity\nGemini or Google AI Mode\nAnother AI assistant\nGoogle search\nShopify Partner Directory\nClutch or another directory\nReferral / word of mouth\nLinkedIn\nInstagram\nYouTube\nEvent\nOther" },
     { "type": "header", "content": "Quote card" },
     { "type": "textarea", "id": "quote", "label": "Quote", "default": "We literally would not be where we are today if it weren't for Conspire. I cannot recommend them enough." },
     { "type": "text", "id": "quote_author", "label": "Author", "default": "BodyBio" },
