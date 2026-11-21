@@ -12,7 +12,7 @@
  * the meaning lives in the sections' own copy.
  *
  * Fallbacks: no WebGL2 leaves the dark page and its copy; reduced motion draws one
- * still per stop and skips the enter gate.
+ * still per stop.
  */
 
 const root = document.querySelector('[data-ca-ai]');
@@ -27,7 +27,6 @@ function start(root) {
   const debug = (window.__caAi = { frames: 0, ms: 0, scene: '', form: '' });
   if (!gl) {
     html.classList.add('ca-ai-static');
-    html.classList.remove('ca-ai-gated', 'ca-ai-returning');
     return;
   }
   html.classList.add('ca-ai-live');
@@ -639,7 +638,7 @@ function start(root) {
     points = program(POINT_VS, POINT_FS);
     linesProg = program(LINE_VS, LINE_FS);
   } catch (error) {
-    html.classList.remove('ca-ai-live', 'ca-ai-gated', 'ca-ai-returning');
+    html.classList.remove('ca-ai-live');
     html.classList.add('ca-ai-static');
     return;
   }
@@ -1504,7 +1503,7 @@ function start(root) {
     if (k >= 1) release();
   }
   function autopilot(now, index, p, pin, stop, doneFor) {
-    if (!pilotAllowed || pilot.drive || pilot.touching || pastEnd || html.classList.contains('ca-ai-gated')) return;
+    if (!pilotAllowed || pilot.drive || pilot.touching || pastEnd) return;
     const idle = now - pilot.moved;
     const last = stops.length - 1;
     if (idle > 300) {
@@ -1895,7 +1894,7 @@ function start(root) {
     play();
   }
 
-  /* ---------------------------------------------------------- gate and sound */
+  /* ------------------------------------------------------------------ sound */
 
   /* The site's floating "Let's Talk" pill shares the corner with the toggles:
      its size is handed to the stylesheet, which moves them beside it. */
@@ -1911,25 +1910,84 @@ function start(root) {
     if ('ResizeObserver' in window) new ResizeObserver(sizeFloat).observe(floatPill);
   }
 
-  const sound = createSound(root.dataset.audioSrc);
+  /* Sound. No gate: on a desktop the track starts by itself where the browser
+     allows it, otherwise on the first click or key press anywhere on the page.
+     On a phone it waits for a tap on the invitation under the hero copy.
+     A visitor who turns it off stays off for the session. */
+  const designMode = !!(window.Shopify && window.Shopify.designMode);
+  const desktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const toggle = root.querySelector('[data-ai-sound]');
+  const invite = root.querySelector('[data-ai-invite]');
+  let choice = null;
+  try {
+    choice = sessionStorage.getItem('ca-ai-sound');
+  } catch (error) {
+    choice = null;
+  }
+  const remember = (on) => {
+    try {
+      sessionStorage.setItem('ca-ai-sound', on ? '1' : '0');
+    } catch (error) {
+      /* private mode: the choice lasts for this page view */
+    }
+  };
+  const showInvite = (shown) => {
+    if (!invite) return;
+    invite.classList.toggle('is-shown', shown);
+    invite.tabIndex = shown ? 0 : -1;
+  };
   const setToggle = (on) => {
     if (!toggle) return;
     toggle.hidden = false;
     toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
     toggle.querySelector('[data-ai-sound-label]').textContent = on ? toggle.dataset.on : toggle.dataset.off;
   };
+  // The toggle shows what is heard, not what was asked for: a desktop whose
+  // browser holds the sound back until a click reads "Sound off" until then.
+  const sound = createSound(root.dataset.audioSrc, (audible) => {
+    setToggle(audible);
+    if (audible) showInvite(false);
+  });
+  const turnOn = () => {
+    choice = '1';
+    remember(true);
+    showInvite(false);
+    sound.on();
+  };
+  const turnOff = () => {
+    choice = '0';
+    remember(false);
+    showInvite(false);
+    sound.off();
+  };
   if (toggle) {
     toggle.addEventListener('click', () => {
-      const on = toggle.getAttribute('aria-pressed') !== 'true';
-      if (on) sound.on();
-      else sound.off();
-      // Either way the choice is made: the first screen stops offering it.
-      html.classList.remove('ca-ai-returning');
-      setToggle(on);
+      if (toggle.getAttribute('aria-pressed') === 'true') turnOff();
+      else turnOn();
     });
   }
+  if (invite) invite.addEventListener('click', turnOn);
 
+  const hasAudio = !!root.dataset.audioSrc && !designMode;
+  setToggle(false);
+  if (hasAudio && choice !== '0') {
+    showInvite(true);
+    if (desktop) {
+      sound.on();
+      // Browsers hold back sound until the visitor's first click or key press
+      // (scrolling does not count). Whichever comes first starts it, unless it
+      // lands on one of the sound buttons, which do their own thing.
+      const first = (event) => {
+        if (event.target.closest && event.target.closest('[data-ai-sound], [data-ai-invite]')) return;
+        document.removeEventListener('pointerdown', first, true);
+        document.removeEventListener('keydown', first, true);
+        if (choice === '0' || !sound.wanted()) return;
+        sound.on();
+      };
+      document.addEventListener('pointerdown', first, true);
+      document.addEventListener('keydown', first, true);
+    }
+  }
   const autoToggle = root.querySelector('[data-ai-auto]');
   if (autoToggle && pilotAllowed) {
     const show = () => {
@@ -1950,42 +2008,13 @@ function start(root) {
     show();
   }
 
-  let entered = false;
-  try {
-    entered = sessionStorage.getItem('ca-ai-entered') === '1';
-  } catch (error) {
-    entered = false;
-  }
-  const designMode = !!(window.Shopify && window.Shopify.designMode);
-  const gateNeeded = !reduced && !entered && !designMode && root.getBoundingClientRect().top > -40 && !location.hash;
-  const enter = (withSound) => {
-    html.classList.remove('ca-ai-gated', 'ca-ai-returning');
-    html.classList.add('ca-ai-entered');
-    try {
-      sessionStorage.setItem('ca-ai-entered', '1');
-    } catch (error) {
-      /* private mode: the gate simply shows again next time */
-    }
-    if (withSound) sound.on();
-    setToggle(!!withSound);
-  };
-  root.querySelectorAll('[data-ai-enter]').forEach((button) => {
-    button.addEventListener('click', () => enter(button.dataset.aiEnter === 'sound'));
-  });
-  if (gateNeeded) html.classList.add('ca-ai-gated');
-  else {
-    // No gate (a return visit, or reduced motion): the page is open, and the
-    // first screen still offers the sound, which cannot start without a click.
-    html.classList.remove('ca-ai-gated');
-    html.classList.add('ca-ai-entered');
-    html.classList.toggle('ca-ai-returning', !designMode && !!root.dataset.audioSrc);
-    setToggle(false);
-  }
 }
 
-/* The ambient track. Nothing is fetched until the visitor asks for sound. The
-   buffer loops with a crossfade, so the join is never heard. */
-function createSound(src) {
+/* The ambient track. Nothing is fetched until sound is wanted. The buffer loops
+   with a crossfade, so the join is never heard. onChange(audible) reports when
+   the visitor can actually hear it: a context created before any click stays
+   suspended until the browser lets it run. */
+function createSound(src, onChange = () => {}) {
   const LEVEL = 0.3;
   const CROSS = 3;
   let ctx = null;
@@ -2067,12 +2096,15 @@ function createSound(src) {
       const Ctx = window.AudioContext || window.webkitAudioContext;
       if (!Ctx) return;
       ctx = new Ctx();
+      ctx.addEventListener('statechange', report);
       master = ctx.createGain();
       master.gain.value = 0;
       master.connect(ctx.destination);
     }
-    // Resume inside the click, before anything is awaited.
-    ctx.resume();
+    // Resume inside the click, before anything is awaited. Without a click the
+    // promise waits, and the statechange reports it once the browser allows it.
+    ctx.resume().catch(() => {});
+    report();
     if (!buffer) {
       loading =
         loading ||
@@ -2086,8 +2118,12 @@ function createSound(src) {
     }
     if (wanted) fade(LEVEL, 2.5);
   }
+  function report() {
+    onChange(!!ctx && wanted && ctx.state === 'running');
+  }
   function off() {
     wanted = false;
+    report();
     if (!ctx) return;
     fade(0, 0.6);
     window.setTimeout(() => {
@@ -2106,5 +2142,5 @@ function createSound(src) {
       if (keeper) keeper.play().catch(() => {});
     }
   });
-  return { on, off };
+  return { on, off, wanted: () => wanted };
 }
