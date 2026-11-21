@@ -174,7 +174,8 @@
     align-items: flex-end;
     min-height: 100vh;
     min-height: 100svh;
-    padding-block: calc(var(--ca-header-height, 117px) + 24px) clamp(40px, 7vh, 72px);
+    /* The foot keeps room for the scroll hint, which sits level with the toggles. */
+    padding-block: calc(var(--ca-header-height, 117px) + 24px) clamp(84px, 11vh, 112px);
   }
 
   .ca-ai-hero__inner {
@@ -309,12 +310,22 @@
     50% { transform: scaleY(1); }
   }
 
+  /* Out of the copy column: at the foot of the first screen, centred, on the
+     same line as the autoplay and sound toggles (same bottom, same height). */
   .ca-ai-hero__hint {
+    position: absolute;
+    inset: auto auto calc(20px + env(safe-area-inset-bottom, 0px)) 50%;
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-block-start: 34px;
+    min-height: 34px;
+    margin: 0;
+    translate: -50% 0;
     color: rgb(var(--color-foreground-rgb) / 0.62);
+  }
+
+  body:has([data-ca-header-float][data-visible]) .ca-ai-hero__hint {
+    min-height: max(34px, var(--ca-ai-float-h, 0px));
   }
 
   .ca-ai-hero__hint::after {
@@ -655,7 +666,26 @@
 
   @media screen and (max-width: 749px) {
     .ca-ai-hero {
-      padding-block-end: 34px;
+      padding-block-end: 76px;
+    }
+
+    /* On a phone the toggles fill the right of the foot, so the hint moves to
+       the left edge, still on their line. */
+    .ca-ai-hero__hint {
+      inset: auto auto calc(12px + env(safe-area-inset-bottom, 0px)) var(--page-margin, 16px);
+      min-height: 38px;
+      translate: none;
+    }
+
+    body:has([data-ca-header-float][data-visible]) .ca-ai-hero__hint {
+      inset-block-end: calc(20px + env(safe-area-inset-bottom, 0px));
+      min-height: max(38px, var(--ca-ai-float-h, 0px));
+    }
+
+    .ca-ai-hero__hint::after {
+      width: 22px;
+      height: 1px;
+      background: linear-gradient(90deg, rgb(var(--color-foreground-rgb) / 0.7), rgb(var(--color-foreground-rgb) / 0));
     }
 
     .ca-ai-invite {
