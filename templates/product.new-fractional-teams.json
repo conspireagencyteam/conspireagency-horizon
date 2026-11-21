@@ -776,11 +776,11 @@
   },
   "order": [
     "hero",
+    "services",
+    "month_one",
     "clients",
     "questions",
-    "services",
     "communication",
-    "month_one",
     "price_range",
     "faq",
     "testimonials",
