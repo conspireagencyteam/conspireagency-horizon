@@ -13,8 +13,8 @@
       "type": "ca-brands-marquee",
       "settings": {
         "seo_heading": "Shopify Plus Premier Development Agency",
-        "heading": "A team to solve your complex problems.",
-        "body": "<p>Now the whole funnel: store, email, SEO and paid.</p><p>Your team can't do it all. You need a senior team, that knows your business, sits in your Slack alongside your people, and has the senior experience to transform business problems into solutions.</p>",
+        "heading": "Strategy, design and engineering. One senior team.",
+        "body": "<p>A senior team that becomes part of yours. In your Slack and on your standups, working from one focused roadmap, with work that keeps shipping.</p>",
         "button_label": "Book a Strategy Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -756,7 +756,8 @@
       "type": "ca-price-range",
       "settings": {
         "anchor_id": "pricing",
-        "eyebrow": "The best hire you've made.",
+        "eyebrow": "Pricing",
+        "heading": "The best hire you've made.",
         "range": "$6k to $20k",
         "cycle": "a month",
         "line": "Tailored to your store. Hand us as much as you want.",

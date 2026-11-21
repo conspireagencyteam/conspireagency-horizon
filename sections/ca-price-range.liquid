@@ -26,11 +26,15 @@
         {%- if section.settings.eyebrow != blank -%}
           <p class="ca-eyebrow ca-prange__eyebrow">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ca-prange__range">{{ section.settings.heading }}</h2>
+        {%- endif -%}
         {%- if section.settings.range != blank -%}
-          <h2 class="ca-prange__range">
+          {%- if section.settings.heading != blank -%}{%- assign range_tag = 'p' -%}{%- else -%}{%- assign range_tag = 'h2' -%}{%- endif -%}
+          <{{ range_tag }} class="ca-prange__range{% if section.settings.heading != blank %} ca-prange__range--sub{% endif %}">
             {{- section.settings.range -}}
             {%- if section.settings.cycle != blank %} <span class="ca-prange__cycle">{{ section.settings.cycle }}</span>{% endif -%}
-          </h2>
+          </{{ range_tag }}>
         {%- endif -%}
         {%- if section.settings.line != blank -%}
           <p class="ca-prange__line">{{ section.settings.line }}</p>
@@ -111,6 +115,13 @@
     line-height: 1;
     letter-spacing: -0.04em;
     text-wrap: balance;
+  }
+
+  /* With a headline above it, the range steps down to a secondary size. */
+  .ca-prange__range--sub {
+    margin-block-start: 32px;
+    font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+    letter-spacing: -0.03em;
   }
 
   .ca-prange__cycle {
@@ -200,7 +211,8 @@
   "settings": [
     { "type": "text", "id": "anchor_id", "label": "Anchor id", "info": "Optional. Lets links jump here." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The best hire you've made." },
-    { "type": "text", "id": "range", "label": "Range", "default": "$6,000 to $20,000" },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Optional. When set, it is the headline and the range shows smaller below it." },
+    { "type": "text", "id": "range", "label": "Range", "default": "$6k to $20k" },
     { "type": "text", "id": "cycle", "label": "Billing cycle", "default": "a month" },
     { "type": "text", "id": "line", "label": "Line" },
     { "type": "text", "id": "terms", "label": "Terms" },
