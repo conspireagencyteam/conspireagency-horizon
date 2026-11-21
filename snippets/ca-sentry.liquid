@@ -1,0 +1,31 @@
+{%- comment -%}
+  ca-sentry.liquid — browser error reporting to Sentry (project agency-site, org conspire-agency),
+  added 2026-11-21 for a few weeks after the contact form's fallback went unnoticed (Danny: "just to
+  make sure that there's no issues elsewhere on the site").
+
+  Errors only: no tracing, no session replay, no user data (sendDefaultPii off), no cookies. Only
+  errors thrown by our own code count: allowUrls keeps scripts served from conspireagency.com (theme
+  assets and inline scripts), so browser extensions and third-party app scripts are dropped. Off in
+  the theme editor; a preview link reports as environment "preview". The Loader script loads the
+  SDK only when the first error happens, so the page pays nothing until then. Async, so it never blocks the page; an error in the first moment before the Loader has run is not seen.
+
+  To remove: delete this snippet and its render in layout/theme.liquid.
+{%- endcomment -%}
+{%- unless request.design_mode -%}
+  <script>
+    window.sentryOnLoad = function () {
+      Sentry.init({
+        environment: /preview_theme_id|shopifypreview\.com|myshopify\.com/.test(location.href) ? 'preview' : 'production',
+        allowUrls: [/^https?:\/\/(www\.)?conspireagency\.com\//],
+        ignoreErrors: ['ResizeObserver loop', 'Non-Error promise rejection captured', /^Script error\.?$/],
+        sendDefaultPii: false,
+        tracesSampleRate: 0,
+        replaysSessionSampleRate: 0,
+        replaysOnErrorSampleRate: 0,
+        sampleRate: 1.0
+      });
+      Sentry.setTag('template', {{ template.name | json }});
+    };
+  </script>
+  <script src="https://js.sentry-cdn.com/dc22aa4e28dbc913bbb525a3d1e63430.min.js" crossorigin="anonymous" async></script>
+{%- endunless -%}
