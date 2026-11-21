@@ -5,7 +5,10 @@
 
   Errors only: no tracing, no session replay, no user data (sendDefaultPii off), no cookies. Only
   errors thrown by our own code count: allowUrls keeps scripts served from conspireagency.com (theme
-  assets and inline scripts), so browser extensions and third-party app scripts are dropped. Off in
+  assets and inline scripts), so browser extensions and third-party app scripts are dropped.
+  Shopify serves its web pixel sandbox (app and custom pixels) from our domain under /web-pixels/;
+  its worker fails to load when a visitor's blocker stops it, so anything naming /web-pixels/ is
+  ignored too (AGENCY-SITE-2 and -3, 2026-11-21). Off in
   the theme editor; a preview link reports as environment "preview". The Loader script loads the
   SDK only when the first error happens, so the page pays nothing until then. Async, so it never blocks the page; an error in the first moment before the Loader has run is not seen.
 
@@ -17,7 +20,8 @@
       Sentry.init({
         environment: /preview_theme_id|shopifypreview\.com|myshopify\.com/.test(location.href) ? 'preview' : 'production',
         allowUrls: [/^https?:\/\/(www\.)?conspireagency\.com\//],
-        ignoreErrors: ['ResizeObserver loop', 'Non-Error promise rejection captured', /^Script error\.?$/],
+        denyUrls: [/\/web-pixels\//],
+        ignoreErrors: ['ResizeObserver loop', 'Non-Error promise rejection captured', /^Script error\.?$/, /\/web-pixels\//],
         sendDefaultPii: false,
         tracesSampleRate: 0,
         replaysSessionSampleRate: 0,
