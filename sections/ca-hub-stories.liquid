@@ -102,6 +102,7 @@
             outcome_label: section.settings.outcome_label,
             link_url: story.link.value,
             link_label: story.link_label.value,
+            video: story.video.value,
             image_1: shot_1,
             image_2: shot_2,
             image_3: shot_3,
@@ -128,6 +129,7 @@
             outcome_label: section.settings.outcome_label,
             link_url: block.settings.link_url,
             link_label: block.settings.link_label,
+            video: block.settings.video,
             image_1: block.settings.image_1,
             image_2: block.settings.image_2,
             image_3: block.settings.image_3,
@@ -233,7 +235,8 @@
     box-shadow: 0 30px 60px -30px rgb(13 17 13 / 0.35);
   }
 
-  .ca-hstory__shot img {
+  .ca-hstory__shot img,
+  .ca-hstory__shot video {
     display: block;
     width: 100%;
     height: auto;
@@ -295,6 +298,23 @@
   }
 {% endstylesheet %}
 
+
+<script>
+  /* Conspire Agency: story recordings play muted while in view and pause out of view;
+     with reduced motion they stay on the poster. */
+  (() => {
+    const videos = document.querySelectorAll('[data-ca-hstory-video]');
+    if (!videos.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) { videos.forEach((v) => { v.preload = 'auto'; v.play().catch(() => {}); }); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (isIntersecting) { target.play().catch(() => {}); } else { target.pause(); }
+      });
+    }, { threshold: 0.25 });
+    videos.forEach((v) => io.observe(v));
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Hub client stories",
@@ -328,6 +348,7 @@
         { "type": "image_picker", "id": "image_1", "label": "Main capture" },
         { "type": "image_picker", "id": "image_2", "label": "Second capture (overlaps the lower corner)" },
         { "type": "image_picker", "id": "image_3", "label": "Third capture (overlaps the upper corner)" },
+        { "type": "video", "id": "video", "label": "Recording (optional)", "info": "Plays muted and looped as the main capture while in view; the second and third captures overlap it." },
         { "type": "text", "id": "caption", "label": "Caption" }
       ]
     }

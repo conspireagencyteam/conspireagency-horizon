@@ -5,6 +5,27 @@
   tour thumbnail (links to the video), App Store rating line, and three links:
   Learn more / Documentation / Install on Shopify.
 {%- endcomment -%}
+{%- liquid
+  comment
+    A vertical hub whose custom.hub_apps names no app in this strip (for example the food
+    franchises hub, ["none"]) hides the whole section instead of showing the heading with no cards.
+  endcomment
+  assign hide_apps = false
+  if article != blank and article.metafields.custom.hub_apps.value != blank
+    assign hub_apps_only = article.metafields.custom.hub_apps.value
+    assign hub_apps_shown = 0
+    for block in section.blocks
+      assign hub_app_handle = block.settings.name | handleize
+      if hub_apps_only contains block.id or hub_apps_only contains hub_app_handle
+        assign hub_apps_shown = hub_apps_shown | plus: 1
+      endif
+    endfor
+    if hub_apps_shown == 0
+      assign hide_apps = true
+    endif
+  endif
+-%}
+{%- unless hide_apps -%}
 <div
   class="ca-appcards spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
   style="{% render 'spacing-style', settings: section.settings %}"
@@ -138,6 +159,7 @@
     {%- endif -%}
   </div>
 </div>
+{%- endunless -%}
 {% stylesheet %}
   .ca-appcards {
     background-color: var(--color-background);

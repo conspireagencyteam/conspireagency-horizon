@@ -110,6 +110,9 @@ The `hub_story` metaobject (`gid://shopify/MetaobjectDefinition/47629598901`, cr
 | `link_label` | single line text | "Read the Zia Tile case study". |
 | `screens` | list of files (images) | One to three real captures of the client's store, in Files, each with its own alt. First is the main screen. No recreated UI, no signed-in customer data, no staff names or photos, no dated promo bars. |
 | `caption` | single line text | Optional, under the captures. |
+| `video` | file reference (Video) | Optional, added 2026-11-20. A case study recording of the client's store. When set it replaces the first screen as the main capture, plays muted and looped while in view (paused out of view, poster only with reduced motion), and the second and third screens overlap it. Served from the 720p rendition through `ca-preview-video`. |
+
+An article whose `custom.hub_apps` names no app in the strip (the food franchises hub sets `["none"]`) hides the apps section entirely (2026-11-20).
 
 Real captures on a hub are the exception to the usual "never a live capture" rule for case
 studies (Danny, 2026-11-10); they still need the client's agreement before the hub publishes.

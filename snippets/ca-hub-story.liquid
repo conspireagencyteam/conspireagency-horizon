@@ -10,7 +10,9 @@
   @param {string} [outcome_label]
   @param {string} [link_url]
   @param {string} [link_label]
-  @param {image} [image_1] - the main capture
+  @param {video} [video] - optional recording of the client's store; when set it is the main capture,
+    plays muted and looped while in view (sections/ca-hub-stories), and image_2 / image_3 overlap it
+  @param {image} [image_1] - the main capture (ignored when a video is set)
   @param {image} [image_2] - overlaps the main capture at the lower right corner (a capture's heading is usually top left)
   @param {image} [image_3] - overlaps the main capture at the upper left corner
   @param {string} [caption]
@@ -20,6 +22,10 @@
 {%- endcomment -%}
 {%- liquid
   assign shots = 0
+  if video != blank
+    assign image_1 = blank
+    assign shots = shots | plus: 1
+  endif
   if image_1 != blank
     assign shots = shots | plus: 1
   endif
@@ -63,6 +69,11 @@
   {%- if shots > 0 -%}
     <div class="ca-hstory__media">
       <div class="ca-hstory__stack">
+        {%- if video != blank -%}
+          <figure class="ca-hstory__shot ca-hstory__shot--main ca-hstory__shot--video">
+            {%- render 'ca-preview-video', video: video, quality: 'hd', poster_width: 1600, preload: 'none', class: 'ca-hstory__video', attrs: 'data-ca-hstory-video' -%}
+          </figure>
+        {%- endif -%}
         {%- if image_1 != blank -%}
           <figure class="ca-hstory__shot ca-hstory__shot--main">
             {{- image_1 | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 800, 1200, 1600', sizes: '(min-width: 990px) 44vw, 92vw', alt: alt_1 -}}
