@@ -122,8 +122,14 @@
         the brain repo), which stores the message, checks it for spam, makes the lead and emails
         hello@. On success it reloads with ?contact_posted=true, so the lead tracking in
         snippets/ca-lead-tracking fires exactly as it did for Shopify's form. If the brain cannot
-        be reached (network, 5xx, 429), the same form submits to Shopify as before, so a message is
-        never lost. Without JavaScript the form is Shopify's.
+        be reached (network, blocked, 5xx, 429, or no answer in 15 seconds), the same form submits
+        to Shopify as before, so a message is never lost, with a hidden "Backup Reason" field (what
+        failed, from which page address); the brain reads Shopify's email every 15 minutes and puts
+        the message on the lead board. Without JavaScript the form is Shopify's.
+        The body is JSON sent as text/plain: a request browsers deliver without first asking the
+        brain for permission (a CORS preflight). With application/json a page whose address was
+        not on the brain's list (a ChatGPT or translated view of the site) was refused and fell
+        back (2026-11-21). The brain accepts any address on this route.
       {%- endcomment -%}
       <script>
         (function () {
@@ -158,28 +164,50 @@
               if (m) fields[m[1]] = String(value);
             });
             var honeypot = form.querySelector('input[name="ca_leave_empty"]');
-            var fallback = function () {
+            var done = false;
+            var controller = window.AbortController ? new AbortController() : null;
+            var timer = setTimeout(function () {
+              if (controller) controller.abort();
+              fallback('no answer in 15 seconds');
+            }, 15000);
+            var fallback = function (reason) {
+              if (done) return;
+              done = true;
+              clearTimeout(timer);
               form.setAttribute('data-ca-fallback', '1');
+              var note = document.createElement('input');
+              note.type = 'hidden';
+              note.name = 'contact[Backup Reason]';
+              note.value = String(reason || 'unknown').slice(0, 120) + ' from ' + window.location.origin;
+              form.appendChild(note);
               HTMLFormElement.prototype.submit.call(form);
             };
             fetch(api + '/api/public/contact', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fields: fields, page: window.location.pathname, website: honeypot ? honeypot.value : '' })
+              headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+              body: JSON.stringify({ fields: fields, page: window.location.pathname, website: honeypot ? honeypot.value : '' }),
+              signal: controller ? controller.signal : undefined
             }).then(function (res) {
+              if (done) return;
               if (res.ok) {
+                done = true;
+                clearTimeout(timer);
                 window.location.href = window.location.pathname + '?contact_posted=true';
                 return;
               }
               if (res.status === 400) {
+                done = true;
+                clearTimeout(timer);
                 return res.json().catch(function () { return {}; }).then(function (j) {
                   var errors = j.errors ? Object.keys(j.errors).map(function (k) { return j.errors[k]; }) : [];
                   status(errors.length ? errors.join(' ') : (j.error || 'Some fields need a look.'), true);
                   if (button) button.disabled = false;
                 });
               }
-              fallback();
-            }).catch(fallback);
+              fallback('status ' + res.status);
+            }).catch(function (err) {
+              fallback('network: ' + (err && err.message ? err.message : 'request failed'));
+            });
           });
         })();
       </script>
