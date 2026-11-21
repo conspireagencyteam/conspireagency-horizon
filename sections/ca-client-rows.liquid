@@ -33,6 +33,8 @@
     {%- render 'ca-intro',
       eyebrow: section.settings.eyebrow,
       heading: section.settings.heading,
+      button_label: section.settings.button_label,
+      button_link: section.settings.button_link,
       class: intro_class
     -%}
 
@@ -241,6 +243,8 @@
       "info": "Bold the words to emphasise. The rest is shown muted.",
       "default": "We don't just launch projects. <strong>We build long-term partnerships, becoming an extension of your team as your business evolves.</strong>"
     },
+    { "type": "text", "id": "button_label", "label": "Button label", "info": "Optional. For example Book a Call." },
+    { "type": "url", "id": "button_link", "label": "Button link" },
     { "type": "checkbox", "id": "link_names", "label": "Link client names to their case study", "default": true },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "t:settings.background" },

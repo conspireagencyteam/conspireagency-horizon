@@ -166,7 +166,9 @@
         "background_color": "",
         "text_color": "",
         "padding-block-start": 80,
-        "padding-block-end": 80
+        "padding-block-end": 80,
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call"
       }
     },
     "testimonials": {

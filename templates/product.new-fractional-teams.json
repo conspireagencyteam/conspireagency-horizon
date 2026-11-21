@@ -100,7 +100,9 @@
         "background_color": "",
         "text_color": "",
         "padding-block-start": 80,
-        "padding-block-end": 80
+        "padding-block-end": 80,
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call"
       }
     },
     "questions": {
@@ -586,7 +588,9 @@
         "background_color": "",
         "text_color": "",
         "padding-block-start": 80,
-        "padding-block-end": 80
+        "padding-block-end": 80,
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call"
       }
     },
     "services": {
@@ -717,7 +721,9 @@
         "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 120,
-        "padding-block-end": 120
+        "padding-block-end": 120,
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call"
       }
     },
     "month_one": {

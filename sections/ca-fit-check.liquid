@@ -24,6 +24,8 @@
     {%- render 'ca-intro',
       eyebrow: section.settings.eyebrow,
       heading: section.settings.heading,
+      button_label: section.settings.button_label,
+      button_link: section.settings.button_link,
       start: 7,
       class: 'ca-fit__intro'
     -%}
@@ -163,6 +165,8 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Is this right for you?" },
     { "type": "inline_richtext", "id": "heading", "label": "Statement", "default": "Built for brands that take their store seriously." },
+    { "type": "text", "id": "button_label", "label": "Button label", "info": "Optional. For example Book a Call." },
+    { "type": "url", "id": "button_link", "label": "Button link" },
     { "type": "header", "content": "A fit" },
     { "type": "text", "id": "fit_label", "label": "Label", "default": "A Fit If" },
     { "type": "textarea", "id": "fit_items", "label": "Items", "info": "One per line" },
