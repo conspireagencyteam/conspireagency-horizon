@@ -1,0 +1,224 @@
+{%- comment -%}
+  ca-price-range.liquid - one price range in place of pricing tiers
+  (Fractional Shopify Teams page).
+
+  Left: eyebrow, the range at headline size with its billing cycle muted, a
+  short line, the terms line and two buttons. Right: a small label over a
+  numbered list of what the price is built from (one name per line, hairlines
+  between). The columns stack below 990px.
+{%- endcomment -%}
+
+{%- assign names = section.settings.list | newline_to_br | split: '<br />' -%}
+
+<div
+  class="ca-prange spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | strip | handleize }}"{% endif %}
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    <div class="ca-prange__grid">
+      <div class="ca-prange__main">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ca-eyebrow ca-prange__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.range != blank -%}
+          <h2 class="ca-prange__range">
+            {{- section.settings.range -}}
+            {%- if section.settings.cycle != blank %} <span class="ca-prange__cycle">{{ section.settings.cycle }}</span>{% endif -%}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.line != blank -%}
+          <p class="ca-prange__line">{{ section.settings.line }}</p>
+        {%- endif -%}
+        {%- if section.settings.terms != blank -%}
+          <p class="ca-prange__terms">{{ section.settings.terms }}</p>
+        {%- endif -%}
+        {%- if section.settings.button_label != blank or section.settings.button2_label != blank -%}
+          <div class="ca-prange__actions">
+            {%- if section.settings.button_label != blank -%}
+              <a class="button size-style" {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}>
+                {{- section.settings.button_label -}}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.button2_label != blank -%}
+              <a class="button-secondary size-style" {% if section.settings.button2_link != blank %}href="{{ section.settings.button2_link }}"{% endif %}>
+                {{- section.settings.button2_label -}}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.list != blank -%}
+        <div class="ca-prange__aside">
+          {%- if section.settings.list_label != blank -%}
+            <h3 class="ca-eyebrow ca-prange__label">{{ section.settings.list_label }}</h3>
+          {%- endif -%}
+          <ol class="ca-prange__list">
+            {%- assign n = 0 -%}
+            {%- for name in names -%}
+              {%- assign label = name | strip -%}
+              {%- if label != blank -%}
+                {%- assign n = n | plus: 1 -%}
+                <li class="ca-prange__item">
+                  <span class="ca-prange__num" aria-hidden="true">{% if n < 10 %}0{% endif %}{{ n }}</span>
+                  <span>{{ label }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ol>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-prange {
+    scroll-margin-top: var(--ca-header-height, 96px);
+    background-color: var(--color-background);
+  }
+
+  .ca-prange__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 64px;
+    align-items: start;
+  }
+
+  .ca-prange__main {
+    grid-column: 1 / span 7;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ca-prange__eyebrow {
+    margin-block-end: 32px;
+  }
+
+  .ca-prange__range {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight, 400);
+    font-size: clamp(2.75rem, 5.2vw, 4.75rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  .ca-prange__cycle {
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+    white-space: nowrap;
+  }
+
+  .ca-prange__line {
+    margin: 32px 0 0;
+    font-size: var(--ca-fs-24);
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .ca-prange__terms {
+    margin: 12px 0 0;
+    color: var(--ca-soft);
+  }
+
+  .ca-prange__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-block-start: 40px;
+  }
+
+  .ca-prange__aside {
+    grid-column: 9 / -1;
+    padding-block-start: 6px;
+  }
+
+  .ca-prange__label {
+    padding-block-end: 16px;
+  }
+
+  .ca-prange__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-prange__item {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding-block: 12px;
+    border-block-end: 1px solid var(--ca-hairline);
+    font-size: var(--ca-fs-18);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .ca-prange__num {
+    flex: 0 0 1.75em;
+    font-size: 0.875rem;
+    color: var(--ca-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-prange__main,
+    .ca-prange__aside {
+      grid-column: 1 / -1;
+    }
+
+    .ca-prange__grid {
+      row-gap: 48px;
+    }
+
+    .ca-prange__eyebrow {
+      margin-block-end: 24px;
+    }
+
+    .ca-prange__line {
+      margin-block-start: 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Price range",
+  "tag": "section",
+  "class": "ca-prange-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor id", "info": "Optional. Lets links jump here." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The best hire you've made." },
+    { "type": "text", "id": "range", "label": "Range", "default": "$6,000 to $20,000" },
+    { "type": "text", "id": "cycle", "label": "Billing cycle", "default": "a month" },
+    { "type": "text", "id": "line", "label": "Line" },
+    { "type": "text", "id": "terms", "label": "Terms" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary label", "default": "See Full Pricing" },
+    { "type": "url", "id": "button_link", "label": "Primary link" },
+    { "type": "text", "id": "button2_label", "label": "Secondary label", "default": "Book a Call" },
+    { "type": "url", "id": "button2_link", "label": "Secondary link" },
+    { "type": "header", "content": "List" },
+    { "type": "text", "id": "list_label", "label": "Label", "default": "Priced by what we own" },
+    { "type": "textarea", "id": "list", "label": "Items", "info": "One per line. Numbered in order." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background", "default": "#f2f2f2" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Price range", "category": "Conspire" }]
+}
+{% endschema %}
