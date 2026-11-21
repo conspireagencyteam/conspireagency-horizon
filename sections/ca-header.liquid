@@ -9,7 +9,7 @@
   collection, case studies, blog posts) it shows as soon as the page lands.
   Visibility is set by assets/ca-header.js. Hidden on the page the CTA links to. A nav item whose title matches a `services_mega` or
   `work_mega` block's "Menu item title" opens that mega menu (hover or click,
-  desktop only); the mobile drawer lists the same content as nested groups.
+  desktop only); the mobile drawer lists the services as a nested group and Our Work as one link to the work index.
   Solid + sticky by default. Goes transparent over the first section when that
   section opts in via `.ca-allow-transparent-header` (see ca-brands-marquee), and
   reverts to solid once scrolled (data-stuck, set by assets/ca-header.js).
@@ -189,7 +189,10 @@
             endfor
           -%}
           <li>
-            {%- if mega_block != blank -%}
+            {%- if mega_block.type == 'work_mega' -%}
+              {%- comment -%} Conspire Agency (2026-11-20, Danny): on the drawer, Our Work is one link to the work index; the named case studies stay in the desktop mega menu, so the links are still in every page's HTML. {%- endcomment -%}
+              <a href="{{ mega_block.settings.view_all_url | default: link.url }}" class="ca-header__drawer-link"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            {%- elsif mega_block != blank -%}
               <a href="{{ link.url }}" class="ca-header__drawer-link ca-header__drawer-group"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
               <ul class="ca-header__drawer-sub" role="list">
                 {%- if mega_block.type == 'services_mega' -%}
@@ -222,11 +225,6 @@
                       </details>
                     </li>
                   {%- endif -%}
-                {%- else -%}
-                  {%- for case in work_cases -%}
-                    <li><a href="{{ case.settings.url | default: '/blogs/work' }}">{{ case.settings.title }}</a></li>
-                  {%- endfor -%}
-                  <li><a href="{{ mega_block.settings.view_all_url | default: '/blogs/work' }}">{{ mega_block.settings.view_all_text | default: 'View all work' }}</a></li>
                 {%- endif -%}
               </ul>
             {%- else -%}
