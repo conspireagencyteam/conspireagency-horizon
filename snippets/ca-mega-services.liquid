@@ -42,7 +42,7 @@
   <div class="ca-mega__col ca-mega__col--specialties">
     <p class="ca-eyebrow ca-mega__eyebrow">{{ block.settings.industries_heading | default: 'Specialties' }}</p>
     <ul class="ca-mega__list" role="list" data-ca-mega-targets>
-      {%- for i in (1..5) -%}
+      {%- for i in (1..6) -%}
         {%- liquid
           assign label_key = 'i' | append: i | append: '_label'
           assign url_key = 'i' | append: i | append: '_url'
@@ -93,7 +93,7 @@
         </span>
       </a>
 
-      {%- for i in (1..5) -%}
+      {%- for i in (1..6) -%}
         {%- liquid
           assign label_key = 'i' | append: i | append: '_label'
           assign f_title_key = 'i' | append: i | append: '_feat_title'
