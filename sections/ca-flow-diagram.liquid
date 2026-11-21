@@ -1,0 +1,993 @@
+{%- comment -%}
+  ca-flow-diagram.liquid - "How it works" on the Fractional Shopify Teams page.
+
+  Copy on the left (eyebrow, statement, body), a flow diagram on the right,
+  split by a hairline. The diagram is an hourglass: the brand's teams converge
+  on its ecom manager, one solid line runs to the Conspire hub (with the
+  "Your data" card beside it), and the work fans out to our disciplines.
+  Small dots travel the curves from top to bottom (SVG animateMotion, starts
+  on load, hidden under prefers-reduced-motion).
+
+  Every label is a setting: teams, data sources and disciplines are textareas
+  (one per line), the two hubs and the card heading are text settings.
+
+  Desktop (750px and up) is one inline SVG on a fixed 720-wide viewBox, laid out
+  here in Liquid: rows of six or more labels alternate between two tiers so the
+  boxes keep their room, and labels longer than 11 characters break onto two
+  lines. Box widths are estimated here and trimmed to the measured text by the
+  script below once the font has loaded. Below 750px a narrower HTML variant
+  shows the same flow with the labels in two-column grids, so they stay 14px.
+{%- endcomment -%}
+
+{%- liquid
+  assign vb_w = 720
+  assign vb_cx = 360
+  assign lh = 19
+  assign padx = 14
+  assign char_w = 8.3
+
+  assign teams_raw = section.settings.teams | newline_to_br | split: '<br />'
+  assign teams_list = ''
+  for t in teams_raw
+    assign s = t | strip | escape
+    if s != blank
+      assign teams_list = teams_list | append: s | append: '~~'
+    endif
+  endfor
+  assign teams = teams_list | split: '~~'
+
+  assign disc_raw = section.settings.disciplines | newline_to_br | split: '<br />'
+  assign disc_list = ''
+  for t in disc_raw
+    assign s = t | strip | escape
+    if s != blank
+      assign disc_list = disc_list | append: s | append: '~~'
+    endif
+  endfor
+  assign disciplines = disc_list | split: '~~'
+
+  assign data_raw = section.settings.data_sources | newline_to_br | split: '<br />'
+  assign data_list = ''
+  for t in data_raw
+    assign s = t | strip | escape
+    if s != blank
+      assign data_list = data_list | append: s | append: '~~'
+    endif
+  endfor
+  assign sources = data_list | split: '~~'
+
+  assign ecom_label = section.settings.ecom_label | default: 'Your ecom manager' | escape
+  assign hub_label = section.settings.hub_label | default: 'Conspire' | escape
+  assign data_heading = section.settings.data_heading | default: 'Your data' | escape
+
+  assign aria = section.settings.aria_label | strip | escape
+  if aria == blank
+    assign src_join = sources | join: ', '
+    assign disc_join = disciplines | join: ', '
+    assign aria = teams | join: ', '
+    assign aria = aria | append: ' bring their requests to ' | append: ecom_label | append: '. One message goes to ' | append: hub_label | append: ', which reads ' | append: src_join | append: ', then hands the work to ' | append: disc_join | append: '.'
+  endif
+
+  # Vertical rhythm of the desktop diagram.
+  assign t_count = teams.size
+  assign d_count = disciplines.size
+  assign t_stagger = false
+  if t_count >= 6
+    assign t_stagger = true
+  endif
+  assign d_stagger = false
+  if d_count >= 6
+    assign d_stagger = true
+  endif
+
+  assign tier_gap = 62
+  assign top_a = 62
+  assign top_base = top_a
+  if t_stagger
+    assign top_base = top_a | plus: tier_gap
+  endif
+  assign conv_y = top_base | plus: 150
+  assign ecom_h = 46
+  assign ecom_bottom = conv_y | plus: ecom_h
+  assign hub_top = ecom_bottom | plus: 58
+  assign hub_h = 64
+  assign hub_bottom = hub_top | plus: hub_h
+  assign hub_mid = hub_h | divided_by: 2 | plus: hub_top
+  assign bot_a = hub_bottom | plus: 168
+  assign bot_last = bot_a
+  if d_stagger
+    assign bot_last = bot_a | plus: tier_gap
+  endif
+  assign vb_h = bot_last | plus: 62
+
+  # Ecom manager box width (estimated, trimmed by the script).
+  assign ecom_w = ecom_label.size | times: 8.9 | plus: 40 | round
+  assign ecom_x = ecom_w | divided_by: 2.0 | minus: vb_cx | times: -1
+
+  # Conspire hub: dot glyph, gap, label.
+  assign hub_text_w = hub_label.size | times: 10.6
+  assign hub_content = hub_text_w | plus: 24
+  assign hub_w = hub_content | plus: 60 | round
+  if hub_w < 184
+    assign hub_w = 184
+  endif
+  assign hub_x = hub_w | divided_by: 2.0 | minus: vb_cx | times: -1
+  assign hub_right = hub_x | plus: hub_w
+  assign glyph_x = hub_content | divided_by: 2.0 | minus: vb_cx | times: -1
+  assign hub_text_x = glyph_x | plus: 24
+
+  # Data card, to the right of the hub, centred on it.
+  assign card_w = 214
+  assign card_x = vb_w | minus: card_w
+  assign card_head = 46
+  assign card_row = 28
+  assign card_h = sources.size | times: card_row | plus: card_head | plus: 12
+  assign card_y = card_h | divided_by: 2.0 | minus: hub_mid | times: -1 | minus: 40
+-%}
+
+<div
+  class="ca-flow spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | strip | handleize }}"{% endif %}
+  data-ca-flow
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner ca-flow__grid">
+    <div class="ca-flow__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ca-eyebrow ca-flow__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ca-statement ca-flow__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <div class="ca-flow__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="ca-flow__figure">
+      {%- comment -%} ---------- Desktop: one SVG ---------- {%- endcomment -%}
+      <svg
+        class="ca-flow__svg"
+        viewBox="0 0 {{ vb_w }} {{ vb_h }}"
+        role="img"
+        aria-label="{{ aria }}"
+        focusable="false"
+      >
+        {%- liquid
+          # Lay out both label rows. Pass 1 splits labels into lines and
+          # estimates widths; pass 2 places them and writes nodes and curves.
+          assign lines_svg = ''
+          assign nodes_svg = ''
+          assign dots_svg = ''
+          assign top_ends = ''
+          assign bot_ends = ''
+
+          for row in (1..2)
+            if row == 1
+              assign items = teams
+              assign stagger = t_stagger
+            else
+              assign items = disciplines
+              assign stagger = d_stagger
+            endif
+            assign n = items.size
+            if n == 0
+              continue
+            endif
+
+            assign specs = ''
+            assign widths = ''
+            for label in items
+              assign l1 = label
+              assign l2 = ''
+              if label.size > 11 and label contains ' '
+                assign words = label | split: ' '
+                assign best = 999
+                assign wc = words.size
+                for k in (1..wc)
+                  if k < wc
+                    assign a = words | slice: 0, k | join: ' '
+                    assign rest = wc | minus: k
+                    assign b = words | slice: k, rest | join: ' '
+                    assign m = a.size
+                    if b.size > m
+                      assign m = b.size
+                    endif
+                    if m < best
+                      assign best = m
+                      assign l1 = a
+                      assign l2 = b
+                    endif
+                  endif
+                endfor
+              endif
+              assign chars = l1.size
+              if l2.size > chars
+                assign chars = l2.size
+              endif
+              assign w = chars | times: char_w | plus: padx | plus: padx | round
+              assign specs = specs | append: l1 | append: '^' | append: l2 | append: '|'
+              assign widths = widths | append: w | append: ','
+            endfor
+            assign spec_list = specs | split: '|'
+            assign width_list = widths | split: ','
+
+            assign first_w = width_list.first | plus: 0
+            assign last_w = width_list.last | plus: 0
+            assign x0 = first_w | divided_by: 2.0 | plus: 4
+            assign x_last = last_w | divided_by: 2.0 | plus: 4 | minus: vb_w | times: -1
+            assign span = x_last | minus: x0
+            assign steps = n | minus: 1
+            if steps < 1
+              assign steps = 1
+            endif
+
+            for spec in spec_list
+              assign i = forloop.index0
+              assign parts = spec | split: '^'
+              assign l1 = parts[0]
+              assign l2 = parts[1] | default: ''
+              assign w = width_list[i] | plus: 0
+              assign nl = 1
+              if l2 != blank
+                assign nl = 2
+              endif
+              assign h = nl | plus: 1 | times: lh
+
+              if n == 1
+                assign x = vb_cx
+              else
+                assign x = span | times: i | divided_by: steps | plus: x0
+              endif
+              assign x = x | round: 1
+
+              assign tier = 0
+              if stagger
+                assign tier = i | modulo: 2
+              endif
+
+              if row == 1
+                assign bottom = tier | times: tier_gap | plus: top_a
+                assign box_y = bottom | minus: h
+                assign end_y = bottom
+                assign dy = conv_y | minus: bottom
+                assign c1y = dy | times: 0.55 | plus: bottom | round: 1
+                assign c2y = dy | times: -0.5 | plus: conv_y | round: 1
+                capture d
+                  echo 'M' | append: x | append: ' ' | append: bottom | append: ' C' | append: x | append: ' ' | append: c1y | append: ' ' | append: vb_cx | append: ' ' | append: c2y | append: ' ' | append: vb_cx | append: ' ' | append: conv_y
+                endcapture
+                assign top_ends = top_ends | append: d | append: '|'
+              else
+                assign box_y = tier | times: tier_gap | plus: bot_a
+                assign end_y = box_y
+                assign dy = box_y | minus: hub_bottom
+                assign c1y = dy | times: 0.5 | plus: hub_bottom | round: 1
+                assign c2y = dy | times: -0.55 | plus: box_y | round: 1
+                capture d
+                  echo 'C' | append: vb_cx | append: ' ' | append: c1y | append: ' ' | append: x | append: ' ' | append: c2y | append: ' ' | append: x | append: ' ' | append: box_y
+                endcapture
+                assign bot_ends = bot_ends | append: d | append: '|'
+                assign d = 'M' | append: vb_cx | append: ' ' | append: hub_bottom | append: ' ' | append: d
+              endif
+
+              assign rx = w | divided_by: 2.0 | minus: x | times: -1 | round: 1
+              assign ty1 = box_y | plus: lh
+              assign ty2 = ty1 | plus: lh
+
+              capture node
+                echo '<g class="ca-flow__node" data-flow-node data-cx="' | append: x | append: '"><rect class="ca-flow__box" x="' | append: rx | append: '" y="' | append: box_y | append: '" width="' | append: w | append: '" height="' | append: h | append: '" rx="8"/><text class="ca-flow__label" x="' | append: x | append: '" text-anchor="middle">'
+                echo '<tspan x="' | append: x | append: '" y="' | append: ty1 | append: '" dominant-baseline="central">' | append: l1 | append: '</tspan>'
+                if l2 != blank
+                  echo '<tspan x="' | append: x | append: '" y="' | append: ty2 | append: '" dominant-baseline="central">' | append: l2 | append: '</tspan>'
+                endif
+                echo '</text></g>'
+              endcapture
+
+              assign nodes_svg = nodes_svg | append: node
+              assign lines_svg = lines_svg | append: '<path class="ca-flow__curve" d="' | append: d | append: '"/>'
+              assign dots_svg = dots_svg | append: '<circle class="ca-flow__end" cx="' | append: x | append: '" cy="' | append: end_y | append: '" r="2.5"/>'
+            endfor
+          endfor
+
+          assign top_paths = top_ends | split: '|'
+          assign bot_paths = bot_ends | split: '|'
+        -%}
+
+        <g class="ca-flow__lines" aria-hidden="true">
+          {{- lines_svg -}}
+          <path class="ca-flow__solid" d="M{{ vb_cx }} {{ ecom_bottom }} L{{ vb_cx }} {{ hub_top }}"/>
+          {%- if sources.size > 0 -%}
+            <path class="ca-flow__solid" d="M{{ hub_right }} {{ hub_mid }} L{{ card_x }} {{ hub_mid }}"/>
+          {%- endif -%}
+        </g>
+
+        {%- comment -%} Travelling dots: each runs a team's curve, through both hubs, out to a discipline. {%- endcomment -%}
+        <g class="ca-flow__movers" aria-hidden="true">
+          {%- liquid
+            assign tp = top_paths.size
+            assign bp = bot_paths.size
+            assign dur = 11
+            if tp > 0 and bp > 0
+              for p in top_paths
+                assign i = forloop.index0
+                assign j = i | times: bp | divided_by: tp | modulo: bp
+                assign route = p | append: ' L' | append: vb_cx | append: ' ' | append: hub_bottom | append: ' ' | append: bot_paths[j]
+                assign begin = dur | times: i | divided_by: tp | times: -1.0 | round: 2
+                echo '<circle class="ca-flow__mover" r="2.6"><animateMotion dur="' | append: dur | append: 's" begin="' | append: begin | append: 's" repeatCount="indefinite" calcMode="linear" path="' | append: route | append: '"/></circle>'
+              endfor
+            endif
+          -%}
+          {%- if sources.size > 0 -%}
+            <circle class="ca-flow__mover" r="2.2"><animateMotion dur="3.6s" begin="0s" repeatCount="indefinite" path="M{{ card_x }} {{ hub_mid }} L{{ hub_right }} {{ hub_mid }}"/></circle>
+            <circle class="ca-flow__mover" r="2.2"><animateMotion dur="3.6s" begin="-1.8s" repeatCount="indefinite" path="M{{ card_x }} {{ hub_mid }} L{{ hub_right }} {{ hub_mid }}"/></circle>
+          {%- endif -%}
+        </g>
+
+        <g class="ca-flow__ends" aria-hidden="true">
+          {{- dots_svg -}}
+          <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ conv_y }}" r="2.5"/>
+          <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ ecom_bottom }}" r="2.5"/>
+          <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ hub_top }}" r="2.5"/>
+          <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ hub_bottom }}" r="2.5"/>
+          {%- if sources.size > 0 -%}
+            <circle class="ca-flow__end" cx="{{ hub_right }}" cy="{{ hub_mid }}" r="2.5"/>
+            <circle class="ca-flow__end" cx="{{ card_x }}" cy="{{ hub_mid }}" r="2.5"/>
+          {%- endif -%}
+        </g>
+
+        <g class="ca-flow__nodes">
+          {{- nodes_svg -}}
+
+          <g class="ca-flow__node ca-flow__node--ecom" data-flow-node data-cx="{{ vb_cx }}" data-pad="20">
+            <rect class="ca-flow__box ca-flow__box--ecom" x="{{ ecom_x }}" y="{{ conv_y }}" width="{{ ecom_w }}" height="{{ ecom_h }}" rx="10"/>
+            <text class="ca-flow__label ca-flow__label--ecom" x="{{ vb_cx }}" y="{{ ecom_h | divided_by: 2.0 | plus: conv_y }}" text-anchor="middle" dominant-baseline="central">{{ ecom_label }}</text>
+          </g>
+
+          <g class="ca-flow__hub" data-flow-hub data-cx="{{ vb_cx }}">
+            <rect class="ca-flow__box ca-flow__box--hub" x="{{ hub_x }}" y="{{ hub_top }}" width="{{ hub_w }}" height="{{ hub_h }}" rx="12"/>
+            <g class="ca-flow__glyph" data-flow-glyph transform="translate({{ glyph_x }} {{ hub_mid | minus: 6 }})">
+              {%- for gy in (0..2) -%}
+                {%- for gx in (0..2) -%}
+                  <circle cx="{{ gx | times: 6 | plus: 1.5 }}" cy="{{ gy | times: 6 | plus: 0 }}" r="1.6"/>
+                {%- endfor -%}
+              {%- endfor -%}
+            </g>
+            <text class="ca-flow__hub-label" x="{{ hub_text_x }}" y="{{ hub_mid }}" dominant-baseline="central">{{ hub_label }}</text>
+          </g>
+
+          {%- if sources.size > 0 -%}
+            <g class="ca-flow__card">
+              <rect class="ca-flow__card-box" x="{{ card_x }}" y="{{ card_y }}" width="{{ card_w }}" height="{{ card_h }}" rx="12"/>
+              <text class="ca-flow__card-head" x="{{ card_x | plus: 20 }}" y="{{ card_y | plus: 24 }}" dominant-baseline="central">{{ data_heading }}</text>
+              <path class="ca-flow__card-rule" d="M{{ card_x | plus: 20 }} {{ card_y | plus: card_head | minus: 4 }} H{{ vb_w | minus: 20 }}"/>
+              {%- for src in sources -%}
+                {%- assign ry = forloop.index0 | times: card_row | plus: card_y | plus: card_head | plus: 14 -%}
+                <circle class="ca-flow__ok" cx="{{ card_x | plus: 24 }}" cy="{{ ry }}" r="3.5"/>
+                <text class="ca-flow__card-item" x="{{ card_x | plus: 38 }}" y="{{ ry }}" dominant-baseline="central">{{ src }}</text>
+              {%- endfor -%}
+            </g>
+          {%- endif -%}
+        </g>
+      </svg>
+
+      {%- comment -%} ---------- Mobile: the same flow, labels in grids ---------- {%- endcomment -%}
+      <div class="ca-flow__m" role="img" aria-label="{{ aria }}">
+        <ul class="ca-flow__m-grid" role="list">
+          {%- for label in teams -%}
+            <li class="ca-flow__m-box">{{ label }}</li>
+          {%- endfor -%}
+        </ul>
+
+        {%- liquid
+          assign mw = 340
+          assign mcx = 170
+          assign mh = 96
+        -%}
+        <svg class="ca-flow__m-svg" viewBox="0 0 {{ mw }} {{ mh }}" aria-hidden="true" focusable="false">
+          {%- liquid
+            assign n = teams.size
+            assign steps = n | minus: 1
+            if steps < 1
+              assign steps = 1
+            endif
+            assign m_paths = ''
+            for label in teams
+              assign i = forloop.index0
+              if n == 1
+                assign x = mcx
+              else
+                assign x = 280.0 | times: i | divided_by: steps | plus: 30 | round: 1
+              endif
+              assign d = 'M' | append: x | append: ' 4 C' | append: x | append: ' 52 ' | append: mcx | append: ' 46 ' | append: mcx | append: ' ' | append: mh
+              assign m_paths = m_paths | append: d | append: '|'
+              echo '<path class="ca-flow__curve" d="' | append: d | append: '"/>'
+              echo '<circle class="ca-flow__end" cx="' | append: x | append: '" cy="4" r="2.5"/>'
+            endfor
+            assign m_list = m_paths | split: '|'
+            for d in m_list
+              assign begin = 5.0 | times: forloop.index0 | divided_by: m_list.size | times: -1 | round: 2
+              echo '<circle class="ca-flow__mover" r="2.4"><animateMotion dur="5s" begin="' | append: begin | append: 's" repeatCount="indefinite" path="' | append: d | append: '"/></circle>'
+            endfor
+          -%}
+        </svg>
+
+        <div class="ca-flow__m-node ca-flow__m-node--ecom">{{ ecom_label }}</div>
+        <span class="ca-flow__m-link" aria-hidden="true"><i></i></span>
+        <div class="ca-flow__m-node ca-flow__m-node--hub">
+          <svg class="ca-flow__m-glyph" viewBox="0 0 15 15" aria-hidden="true" focusable="false">
+            {%- for gy in (0..2) -%}
+              {%- for gx in (0..2) -%}
+                <circle cx="{{ gx | times: 6 | plus: 1.5 }}" cy="{{ gy | times: 6 | plus: 1.5 }}" r="1.6"/>
+              {%- endfor -%}
+            {%- endfor -%}
+          </svg>
+          <span>{{ hub_label }}</span>
+        </div>
+
+        {%- if sources.size > 0 -%}
+          <span class="ca-flow__m-link ca-flow__m-link--up" aria-hidden="true"><i></i></span>
+          <div class="ca-flow__m-card">
+            <p class="ca-flow__m-card-head">{{ data_heading }}</p>
+            <ul class="ca-flow__m-sources" role="list">
+              {%- for src in sources -%}
+                <li><span class="ca-flow__m-ok" aria-hidden="true"></span>{{ src }}</li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <svg class="ca-flow__m-svg" viewBox="0 0 {{ mw }} {{ mh }}" aria-hidden="true" focusable="false">
+          {%- liquid
+            assign n = disciplines.size
+            assign steps = n | minus: 1
+            if steps < 1
+              assign steps = 1
+            endif
+            assign m_paths = ''
+            assign mend = mh | minus: 4
+            for label in disciplines
+              assign i = forloop.index0
+              if n == 1
+                assign x = mcx
+              else
+                assign x = 280.0 | times: i | divided_by: steps | plus: 30 | round: 1
+              endif
+              assign d = 'M' | append: mcx | append: ' 0 C' | append: mcx | append: ' 50 ' | append: x | append: ' 44 ' | append: x | append: ' ' | append: mend
+              assign m_paths = m_paths | append: d | append: '|'
+              echo '<path class="ca-flow__curve" d="' | append: d | append: '"/>'
+              echo '<circle class="ca-flow__end" cx="' | append: x | append: '" cy="' | append: mend | append: '" r="2.5"/>'
+            endfor
+            assign m_list = m_paths | split: '|'
+            for d in m_list
+              assign begin = 5.0 | times: forloop.index0 | divided_by: m_list.size | times: -1 | round: 2
+              echo '<circle class="ca-flow__mover" r="2.4"><animateMotion dur="5s" begin="' | append: begin | append: 's" repeatCount="indefinite" path="' | append: d | append: '"/></circle>'
+            endfor
+          -%}
+        </svg>
+
+        <ul class="ca-flow__m-grid" role="list">
+          {%- for label in disciplines -%}
+            <li class="ca-flow__m-box">{{ label }}</li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-flow {
+    scroll-margin-top: var(--ca-header-height, 96px);
+    background-color: var(--color-background);
+    --ca-flow-box: #f2f2f2;
+    --ca-flow-line: rgb(var(--color-foreground-rgb) / 0.38);
+    --ca-flow-solid: rgb(var(--color-foreground-rgb) / 0.55);
+    --ca-flow-ink: rgb(var(--color-foreground-rgb) / 0.88);
+    --ca-flow-ok: #1fa45a;
+  }
+
+  .ca-flow__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 64px;
+    align-items: center;
+  }
+
+  .ca-flow__copy {
+    grid-column: 1 / span 5;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-inline-end: 24px;
+  }
+
+  .ca-flow__heading {
+    text-indent: 0;
+    text-wrap: balance;
+  }
+
+  .ca-flow__body {
+    max-width: 34rem;
+    font-size: var(--ca-fs-20);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  .ca-flow__body > :first-child {
+    margin-block-start: 0;
+  }
+
+  .ca-flow__body > :last-child {
+    margin-block-end: 0;
+  }
+
+  .ca-flow__figure {
+    grid-column: 6 / -1;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding-block: 24px;
+    padding-inline-start: 56px;
+    border-inline-start: 1px solid var(--ca-hairline);
+  }
+
+  .ca-flow__svg {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin-inline: auto;
+    overflow: visible;
+    font-family: var(--font-body--family);
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-flow__curve {
+    fill: none;
+    stroke: var(--ca-flow-line);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-dasharray: 0.1 4.4;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .ca-flow__solid {
+    fill: none;
+    stroke: var(--ca-flow-solid);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .ca-flow__end {
+    fill: rgb(var(--color-foreground-rgb) / 0.85);
+  }
+
+  .ca-flow__mover {
+    fill: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-flow__box {
+    fill: var(--ca-flow-box);
+  }
+
+  .ca-flow__box--hub {
+    fill: var(--color-background, #fff);
+    stroke: rgb(var(--color-foreground-rgb) / 0.75);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .ca-flow__label {
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    fill: var(--ca-flow-ink);
+  }
+
+  .ca-flow__label--ecom {
+    font-size: 16px;
+    fill: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-flow__glyph circle {
+    fill: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-flow__hub-label {
+    font-family: var(--font-heading--family);
+    font-size: 20px;
+    letter-spacing: -0.03em;
+    fill: rgb(var(--color-foreground-rgb));
+  }
+
+  .ca-flow__card-box {
+    fill: var(--color-background, #fff);
+    stroke: var(--ca-hairline-strong);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .ca-flow__card-head {
+    font-size: 12px;
+    font-weight: var(--font-h6--weight, 500);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    fill: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .ca-flow__card-rule {
+    stroke: var(--ca-hairline);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .ca-flow__card-item {
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    fill: var(--ca-flow-ink);
+  }
+
+  .ca-flow__ok {
+    fill: var(--ca-flow-ok);
+  }
+
+  /* ---- Mobile variant ---- */
+  .ca-flow__m {
+    display: none;
+  }
+
+  @media screen and (max-width: 1279px) {
+    .ca-flow__copy,
+    .ca-flow__figure {
+      grid-column: 1 / -1;
+    }
+
+    .ca-flow__copy {
+      max-width: 44rem;
+      padding-inline-end: 0;
+    }
+
+    .ca-flow__figure {
+      padding-inline-start: 0;
+      padding-block: 56px 0;
+      border-inline-start: 0;
+      border-block-start: 1px solid var(--ca-hairline);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-flow__grid {
+      row-gap: 48px;
+    }
+
+    .ca-flow__figure {
+      padding-block-start: 40px;
+    }
+
+    .ca-flow__svg {
+      display: none;
+    }
+
+    .ca-flow__m {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 400px;
+      margin-inline: auto;
+    }
+
+    .ca-flow__m-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ca-flow__m-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--ca-flow-box);
+      font-size: 14px;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      text-align: center;
+      color: var(--ca-flow-ink);
+    }
+
+    .ca-flow__m-grid > .ca-flow__m-box:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: calc(50% - 4px);
+    }
+
+    .ca-flow__m-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-block: 16px 4px;
+      overflow: visible;
+    }
+
+    .ca-flow__m-card + .ca-flow__m-svg,
+    .ca-flow__m-node--hub + .ca-flow__m-svg {
+      margin-block-start: 0;
+    }
+
+    .ca-flow__m-node {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: var(--ca-flow-box);
+      font-size: 16px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    .ca-flow__m-node--hub {
+      min-height: 58px;
+      padding-inline: 26px;
+      border: 1px solid rgb(var(--color-foreground-rgb) / 0.75);
+      border-radius: 12px;
+      background: var(--color-background, #fff);
+      font-family: var(--font-heading--family);
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .ca-flow__m-glyph {
+      width: 15px;
+      height: 15px;
+      fill: rgb(var(--color-foreground-rgb));
+    }
+
+    /* A short solid link with a dot at each end and one travelling dot. */
+    .ca-flow__m-link {
+      position: relative;
+      display: block;
+      width: 1px;
+      height: 44px;
+      background: var(--ca-flow-solid);
+    }
+
+    .ca-flow__m-link::before,
+    .ca-flow__m-link::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      margin-left: -2.5px;
+      border-radius: 50%;
+      background: rgb(var(--color-foreground-rgb) / 0.85);
+    }
+
+    .ca-flow__m-link::before {
+      top: -2.5px;
+    }
+
+    .ca-flow__m-link::after {
+      bottom: -2.5px;
+    }
+
+    .ca-flow__m-link i {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 5px;
+      height: 5px;
+      margin-left: -2.5px;
+      border-radius: 50%;
+      background: rgb(var(--color-foreground-rgb));
+      animation: ca-flow-drop 2.6s linear infinite;
+    }
+
+    .ca-flow__m-link--up i {
+      animation-name: ca-flow-rise;
+      animation-duration: 3.2s;
+    }
+
+    .ca-flow__m-card {
+      width: 100%;
+      padding: 16px 20px 18px;
+      border: 1px solid var(--ca-hairline-strong);
+      border-radius: 12px;
+      background: var(--color-background, #fff);
+    }
+
+    .ca-flow__m-card-head {
+      margin: 0 0 12px;
+      padding-block-end: 10px;
+      border-block-end: 1px solid var(--ca-hairline);
+      font-size: 12px;
+      font-weight: var(--font-h6--weight, 500);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgb(var(--color-foreground-rgb) / 0.6);
+    }
+
+    .ca-flow__m-sources {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--ca-flow-ink);
+    }
+
+    .ca-flow__m-sources li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ca-flow__m-ok {
+      flex: 0 0 auto;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ca-flow-ok);
+    }
+  }
+
+  @keyframes ca-flow-drop {
+    0% { transform: translateY(-2px); opacity: 0; }
+    12% { opacity: 1; }
+    88% { opacity: 1; }
+    100% { transform: translateY(42px); opacity: 0; }
+  }
+
+  @keyframes ca-flow-rise {
+    0% { transform: translateY(42px); opacity: 0; }
+    12% { opacity: 1; }
+    88% { opacity: 1; }
+    100% { transform: translateY(-2px); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ca-flow__mover,
+    .ca-flow__m-link i {
+      display: none;
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Trim each label box to its measured text, keeping it centred on its line end.
+    function fit(root) {
+      var svg = root.querySelector('.ca-flow__svg');
+      if (!svg) return;
+      if (reduce.matches && svg.pauseAnimations) svg.pauseAnimations();
+      if (!svg.getBoundingClientRect().width) return;
+
+      root.querySelectorAll('[data-flow-node]').forEach(function (g) {
+        var rect = g.querySelector('rect');
+        var text = g.querySelector('text');
+        if (!rect || !text) return;
+        var w = text.getBBox().width;
+        if (!w) return;
+        var pad = parseFloat(g.getAttribute('data-pad') || '14');
+        var cx = parseFloat(g.getAttribute('data-cx'));
+        var bw = Math.round(w + pad * 2);
+        rect.setAttribute('width', bw);
+        rect.setAttribute('x', (cx - bw / 2).toFixed(1));
+      });
+
+      var hub = root.querySelector('[data-flow-hub]');
+      if (hub) {
+        var label = hub.querySelector('text');
+        var glyph = hub.querySelector('[data-flow-glyph]');
+        var lw = label.getBBox().width;
+        if (lw && glyph) {
+          var cx = parseFloat(hub.getAttribute('data-cx'));
+          var start = cx - (lw + 24) / 2;
+          var ty = glyph.getAttribute('transform').split(' ')[1];
+          glyph.setAttribute('transform', 'translate(' + start.toFixed(1) + ' ' + ty);
+          label.setAttribute('x', (start + 24).toFixed(1));
+        }
+      }
+      root.setAttribute('data-fitted', '');
+    }
+
+    function init(scope) {
+      (scope || document).querySelectorAll('[data-ca-flow]').forEach(function (root) {
+        fit(root);
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function () { fit(root); });
+        }
+      });
+    }
+
+    init();
+    window.addEventListener('resize', function () {
+      document.querySelectorAll('[data-ca-flow]:not([data-fitted])').forEach(fit);
+    });
+    reduce.addEventListener && reduce.addEventListener('change', function () { init(); });
+    document.addEventListener('shopify:section:load', function (e) { init(e.target); });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Flow diagram",
+  "tag": "section",
+  "class": "ca-flow-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor id", "info": "Optional. Lets links jump here." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How it works" },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Statement",
+      "info": "Bold the words to emphasise. The rest is shown muted.",
+      "default": "Every team asks once. One team handles it."
+    },
+    { "type": "richtext", "id": "body", "label": "Body" },
+    { "type": "header", "content": "Diagram" },
+    {
+      "type": "textarea",
+      "id": "teams",
+      "label": "Your teams",
+      "info": "One per line. Shown along the top.",
+      "default": "Customer service\nPaid media and PPC\nFulfillment\nSEO\nProduct\nB2B and trade\nMarketing"
+    },
+    { "type": "text", "id": "ecom_label", "label": "First hub", "default": "Your ecom manager" },
+    { "type": "text", "id": "hub_label", "label": "Centre hub", "default": "Conspire" },
+    { "type": "text", "id": "data_heading", "label": "Data card heading", "default": "Your data" },
+    {
+      "type": "textarea",
+      "id": "data_sources",
+      "label": "Data sources",
+      "info": "One per line. Each gets a green dot.",
+      "default": "Shopify\nKlaviyo\nGoogle Analytics\nGoogle Ads\nMeta\nTikTok\nHelp desk"
+    },
+    {
+      "type": "textarea",
+      "id": "disciplines",
+      "label": "Our disciplines",
+      "info": "One per line. Shown along the bottom.",
+      "default": "Strategy\nDesign\nFront-end development\nBack-end development\nCompliance\nQA"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Screen reader description",
+      "info": "Optional. Left blank, it is written from the labels above."
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 120 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 120 }
+  ],
+  "presets": [
+    { "name": "Flow diagram", "category": "Conspire" }
+  ]
+}
+{% endschema %}

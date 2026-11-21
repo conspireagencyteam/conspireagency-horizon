@@ -699,6 +699,26 @@
         "padding-block-end": 80
       }
     },
+    "how_it_works": {
+      "type": "ca-flow-diagram",
+      "settings": {
+        "anchor_id": "",
+        "eyebrow": "How it works",
+        "heading": "Every team asks once. One team handles it.",
+        "body": "<p>Customer service, fulfillment, paid media and product bring their requests to your ecom manager. One message reaches us. We read your store's data, plan the work, then design, build, test and ship it.</p>",
+        "teams": "Customer service\nPaid media and PPC\nFulfillment\nSEO\nProduct\nB2B and trade\nMarketing",
+        "ecom_label": "Your ecom manager",
+        "hub_label": "Conspire",
+        "data_heading": "Your data",
+        "data_sources": "Shopify\nKlaviyo\nGoogle Analytics\nGoogle Ads\nMeta\nTikTok\nHelp desk",
+        "disciplines": "Strategy\nDesign\nFront-end development\nBack-end development\nCompliance\nQA",
+        "aria_label": "",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
     "month_one": {
       "type": "ca-offer-steps",
       "blocks": {
@@ -778,6 +798,7 @@
   "order": [
     "hero",
     "services",
+    "how_it_works",
     "month_one",
     "clients",
     "questions",
