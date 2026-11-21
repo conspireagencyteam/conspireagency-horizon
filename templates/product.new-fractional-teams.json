@@ -687,9 +687,9 @@
       ],
       "settings": {
         "anchor_id": "",
-        "eyebrow": "What's in the retainer",
-        "heading": "One team. <strong>The whole revenue stack of your store.</strong>",
-        "intro": "Here is the work we take on, grouped the way we run it.",
+        "eyebrow": "What you get",
+        "heading": "One team. <strong>Everything your store runs on.</strong>",
+        "intro": "Hand us the parts you want off your plate.",
         "button_label": "Book a Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -727,7 +727,7 @@
           "type": "step",
           "settings": {
             "title": "Decide",
-            "text": "A six-month roadmap and your monthly price, with seven days to opt out."
+            "text": "A six-month roadmap for what comes next. If it isn't right, seven days to walk away."
           }
         }
       },
@@ -741,8 +741,8 @@
         "anchor_id": "month-one",
         "eyebrow": "How we start",
         "heading": "Month One",
-        "subheading": "A $6,000 paid trial month that ends in a roadmap and a price.",
-        "body": "<p>The fastest way to know if we fit is to work together. In the first month we connect to your store and your tools, audit every area of the store, and ship the first fixes. You finish the month with a six-month roadmap and the monthly price for the work we will own. Then you have seven days to decide. If it isn't right, you owe that month and nothing more.</p>",
+        "subheading": "A month of real work before you commit.",
+        "body": "<p>The fastest way to know if we fit is to work together. In the first month we connect to your store and your tools, audit every area of the store, and ship the first fixes. You finish the month with real work shipped and a six-month roadmap. Then you have seven days to decide. If it isn't right, you owe that month and nothing more.</p>",
         "button_label": "Book a Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -757,15 +757,15 @@
       "settings": {
         "anchor_id": "pricing",
         "eyebrow": "The best hire you've made.",
-        "range": "$6,000 to $20,000",
+        "range": "$6k to $20k",
         "cycle": "a month",
-        "line": "Your price depends on what we own, not on your revenue.",
+        "line": "Tailored to your store. Hand us as much as you want.",
         "terms": "12-month commitment rates. Six-month terms available. Month One, a paid trial, is $6,000.",
         "button_label": "See Full Pricing",
         "button_link": "shopify://pages/pricing",
         "button2_label": "Book a Call",
         "button2_link": "#book-a-call",
-        "list_label": "Priced by what we own",
+        "list_label": "What you can hand us",
         "list": "Strategy and roadmap\nDesign and development\nTesting and monitoring\nConversion\nRetention and subscriptions\nSearch and AI discovery\nCompliance and privacy\nData and tracking\nCustom software and integrations\nPaid media",
         "background_color": "#f2f2f2",
         "text_color": "",

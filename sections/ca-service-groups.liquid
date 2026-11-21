@@ -72,6 +72,8 @@
 </div>
 
 {% stylesheet %}
+  /* The emphasised clause starts its own line, so a long one never leaves an orphan after the indented lead. */
+  .ca-svc__intro .ca-statement strong { display: block; }
   .ca-svc {
     scroll-margin-top: var(--ca-header-height, 96px);
     background-color: var(--color-background);
