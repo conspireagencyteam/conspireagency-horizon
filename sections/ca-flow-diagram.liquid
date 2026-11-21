@@ -152,6 +152,9 @@
       {%- if section.settings.body != blank -%}
         <div class="ca-flow__body">{{ section.settings.body }}</div>
       {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="button size-style ca-flow__button" {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}>{{ section.settings.button_label }}</a>
+      {%- endif -%}
     </div>
 
     <div class="ca-flow__figure">
@@ -491,6 +494,7 @@
 </div>
 
 {% stylesheet %}
+  .ca-flow__button { margin-block-start: 32px; align-self: flex-start; }
   .ca-flow {
     scroll-margin-top: var(--ca-header-height, 96px);
     background-color: var(--color-background);
@@ -952,6 +956,8 @@
       "default": "Every team asks once. One team handles it."
     },
     { "type": "richtext", "id": "body", "label": "Body" },
+    { "type": "text", "id": "button_label", "label": "Button label", "info": "Optional. For example Book a Call." },
+    { "type": "url", "id": "button_link", "label": "Button link" },
     { "type": "header", "content": "Diagram" },
     {
       "type": "textarea",
