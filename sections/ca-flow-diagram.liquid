@@ -57,6 +57,7 @@
   assign sources = data_list | split: '~~'
 
   assign ecom_label = section.settings.ecom_label | default: 'Your ecom manager' | escape
+  assign strat_label = section.settings.strategy_label | default: 'Strategy' | escape
   assign hub_label = section.settings.hub_label | default: 'Conspire' | escape
   assign data_heading = section.settings.data_heading | default: 'Your data' | escape
 
@@ -65,7 +66,7 @@
     assign src_join = sources | join: ', '
     assign disc_join = disciplines | join: ', '
     assign aria = teams | join: ', '
-    assign aria = aria | append: ' bring their requests to ' | append: ecom_label | append: '. One message goes to ' | append: hub_label | append: ', which reads ' | append: src_join | append: ', then hands the work to ' | append: disc_join | append: '.'
+    assign aria = aria | append: ' bring their requests to ' | append: ecom_label | append: '. One message goes to ' | append: hub_label | append: ', which reads ' | append: src_join | append: ', turns it into a ' | append: strat_label | append: ' and hands the work to ' | append: disc_join | append: '.'
   endif
 
   # Vertical rhythm of the desktop diagram.
@@ -93,7 +94,13 @@
   assign hub_h = ecom_h
   assign hub_bottom = hub_top | plus: hub_h
   assign hub_mid = hub_h | divided_by: 2 | plus: hub_top
-  assign bot_a = hub_bottom | plus: 168
+  # Strategy box below the hub; the work fans out from it.
+  assign strat_top = hub_bottom | plus: 46
+  assign strat_h = ecom_h
+  assign strat_bottom = strat_top | plus: strat_h
+  assign strat_w = strat_label.size | times: 8.9 | plus: 40 | round
+  assign strat_x = strat_w | divided_by: 2.0 | minus: vb_cx | times: -1
+  assign bot_a = strat_bottom | plus: 168
   assign bot_last = bot_a
   if d_stagger
     assign bot_last = bot_a | plus: tier_gap
@@ -263,14 +270,14 @@
               else
                 assign box_y = tier | times: tier_gap | plus: bot_a
                 assign end_y = box_y
-                assign dy = box_y | minus: hub_bottom
-                assign c1y = dy | times: 0.5 | plus: hub_bottom | round: 1
+                assign dy = box_y | minus: strat_bottom
+                assign c1y = dy | times: 0.5 | plus: strat_bottom | round: 1
                 assign c2y = dy | times: -0.55 | plus: box_y | round: 1
                 capture d
                   echo 'C' | append: vb_cx | append: ' ' | append: c1y | append: ' ' | append: x | append: ' ' | append: c2y | append: ' ' | append: x | append: ' ' | append: box_y
                 endcapture
                 assign bot_ends = bot_ends | append: d | append: '|'
-                assign d = 'M' | append: vb_cx | append: ' ' | append: hub_bottom | append: ' ' | append: d
+                assign d = 'M' | append: vb_cx | append: ' ' | append: strat_bottom | append: ' ' | append: d
               endif
 
               assign rx = w | divided_by: 2.0 | minus: x | times: -1 | round: 1
@@ -299,6 +306,7 @@
         <g class="ca-flow__lines" aria-hidden="true">
           {{- lines_svg -}}
           <path class="ca-flow__solid" d="M{{ vb_cx }} {{ ecom_bottom }} L{{ vb_cx }} {{ hub_top }}"/>
+          <path class="ca-flow__solid" d="M{{ vb_cx }} {{ hub_bottom }} L{{ vb_cx }} {{ strat_top }}"/>
           {%- if sources.size > 0 -%}
             <path class="ca-flow__solid" d="M{{ hub_right }} {{ hub_mid }} L{{ card_x }} {{ hub_mid }}"/>
           {%- endif -%}
@@ -314,7 +322,7 @@
               for p in top_paths
                 assign i = forloop.index0
                 assign j = i | times: bp | divided_by: tp | modulo: bp
-                assign route = p | append: ' L' | append: vb_cx | append: ' ' | append: hub_bottom | append: ' ' | append: bot_paths[j]
+                assign route = p | append: ' L' | append: vb_cx | append: ' ' | append: strat_bottom | append: ' ' | append: bot_paths[j]
                 assign begin = dur | times: i | divided_by: tp | times: -1.0 | round: 2
                 echo '<circle class="ca-flow__mover" r="2.6"><animateMotion dur="' | append: dur | append: 's" begin="' | append: begin | append: 's" repeatCount="indefinite" calcMode="linear" path="' | append: route | append: '"/></circle>'
               endfor
@@ -332,6 +340,8 @@
           <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ ecom_bottom }}" r="2.5"/>
           <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ hub_top }}" r="2.5"/>
           <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ hub_bottom }}" r="2.5"/>
+          <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ strat_top }}" r="2.5"/>
+          <circle class="ca-flow__end" cx="{{ vb_cx }}" cy="{{ strat_bottom }}" r="2.5"/>
           {%- if sources.size > 0 -%}
             <circle class="ca-flow__end" cx="{{ hub_right }}" cy="{{ hub_mid }}" r="2.5"/>
             <circle class="ca-flow__end" cx="{{ card_x }}" cy="{{ hub_mid }}" r="2.5"/>
@@ -353,6 +363,11 @@
             {%- else -%}
               <text class="ca-flow__hub-label" x="{{ vb_cx }}" y="{{ hub_mid }}" text-anchor="middle" dominant-baseline="central">{{ hub_label }}</text>
             {%- endif -%}
+          </g>
+
+          <g class="ca-flow__node ca-flow__node--ecom" data-flow-node data-cx="{{ vb_cx }}" data-pad="20">
+            <rect class="ca-flow__box ca-flow__box--ecom" x="{{ strat_x }}" y="{{ strat_top }}" width="{{ strat_w }}" height="{{ strat_h }}" rx="10"/>
+            <text class="ca-flow__label ca-flow__label--ecom" x="{{ vb_cx }}" y="{{ strat_h | divided_by: 2.0 | plus: strat_top }}" text-anchor="middle" dominant-baseline="central">{{ strat_label }}</text>
           </g>
 
           {%- if sources.size > 0 -%}
@@ -432,6 +447,9 @@
             </ul>
           </div>
         {%- endif -%}
+
+        <span class="ca-flow__m-link" aria-hidden="true"><i></i></span>
+        <div class="ca-flow__m-node ca-flow__m-node--ecom ca-flow__m-node--strategy">{{ strat_label }}</div>
 
         <svg class="ca-flow__m-svg" viewBox="0 0 {{ mw }} {{ mh }}" aria-hidden="true" focusable="false">
           {%- liquid
@@ -715,6 +733,7 @@
     }
 
     .ca-flow__m-card + .ca-flow__m-svg,
+    .ca-flow__m-node--strategy + .ca-flow__m-svg,
     .ca-flow__m-node--hub + .ca-flow__m-svg {
       margin-block-start: 0;
     }
@@ -943,6 +962,7 @@
     },
     { "type": "text", "id": "ecom_label", "label": "First hub", "default": "Your ecom manager" },
     { "type": "text", "id": "hub_label", "label": "Centre hub", "default": "Conspire" },
+    { "type": "text", "id": "strategy_label", "label": "Strategy step", "default": "Strategy" },
     { "type": "text", "id": "data_heading", "label": "Data card heading", "default": "Your data" },
     {
       "type": "textarea",
@@ -956,7 +976,7 @@
       "id": "disciplines",
       "label": "Our disciplines",
       "info": "One per line. Shown along the bottom.",
-      "default": "Strategy\nDesign\nFront-end development\nBack-end development\nCompliance\nQA"
+      "default": "Design\nFront-end development\nBack-end development\nSEO and GEO\nPPC\nCompliance\nQA"
     },
     {
       "type": "text",
