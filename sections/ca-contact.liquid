@@ -17,6 +17,11 @@
   search visit from a typed address even when "How did you hear about us?" is
   left blank. "How did you hear about us?" keeps one AI assistant option
   (Danny, 2026-11-20); the referrer field says which assistant it was.
+
+  "What are you looking for?" (2026-11-21) decides which budget question shows: build budget in six
+  bands from $15K (no band below it, so the floor reads as the floor) to $150K+ (so a large brand
+  sees we take large builds), a monthly budget for an ongoing team, a project budget for a defined
+  job. The brain reads them to shape the automatic reply (docs/CONTACT-FORM.md in the brain repo).
 {%- endcomment -%}
 
 {%- liquid
@@ -94,6 +99,10 @@
             <label class="ca-field__label" for="ContactModernBrand">Brand</label>
             <input class="ca-field__input" id="ContactModernBrand" type="text" name="contact[Brand]" autocomplete="organization" placeholder="Brand or company name">
           </div>
+          {%- render 'ca-select', id: 'ContactModernLookingFor', name: 'contact[Looking for]', label: 'What are you looking for?', options: section.settings.looking_for_options -%}
+          {%- render 'ca-select', id: 'ContactModernBuildBudget', name: 'contact[Build budget]', label: 'Build budget', options: section.settings.build_budget_options, full: true, group: 'build' -%}
+          {%- render 'ca-select', id: 'ContactModernMonthlyBudget', name: 'contact[Monthly budget]', label: 'Monthly budget', options: section.settings.monthly_budget_options, full: true, group: 'team' -%}
+          {%- render 'ca-select', id: 'ContactModernProjectBudget', name: 'contact[Project budget]', label: 'Project budget', options: section.settings.project_budget_options, full: true, group: 'project' -%}
           {%- render 'ca-select', id: 'ContactModernRole', name: 'contact[Your Role]', label: 'Your role', options: section.settings.role_options -%}
           {%- render 'ca-select', id: 'ContactModernPlatform', name: 'contact[Current Platform]', label: 'Current platform', options: section.settings.platform_options -%}
           {%- render 'ca-select', id: 'ContactModernErp', name: 'contact[ERP / Back-office]', label: 'ERP / back-office', options: section.settings.erp_options -%}
@@ -131,6 +140,33 @@
         not on the brain's list (a ChatGPT or translated view of the site) was refused and fell
         back (2026-11-21). The brain accepts any address on this route.
       {%- endcomment -%}
+      <script>
+        (function () {
+          // One budget question, the one that goes with "What are you looking for?" (2026-11-21).
+          // Without JavaScript every budget question shows; a hidden one is disabled, so it is not sent.
+          var form = document.getElementById({{ form_id | json }});
+          if (!form) return;
+          var need = form.querySelector('select[name="contact[Looking for]"]');
+          var groups = form.querySelectorAll('[data-ca-budget]');
+          function groupFor(v) {
+            v = (v || '').toLowerCase();
+            if (/ongoing|fractional|senior team/.test(v)) return 'team';
+            if (/build/.test(v)) return 'build';
+            if (/project/.test(v)) return 'project';
+            return '';
+          }
+          function showBudget() {
+            var g = groupFor(need && need.value);
+            Array.prototype.forEach.call(groups, function (el) {
+              var on = el.getAttribute('data-ca-budget') === g;
+              el.style.display = on ? '' : 'none';
+              var sel = el.querySelector('select');
+              if (sel) sel.disabled = !on;
+            });
+          }
+          if (need && groups.length) { showBudget(); need.addEventListener('change', showBudget); }
+        })();
+      </script>
       <script>
         (function () {
           var form = document.getElementById({{ form_id | json }});
@@ -420,6 +456,10 @@
     { "type": "text", "id": "api_base", "label": "Brain address", "default": "https://projects.conspireagency.com", "info": "Where messages are sent (the lead board and the email to hello@). Leave empty to use Shopify's own form." },
     { "type": "textarea", "id": "success_text", "label": "Success message", "default": "Thanks for reaching out. A senior member of the team will reply within one business day." },
     { "type": "header", "content": "Dropdown options", "info": "One per line" },
+    { "type": "textarea", "id": "looking_for_options", "label": "What are you looking for", "default": "An ongoing senior team (fractional)\nA new Shopify build\nA defined project (one to a few weeks)\nNot sure yet", "info": "The budget question shown follows the answer: 'ongoing' or 'fractional' shows Monthly budget, 'build' shows Build budget, 'project' shows Project budget." },
+    { "type": "textarea", "id": "build_budget_options", "label": "Build budget", "default": "$15K to $25K\n$25K to $45K\n$45K to $75K\n$75K to $150K\n$150K+\nNot sure yet" },
+    { "type": "textarea", "id": "monthly_budget_options", "label": "Monthly budget", "default": "$6K to $10K\n$10K to $20K\n$20K+\nNot sure yet" },
+    { "type": "textarea", "id": "project_budget_options", "label": "Project budget", "default": "Under $15K\n$15K to $40K\n$40K+\nNot sure yet" },
     { "type": "textarea", "id": "role_options", "label": "Your role", "default": "Founder / CEO\nCMO / Head of Marketing\nHead of Ecommerce / Digital\nCTO / Head of Engineering / IT\nOps / Supply chain\nAgency / Partner\nOther" },
     { "type": "textarea", "id": "platform_options", "label": "Current platform", "default": "Shopify Plus\nShopify\nMagento / Adobe Commerce\nBigCommerce\nSalesforce Commerce Cloud\nWooCommerce\nCustom / in-house\nNot online yet" },
     { "type": "textarea", "id": "erp_options", "label": "ERP / back-office", "default": "Microsoft Dynamics 365 F&O\nMicrosoft Dynamics 365 Business Central\nNetSuite\nSAP\nSalsify (PIM)\nOther\nNone yet" },

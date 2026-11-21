@@ -7,9 +7,10 @@
   @param {string} options - one option per line
   @param {boolean} [full] - span both form columns
   @param {boolean} [required]
+  @param {string} [group] - data-ca-budget value; the contact form shows the budget field that matches "What are you looking for?"
 {%- endcomment -%}
 {%- assign ca_options = options | newline_to_br | split: '<br />' -%}
-<div class="ca-field{% if full %} ca-field--full{% endif %}">
+<div class="ca-field{% if full %} ca-field--full{% endif %}"{% if group != blank %} data-ca-budget="{{ group }}"{% endif %}>
   <label class="ca-field__label" for="{{ id }}">{{ label }}</label>
   <span class="ca-field__select">
     <select class="ca-field__input" id="{{ id }}" name="{{ name }}"{% if required %} required{% endif %}>
