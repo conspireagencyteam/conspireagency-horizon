@@ -376,8 +376,8 @@
   "order": [
     "hero",
     "tiers",
-    "sprints",
     "build",
+    "sprints",
     "clients",
     "testimonials",
     "call",
