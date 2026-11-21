@@ -65,44 +65,25 @@
       }
     },
     "sprints": {
-      "type": "ca-sprints-table",
-      "blocks": {
-        "plan_1": {
-          "type": "plan",
-          "settings": {
-            "name": "Starter Sprint",
-            "price": "$7.5k",
-            "values": "1 week\nTargeted updates and feature builds\nHighly focused, tight orchestration\nyes\nyes\nBilled at a day rate, not another full week",
-            "highlight": false,
-            "button_label": "Get Started",
-            "button_link": "#book-a-call"
-          }
-        },
-        "plan_2": {
-          "type": "plan",
-          "settings": {
-            "name": "Full Sprint",
-            "price": "$14k",
-            "values": "2 weeks\nMigrations and smaller builds\nBetter weekly rate than a single week\nyes\nyes\nBilled at a day rate, not another full week",
-            "highlight": true,
-            "button_label": "Get Started",
-            "button_link": "#book-a-call"
-          }
-        }
-      },
-      "block_order": [
-        "plan_1",
-        "plan_2"
-      ],
+      "type": "ca-price-range",
       "settings": {
-        "eyebrow": "Focused Builds sprints",
-        "heading": "For businesses that require speed and have a specific need. Good for migrations, partial redesigns, or feature build. Businesses that want dedicated focus without a long-term commitment.",
-        "rows": "Dedicated team focus\nBest suited for\nEngagement style\nRegular progress updates\nDedicated project manager\nIf it runs over",
+        "anchor_id": "sprints",
+        "eyebrow": "Sprints",
+        "heading": "For a defined job, done fast.",
+        "range": "$7.5k",
+        "cycle": "a week",
+        "line": "One week of the senior team on your job, starting on day one. No long-term commitment.",
+        "terms": "We scope the job and quote it in weeks before we start. Each week is invoiced before it begins.",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "button2_label": "",
+        "button2_link": "",
+        "list_label": "Built for",
+        "list": "Complex migrations\nCustom apps and integrations\nB2B and wholesale moves\nLaunch pushes and landing pages",
         "background_color": "#ffffff",
         "text_color": "",
         "padding-block-start": 80,
-        "padding-block-end": 80,
-        "anchor_id": "sprints"
+        "padding-block-end": 80
       }
     },
     "build": {
