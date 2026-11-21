@@ -90,7 +90,7 @@
   assign ecom_h = 46
   assign ecom_bottom = conv_y | plus: ecom_h
   assign hub_top = ecom_bottom | plus: 58
-  assign hub_h = 64
+  assign hub_h = ecom_h
   assign hub_bottom = hub_top | plus: hub_h
   assign hub_mid = hub_h | divided_by: 2 | plus: hub_top
   assign bot_a = hub_bottom | plus: 168
@@ -104,17 +104,15 @@
   assign ecom_w = ecom_label.size | times: 8.9 | plus: 40 | round
   assign ecom_x = ecom_w | divided_by: 2.0 | minus: vb_cx | times: -1
 
-  # Conspire hub: dot glyph, gap, label.
-  assign hub_text_w = hub_label.size | times: 10.6
-  assign hub_content = hub_text_w | plus: 24
-  assign hub_w = hub_content | plus: 60 | round
-  if hub_w < 184
-    assign hub_w = 184
-  endif
+  # Conspire hub: the wordmark from the theme logo, in a box the size of the ecom manager's.
+  assign logo_ratio = settings.logo.aspect_ratio | default: 6.5
+  assign logo_h = 13
+  assign logo_w = logo_h | times: logo_ratio | round: 1
+  assign hub_w = logo_w | plus: 48 | round
   assign hub_x = hub_w | divided_by: 2.0 | minus: vb_cx | times: -1
   assign hub_right = hub_x | plus: hub_w
-  assign glyph_x = hub_content | divided_by: 2.0 | minus: vb_cx | times: -1
-  assign hub_text_x = glyph_x | plus: 24
+  assign logo_x = logo_w | divided_by: 2.0 | minus: vb_cx | times: -1
+  assign logo_y = logo_h | divided_by: 2.0 | minus: hub_mid | times: -1
 
   # Data card, to the right of the hub, centred on it.
   assign card_w = 214
@@ -350,14 +348,11 @@
 
           <g class="ca-flow__hub" data-flow-hub data-cx="{{ vb_cx }}">
             <rect class="ca-flow__box ca-flow__box--hub" x="{{ hub_x }}" y="{{ hub_top }}" width="{{ hub_w }}" height="{{ hub_h }}" rx="12"/>
-            <g class="ca-flow__glyph" data-flow-glyph transform="translate({{ glyph_x }} {{ hub_mid | minus: 6 }})">
-              {%- for gy in (0..2) -%}
-                {%- for gx in (0..2) -%}
-                  <circle cx="{{ gx | times: 6 | plus: 1.5 }}" cy="{{ gy | times: 6 | plus: 0 }}" r="1.6"/>
-                {%- endfor -%}
-              {%- endfor -%}
-            </g>
-            <text class="ca-flow__hub-label" x="{{ hub_text_x }}" y="{{ hub_mid }}" dominant-baseline="central">{{ hub_label }}</text>
+            {%- if settings.logo != blank -%}
+              <image class="ca-flow__logo" href="{{ settings.logo | image_url: width: 600 }}" x="{{ logo_x }}" y="{{ logo_y }}" width="{{ logo_w }}" height="{{ logo_h }}" preserveAspectRatio="xMidYMid meet"><title>{{ hub_label }}</title></image>
+            {%- else -%}
+              <text class="ca-flow__hub-label" x="{{ vb_cx }}" y="{{ hub_mid }}" text-anchor="middle" dominant-baseline="central">{{ hub_label }}</text>
+            {%- endif -%}
           </g>
 
           {%- if sources.size > 0 -%}
@@ -419,14 +414,11 @@
         <div class="ca-flow__m-node ca-flow__m-node--ecom">{{ ecom_label }}</div>
         <span class="ca-flow__m-link" aria-hidden="true"><i></i></span>
         <div class="ca-flow__m-node ca-flow__m-node--hub">
-          <svg class="ca-flow__m-glyph" viewBox="0 0 15 15" aria-hidden="true" focusable="false">
-            {%- for gy in (0..2) -%}
-              {%- for gx in (0..2) -%}
-                <circle cx="{{ gx | times: 6 | plus: 1.5 }}" cy="{{ gy | times: 6 | plus: 1.5 }}" r="1.6"/>
-              {%- endfor -%}
-            {%- endfor -%}
-          </svg>
-          <span>{{ hub_label }}</span>
+          {%- if settings.logo != blank -%}
+            <img class="ca-flow__m-logo" src="{{ settings.logo | image_url: width: 600 }}" alt="{{ hub_label }}" width="{{ logo_h | times: logo_ratio | round }}" height="13" loading="lazy">
+          {%- else -%}
+            <span>{{ hub_label }}</span>
+          {%- endif -%}
         </div>
 
         {%- if sources.size > 0 -%}
@@ -740,8 +732,14 @@
       letter-spacing: -0.01em;
     }
 
+    .ca-flow__m-logo {
+      display: block;
+      height: 13px;
+      width: auto;
+    }
+
     .ca-flow__m-node--hub {
-      min-height: 58px;
+      min-height: 46px;
       padding-inline: 26px;
       border: 1px solid rgb(var(--color-foreground-rgb) / 0.75);
       border-radius: 12px;
@@ -897,19 +895,6 @@
         rect.setAttribute('x', (cx - bw / 2).toFixed(1));
       });
 
-      var hub = root.querySelector('[data-flow-hub]');
-      if (hub) {
-        var label = hub.querySelector('text');
-        var glyph = hub.querySelector('[data-flow-glyph]');
-        var lw = label.getBBox().width;
-        if (lw && glyph) {
-          var cx = parseFloat(hub.getAttribute('data-cx'));
-          var start = cx - (lw + 24) / 2;
-          var ty = glyph.getAttribute('transform').split(' ')[1];
-          glyph.setAttribute('transform', 'translate(' + start.toFixed(1) + ' ' + ty);
-          label.setAttribute('x', (start + 24).toFixed(1));
-        }
-      }
       root.setAttribute('data-fitted', '');
     }
 

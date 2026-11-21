@@ -703,9 +703,9 @@
       "type": "ca-flow-diagram",
       "settings": {
         "anchor_id": "",
-        "eyebrow": "How it works",
-        "heading": "Every team asks once. One team handles it.",
-        "body": "<p>Customer service, fulfillment, paid media and product bring their requests to your ecom manager. One message reaches us. We read your store's data, plan the work, then design, build, test and ship it.</p>",
+        "eyebrow": "End to end",
+        "heading": "Everything in one place. Managed end to end.",
+        "body": "<p>Requests from every team and data from every platform come together in one place. We turn them into a strategy, then manage the implementation from start to finish: design, development, testing, launch, and the monitoring that keeps it working.</p>",
         "teams": "Customer service\nPaid media and PPC\nFulfillment\nSEO\nProduct\nB2B and trade\nMarketing",
         "ecom_label": "Your ecom manager",
         "hub_label": "Conspire",
