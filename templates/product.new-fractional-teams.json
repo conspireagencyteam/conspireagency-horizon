@@ -13,8 +13,8 @@
       "type": "ca-brands-marquee",
       "settings": {
         "seo_heading": "Shopify Plus Premier Development Agency",
-        "heading": "A team to solve your complex problems.",
-        "body": "<p>Now the whole funnel: store, email, SEO and paid.</p><p>Your team can't do it all. You need a senior team, that knows your business, sits in your Slack alongside your people, and has the senior experience to transform business problems into solutions.</p>",
+        "heading": "Strategy, design and engineering. One senior team.",
+        "body": "<p>A senior team that becomes part of yours. In your Slack and on your standups, working from one focused roadmap, with work that keeps shipping.</p>",
         "button_label": "Book a Strategy Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -303,56 +303,6 @@
         "padding-block-end": 80
       }
     },
-    "tiers": {
-      "type": "ca-pricing-tiers",
-      "blocks": {
-        "tier_1": {
-          "type": "tier",
-          "settings": {
-            "name": "Optimization Partner",
-            "fit": "For brands doing $3M to $8M",
-            "price": "$6k",
-            "cycle": "/ month"
-          }
-        },
-        "tier_2": {
-          "type": "tier",
-          "settings": {
-            "name": "Growth Partner",
-            "fit": "For brands doing $8M to $15M",
-            "price": "$10k",
-            "cycle": "/ month"
-          }
-        },
-        "tier_3": {
-          "type": "tier",
-          "settings": {
-            "name": "Dedicated Partner",
-            "fit": "For brands doing $15M+",
-            "price": "$18k",
-            "cycle": "/ month"
-          }
-        }
-      },
-      "block_order": [
-        "tier_1",
-        "tier_2",
-        "tier_3"
-      ],
-      "settings": {
-        "eyebrow": "The best hire you've made.",
-        "heading": "Yearly commitment rates. Six month terms available.",
-        "intro_button_label": "See Full Pricing",
-        "intro_button_link": "shopify://pages/pricing",
-        "button_label": "Book a Call",
-        "button_link": "#book-a-call",
-        "style_class": "button-secondary",
-        "background_color": "#f2f2f2",
-        "text_color": "",
-        "padding-block-start": 80,
-        "padding-block-end": 80
-      }
-    },
     "faq": {
       "type": "ca-faq-list",
       "blocks": {
@@ -395,7 +345,7 @@
           "type": "item",
           "settings": {
             "question": "Is there a minimum commitment?",
-            "answer": "<p><p>Plans run on yearly or six month commitments. The first call costs you thirty minutes, and we are looking for brands where a long-term partnership is on the table.</p></p>"
+            "answer": "<p>Plans run on 12-month or six-month commitments, and the first month is a paid trial. After it you have seven days to opt out and owe only that month. We are looking for brands where a long-term partnership is on the table.</p>"
           }
         },
         "item_7": {
@@ -483,7 +433,7 @@
         "eyebrow": "Book a strategy call",
         "heading": "",
         "button_label": "",
-        "statement": "<p><p>The first call is an introduction: some light discovery and a feel for whether we are a fit on both sides. If we are, the next step is an audit and a roadmap for at least the next six months. Then you hand your store's entire task list to a senior team that integrates with yours. No training, no ramp.</p></p>",
+        "statement": "<p><p>The first call is an introduction: some light discovery and a feel for whether we are a fit on both sides. If we are, the next step is Month One: an audit, the first fixes and a roadmap for the next six months. Then you hand your store's entire task list to a senior team that integrates with yours. No training, no ramp.</p></p>",
         "column_start": "6",
         "answer_size": "regular",
         "open_first": true,
@@ -639,51 +589,107 @@
         "padding-block-end": 80
       }
     },
-    "retainer": {
-      "type": "ca-value-cards",
+    "services": {
+      "type": "ca-service-groups",
       "blocks": {
-        "card_1": {
-          "type": "card",
+        "group_1": {
+          "type": "group",
           "settings": {
-            "eyebrow": "Store",
-            "title": "Design, development\nand CRO",
-            "text": "<p>The work the retainer was built on: checkout-critical systems, integrations, launches, landing pages, and the compliance and conversion work that keeps the store earning.</p>"
+            "title": "Strategy and roadmap",
+            "tag": "In every retainer",
+            "items": "Senior strategy and a six-month roadmap\nOne accountable lead\nIn your Slack and on your standups\nEvery open item in your client portal\nMonthly performance reporting"
           }
         },
-        "card_2": {
-          "type": "card",
+        "group_2": {
+          "type": "group",
           "settings": {
-            "eyebrow": "Email",
-            "title": "Klaviyo, run by\nyour store team",
-            "text": "<p>Flows, campaigns, segmentation, and list health, built by the same team that built the product pages and the checkout they send to.</p>"
+            "title": "Design and development",
+            "tag": "In every retainer",
+            "items": "UX and design\nDevelopment and releases\nLanding pages and launches\nMerchandising and collection pages\nThird-party app setup and management"
           }
         },
-        "card_3": {
-          "type": "card",
+        "group_3": {
+          "type": "group",
           "settings": {
-            "eyebrow": "SEO & AI search",
-            "title": "Found on Google\nand inside the answer",
-            "text": "<p>Technical SEO, content structure, and AI search visibility, so ChatGPT and the shopping agents describe your products accurately and send people to you.</p>"
+            "title": "Testing and monitoring",
+            "tag": "In every retainer",
+            "items": "AI-powered exploratory testing\nRelease testing before every release\nManual testing by real people\nStore health and uptime monitoring\nTheme and app updates"
           }
         },
-        "card_4": {
-          "type": "card",
+        "group_4": {
+          "type": "group",
           "settings": {
-            "eyebrow": "Paid media · Rolling out",
-            "title": "Google and Meta,\nreconciled to Shopify",
-            "text": "<p>Campaign management with attribution that ties back to real store revenue, not a platform dashboard. Rolling out to retainer clients now.</p>"
+            "title": "Conversion",
+            "tag": "",
+            "items": "A/B testing program\nCustomer journey and funnel analysis\nCheckout and cart\nPersonalization"
+          }
+        },
+        "group_5": {
+          "type": "group",
+          "settings": {
+            "title": "Retention and subscriptions",
+            "tag": "",
+            "items": "Klaviyo email and SMS\nFlows and campaigns\nLoyalty programs\nSubscription optimization on Recharge or Bonde, our own app\nStock-outs and the cancel flow"
+          }
+        },
+        "group_6": {
+          "type": "group",
+          "settings": {
+            "title": "Search and AI discovery",
+            "tag": "",
+            "items": "Technical SEO\nContent structure and schema\nAI search visibility\nProduct discoverability"
+          }
+        },
+        "group_7": {
+          "type": "group",
+          "settings": {
+            "title": "Compliance and privacy",
+            "tag": "",
+            "items": "Accessibility audits and fixes\nScheduled accessibility scans\nPrivacy audits\nConsent and opt-out handling"
+          }
+        },
+        "group_8": {
+          "type": "group",
+          "settings": {
+            "title": "Data and tracking",
+            "tag": "",
+            "items": "Analytics setup and validation\nPaid media pixels and conversion events\nAttribution with Elevar or Triple Whale\nSet up compliantly, monitored continuously"
+          }
+        },
+        "group_9": {
+          "type": "group",
+          "settings": {
+            "title": "Custom software and integrations",
+            "tag": "",
+            "items": "Custom apps we build and maintain\nSecurity audits\nNetSuite and ERP integrations\nB2B, wholesale and trade programs\nMore stores and markets"
+          }
+        },
+        "group_10": {
+          "type": "group",
+          "settings": {
+            "title": "Paid media",
+            "tag": "Rolling out",
+            "items": "Google and Meta campaigns\nReconciled to Shopify revenue\nLanding pages from the same team"
           }
         }
       },
       "block_order": [
-        "card_1",
-        "card_2",
-        "card_3",
-        "card_4"
+        "group_1",
+        "group_2",
+        "group_3",
+        "group_4",
+        "group_5",
+        "group_6",
+        "group_7",
+        "group_8",
+        "group_9",
+        "group_10"
       ],
       "settings": {
-        "eyebrow": "What's in the retainer",
-        "heading": "One team. <strong>The whole revenue stack of your store.</strong>",
+        "anchor_id": "",
+        "eyebrow": "Grow with confidence",
+        "heading": "One team. <strong>Everything your flagship store needs.</strong>",
+        "intro": "You need senior talent to fill multiple roles. We do that with a single hire. Instead of creating more work, we bring solutions from day one. Hand us the parts you want off your plate.",
         "button_label": "Book a Call",
         "button_link": "#book-a-call",
         "style_class": "button",
@@ -692,15 +698,113 @@
         "padding-block-start": 80,
         "padding-block-end": 80
       }
+    },
+    "how_it_works": {
+      "type": "ca-flow-diagram",
+      "settings": {
+        "anchor_id": "",
+        "eyebrow": "Business intelligence & implementation",
+        "heading": "Everything in one place. Managed end to end.",
+        "body": "<p>Requests from every team and data from every platform come together in one place. We turn them into a strategy, then manage the implementation from start to finish: design, development, testing, launch, and the monitoring that keeps it working.</p>",
+        "teams": "Customer service\nPaid media and PPC\nFulfillment\nSEO\nProduct\nB2B and trade\nMarketing",
+        "ecom_label": "Your ecom manager",
+        "hub_label": "Conspire",
+        "data_heading": "Your data",
+        "data_sources": "Shopify\nKlaviyo\nGoogle Analytics\nGoogle Ads\nMeta\nTikTok\nHelp desk",
+        "strategy_label": "Strategy",
+        "disciplines": "Design\nFront-end development\nBack-end development\nSEO and AI search\nPPC\nCompliance\nQA",
+        "aria_label": "",
+        "background_color": "#ffffff",
+        "text_color": "",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "month_one": {
+      "type": "ca-offer-steps",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Connect",
+            "text": "Your store, analytics, email, ad accounts and help desk."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "Audit",
+            "text": "Every area above, ranked by what it is worth to you."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Ship",
+            "text": "The first fixes go live, and the first test where conversion is in scope."
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "title": "Decide",
+            "text": "A six-month roadmap for what comes next. If it isn't right, seven days to walk away."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4"
+      ],
+      "settings": {
+        "anchor_id": "month-one",
+        "eyebrow": "How we start",
+        "heading": "Month One",
+        "subheading": "A month of real work before you commit.",
+        "body": "<p>The fastest way to know if we fit is to work together. In the first month we connect to your store and your tools, audit every area of the store, and ship the first fixes. You finish the month with real work shipped and a six-month roadmap. Then you have seven days to decide. If it isn't right, you owe that month and nothing more.</p>",
+        "button_label": "Book a Call",
+        "button_link": "#book-a-call",
+        "style_class": "button",
+        "background_color": "#0d110d",
+        "text_color": "#ffffff",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
+    },
+    "price_range": {
+      "type": "ca-price-range",
+      "settings": {
+        "anchor_id": "pricing",
+        "eyebrow": "Pricing",
+        "heading": "The best hire you've made.",
+        "range": "$6k to $20k",
+        "cycle": "a month",
+        "line": "Tailored to your business needs. Replaces multiple specialists you don't have. Hand us as much as you need.",
+        "terms": "12-month commitment rates. Six-month terms available. Month One, a paid trial, is $6,000.",
+        "button_label": "See Full Pricing",
+        "button_link": "shopify://pages/pricing",
+        "button2_label": "Book a Call",
+        "button2_link": "#book-a-call",
+        "list_label": "What you can hand us",
+        "list": "Strategy and roadmap\nDesign and development\nTesting and monitoring\nConversion\nRetention and subscriptions\nSearch and AI discovery\nCompliance and privacy\nData and tracking\nCustom software and integrations\nPaid media",
+        "background_color": "#f2f2f2",
+        "text_color": "",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
     }
   },
   "order": [
     "hero",
+    "services",
+    "how_it_works",
+    "month_one",
     "clients",
     "questions",
-    "retainer",
     "communication",
-    "tiers",
+    "price_range",
     "faq",
     "testimonials",
     "call",

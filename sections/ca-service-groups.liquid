@@ -1,0 +1,247 @@
+{%- comment -%}
+  ca-service-groups.liquid - a numbered, editorial list of service groups
+  ("What's in the retainer" on the Fractional Shopify Teams page).
+
+  Intro (eyebrow, two-tone statement, optional lede, button), then one hairline
+  row per "group" block: the number (from the block's position), the group
+  title with an optional outlined pill tag beside it, and the group's items as
+  a stacked list in the right columns. Rows stack below 990px.
+{%- endcomment -%}
+
+<div
+  class="ca-svc spacing-style color-custom-{{ section.id }}{% render 'ca-invert', color: section.settings.background_color %}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | strip | handleize }}"{% endif %}
+>
+  {%- render 'contrast-override',
+    background_color: section.settings.background_color,
+    text_color: section.settings.text_color,
+    section_id: section.id
+  -%}
+  <div class="ca-inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.intro != blank or section.settings.button_label != blank -%}
+      <div class="ca-intro ca-svc__intro" style="--ca-intro-start: 6;">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ca-eyebrow ca-intro__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <div class="ca-intro__main">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="ca-statement">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.intro != blank -%}
+            <p class="ca-svc__lede">{{ section.settings.intro }}</p>
+          {%- endif -%}
+          {%- if section.settings.button_label != blank -%}
+            <a class="{{ section.settings.style_class }} size-style" {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}>
+              {{- section.settings.button_label -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ol class="ca-svc__list">
+        {%- for block in section.blocks -%}
+          {%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
+          <li class="ca-svc__row" {{ block.shopify_attributes }}>
+            <span class="ca-svc__num" aria-hidden="true">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+            <div class="ca-svc__head">
+              {%- if block.settings.title != blank -%}
+                <h3 class="ca-svc__title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.tag != blank -%}
+                <span class="ca-pill ca-svc__tag">{{ block.settings.tag }}</span>
+              {%- endif -%}
+            </div>
+            {%- if block.settings.items != blank -%}
+              <ul class="ca-svc__items">
+                {%- for item in items -%}
+                  {%- assign line = item | strip -%}
+                  {%- if line != blank -%}
+                    <li class="ca-svc__item">{{ line }}</li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ca-svc {
+    scroll-margin-top: var(--ca-header-height, 96px);
+    background-color: var(--color-background);
+  }
+
+  .ca-svc__intro {
+    margin-block-end: 80px;
+  }
+
+  .ca-svc__lede {
+    width: 100%;
+    margin: 0;
+    font-size: var(--ca-fs-20);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  .ca-svc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-end: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-svc__row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    align-items: start;
+    padding-block: 32px 40px;
+    border-block-start: 1px solid var(--ca-hairline-strong);
+  }
+
+  .ca-svc__num {
+    grid-column: 1 / span 1;
+    padding-block-start: 0.3em;
+    font-size: var(--ca-fs-20);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--ca-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ca-svc__head {
+    grid-column: 2 / span 4;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+  }
+
+  .ca-svc__title {
+    margin: 0;
+    font-size: var(--ca-fs-36);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .ca-svc__tag {
+    flex: 0 0 auto;
+    min-height: 32px;
+    padding: 4px 12px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .ca-svc__items {
+    grid-column: 7 / -1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ca-svc__item {
+    font-size: var(--ca-fs-20);
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+    color: var(--ca-soft);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ca-svc__intro {
+      margin-block-end: 48px;
+    }
+
+    .ca-svc__row {
+      row-gap: 20px;
+      padding-block: 24px 32px;
+    }
+
+    .ca-svc__num {
+      grid-column: 1 / span 2;
+    }
+
+    .ca-svc__head {
+      grid-column: 3 / -1;
+    }
+
+    .ca-svc__items {
+      grid-column: 3 / -1;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ca-svc__row {
+      column-gap: 12px;
+    }
+
+    .ca-svc__num {
+      padding-block-start: 0.2em;
+      font-size: 1rem;
+    }
+
+    .ca-svc__item {
+      font-size: var(--ca-fs-18);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Service groups",
+  "tag": "section",
+  "class": "ca-svc-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor id", "info": "Optional. Lets links jump here." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "What's in the retainer" },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Statement",
+      "info": "Bold the words to emphasise. The rest is shown muted.",
+      "default": "One team. <strong>The whole revenue stack of your store.</strong>"
+    },
+    { "type": "text", "id": "intro", "label": "Intro", "default": "Here is the work we take on, grouped the way we run it." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Book a Call" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "Button style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "t:settings.background" },
+    { "type": "color", "id": "text_color", "label": "t:settings.text" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Group",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Strategy and roadmap" },
+        { "type": "text", "id": "tag", "label": "Tag", "info": "Optional. Shown as a small pill beside the title." },
+        { "type": "textarea", "id": "items", "label": "Items", "info": "One per line.", "default": "Senior strategy and a six-month roadmap\nOne accountable lead" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Service groups", "category": "Conspire", "blocks": [{ "type": "group" }, { "type": "group" }, { "type": "group" }] }
+  ]
+}
+{% endschema %}
