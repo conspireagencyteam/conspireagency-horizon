@@ -139,7 +139,10 @@
         name: "consent-tracking-api",
         version: "0.1",
         onLoad: function () {
-          if (marketingAllowed(window.Shopify.customerPrivacy)) startTracking();
+          // The consent API can fail to load (a blocker, a flaky network); then
+          // customerPrivacy is undefined, so treat it like no consent API at all
+          var customerPrivacy = window.Shopify.customerPrivacy;
+          if (!customerPrivacy || marketingAllowed(customerPrivacy)) startTracking();
         }
       }]);
     }

@@ -1,5 +1,5 @@
 import { Component } from '@theme/component';
-import { debounce, onAnimationEnd, prefersReducedMotion } from '@theme/utilities';
+import { debounce, onAnimationEnd, prefersReducedMotion, requestIdleCallback } from '@theme/utilities';
 import { sectionRenderer } from '@theme/section-renderer';
 import { morph } from '@theme/morph';
 import { RecentlyViewed } from '@theme/recently-viewed-products';

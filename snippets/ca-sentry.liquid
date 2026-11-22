@@ -8,7 +8,8 @@
   assets and inline scripts), so browser extensions and third-party app scripts are dropped.
   Shopify serves its web pixel sandbox (app and custom pixels) from our domain under /web-pixels/;
   its worker fails to load when a visitor's blocker stops it, so anything naming /web-pixels/ is
-  ignored too (AGENCY-SITE-2 and -3, 2026-11-21). Off in
+  ignored too (AGENCY-SITE-2 and -3, 2026-11-21), as are Shopify's own pixel manager (/cdn/wpm/)
+  and shop events listener, whose fetches fail the same way (AGENCY-SITE-4 and -8, 2026-11-22). Off in
   the theme editor; a preview link reports as environment "preview". The Loader script loads the
   SDK only when the first error happens, so the page pays nothing until then. Async, so it never blocks the page; an error in the first moment before the Loader has run is not seen.
 
@@ -20,7 +21,7 @@
       Sentry.init({
         environment: /preview_theme_id|shopifypreview\.com|myshopify\.com/.test(location.href) ? 'preview' : 'production',
         allowUrls: [/^https?:\/\/(www\.)?conspireagency\.com\//],
-        denyUrls: [/\/web-pixels\//],
+        denyUrls: [/\/web-pixels\//, /\/cdn\/wpm\//, /\/shopifycloud\/storefront\/assets\/shop_events_listener/],
         ignoreErrors: ['ResizeObserver loop', 'Non-Error promise rejection captured', /^Script error\.?$/, /\/web-pixels\//],
         sendDefaultPii: false,
         tracesSampleRate: 0,
