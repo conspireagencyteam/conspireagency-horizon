@@ -234,6 +234,12 @@
         {%- endfor -%}
       </ul>
     </nav>
+    {%- comment -%} Conspire Agency (2026-11-22, Danny): the drawer ends in the hero's "Get Started" pill, linking where the floating CTA does. {%- endcomment -%}
+    {%- if section.settings.drawer_cta_label != blank -%}
+      <div class="ca-header__drawer-cta">
+        <a class="button size-style" href="{{ section.settings.cta_link | default: '/pages/contact' }}">{{ section.settings.drawer_cta_label }}</a>
+      </div>
+    {%- endif -%}
   </div>
   <div class="ca-header__overlay" data-ca-header-overlay inert></div>
 </ca-header>
@@ -1013,6 +1019,10 @@
     text-decoration: none;
   }
 
+  .ca-header__drawer-cta {
+    margin-block-start: 40px;
+  }
+
   .ca-header__overlay {
     position: fixed;
     inset: 0;
@@ -1069,6 +1079,10 @@
 
     .ca-header__drawer .ca-header__drawer-menu {
       padding: 8px var(--page-margin, 24px) 0;
+    }
+
+    .ca-header__drawer-cta {
+      padding-inline: var(--page-margin, 24px);
     }
 
     .ca-header__nav {
@@ -1171,6 +1185,13 @@
       "id": "cta_link",
       "label": "Button link",
       "info": "Defaults to the contact page"
+    },
+    {
+      "type": "text",
+      "id": "drawer_cta_label",
+      "label": "Mobile menu button label",
+      "info": "A button at the end of the mobile menu, linking to the button link above. Leave empty to remove it.",
+      "default": "Get Started"
     },
     {
       "type": "header",
