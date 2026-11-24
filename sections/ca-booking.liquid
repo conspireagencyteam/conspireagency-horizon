@@ -19,6 +19,13 @@
   key" settings name custom.* metafields (single or multi-line text) that replace the
   panel heading and text when set, so one template can end every vertical hub page in
   the page's own words (docs/VERTICAL-HUBS.md).
+
+  After a booking: Calendly's iframe announces it (postMessage
+  calendly.event_scheduled) and the section then says what to expect on the call,
+  over the montage on wide screens and under the calendar on narrow ones. The
+  words wait in a <template>, so nothing is on the page until then. Shown only
+  when "Show what to expect after someone books" is on; ?ca_booked=1 on the page
+  address shows it either way, to read the words without booking.
 {%- endcomment -%}
 
 {%- liquid
@@ -38,9 +45,52 @@
       assign panel_text = article.metafields.custom[text_key].value
     endif
   endif
+
+  assign booked_video_id = section.settings.booked_video_id | strip
+  assign booked_now = false
+  if request.design_mode and section.settings.booked_preview
+    assign booked_now = true
+  endif
+  assign booked_announce = section.settings.booked_eyebrow | append: '. ' | append: section.settings.booked_heading | strip_html | strip
 -%}
 
-<div id="book-a-call" class="ca-booking spacing-style color-custom-{{ section.id }}" style="{% render 'spacing-style', settings: section.settings %}">
+{%- capture booked_panel -%}
+  <div
+    class="ca-booking__booked{% if booked_now %} is-in{% endif %}"
+    style="--ca-montage-bg: {{ montage_bg }};"
+    data-announce="{{ booked_announce | escape }}"
+  >
+    <div class="ca-booking__booked-inner{% if booked_video_id != blank %} ca-booking__booked-inner--video{% endif %}">
+      <div class="ca-booking__booked-copy">
+        {%- if section.settings.booked_eyebrow != blank -%}
+          <p class="ca-eyebrow">{{ section.settings.booked_eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.booked_heading != blank -%}
+          <h3 class="ca-statement ca-statement--xl ca-booking__booked-heading">{{ section.settings.booked_heading }}</h3>
+        {%- endif -%}
+        {%- if section.settings.booked_text != blank -%}
+          <div class="ca-booking__booked-text">{{ section.settings.booked_text }}</div>
+        {%- endif -%}
+      </div>
+      {%- if booked_video_id != blank -%}
+        <div class="ca-booking__booked-video">
+          {%- if section.settings.booked_video_caption != blank -%}
+            <p class="ca-booking__booked-caption">{{ section.settings.booked_video_caption }}</p>
+          {%- endif -%}
+          {% render 'ca-estimate-video', id: booked_video_id, title: section.settings.booked_video_title %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endcapture -%}
+
+<div
+  id="book-a-call"
+  class="ca-booking spacing-style color-custom-{{ section.id }}"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  {% if section.settings.booked_enabled %}data-booked-enabled{% endif %}
+  {% if booked_now %}data-booked="1"{% endif %}
+>
   {% render 'contrast-override',
     background_color: section.settings.background_color,
     text_color: section.settings.text_color,
@@ -169,7 +219,15 @@
           <p class="ca-booking__empty">Add a <strong>Calendly URL</strong> in this section's settings.</p>
         {%- endif -%}
       </div>
+
+      {%- comment -%} AFTER A BOOKING: what to expect on the call (see the header comment) {%- endcomment -%}
+      {%- if booked_now -%}
+        {{ booked_panel }}
+      {%- else -%}
+        <template data-ca-booked>{{ booked_panel }}</template>
+      {%- endif -%}
     </div>
+    <p class="visually-hidden" role="status" data-ca-booked-status></p>
   </div>
 </div>
 
@@ -405,6 +463,111 @@
     text-underline-offset: 3px;
   }
 
+  /* ---- AFTER A BOOKING: what to expect on the call ---------------------- */
+  /* Shares the montage's grid cell on wide screens (a scrim over the spiral,
+     which keeps moving behind it) and takes its own row under the calendar on
+     narrow ones. Always light-on-dark, whatever the section colours. */
+  .ca-booking__montage,
+  .ca-booking__booked {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .ca-booking__calendar {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .ca-booking__booked {
+    --color-foreground: #ffffff;
+    --color-foreground-rgb: 255 255 255;
+    --color-background: var(--ca-montage-bg, #0d110d);
+    position: relative;
+    z-index: 300;
+    /* Clear of the sticky header when the preview scrolls to it. */
+    scroll-margin-block-start: 96px;
+    container-type: inline-size;
+    display: flex;
+    align-items: center;
+    padding: 48px;
+    color: #ffffff;
+    background-color: color-mix(in srgb, var(--ca-montage-bg, #0d110d) 88%, transparent);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .ca-booking__booked.is-in {
+    opacity: 1;
+  }
+
+  .ca-booking__booked-inner {
+    display: grid;
+    gap: 32px;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .ca-booking__booked-heading {
+    margin-block-start: 16px;
+    text-indent: 0;
+  }
+
+  /* Each paragraph is one short line of the list, ruled above and below. */
+  .ca-booking__booked-text {
+    margin-block-start: 28px;
+  }
+
+  .ca-booking__booked-text p {
+    margin: 0;
+    padding-block: 14px;
+    border-block-start: 1px solid rgb(255 255 255 / 0.16);
+    color: rgb(255 255 255 / 0.82);
+    line-height: 1.45;
+  }
+
+  .ca-booking__booked-text p:last-child {
+    border-block-end: 1px solid rgb(255 255 255 / 0.16);
+  }
+
+  .ca-booking__booked-text a {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .ca-booking__booked-video {
+    max-width: 360px;
+  }
+
+  /* The poster's play pill, sized for this smaller frame. */
+  .ca-booking__booked-video .ca-estimate__video-play {
+    inset-block-end: 12px;
+    inset-inline-start: 12px;
+    padding: 8px 14px 8px 10px;
+    font-size: 0.875rem;
+  }
+
+  .ca-booking__booked-caption {
+    margin: 0 0 12px;
+    color: rgb(255 255 255 / 0.7);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+
+  @container (min-width: 800px) {
+    .ca-booking__booked-inner--video {
+      max-width: none;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .ca-booking__booked-inner--video .ca-booking__booked-video {
+      max-width: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ca-booking__tile,
     .ca-booking__photo,
@@ -426,6 +589,10 @@
 
     .ca-booking__photo {
       filter: none;
+    }
+
+    .ca-booking__booked {
+      transition: none;
     }
   }
 
@@ -456,6 +623,19 @@
     .ca-booking__tile {
       width: 64px;
       margin: -32px;
+    }
+
+    .ca-booking__calendar {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    /* Its own row under the calendar: the 300px montage row is too short for it. */
+    .ca-booking__booked {
+      grid-row: 3;
+      padding: 32px 24px;
+      background-color: var(--ca-montage-bg, #0d110d);
+      backdrop-filter: none;
     }
   }
 {% endstylesheet %}
@@ -506,6 +686,52 @@
     }
   }
   if (!customElements.get('ca-calendly')) customElements.define('ca-calendly', CaCalendly);
+
+  // After a booking the section says what to expect on the call. The words wait
+  // in a <template> inside the grid; showing them is a clone, once per section.
+  function caBookingShowBooked(root, reveal) {
+    if (!root || root.dataset.booked) return;
+    const tpl = root.querySelector('template[data-ca-booked]');
+    const grid = root.querySelector('.ca-booking__grid');
+    if (!tpl || !grid) return;
+    root.dataset.booked = '1';
+    grid.appendChild(tpl.content.cloneNode(true));
+    const panel = grid.querySelector('.ca-booking__booked');
+    if (!panel) return;
+    const status = root.querySelector('[data-ca-booked-status]');
+    if (status) status.textContent = panel.dataset.announce || '';
+    // A beat later, so the fade starts from the hidden state (a timer, not a
+    // frame callback: frames do not run while the tab is in the background).
+    setTimeout(() => panel.classList.add('is-in'), 40);
+    if (reveal) {
+      // The preview only: bring it into view once the page has settled, and once
+      // more after the calendar has loaded (Calendly's embed pulls the scroll to itself).
+      const show = () => {
+        const top = panel.getBoundingClientRect().top;
+        if (top < 0 || top > window.innerHeight * 0.5) panel.scrollIntoView({ block: 'start' });
+      };
+      const go = () => [800, 4500].forEach((ms) => setTimeout(show, ms));
+      if (document.readyState === 'complete') go();
+      else window.addEventListener('load', go, { once: true });
+    }
+  }
+
+  // Calendly announces a booking from its iframe. Only the section that holds
+  // that iframe answers, and only when the setting is on.
+  window.addEventListener('message', (e) => {
+    if (e.origin !== 'https://calendly.com' || !e.data || e.data.event !== 'calendly.event_scheduled') return;
+    document.querySelectorAll('.ca-booking[data-booked-enabled]').forEach((root) => {
+      const own = Array.from(root.querySelectorAll('iframe')).some((frame) => frame.contentWindow === e.source);
+      if (own) caBookingShowBooked(root, false);
+    });
+  });
+
+  // ?ca_booked=1 shows it without a booking, setting on or off, to read the words.
+  if (new URLSearchParams(window.location.search).has('ca_booked')) {
+    const preview = () => document.querySelectorAll('.ca-booking').forEach((root, i) => caBookingShowBooked(root, i === 0));
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', preview, { once: true });
+    else preview();
+  }
 {% endjavascript %}
 
 {% schema %}
@@ -561,6 +787,35 @@
       "unit": "px",
       "default": 700
     },
+    {
+      "type": "header",
+      "content": "After a booking"
+    },
+    {
+      "type": "checkbox",
+      "id": "booked_enabled",
+      "label": "Show what to expect after someone books",
+      "info": "Off: nothing changes after a booking. Add ?ca_booked=1 to the page address to read it either way.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "booked_preview",
+      "label": "Show it now (in the editor only)",
+      "default": false
+    },
+    { "type": "text", "id": "booked_eyebrow", "label": "Eyebrow", "default": "You're booked" },
+    { "type": "inline_richtext", "id": "booked_heading", "label": "Heading", "default": "See you on the call. <strong>Here's what to expect.</strong>" },
+    {
+      "type": "richtext",
+      "id": "booked_text",
+      "label": "Text",
+      "info": "One short paragraph per line of the list.",
+      "default": "<p>The call is for us to learn about your business. Daniel, our founder, and Jack will be on it.</p><p>Calendly has sent the invite. Forward it to anyone who should join, and bring any date that cannot move.</p><p>If it's a fit, a proposal follows the call, scoped line by line.</p><p>Nothing to prepare. If you'd like to read ahead, <a href=\"/pages/pricing\">our pricing</a> is public, and so is <a href=\"/blogs/work\">work for brands like yours</a>.</p>"
+    },
+    { "type": "text", "id": "booked_video_id", "label": "Video (YouTube ID)", "info": "Optional. Leave empty for no video.", "default": "iarfNgaclWQ" },
+    { "type": "text", "id": "booked_video_title", "label": "Video title", "default": "How a Conspire Build runs" },
+    { "type": "text", "id": "booked_video_caption", "label": "Line above the video", "default": "How a build runs, start to finish. No pressure to watch it now." },
     {
       "type": "header",
       "content": "Montage"
