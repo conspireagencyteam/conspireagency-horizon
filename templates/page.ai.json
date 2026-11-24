@@ -282,6 +282,8 @@
         "background_color": "#0d110d",
         "text_color": "#f2f2f2",
         "calendly_url": "https://calendly.com/d/crbh-5vt-9jc/website-strategy-consultation-intro-call-conspire?hide_event_type_details=1&hide_gdpr_banner=1",
+        "booked_enabled": true,
+        "booked_video_id": "",
         "calendly_height": 700,
         "montage_background": "#171b17",
         "padding-block-start": 40,
