@@ -482,8 +482,13 @@
     --color-foreground: #ffffff;
     --color-foreground-rgb: 255 255 255;
     --color-background: var(--ca-montage-bg, #0d110d);
+    /* The theme's link hover reads --color-rgb, which the section's own text
+       colour sets (dark): without this a hovered link goes dark on dark. */
+    --color-rgb: 255 255 255;
     position: relative;
-    z-index: 300;
+    /* Above the montage only (its tiles are isolated inside it). Kept under the
+       sticky header and the partner ribbon, which sit at layer 12. */
+    z-index: 1;
     /* Clear of the sticky header when the preview scrolls to it. */
     scroll-margin-block-start: 96px;
     container-type: inline-size;
@@ -533,7 +538,12 @@
   .ca-booking__booked-text a {
     color: #ffffff;
     text-decoration: underline;
+    text-decoration-color: currentcolor;
     text-underline-offset: 3px;
+  }
+
+  .ca-booking__booked-text a:hover {
+    color: rgb(255 255 255 / 0.7);
   }
 
   .ca-booking__booked-video {
@@ -811,7 +821,7 @@
       "id": "booked_text",
       "label": "Text",
       "info": "One short paragraph per line of the list.",
-      "default": "<p>The call is for us to learn about your business. Daniel, our founder, and Jack will be on it.</p><p>Calendly has sent the invite. Forward it to anyone who should join, and bring any date that cannot move.</p><p>If it's a fit, a proposal follows the call, scoped line by line.</p><p>Nothing to prepare. If you'd like to read ahead, <a href=\"/pages/pricing\">our pricing</a> is public, and so is <a href=\"/blogs/work\">work for brands like yours</a>.</p>"
+      "default": "<p>The call is for us to learn about your business. Daniel, our founder, and Jack will be on it.</p><p>Calendly has sent the invite. Forward it to anyone who should join.</p><p>If it's a fit, a proposal follows the call, scoped line by line.</p><p>Nothing to prepare. If you'd like to read ahead, <a href=\"/pages/pricing\">our pricing</a> is public, and so is <a href=\"/blogs/work\">work for brands like yours</a>.</p>"
     },
     { "type": "text", "id": "booked_video_id", "label": "Video (YouTube ID)", "info": "Optional. Leave empty for no video.", "default": "iarfNgaclWQ" },
     { "type": "text", "id": "booked_video_title", "label": "Video title", "default": "How a Conspire Build runs" },
