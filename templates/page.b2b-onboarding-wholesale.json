@@ -149,6 +149,14 @@
             "text": "No separate wholesale storefront. Customers log in and see their pricing on your normal store, through the standard Shopify checkout."
           }
         },
+        "f14": {
+          "type": "feature",
+          "settings": {
+            "icon_asset": "ca-app-icon-map-pin.svg",
+            "title": "Store locator",
+            "text": "Show retail buyers where to find you: a map of your stockists and showrooms in your theme, with no map key to set up. On Pro, each location shows the products it carries."
+          }
+        },
         "f8": {
           "type": "feature",
           "settings": {
@@ -211,6 +219,7 @@
         "f6",
         "f8",
         "f9",
+        "f14",
         "f7"
       ],
       "settings": {
